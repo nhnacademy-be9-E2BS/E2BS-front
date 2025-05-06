@@ -1,0 +1,45 @@
+<!--배송지 추가-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div>
+    <h1>배송지 추가</h1>
+    <form action="/member/add-delivery" method="post">
+        <div>
+            <label for="orderReceiverName">수령자</label>
+            <input type="text" id="orderReceiverName" name="orderReceiverName" required>
+        </div>
+        <div>
+            <label for="orderReceiverPhone">수령자 휴대폰</label>
+            <input type="text" id="orderReceiverPhone" name="orderReceiverPhone" required>
+        </div>
+        <div>
+            <label for="orderReceiverTel">비밀번호</label>
+            <input type="text" id="orderReceiverTel" name="orderReceiverTel" required>
+        </div>
+        <div>
+<!--            api를 통해 링크 추가-->
+            <label for="orderAddressCode">우편번호</label>
+            <input type="text" id="orderAddressCode" name="orderAddressCode" required>
+        </div>
+        <div>
+            <label for="orderAddressInfo">주소</label>
+            <input type="text" id="orderAddressInfo" name="orderAddressInfo" required>
+        </div>
+        <div>
+            <label for="orderAddressDetail">상세주소</label>
+            <input type="text" id="orderAddressDetail" name="orderAddressDetail" required>
+        </div>
+
+        <button type="submit">저장하기</button>
+    </form>
+</div>
+
+</body>
+</html>

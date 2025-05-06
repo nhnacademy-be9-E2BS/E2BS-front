@@ -1,0 +1,43 @@
+<!--회원가입-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <h1>E2BS 회원가입</h1>
+
+    <form action="/member/register" method="post">
+        <div>
+            <label for="id">아이디</label>
+            <input type="text" id="id" name="id" required>
+        </div>
+        <div>
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="birth">생일</label>
+            <input type="date" id="birth" name="birth" required>
+        </div>
+        <div>
+            <label for="phone">휴대전화</label>
+            <input type="text" id="phone" name="phone" required>
+        </div>
+            <button type="submit">회원 가입하기</button>
+    </form>
+    <button type="button" onclick="location.href='home'">회원 가입하기</button>
+</div>
+</body>
+</html>
