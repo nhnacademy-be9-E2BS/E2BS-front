@@ -1,0 +1,39 @@
+<!--최종 금액 결제-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <h1>최종 결제</h1>
+    <table width="800" bgcolor="#d1d1d1">
+        <tr>
+            <th>항목</th>
+            <th>내용</th>
+        </tr>
+    </table>
+    <table width="800">
+        <tr>
+            <td>주문 상품</td>
+            <td>소년이 온다</td>
+        </tr>
+        <tr>
+            <td>배송지</td>
+            <td>주소</td>
+        </tr>
+        <tr>
+            <td>총 결제 금액</td>
+            <td>14,000원</td>
+        </tr>
+    </table>
+    <form action="/payment/confirm" method="post">
+        <input type="hidden" name="orderId" value="0000001">
+        <button type="submit" id="tossPaymentButton">토스 결제로 결제하기</button>
+    </form>
+    <!-- 토스 결제 API 스크립트는 추가 필요 -->
+</div>
+</body>
+</html>
