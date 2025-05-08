@@ -22,7 +22,7 @@ import lombok.Setter;
 public class LoginProcessMember implements UserDetails {
 
 	private String memberId;
-	private String customerPassword;
+  private String customerPassword;
 	private RankName memberRankName;
 
 	@Override
@@ -34,7 +34,7 @@ public class LoginProcessMember implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return customerPassword;
+    return customerPassword;
 	}
 
 	@Override

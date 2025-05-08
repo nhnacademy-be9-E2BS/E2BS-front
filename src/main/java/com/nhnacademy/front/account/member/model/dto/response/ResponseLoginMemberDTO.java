@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ResponseLoginMemberDTO {
 
 	private String memberId;
-	private String customerPassword;
+  private String customerPassword;
 	private RankName memberRankName;
 
 }
