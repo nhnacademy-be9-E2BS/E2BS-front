@@ -12,11 +12,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.nhnacademy.front.account.member.adaptor.MemberLoginAdaptor;
-import com.nhnacademy.front.account.member.exception.LoginProcessException;
-import com.nhnacademy.front.account.member.model.domain.RankName;
-import com.nhnacademy.front.account.member.model.dto.request.RequestLoginMemberDTO;
-import com.nhnacademy.front.account.member.model.dto.response.ResponseLoginMemberDTO;
+import com.nhnacademy.front.account.member.login.adaptor.MemberLoginAdaptor;
+import com.nhnacademy.front.account.member.login.exception.LoginProcessException;
+import com.nhnacademy.front.account.member.login.model.domain.RankName;
+import com.nhnacademy.front.account.member.login.model.dto.request.RequestLoginMemberDTO;
+import com.nhnacademy.front.account.member.login.model.dto.response.ResponseLoginMemberDTO;
+import com.nhnacademy.front.account.member.login.service.MemberLoginUserDetailsService;
 
 @ExtendWith(MockitoExtension.class)
 class MemberLoginUserDetailsServiceTest {
