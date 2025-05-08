@@ -1,0 +1,57 @@
+/* 상위 드롭다운 활성화 (hover 시 열리도록) */
+.nav-item.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+
+/* 중첩 드롭다운 (2단계 메뉴) 위치 조정 */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    display: none;
+    position: absolute;
+}
+
+.dropdown-submenu:hover .dropdown-menu {
+    display: block;
+}
+
+/* 기본 Bootstrap 드롭다운의 화살표 없애기 */
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+/* 드롭다운 메뉴 기본 배경/테두리 제거 */
+.dropdown-menu {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin: 0;
+}
+
+/* 모든 드롭다운 항목 (1단계 + 2단계) 스타일 */
+.dropdown-menu .dropdown-item {
+    background-color: white;
+    padding: 10px 30px;
+    border-bottom: 1px solid #ddd;
+    color: black;
+    box-shadow: none !important;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+/* hover + focus 시 파란 배경 + 흰 글씨 */
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+    background-color: #007bff;
+    color: white;
+}
+
+/* 오직 상위 드롭다운의 마지막 항목만 밑줄 제거 */
+.nav-item > .dropdown-menu > .dropdown-item:last-child {
+    border-bottom: none;
+}

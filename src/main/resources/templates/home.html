@@ -1,92 +1,166 @@
-<!--홈페이지-->
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>홈페이지</title>
-    <style>
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .button-container {
-            display: flex;
-        }
-        .book-container {
-            display: flex;
-            justify-content: space-between;
-            width: 800px;
-            margin-top: 20px;
-        }
-        .book {
-            width: 30%;
-            border: 1px solid #d1d1d1;
-            padding: 10px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <!-- layout.html의 상단 레이아웃 임시로 만들긴 했는데 나중에 layout.html과 연결해야됨-->
-    <form action="/product/categorys" method="GET">
-        <label>
-            <select name="categoryId" onchange="this.form.submit()">
-                <option value="">카테고리 선택</option>
-                <option value="1">소설</option>
-                <option value="2">에세이</option>
-                <option value="3">과학</option>
-            </select>
-        </label>
-        <label carregory>
-            <select name="categoryId" onchange="this.form.submit()">
-                <option value="">카테고리 선택2</option>
-                <option value="4">역사</option>
-                <option value="5">철학</option>
-            </select>
-        </label>
-    </form>
-    <div class="button-container">
-        <button type="button" onclick="location.href='/member/login'">로그인</button>
-        <button type="button" onclick="location.href='/member/cart'">장바구니</button>
-        <button type="button" onclick="location.href='/member/my-page'">마이페이지</button>
-        <button type="button" onclick="location.href='/member/logout'">로그아웃</button>
-    </div>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/user-layout}">
 
-    <div style="width: 800px;">
-        <h1>홈페이지</h1>
-        <h2>추천 도서</h2>
-        <div class="book-container">
-            <div class="book">
-                <h3><a href="/book/123">소년이 온다</a></h3>
-                <p>저자: 한강</p>
-                <p>가격: 14,000원</p>
-                <form action="/member/cart" method="post">
-                    <input type="hidden" name="bookId" value="123">
-                    <button type="submit">장바구니 추가</button>
-                </form>
-            </div>
-            <div class="book">
-                <h3><a href="/book/456">82년생 김지영</a></h3>
-                <p>저자: 조남주</p>
-                <p>가격: 13,000원</p>
-                <form action="/member/cart" method="post">
-                    <input type="hidden" name="bookId" value="456">
-                    <button type="submit">장바구니 추가</button>
-                </form>
-            </div>
-            <div class="book">
-                <h3><a href="/book/789">데미안</a></h3>
-                <p>저자: 헤르만 헤세</p>
-                <p>가격: 12,000원</p>
-                <form action="/member/cart" method="post">
-                    <input type="hidden" name="bookId" value="789">
-                    <button type="submit">장바구니 추가</button>
-                </form>
-            </div>
+<body>
+<div layout:fragment="content">
+
+
+
+    <!-- ================ trending product section start ================= -->
+    <section class="section-margin calc-60px">
+      <div class="container">
+        <div class="section-intro pb-60px">
+          <p>Popular Item in the market</p>
+          <h2>책</h2>
         </div>
-    </div>
+        <div class="row">
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product">
+              <div class="card-product__img">
+                <img class="card-img" src="../static/img/product/product1.png" alt="">
+                <ul class="card-product__imgOverlay">
+                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button><i class="ti-shopping-cart"></i></button></li>
+                  <li><button><i class="ti-heart"></i></button></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <p>Accessories</p>
+                <h4 class="card-product__title"><a href="product/product-detail.html">Quartz Belt Watch</a></h4>
+                <p class="card-product__price">$150.00</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product">
+              <div class="card-product__img">
+                <img class="card-img" src="../static/img/product/product2.png" alt="">
+                <ul class="card-product__imgOverlay">
+                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button><i class="ti-shopping-cart"></i></button></li>
+                  <li><button><i class="ti-heart"></i></button></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <p>Beauty</p>
+                <h4 class="card-product__title"><a href="product/product-detail.html">Women Freshwash</a></h4>
+                <p class="card-product__price">$150.00</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product">
+              <div class="card-product__img">
+                <img class="card-img" src="../static/img/product/product3.png" alt="">
+                <ul class="card-product__imgOverlay">
+                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button><i class="ti-shopping-cart"></i></button></li>
+                  <li><button><i class="ti-heart"></i></button></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <p>Decor</p>
+                <h4 class="card-product__title"><a href="product/product-detail.html">Room Flash Light</a></h4>
+                <p class="card-product__price">$150.00</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product">
+              <div class="card-product__img">
+                <img class="card-img" src="../static/img/product/product4.png" alt="">
+                <ul class="card-product__imgOverlay">
+                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button><i class="ti-shopping-cart"></i></button></li>
+                  <li><button><i class="ti-heart"></i></button></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <p>Decor</p>
+                <h4 class="card-product__title"><a href="product/product-detail.html">Room Flash Light</a></h4>
+                <p class="card-product__price">$150.00</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product">
+              <div class="card-product__img">
+                <img class="card-img" src="../static/img/product/product5.png" alt="">
+                <ul class="card-product__imgOverlay">
+                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button><i class="ti-shopping-cart"></i></button></li>
+                  <li><button><i class="ti-heart"></i></button></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <p>Accessories</p>
+                <h4 class="card-product__title"><a href="product/product-detail.html">Man Office Bag</a></h4>
+                <p class="card-product__price">$150.00</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product">
+              <div class="card-product__img">
+                <img class="card-img" src="../static/img/product/product6.png" alt="">
+                <ul class="card-product__imgOverlay">
+                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button><i class="ti-shopping-cart"></i></button></li>
+                  <li><button><i class="ti-heart"></i></button></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <p>Kids Toy</p>
+                <h4 class="card-product__title"><a href="product/product-detail.html">Charging Car</a></h4>
+                <p class="card-product__price">$150.00</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product">
+              <div class="card-product__img">
+                <img class="card-img" src="../static/img/product/product7.png" alt="">
+                <ul class="card-product__imgOverlay">
+                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button><i class="ti-shopping-cart"></i></button></li>
+                  <li><button><i class="ti-heart"></i></button></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <p>Accessories</p>
+                <h4 class="card-product__title"><a href="product/product-detail.html">Blutooth Speaker</a></h4>
+                <p class="card-product__price">$150.00</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product">
+              <div class="card-product__img">
+                <img class="card-img" src="../static/img/product/product8.png" alt="">
+                <ul class="card-product__imgOverlay">
+                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button><i class="ti-shopping-cart"></i></button></li>
+                  <li><button><i class="ti-heart"></i></button></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <p>Kids Toy</p>
+                <h4 class="card-product__title"><a href="#">Charging Car</a></h4>
+                <p class="card-product__price">$150.00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <!--================ Start footer Area  =================-->
+
 </div>
+
 </body>
 </html>
