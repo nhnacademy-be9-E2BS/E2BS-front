@@ -1,4 +1,4 @@
-package com.nhnacademy.front.account.member.login.model.domain;
+package com.nhnacademy.front.account.member.model.domain;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import lombok.Setter;
 public class LoginProcessMember implements UserDetails {
 
 	private String memberId;
-	private String memberPassword;
+	private String customerPassword;
 	private RankName memberRankName;
 
 	@Override
@@ -34,7 +34,7 @@ public class LoginProcessMember implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return memberPassword;
+		return customerPassword;
 	}
 
 	@Override
