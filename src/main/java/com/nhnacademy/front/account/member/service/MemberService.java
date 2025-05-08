@@ -8,7 +8,6 @@ import com.nhnacademy.front.account.member.adaptor.MemberRegisterAdaptor;
 import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordException;
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.account.member.model.dto.request.RequestRegisterMemberDTO;
-import com.nhnacademy.front.account.member.model.dto.response.ResponseRegisterMemberDTO;
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 
 import feign.FeignException;
@@ -35,12 +34,7 @@ public class MemberService {
 		}
 
 		try {
-			ResponseRegisterMemberDTO responseRegisterMemberDTO = memberRegisterAdaptor
-				.postRegisterMember(requestRegisterMemberDTO);
-
-			if (Objects.isNull(responseRegisterMemberDTO) || Objects.isNull(responseRegisterMemberDTO.getMemberId())) {
-				throw new RegisterProcessException("회원가입 실패");
-			}
+			memberRegisterAdaptor.postRegisterMember(requestRegisterMemberDTO);
 
 		} catch (FeignException ex) {
 			throw new RegisterProcessException("회원가입 실패");

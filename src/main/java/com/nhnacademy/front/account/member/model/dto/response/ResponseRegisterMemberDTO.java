@@ -2,6 +2,7 @@ package com.nhnacademy.front.account.member.model.dto.response;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class ResponseRegisterMemberDTO {
 	private String customerName;
 	@NotNull
 	private String customerPassword;
+	@Email
 	@NotNull
 	private String customerEmail;
 	@NotNull

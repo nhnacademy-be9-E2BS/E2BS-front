@@ -1,7 +1,6 @@
 package com.nhnacademy.front.account.member.service;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -53,8 +52,6 @@ class MemberServiceTest {
 		ResponseRegisterMemberDTO responseRegisterMemberDTO = new ResponseRegisterMemberDTO(
 			memberId, customerName, customerPassword, customerEmail, memberBirth, memberPhone
 		);
-
-		when(memberRegisterAdaptor.postRegisterMember(requestRegisterMemberDTO)).thenReturn(responseRegisterMemberDTO);
 
 		// Then
 		assertThatCode(() -> memberService.createMember(requestRegisterMemberDTO))
