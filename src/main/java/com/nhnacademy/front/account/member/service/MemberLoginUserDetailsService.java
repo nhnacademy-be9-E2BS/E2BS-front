@@ -1,4 +1,4 @@
-package com.nhnacademy.front.account.member.login.service;
+package com.nhnacademy.front.account.member.service;
 
 import java.util.Objects;
 
@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.account.member.login.adaptor.MemberLoginAdaptor;
-import com.nhnacademy.front.account.member.login.exception.LoginProcessException;
-import com.nhnacademy.front.account.member.login.model.domain.LoginProcessMember;
-import com.nhnacademy.front.account.member.login.model.dto.request.RequestLoginMemberDTO;
-import com.nhnacademy.front.account.member.login.model.dto.response.ResponseLoginMemberDTO;
+import com.nhnacademy.front.account.member.adaptor.MemberLoginAdaptor;
+import com.nhnacademy.front.account.member.exception.LoginProcessException;
+import com.nhnacademy.front.account.member.model.domain.LoginProcessMember;
+import com.nhnacademy.front.account.member.model.dto.request.RequestLoginMemberDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseLoginMemberDTO;
 
 import feign.FeignException;
 

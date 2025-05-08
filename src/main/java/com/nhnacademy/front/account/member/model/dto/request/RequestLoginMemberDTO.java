@@ -1,4 +1,4 @@
-package com.nhnacademy.front.account.member.login.model.dto.request;
+package com.nhnacademy.front.account.member.model.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

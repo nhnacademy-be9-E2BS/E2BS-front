@@ -1,4 +1,4 @@
-package com.nhnacademy.front.account.member.login.model.domain;
+package com.nhnacademy.front.account.member.model.domain;
 
 import java.util.Arrays;
 import java.util.Collection;

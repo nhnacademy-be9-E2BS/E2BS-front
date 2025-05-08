@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.nhnacademy.front.account.member.login.exception.LoginProcessException;
+import com.nhnacademy.front.account.member.exception.LoginProcessException;
 
 @ControllerAdvice
 public class WebAdviceController {
