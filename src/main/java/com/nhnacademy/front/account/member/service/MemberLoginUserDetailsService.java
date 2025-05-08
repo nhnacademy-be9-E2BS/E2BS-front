@@ -14,30 +14,33 @@ import com.nhnacademy.front.account.member.model.dto.request.RequestLoginMemberD
 import com.nhnacademy.front.account.member.model.dto.response.ResponseLoginMemberDTO;
 
 import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Security 로그인을 위한 UserDetailService 구현
  */
 @Service
+@RequiredArgsConstructor
 public class MemberLoginUserDetailsService implements UserDetailsService {
 
-	MemberLoginAdaptor memberLoginAdaptor;
+	private final MemberLoginAdaptor memberLoginAdaptor;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		try {
-			ResponseLoginMemberDTO loginMemberDTO = memberLoginAdaptor.postLoginMember(
-				new RequestLoginMemberDTO(username));
+			ResponseLoginMemberDTO loginMemberDTO = memberLoginAdaptor
+				.postLoginMember(new RequestLoginMemberDTO(username));
+
 			if (Objects.isNull(loginMemberDTO)
 				|| Objects.isNull(loginMemberDTO.getMemberId())
 				|| !loginMemberDTO.getMemberId().equals(username)
-				|| Objects.isNull(loginMemberDTO.getMemberPassword())) {
+				|| Objects.isNull(loginMemberDTO.getCustomerPassword())) {
 				throw new LoginProcessException("로그인 실패(사용자 정보 불일치)");
 			}
 
 			return new LoginProcessMember(loginMemberDTO.getMemberId(),
-				loginMemberDTO.getMemberPassword(),
+				loginMemberDTO.getCustomerPassword(),
 				loginMemberDTO.getMemberRankName());
 
 		} catch (FeignException e) {

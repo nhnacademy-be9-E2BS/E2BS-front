@@ -1,4 +1,4 @@
-package com.nhnacademy.front.account.member;
+package com.nhnacademy.front.account.member.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -20,8 +20,15 @@ class MemberLoginControllerTest {
 	@Test
 	@DisplayName("로그인 페이지 접근 가능")
 	void loginPageAccessibleTest() throws Exception {
+
+		// Given
+
+		// When
+
+		// Then
 		mockMvc.perform(get("/login"))
 			.andExpect(status().isOk());
+
 	}
 
 }

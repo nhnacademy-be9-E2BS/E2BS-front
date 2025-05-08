@@ -10,34 +10,38 @@
 <div>
     <h1>E2BS 회원가입</h1>
 
-    <form action="/member/register" method="post">
+    <form action="/register" method="post">
         <div>
-            <label for="id">아이디</label>
-            <input type="text" id="id" name="id" required>
+            <label for="memberId">아이디</label>
+            <input type="text" id="memberId" name="memberId" required>
         </div>
         <div>
-            <label for="name">이름</label>
-            <input type="text" id="name" name="name" required>
+            <label for="customerName">이름</label>
+            <input type="text" id="customerName" name="customerName" required>
         </div>
         <div>
-            <label for="password">비밀번호</label>
-            <input type="password" id="password" name="password" required>
+            <label for="customerPassword">비밀번호</label>
+            <input type="password" id="customerPassword" name="customerPassword" required>
         </div>
         <div>
-            <label for="email">이메일</label>
-            <input type="email" id="email" name="email" required>
+            <label for="customerPasswordCheck">비밀번호 확인</label>
+            <input type="password" id="customerPasswordCheck" name="customerPasswordCheck" required>
         </div>
         <div>
-            <label for="birth">생일</label>
-            <input type="date" id="birth" name="birth" required>
+            <label for="customerEmail">이메일</label>
+            <input type="email" id="customerEmail" name="customerEmail" required>
         </div>
         <div>
-            <label for="phone">휴대전화</label>
-            <input type="text" id="phone" name="phone" required>
+            <label for="memberBirth">생일</label>
+            <input type="date" id="memberBirth" name="memberBirth" required>
         </div>
-            <button type="submit">회원 가입하기</button>
+        <div>
+            <label for="memberPhone">휴대전화</label>
+            <input type="text" id="memberPhone" name="memberPhone" required>
+        </div>
+        <button type="submit">회원 가입하기</button>
     </form>
-    <button type="button" onclick="location.href='home'">회원 가입하기</button>
+    <button type="button" onclick="location.href='/login'">로그인으로 돌아가기</button>
 </div>
 </body>
 </html>
