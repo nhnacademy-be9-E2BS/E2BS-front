@@ -3,6 +3,7 @@ package com.nhnacademy.front.product.publisher.adaptor;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +21,8 @@ public interface PublisherAdaptor {
 	PageResponse<ResponsePublisherDTO> getPublishers(@SpringQueryMap Pageable pageable);
 
 	@PostMapping
-	void postCreatePublisher(@RequestBody RequestPublisherDTO request);
+	ResponseEntity<Void> postCreatePublisher(@RequestBody RequestPublisherDTO request);
 
 	@PutMapping("/{publisherId}")
-	void putUpdatePublisher(@PathVariable("publisherId") Long publisherId, @RequestBody RequestPublisherDTO request);
+	ResponseEntity<Void> putUpdatePublisher(@PathVariable("publisherId") Long publisherId, @RequestBody RequestPublisherDTO request);
 }
