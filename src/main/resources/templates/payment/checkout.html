@@ -1,182 +1,518 @@
-<!--결제-->
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/user-layout}">
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/user-layout}">
 <body>
 <div layout:fragment="content">
-	<!-- ================ start banner area ================= -->	
-	<section class="blog-banner-area" id="category">
-		<div class="container h-100">
-			<div class="blog-banner">
-				<div class="text-center">
-					<h1>Product Checkout</h1>
-					<nav aria-label="breadcrumb" class="banner-breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Checkout</li>
-            </ol>
-          </nav>
-				</div>
-			</div>
-    </div>
-	</section>
-	<!-- ================ end banner area ================= -->
-  
-  
-  <!--================Checkout Area =================-->
-  <section class="checkout_area section-margin--small">
-    <div class="container">
-        <div class="returning_customer">
-            <div class="check_title">
-                <h2>Returning Customer? <a href="#">Click here to login</a></h2>
+    <!-- 배너 영역 -->
+    <section class="blog-banner-area" id="category">
+        <div class="container h-100">
+            <div class="blog-banner">
+                <div class="text-center">
+                    <h1>결제 상세 페이지</h1>
+                    <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                        </ol>
+                    </nav>
+                </div>
             </div>
-            <p>If you have shopped with us before, please enter your details in the boxes below. If you are a new
-                customer, please proceed to the Billing & Shipping section.</p>
-            <form class="row contact_form" action="#" method="post" novalidate="novalidate">
-                <div class="col-md-6 form-group p_star">
-                    <input type="text" class="form-control" placeholder="Username or Email*" onfocus="this.placeholder=''" onblur="this.placeholder = 'Username or Email*'" id="name" name="name">
-                    <!-- <span class="placeholder" data-placeholder="Username or Email"></span> -->
-                </div>
-                <div class="col-md-6 form-group p_star">
-                    <input type="password" class="form-control" placeholder="Password*" onfocus="this.placeholder=''" onblur="this.placeholder = 'Password*'" id="password" name="password">
-                    <!-- <span class="placeholder" data-placeholder="Password"></span> -->
-                </div>
-                <div class="col-md-12 form-group">
-                    <button type="submit" value="submit" class="button button-login">login</button>
-                    <div class="creat_account">
-                        <input type="checkbox" id="f-option" name="selector">
-                        <label for="f-option">Remember me</label>
+        </div>
+    </section>
+    <!-- ================ 배너 영역 끝 ================= -->
+
+
+    <!--================ 주문서 영역 =================-->
+    <section class="checkout_area section-margin--small">
+        <div class="container">
+            <!--주문 상품 리스트-->
+            <h3>주문 상세 내역</h3>
+            <div>
+                <!-- 헤더 -->
+                <table cellspacing="1" cellpadding="3" width="100%" border="1px solid black">
+                    <tr>
+                        <th style="width: 10%;">
+                            <span>이미지</span>
+                        </th>
+                        <th style="width: 40%;">
+                            <span>상품 명</span>
+                        </th>
+                        <th style="width: 20%;">
+                            <span>가격</span>
+                        </th>
+                        <th style="width: 10%;">
+                            <span>수량</span>
+                        </th>
+                        <th style="width: 20%;">
+                            <span>포장 여부</span>
+                        </th>
+                    </tr>
+
+                    <!-- 상품 예시 -->
+                    <tr>
+                        <td>
+                            <img src="/img/product/product1.png" alt="" width="100">
+                        </td>
+                        <td>
+                            <span>해리포터</span>
+                        </td>
+                        <td>
+                            <span>12,000</span>
+                        </td>
+                        <td>
+                            <span>2</span>
+                        </td>
+                        <td>
+                            <!-- 포장지 선택 버튼 -->
+                            <button class="btn btn-primary btn-sm" type="button"
+                                    onclick="toggleWrapOptions('wrapOptions1')">
+                                포장지 선택
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!--포장지 선택 창-->
+                    <tr id="wrapOptions1" style="display: none;">
+                        <td colspan="5">
+                            <div class="row" style="display: flex; text-align: center;">
+                                <div class="col-4">
+                                    <label>
+                                        <input type="radio" name="wrap1" value="red"> 빨간 포장지
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <label>
+                                        <input type="radio" name="wrap1" value="red"> 빨간 포장지
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <label>
+                                        <input type="radio" name="wrap1" value="red"> 빨간 포장지
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <span> ● 도서의 종류마다 포장이 가능하며, 한 종류의 도서의 일부만 포장은 불가합니다.</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!--주문 상품 리스트 끝-->
+            <br>
+            <br>
+            <br>
+
+            <!--주문 상세 정보 입력 영역-->
+            <div class="billing_details">
+                <div class="row">
+                    <!--배송지, 수령인, 희망 수령일, 쿠폰, 포인트 적용 구역-->
+                    <div class="col-lg-8">
+                        <h3>배송지 정보 입력</h3>
+                        <table cellspacing="1" cellpadding="3" width="100%" border="1px solid black">
+                            <tr>
+                                <td width="20%">
+                                    <span class="warning">* </span>
+                                    <strong>수령인</strong>
+                                </td>
+                                <td>
+                                    <input type="text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%">
+                                    <span class="warning">* </span>
+                                    <strong>주소</strong>
+                                </td>
+                                <td>
+                                    <input type="text" id="sample6_postcode" placeholder="우편번호">
+                                    <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+                                    <input type="text" id="sample6_address" placeholder="주소"><br>
+                                    <input type="text" id="sample6_detailAddress" placeholder="상세주소">
+                                    <input type="text" id="sample6_extraAddress" placeholder="참고항목">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td width="20%">
+                                    <span class="warning">* </span>
+                                    <strong>휴대전화 번호</strong>
+                                </td>
+                                <td>
+                                    <input type="text">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td width="20%">
+                                    <strong>전화번호</strong>
+                                </td>
+                                <td>
+                                    <input type="text">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <strong>메모</strong>
+                                </td>
+                                <td>
+                                    <textarea></textarea>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <table cellspacing="1" cellpadding="3" width="100%" border="1px solid black">
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>언제 받으시겠어요?</strong>
+                                    </div>
+                                    <input type="radio" id="order_receive_date0" name="order_receive_date"
+                                           checked="checked" value="">
+                                    <label for="order_receive_date0">내일 수령</label>
+
+                                    <br>
+                                    <input type="radio" id="order_receive_date1" name="order_receive_date" value="">
+                                    <label for="order_receive_date1">다른 날에 받을게요</label>
+                                    <div id="date_buttons" style="display: none;">
+                                        <span>주문 시점 7일 이내 선택 가능(주말 제외)</span><br>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
                     </div>
-                    <a class="lost_pass" href="#">Lost your password?</a>
-                </div>
-            </form>
-        </div>
-        <div class="cupon_area">
-            <div class="check_title">
-                <h2>Have a coupon? <a href="#">Click here to enter your code</a></h2>
-            </div>
-            <input type="text" placeholder="Enter coupon code">
-            <a class="button button-coupon" href="#">Apply Coupon</a>
-        </div>
-        <div class="billing_details">
-            <div class="row">
-                <div class="col-lg-8">
-                    <h3>Billing Details</h3>
-                    <form class="row contact_form" action="#" method="post" novalidate="novalidate">
-                        <div class="col-md-6 form-group p_star">
-                            <input type="text" class="form-control" id="first" name="name">
-                            <span class="placeholder" data-placeholder="First name"></span>
-                        </div>
-                        <div class="col-md-6 form-group p_star">
-                            <input type="text" class="form-control" id="last" name="name">
-                            <span class="placeholder" data-placeholder="Last name"></span>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="company" name="company" placeholder="Company name">
-                        </div>
-                        <div class="col-md-6 form-group p_star">
-                            <input type="text" class="form-control" id="number" name="number">
-                            <span class="placeholder" data-placeholder="Phone number"></span>
-                        </div>
-                        <div class="col-md-6 form-group p_star">
-                            <input type="text" class="form-control" id="email" name="compemailany">
-                            <span class="placeholder" data-placeholder="Email Address"></span>
-                        </div>
-                        <div class="col-md-12 form-group p_star">
-                            <select class="country_select">
-                                <option value="1">Country</option>
-                                <option value="2">Country</option>
-                                <option value="4">Country</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12 form-group p_star">
-                            <input type="text" class="form-control" id="add1" name="add1">
-                            <span class="placeholder" data-placeholder="Address line 01"></span>
-                        </div>
-                        <div class="col-md-12 form-group p_star">
-                            <input type="text" class="form-control" id="add2" name="add2">
-                            <span class="placeholder" data-placeholder="Address line 02"></span>
-                        </div>
-                        <div class="col-md-12 form-group p_star">
-                            <input type="text" class="form-control" id="city" name="city">
-                            <span class="placeholder" data-placeholder="Town/City"></span>
-                        </div>
-                        <div class="col-md-12 form-group p_star">
-                            <select class="country_select">
-                                <option value="1">District</option>
-                                <option value="2">District</option>
-                                <option value="4">District</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="zip" name="zip" placeholder="Postcode/ZIP">
-                        </div>
-                        <div class="col-md-12 form-group">
+
+                    <!--결제 정보 선택 영역-->
+                    <div class="col-lg-4">
+                        <div class="order_box">
+                            <h2>주문 내역</h2>
+                            <ul class="list">
+                                <li><a href="#"><h4>상품 명 <span>금액</span></h4></a></li>
+                                <li><a href="#">해리포터 <span class="middle">x 2</span>
+                                    <span class="last">24,000</span></a>
+                                </li>
+                            </ul>
+                            <hr>
+                            <ul class="list list_2">
+                                <li><a href="#">상품 금액 <span>24,000</span></a></li>
+                                <li><a href="#">배송비 <span>5,000</span></a></li>
+                                <li><a href="#">포인트 사용 <span>520</span></a></li>
+                                <li><a href="#">쿠폰 할인 <span>1000</span></a></li>
+                                <li><a href="#">결제금액 <span id="payment_amount">27,480</span></a></li>
+                            </ul>
+
+                            <!--포인트 적용-->
+                            <div>
+                                <h6>포인트 <input type="number" id="pointInput" max="2500"><span>/ 2500</span></h6>
+                            </div>
+
+                            <!--쿠폰 적용-->
+                            <div>
+                                <h6>▽ 쿠폰 사용하기</h6>
+                                <!--사용 가능한 쿠폰 리스트-->
+                                <div>
+                                    <input type="checkbox" id="coupon-box"/>
+                                    <label for="coupon-box"> 5,000원 쿠폰 적용 </label>
+                                </div>
+                            </div>
+
                             <div class="creat_account">
-                                <input type="checkbox" id="f-option2" name="selector">
-                                <label for="f-option2">Create an account?</label>
+                                <input type="checkbox" id="f-option4" name="selector">
+                                <label for="f-option4">다음의 이용약관을 읽었으며 동의합니다.</label>
+                                <a href="#">개인정보 수집 및 이용에 동의*</a>
                             </div>
-                        </div>
-                        <div class="col-md-12 form-group mb-0">
-                            <div class="creat_account">
-                                <h3>Shipping Details</h3>
-                                <input type="checkbox" id="f-option3" name="selector">
-                                <label for="f-option3">Ship to a different address?</label>
+                            <div class="text-center">
+
+                                <span>결제 금액이 0원이 아닐 경우 자동으로 토스 결제가 진행됩니다.</span>
+                                <button class="btn primary w-100" id="payment-button"
+                                        style="margin-top: 30px">결제하기
+                                </button>
+
                             </div>
-                            <textarea class="form-control" name="message" id="message" rows="1" placeholder="Order Notes"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-4">
-                    <div class="order_box">
-                        <h2>Your Order</h2>
-                        <ul class="list">
-                            <li><a href="#"><h4>Product <span>Total</span></h4></a></li>
-                            <li><a href="#">Fresh Blackberry <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                            <li><a href="#">Fresh Tomatoes <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                            <li><a href="#">Fresh Brocoli <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                        </ul>
-                        <ul class="list list_2">
-                            <li><a href="#">Subtotal <span>$2160.00</span></a></li>
-                            <li><a href="#">Shipping <span>Flat rate: $50.00</span></a></li>
-                            <li><a href="#">Total <span>$2210.00</span></a></li>
-                        </ul>
-                        <div class="payment_item">
-                            <div class="radion_btn">
-                                <input type="radio" id="f-option5" name="selector">
-                                <label for="f-option5">Check payments</label>
-                                <div class="check"></div>
-                            </div>
-                            <p>Please send a check to Store Name, Store Street, Store Town, Store State / County,
-                                Store Postcode.</p>
-                        </div>
-                        <div class="payment_item active">
-                            <div class="radion_btn">
-                                <input type="radio" id="f-option6" name="selector">
-                                <label for="f-option6">Paypal </label>
-                                <img src="../../static/img/product/card.jpg" alt="">
-                                <div class="check"></div>
-                            </div>
-                            <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal
-                                account.</p>
-                        </div>
-                        <div class="creat_account">
-                            <input type="checkbox" id="f-option4" name="selector">
-                            <label for="f-option4">I’ve read and accept the </label>
-                            <a href="#">terms & conditions*</a>
-                        </div>
-                        <div class="text-center">
-                          <a class="button button-paypal" href="#">Proceed to Paypal</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-  </section>
-  <!--================End Checkout Area =================-->
+
+        <script src="https://js.tosspayments.com/v1/payment"></script>
+        <script>
+
+            function parseCurrency(value) {
+                return parseInt(value.replace(/[^0-9]/g, "")) || 0;
+            }
+
+            // ------ 클라이언트 키로 객체 초기화 ------
+            var clientKey = "test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO";
+            var tossPayments = TossPayments(clientKey);
+
+            // ------ 결제창 띄우기 ------
+            document.getElementById("payment-button").addEventListener("click", function () {
+                tossPayments
+                    .requestPayment("토스페이", {
+                        amount: parseInt(parseCurrency(document.getElementById("payment_amount").innerText)),
+                        orderId: 'vGKm2kJVZYo5AqHqL3riW',
+                        orderName: "테스트 결제",
+                        customerName: "김토스",
+                        successUrl: "https://docs.tosspayments.com/guides/payment/test-success",
+                        failUrl: "https://docs.tosspayments.com/guides/payment/test-fail",
+                    })
+                    .catch(function (error) {
+                        if (error.code === "USER_CANCEL") {
+                            alert("결제가 취소되었습니다.");
+                        } else if (error.code === "INVALID_CARD_COMPANY") {
+                            alert("유효하지 않은 카드입니다.");
+                        } else {
+                            alert("에러 발생: " + error.message);
+                            console.error(error);
+                        }
+                    });
+            });
+        </script>
+
+
+        <!--희망 수령일 계산 JS-->
+        <script>
+            const today = new Date();
+
+            // 내일 날짜
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+
+            // 주말 체크 → 월요일로 밀기
+            if (tomorrow.getDay() === 0) { // 일요일
+                tomorrow.setDate(tomorrow.getDate() + 1);
+            } else if (tomorrow.getDay() === 6) { // 토요일
+                tomorrow.setDate(tomorrow.getDate() + 2);
+            }
+
+            // 요일 배열
+            const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+
+            const tomorrowStr = `${tomorrow.getMonth() + 1}월 ${tomorrow.getDate()}일(${weekdays[tomorrow.getDay()]})`;
+
+            // 라벨에 적용
+            document.querySelector('label[for="order_receive_date0"]').innerText = `내일 수령 (${tomorrowStr}) - 주말 제외`;
+
+            // radio에 value 적용
+            const year = tomorrow.getFullYear();
+            const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+            const day = String(tomorrow.getDate()).padStart(2, '0');
+
+            document.getElementById('order_receive_date0').value = `${year}-${month}-${day}`;
+
+            // 다른 날에 수령 희망 경우 버튼 생성
+            const buttonContainer = document.getElementById('date_buttons');
+
+            const baseDate = new Date(tomorrow); // 최소 기준일
+            const maxDate = new Date(today);
+            maxDate.setDate(today.getDate() + 7);
+
+            let current = new Date(baseDate);
+            current.setDate(current.getDate() + 1); // 기준일 다음날부터
+
+            while (current <= maxDate) {
+                const day = current.getDay();
+                if (day !== 0 && day !== 6) { // 주말 제외
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.innerText = `${current.getMonth() + 1}월 ${current.getDate()}일(${weekdays[day]})`;
+
+                    const selectedDate = new Date(current);
+
+                    btn.addEventListener('click', function () {
+                        document.querySelector('label[for="order_receive_date1"]').innerText = btn.innerText + ' 수령';
+
+                        // radio에 value 적용
+                        const year2 = selectedDate.getFullYear();
+                        const month2 = String(selectedDate.getMonth() + 1).padStart(2, '0');
+                        const day2 = String(selectedDate.getDate()).padStart(2, '0');
+
+                        document.getElementById('order_receive_date1').value = `${year2}-${month2}-${day2}`;
+                    });
+                    buttonContainer.appendChild(btn);
+                }
+                current.setDate(current.getDate() + 1);
+            }
+
+
+            // 라디오 이벤트
+            const dateButtonsDiv = document.getElementById('date_buttons');
+            const radio0 = document.getElementById('order_receive_date0');
+            const radio1 = document.getElementById('order_receive_date1');
+
+            function updateDateButtonsVisibility() {
+                if (radio1.checked) {
+                    dateButtonsDiv.style.display = 'block';
+
+                } else {
+                    dateButtonsDiv.style.display = 'none';
+                    document.querySelector('label[for="order_receive_date1"]').innerText = '다른 날에 받을게요';
+                }
+            }
+
+            radio0.addEventListener('change', updateDateButtonsVisibility);
+            radio1.addEventListener('change', updateDateButtonsVisibility);
+
+            // 초기 상태 동기화
+            updateDateButtonsVisibility();
+        </script>
+
+        <!--주소 API JS-->
+        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script>
+            function sample6_execDaumPostcode() {
+                new daum.Postcode({
+                    oncomplete: function (data) {
+                        // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                        // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                        // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                        var addr = ''; // 주소 변수
+                        var extraAddr = ''; // 참고항목 변수
+
+                        //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                            addr = data.roadAddress;
+                        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                            // addr = data.jibunAddress;
+                            alert('도로명 주소만 선택할 수 있습니다.');
+                        }
+
+                        // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                        if (data.userSelectedType === 'R') {
+                            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                                extraAddr += data.bname;
+                            }
+                            // 건물명이 있고, 공동주택일 경우 추가한다.
+                            if (data.buildingName !== '' && data.apartment === 'Y') {
+                                extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                            }
+                            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                            if (extraAddr !== '') {
+                                extraAddr = ' (' + extraAddr + ')';
+                            }
+                            // 조합된 참고항목을 해당 필드에 넣는다.
+                            document.getElementById("sample6_extraAddress").value = extraAddr;
+
+                        } else {
+                            // document.getElementById("sample6_extraAddress").value = '';
+                        }
+
+                        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                        if (data.userSelectedType === 'R') {
+                            document.getElementById('sample6_postcode').value = data.zonecode;
+                            document.getElementById("sample6_address").value = addr;
+                        }
+                        // 커서를 상세주소 필드로 이동한다.
+                        document.getElementById("sample6_detailAddress").focus();
+                    }
+                }).open();
+            }
+        </script>
+
+        <!--테이블의 포장지 선택 창 토글 JS-->
+        <script>
+            function toggleWrapOptions(id) {
+                const elem = document.getElementById(id);
+                if (elem.style.display === 'none' || elem.style.display === '') {
+                    elem.style.display = 'table-row';
+                } else {
+                    elem.style.display = 'none';
+                }
+            }
+        </script>
+
+        <!--결제 정보 창 JS-->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // 결제 상품 리스트의 가격 리스트
+                const productList = document.querySelectorAll(".list li:not(:first-child) .last");
+                // 결제 상품 들의 가격 총 합 칸
+                const productAmountSpan = document.querySelector(".list_2 li:nth-child(1) span");
+                // 배송비 칸
+                const shippingFeeSpan = document.querySelector(".list_2 li:nth-child(2) span");
+                // 포인트 입력 창
+                const pointInput = document.getElementById("pointInput");
+                // 포인트 적용 금액 칸
+                const pointSpan = document.querySelector(".list_2 li:nth-child(3) span");
+                // 쿠폰 적용 금액 칸
+                const couponSpan = document.querySelector(".list_2 li:nth-child(4) span");
+                // 결제 총 금액 칸
+                const totalAmountSpan = document.querySelector(".list_2 li:nth-child(5) span");
+
+                const FREE_SHIPPING_THRESHOLD = 30000;
+                const SHIPPING_COST = 5000;
+                const MAX_POINT = 2500;
+
+                // 금액에서 , 제거하기
+                function parseCurrency(value) {
+                    return parseInt(value.replace(/[^0-9]/g, "")) || 0;
+                }
+
+                // 금액에 , 붙이기
+                function formatCurrency(value) {
+                    return value.toLocaleString("ko-KR");
+                }
+
+                function calculateTotal() {
+                    let productTotal = 0;
+
+                    // 각 상품의 금액을 더하기
+                    productList.forEach(el => {
+                        productTotal += parseCurrency(el.textContent);
+                    });
+
+                    // 상품 금액 적용
+                    productAmountSpan.textContent = formatCurrency(productTotal);
+
+                    // 배송비 적용 여부 계산
+                    let shippingCost = productTotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+                    shippingFeeSpan.textContent = formatCurrency(shippingCost);
+
+                    // 포인트 계산
+                    let pointUsed = Math.min(parseCurrency(pointInput.value), MAX_POINT, productTotal + shippingCost);
+                    pointSpan.textContent = "-" + formatCurrency(pointUsed);
+
+                    // 쿠폰 값 적용
+                    let couponDiscount = parseCurrency(couponSpan.textContent); // 기본값 -1000이라 가정
+
+                    couponSpan.textContent = "-" + formatCurrency(couponDiscount);
+
+                    // 결제 금액 상품 금액 + 배송비 - 포인트 - 쿠폰 할인
+                    let finalAmount = productTotal + shippingCost - pointUsed - couponDiscount;
+                    totalAmountSpan.textContent = formatCurrency(finalAmount);
+                }
+
+                // 이벤트 바인딩
+                pointInput.addEventListener("input", calculateTotal);
+
+                pointInput.addEventListener("input", () => {
+                    const max = parseInt(pointInput.max);
+                    const value = pointInput.value;
+
+                    if (value > max) {
+                        pointInput.value = max;
+                    }
+                });
+
+                // 초기 실행
+                calculateTotal();
+            });
+        </script>
+
+        <script>
+
+        </script>
+
+    </section>
+    <!--================End Checkout Area =================-->
 </div>
 
 </body>
