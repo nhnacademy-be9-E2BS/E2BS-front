@@ -18,7 +18,7 @@ import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublish
 public interface PublisherAdaptor {
 
 	@GetMapping
-	PageResponse<ResponsePublisherDTO> getPublishers(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponsePublisherDTO>> getPublishers(@SpringQueryMap Pageable pageable);
 
 	@PostMapping
 	ResponseEntity<Void> postCreatePublisher(@RequestBody RequestPublisherDTO request);

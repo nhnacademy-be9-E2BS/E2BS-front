@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.product.publisher.adaptor.PublisherAdaptor;
 import com.nhnacademy.front.product.publisher.exception.PublisherCreateProcessException;
+import com.nhnacademy.front.product.publisher.exception.PublisherGetProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherUpdateProcessException;
 import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
 import com.nhnacademy.front.product.publisher.model.dto.response.PageResponse;
@@ -22,13 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class PublisherService {
 
 	private final PublisherAdaptor publisherAdaptor;
-
-	/**
-	 * Publisher 리스트를 back에서 조회
-	 */
-	public PageResponse<ResponsePublisherDTO> getPublishers(Pageable pageable) {
-		return publisherAdaptor.getPublishers(pageable);
-	}
 
 	/**
 	 * Publisher를 back - publisher table에 저장
@@ -46,6 +40,23 @@ public class PublisherService {
 			}
 		} catch (FeignException ex) {
 			throw new PublisherCreateProcessException("출판사 등록 실패");
+		}
+	}
+
+	/**
+	 * Publisher 리스트를 back에서 조회
+	 */
+	public PageResponse<ResponsePublisherDTO> getPublishers(Pageable pageable) {
+		try {
+			ResponseEntity<PageResponse<ResponsePublisherDTO>> response = publisherAdaptor.getPublishers(pageable);
+
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new PublisherGetProcessException("출판사 리스트 조회 실패");
+			}
+			return response.getBody();
+
+		} catch (FeignException ex) {
+			throw new PublisherGetProcessException("출판사 리스트 조회 실패");
 		}
 	}
 
