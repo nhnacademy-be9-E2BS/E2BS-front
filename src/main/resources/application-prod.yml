@@ -7,3 +7,10 @@ eureka:
       defaultZone: http://admin:1234@s1.java21.net:10230/eureka # 로컬 Eureka 서버의 주소
   instance:
     prefer-ip-address: true # 서비스 등록 시 도메인 대신 IP 주소로 등록
+
+
+########### url 설정
+
+coupon:
+  policy:
+    url: http://e2bs.shop/api/admin/couponPolicies
