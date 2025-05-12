@@ -2,12 +2,6 @@
 server:
   port: 10238
 
-# front server 자동 DB 비활성화
-spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-
 eureka:
   client:
     fetch-registry: true # Eureka에서 다른 서비스 정보를 받아올지 여부
