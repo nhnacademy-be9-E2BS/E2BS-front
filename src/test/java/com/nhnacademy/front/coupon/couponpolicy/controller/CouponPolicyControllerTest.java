@@ -1,6 +1,7 @@
 package com.nhnacademy.front.coupon.couponpolicy.controller;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.coupon.couponpolicy.adaptor.CouponPolicyAdaptor;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
@@ -8,16 +9,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(CouponPolicyController.class)
+@ActiveProfiles("dev")
 class CouponPolicyControllerTest {
 
 	@Autowired
@@ -48,8 +55,8 @@ class CouponPolicyControllerTest {
 			.andExpect(model().attributeExists("couponPolicies"))
 			.andExpect(model().attribute("currentPage", 5))
 			.andExpect(model().attribute("totalPages", 10))
-			.andExpect(model().attribute("startPage", 3))  // Assuming the pagination logic would give 3 as the start page
-			.andExpect(model().attribute("endPage", 7));  // Assuming the pagination logic would give 7 as the end page
+			.andExpect(model().attribute("startPage", 3))
+			.andExpect(model().attribute("endPage", 7));
 	}
 
 	@Test
@@ -66,7 +73,8 @@ class CouponPolicyControllerTest {
 		// Then
 		mockMvc.perform(post("/admin/mypage/couponPolicies")
 				.param("couponPolicyName", requestDTO.getCouponPolicyName())
-				.param("couponPolicyMinimum", "1000"))
+				.param("couponPolicyMinimum", "1000")
+				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
 			.andExpect(redirectedUrl("/admin/mypage/couponPolicies"));
 
