@@ -14,17 +14,19 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
-import com.nhnacademy.front.product.publisher.controller.PublisherController;
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.publisher.controller.PublisherController;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 import com.nhnacademy.front.product.publisher.service.PublisherService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = PublisherController.class)
+@ActiveProfiles("dev")
 public class PublisherControllerTest {
 	@Autowired
 	private MockMvc mockMvc;

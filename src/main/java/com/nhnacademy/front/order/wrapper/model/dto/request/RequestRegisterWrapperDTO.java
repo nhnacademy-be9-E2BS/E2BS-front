@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class RequestWrapperDTO {
+public class RequestRegisterWrapperDTO {
 	@NotNull
 	private long wrapperPrice;
 	@NotNull
