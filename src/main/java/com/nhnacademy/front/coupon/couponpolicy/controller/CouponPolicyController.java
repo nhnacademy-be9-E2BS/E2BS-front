@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.PageResponse;
+import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;

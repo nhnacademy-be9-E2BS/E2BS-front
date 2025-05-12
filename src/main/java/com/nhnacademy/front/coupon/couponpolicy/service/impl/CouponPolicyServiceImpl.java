@@ -2,12 +2,13 @@ package com.nhnacademy.front.coupon.couponpolicy.service.impl;
 
 import java.util.Objects;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.exception.EmptyRequestException;
+import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.coupon.couponpolicy.adaptor.CouponPolicyAdaptor;
 import com.nhnacademy.front.coupon.couponpolicy.exception.CouponPolicyProcessException;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.PageResponse;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
@@ -28,7 +29,10 @@ public class CouponPolicyServiceImpl implements CouponPolicyService {
 		}
 
 		try {
-			couponPolicyAdaptor.postCouponPolicy(requestCouponPolicyDTO);
+			ResponseEntity<Void> response = couponPolicyAdaptor.postCouponPolicy(requestCouponPolicyDTO);
+			if(!response.getStatusCode().is2xxSuccessful()) {
+				throw new CouponPolicyProcessException("쿠폰 등록 실패: " + response.getStatusCode());
+			}
 		} catch (FeignException ex) {
 			throw new CouponPolicyProcessException("쿠폰 등록 실패: " + ex.getMessage());
 		}
@@ -37,7 +41,12 @@ public class CouponPolicyServiceImpl implements CouponPolicyService {
 	@Override
 	public PageResponse<ResponseCouponPolicyDTO> getCouponPolicies(int page, int size) {
 		try {
-			return couponPolicyAdaptor.getCouponPolicies(page, size);
+			ResponseEntity<PageResponse<ResponseCouponPolicyDTO>> response = couponPolicyAdaptor.getCouponPolicies(page, size);
+
+			if(!response.getStatusCode().is2xxSuccessful()) {
+				throw new CouponPolicyProcessException("쿠폰 정책 조회 실패: " + response.getStatusCode());
+			}
+			return response.getBody();
 		} catch (FeignException ex) {
 			throw new CouponPolicyProcessException("쿠폰 정책 조회 실패: " + ex.getMessage());
 		}
@@ -45,6 +54,15 @@ public class CouponPolicyServiceImpl implements CouponPolicyService {
 
 	@Override
 	public ResponseCouponPolicyDTO getCouponPolicyById(Long couponPolicyId) {
-		return couponPolicyAdaptor.getCouponPolicy(couponPolicyId);
+		try {
+			ResponseEntity<ResponseCouponPolicyDTO> response = couponPolicyAdaptor.getCouponPolicy(couponPolicyId);
+			if(!response.getStatusCode().is2xxSuccessful()) {
+				throw new CouponPolicyProcessException("쿠폰 정책 조회 실패: " + response.getStatusCode());
+			}
+			return response.getBody();
+		} catch (FeignException ex) {
+			throw new CouponPolicyProcessException("쿠폰 정책 조회 실패: " + ex.getMessage());
+		}
 	}
+
 }
