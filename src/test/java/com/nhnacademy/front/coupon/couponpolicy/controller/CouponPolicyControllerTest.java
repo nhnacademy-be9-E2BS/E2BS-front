@@ -4,7 +4,6 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -26,61 +24,75 @@ class CouponPolicyControllerTest {
 	private MockMvc mockMvc;
 
 	@MockitoBean
-	private CouponPolicyService couponPolicyServiceImpl;
+	private CouponPolicyService couponPolicyService;
 
 	@Test
-	@DisplayName("쿠폰 정책 전체 조회 성공")
+	@DisplayName("쿠폰 정책 전체 조회 테스트")
 	void testGetCouponPolicies() throws Exception {
-		ResponseCouponPolicyDTO dto = new ResponseCouponPolicyDTO();
-		dto.setCouponPolicyName("TestPolicy");
+		// Given
+		ResponseCouponPolicyDTO policy = new ResponseCouponPolicyDTO();
+		policy.setCouponPolicyName("Test Policy");
 		PageResponse<ResponseCouponPolicyDTO> pageResponse = new PageResponse<>();
-		pageResponse.setContent(List.of(dto));
-		pageResponse.setTotalPages(1);
+		pageResponse.setContent(List.of(policy));
+		pageResponse.setTotalPages(10);
+		pageResponse.setNumber(5);
 		pageResponse.setSize(5);
 
-		when(couponPolicyServiceImpl.getCouponPolicies(0, 5)).thenReturn(pageResponse);
+		// When
+		when(couponPolicyService.getCouponPolicies(5, 5)).thenReturn(pageResponse);
 
-		mockMvc.perform(get("/admin/couponPolicies?page=0&size=5"))
+		// Then
+		mockMvc.perform(get("/admin/mypage/couponPolicies?page=5&size=5"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("admin/coupon/coupon-policy"))
 			.andExpect(model().attributeExists("couponPolicies"))
-			.andExpect(model().attribute("currentPage", 0))
-			.andExpect(model().attribute("totalPages", 1));
+			.andExpect(model().attribute("currentPage", 5))
+			.andExpect(model().attribute("totalPages", 10))
+			.andExpect(model().attribute("startPage", 3))  // Assuming the pagination logic would give 3 as the start page
+			.andExpect(model().attribute("endPage", 7));  // Assuming the pagination logic would give 7 as the end page
 	}
 
 	@Test
-	@DisplayName("쿠폰 정책 생성 성공")
+	@DisplayName("쿠폰 정책 생성 테스트")
 	void testCreateCouponPolicy() throws Exception {
+		// Given
 		RequestCouponPolicyDTO requestDTO = new RequestCouponPolicyDTO();
-		requestDTO.setCouponPolicyName("NewPolicy");
+		requestDTO.setCouponPolicyName("New Policy");
 		requestDTO.setCouponPolicyMinimum(1000);
-		requestDTO.setCouponPolicyCreatedAt(LocalDateTime.now());
 
-		mockMvc.perform(post("/admin/couponPolicies")
+		// When
+		doNothing().when(couponPolicyService).createCouponPolicy(any(RequestCouponPolicyDTO.class));
+
+		// Then
+		mockMvc.perform(post("/admin/mypage/couponPolicies")
 				.param("couponPolicyName", requestDTO.getCouponPolicyName())
-				.param("couponPolicyMinimum", "1000")
-				.param("couponPolicyCreatedAt", requestDTO.getCouponPolicyCreatedAt().toString())
-			)
+				.param("couponPolicyMinimum", "1000"))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/admin/couponPolicies"));
+			.andExpect(redirectedUrl("/admin/mypage/couponPolicies"));
 
-		verify(couponPolicyServiceImpl).createCouponPolicy(any(RequestCouponPolicyDTO.class));
+		verify(couponPolicyService, times(1)).createCouponPolicy(any(RequestCouponPolicyDTO.class));
 	}
 
 	@Test
-	@DisplayName("쿠폰 정책 단건 조회")
+	@DisplayName("쿠폰 정책 단건 조회 테스트")
 	void testGetCouponPolicyById() throws Exception {
+		// Given
 		Long id = 1L;
-		ResponseCouponPolicyDTO responseDTO = new ResponseCouponPolicyDTO();
-		responseDTO.setCouponPolicyName("SinglePolicy");
+		ResponseCouponPolicyDTO policy = new ResponseCouponPolicyDTO();
+		policy.setCouponPolicyName("Single Policy");
 
-		when(couponPolicyServiceImpl.getCouponPolicyById(id)).thenReturn(responseDTO);
+		// When
+		when(couponPolicyService.getCouponPolicyById(id)).thenReturn(policy);
 
-		mockMvc.perform(get("/admin/couponPolicies/{id}", id))
+		// Then
+		mockMvc.perform(get("/admin/mypage/couponPolicies/{couponPolicyId}", id))
 			.andExpect(status().isOk())
 			.andExpect(view().name("admin/coupon/coupon-policy"))
 			.andExpect(model().attributeExists("couponPolicies"))
-			.andExpect(model().attribute("currentPage", 1))
-			.andExpect(model().attribute("totalPages", 1));
+			.andExpect(model().attribute("couponPolicies", policy))
+			.andExpect(model().attribute("currentPage", 0))
+			.andExpect(model().attribute("totalPages", 0))
+			.andExpect(model().attribute("startPage", 0))
+			.andExpect(model().attribute("endPage", 0));
 	}
 }
