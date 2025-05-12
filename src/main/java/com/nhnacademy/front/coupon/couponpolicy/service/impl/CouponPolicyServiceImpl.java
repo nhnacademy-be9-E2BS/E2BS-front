@@ -2,6 +2,7 @@ package com.nhnacademy.front.coupon.couponpolicy.service.impl;
 
 import java.util.Objects;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +40,9 @@ public class CouponPolicyServiceImpl implements CouponPolicyService {
 	}
 
 	@Override
-	public PageResponse<ResponseCouponPolicyDTO> getCouponPolicies(int page, int size) {
+	public PageResponse<ResponseCouponPolicyDTO> getCouponPolicies(Pageable pageable) {
 		try {
-			ResponseEntity<PageResponse<ResponseCouponPolicyDTO>> response = couponPolicyAdaptor.getCouponPolicies(page, size);
+			ResponseEntity<PageResponse<ResponseCouponPolicyDTO>> response = couponPolicyAdaptor.getCouponPolicies(pageable);
 
 			if(!response.getStatusCode().is2xxSuccessful()) {
 				throw new CouponPolicyProcessException("쿠폰 정책 조회 실패: " + response.getStatusCode());

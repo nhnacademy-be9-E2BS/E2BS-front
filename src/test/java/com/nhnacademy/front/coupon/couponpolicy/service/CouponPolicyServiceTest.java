@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -83,15 +85,16 @@ class CouponPolicyServiceTest {
 		page.setTotalPages(1);
 		page.setNumber(0);
 		page.setSize(10);
+		Pageable pageable = PageRequest.of(0, 10);
 
-		when(couponPolicyAdaptor.getCouponPolicies(0, 10)).thenReturn(ResponseEntity.ok(page));
+		when(couponPolicyAdaptor.getCouponPolicies(pageable)).thenReturn(ResponseEntity.ok(page));
 
 		// when
-		PageResponse<ResponseCouponPolicyDTO> result = couponPolicyServiceImpl.getCouponPolicies(0, 10);
+		PageResponse<ResponseCouponPolicyDTO> result = couponPolicyServiceImpl.getCouponPolicies(pageable);
 
 		// then
 		assertThat(result.getContent()).hasSize(1);
-		verify(couponPolicyAdaptor).getCouponPolicies(0, 10);
+		verify(couponPolicyAdaptor).getCouponPolicies(pageable);
 	}
 
 	@Test

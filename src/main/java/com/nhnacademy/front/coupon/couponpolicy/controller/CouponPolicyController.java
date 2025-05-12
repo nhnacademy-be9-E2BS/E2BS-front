@@ -1,5 +1,6 @@
 package com.nhnacademy.front.coupon.couponpolicy.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.common.page.PaginationUtils;
+import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
@@ -46,20 +47,10 @@ public class CouponPolicyController {
 	 */
 	@GetMapping
 	public String getCouponPolicies(@PageableDefault(size = 5) Pageable pageable, Model model) {
-		PageResponse<ResponseCouponPolicyDTO> pageResponse =
-			couponPolicyServiceImpl.getCouponPolicies(pageable.getPageNumber(), pageable.getPageSize());
+		PageResponse<ResponseCouponPolicyDTO> pageResponse = couponPolicyServiceImpl.getCouponPolicies(pageable);
+		Page<ResponseCouponPolicyDTO> couponPolicies = PageResponseConverter.toPage(pageResponse);
 
-		int currentPage = pageResponse.getNumber();
-		int totalPages = pageResponse.getTotalPages();
-		int windowSize = 5;
-
-		int[] range = PaginationUtils.getPageRange(currentPage, totalPages, windowSize);
-
-		model.addAttribute("startPage", range[0]);
-		model.addAttribute("endPage", range[1]);
-		model.addAttribute("currentPage", currentPage);
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("couponPolicies", pageResponse.getContent());
+		model.addAttribute("couponPolicies", couponPolicies);
 
 		return "admin/coupon/coupon-policy";
 	}
@@ -71,13 +62,9 @@ public class CouponPolicyController {
 	public String getCouponPolicyById(@PathVariable Long couponPolicyId, Model model) {
 		ResponseCouponPolicyDTO responseDTO = couponPolicyServiceImpl.getCouponPolicyById(couponPolicyId);
 
-		model.addAttribute("startPage", 0);
-		model.addAttribute("endPage", 0);
-		model.addAttribute("currentPage", 0);
-		model.addAttribute("totalPages", 0);
-		model.addAttribute("couponPolicies", responseDTO);
+		model.addAttribute("couponPolicy", responseDTO);
 
-		return "admin/coupon/coupon-policy";
+		return "admin/coupon/coupon-policy-detail";
 	}
 
 }
