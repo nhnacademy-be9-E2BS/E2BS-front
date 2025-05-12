@@ -10,3 +10,11 @@ eureka:
       defaultZone: http://admin:1234@localhost:10230/eureka # 로컬 Eureka 서버의 주소
   instance:
     prefer-ip-address: true # 서비스 등록 시 도메인 대신 IP 주소로 등록
+
+product:
+  publisher:
+    url: http://localhost:10236/api/admin/publishers
+
+order:
+  wrapper:
+    url: http://localhost:10236/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mappting 어노테이션에서 나머지 url을 작성해주었음

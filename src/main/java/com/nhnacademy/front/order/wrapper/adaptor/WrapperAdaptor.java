@@ -15,7 +15,7 @@ import com.nhnacademy.front.order.wrapper.model.dto.request.RequestModifyWrapper
 import com.nhnacademy.front.order.wrapper.model.dto.request.RequestRegisterWrapperDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 
-@FeignClient(name = "wrapper-service", url = "http://localhost:10236/api")
+@FeignClient(name = "wrapper-service", url = "${order.wrapper.url}")
 public interface WrapperAdaptor {
 
 	@GetMapping("/wrappers")
