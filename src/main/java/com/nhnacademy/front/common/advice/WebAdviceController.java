@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.nhnacademy.front.account.auth.exception.SaveJwtTokenProcessException;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
 import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordException;
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
@@ -36,6 +37,11 @@ public class WebAdviceController {
 
 	@ExceptionHandler(RegisterNotEqualsPasswordException.class)
 	public ResponseEntity<String> registerNotEqualsPasswordException(Exception ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+
+	@ExceptionHandler(SaveJwtTokenProcessException.class)
+	public ResponseEntity<String> saveJwtTokenProcessException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 
