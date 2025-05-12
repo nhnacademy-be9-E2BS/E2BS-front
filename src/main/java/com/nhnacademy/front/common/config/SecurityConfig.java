@@ -8,11 +8,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.nhnacademy.front.account.auth.service.AuthService;
+import com.nhnacademy.front.common.handler.CustomAuthenticationSuccessHandler;
+
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+	private final AuthService authService;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+		CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
+			authService);
 
 		/**
 		 *  CSRF 보호 기능을 비활성화
@@ -33,7 +44,7 @@ public class SecurityConfig {
 				.loginProcessingUrl("/login")
 				.usernameParameter("memberId")
 				.passwordParameter("customerPassword")
-				.defaultSuccessUrl("/index")
+				.successHandler(customAuthenticationSuccessHandler)
 				.permitAll()
 			);
 
