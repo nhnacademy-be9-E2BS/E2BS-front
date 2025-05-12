@@ -1,9 +1,10 @@
-package com.nhnacademy.front.product.publisher.model.dto.response;
+package com.nhnacademy.front.common.page;
+
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import java.util.List;
 
 public class PageResponseConverter {
 

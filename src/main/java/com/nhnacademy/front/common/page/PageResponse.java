@@ -1,8 +1,9 @@
-package com.nhnacademy.front.product.publisher.model.dto.response;
+package com.nhnacademy.front.common.page;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
