@@ -1,0 +1,44 @@
+<!--관리자 페이지 - 출판사-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <h2>출판사 목록</h2>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="publisher : ${publishers.content}">
+            <td th:text="${publisher.publisherId}"></td>
+            <td th:text="${publisher.publisherName}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <ul>
+            <li th:if="${publishers.hasPrevious()}">
+                <a th:href="@{/admin/mypage/publishers(page=${publishers.number - 1}, size=${publishers.size})}">이전</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, publishers.totalPages - 1)}"
+                th:classappend="${i == publishers.number} ? 'active'">
+                <a th:href="@{/admin/mypage/publishers(page=${i}, size=${publishers.size})}"
+                   th:text="${i + 1}"></a>
+            </li>
+            <li th:if="${publishers.hasNext()}">
+                <a th:href="@{/admin/mypage/publishers(page=${publishers.number + 1}, size=${publishers.size})}">다음</a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+</body>
+</html>
