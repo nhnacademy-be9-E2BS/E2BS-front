@@ -23,11 +23,15 @@ auth:
 # 쿠폰 정책
 coupon:
   policy:
-    url: http://e2bs.shop/api/admin/couponPolicies
+    url: https://e2bs.shop/api/admin/couponPolicies
 
 product:
   publisher:
     url: https://e2bs.shop/api/admin/publishers
+
+  tag:
+    url: https://e2bs.shop/api/admin/tags
+
 
 order:
   wrapper:
