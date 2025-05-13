@@ -1,0 +1,100 @@
+<!--장바구니-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/user-layout}">
+
+<body>
+<div layout:fragment="content">
+  <!--================Cart Area =================-->
+  <section class="cart_area">
+      <div class="container">
+          <div class="cart_inner">
+              <div class="table-responsive">
+                  <table class="table">
+                      <thead>
+                          <tr>
+                              <th scope="col">상품</th>
+                              <th scope="col">판매가</th>
+                              <th scope="col">수량</th>
+                              <th scope="col">결제 금액</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr th:each="cartItem : ${cartItemsByCustomer}">
+                              <!-- 카테고리 이름을 공백으로 구분하여 하나의 문자열로 결합하고, hidden 속성에 넣음 -->
+                              <span th:attr="hidden=${true}"
+                                    th:text="${#strings.arrayJoin(cartItem?.categoryIds, ',')}">Categories</span>
+
+                              <td>
+                                  <div class="media">
+                                      <div class="d-flex">
+                                          <img th:src="@{${cartItem.productImagePath}}" src="/img/cart/cart2.png" alt="">
+                                      </div>
+                                      <div class="media-body" th:text="${cartItem.productTitle}">
+                                          <p>상품명1</p>
+                                      </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <h5 th:text="${cartItem.productSalePrice}">30000</h5>
+                              </td>
+                              <td>
+                                  <div class="product_count">
+                                      <input type="text" name="qty" id="sst" value="0" title="Quantity:"
+                                          class="input-text qty" th:value="${cartItem.cartItemsQuantity}" readonly>
+
+                                      <button onclick="var result = document.getElementById('sst');
+                                                       var sst = result.value;
+                                                       if( !isNaN( sst )) result.value++;
+                                                       return false;"
+                                          class="increase items-count" type="button">+</button>
+
+                                      <button onclick="var result = document.getElementById('sst');
+                                                       var sst = result.value;
+                                                       if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;
+                                                       return false;"
+                                          class="reduced items-count" type="button">-</button>
+                                  </div>
+                              </td>
+                              <td>
+                                  <h5 th:text="${cartItem.productTotalPrice}">30000원</h5>
+                              </td>
+                          </tr>
+
+                          <tr>
+                              <td>
+                              </td>
+                              <td>
+                              </td>
+                              <td>
+                                  <h5>최종 결제 금액</h5>
+                              </td>
+                              <td>
+                                  <h5 id="totalPaymentAmount" th:text="${totalPaymentAmount} + '원'">30000원</h5>
+                              </td>
+                          </tr>
+                          <tr class="out_button_area">
+                              <td class="d-none-l">
+                              </td>
+                              <td class="">
+                              </td>
+                              <td>
+                              </td>
+                              <td>
+                                  <div class="checkout_btn_inner d-flex align-items-center">
+                                      <a class="primary-btn" href="#">주문하기</a>
+                                  </div>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </section>
+  <!--================End Cart Area =================-->
+</div>
+</body>
+</html>
