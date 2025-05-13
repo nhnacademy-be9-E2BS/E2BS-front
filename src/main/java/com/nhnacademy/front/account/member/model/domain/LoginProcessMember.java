@@ -22,19 +22,19 @@ import lombok.Setter;
 public class LoginProcessMember implements UserDetails {
 
 	private String memberId;
-  private String customerPassword;
-	private RankName memberRankName;
+	private String customerPassword;
+	private MemberRoleName memberRoleName;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		String role = "ROLE_" + this.memberRankName;
+		String role = "ROLE_" + this.memberRoleName;
 
 		return Arrays.asList(new SimpleGrantedAuthority(role));
 	}
 
 	@Override
 	public String getPassword() {
-    return customerPassword;
+		return customerPassword;
 	}
 
 	@Override

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <h2>Coupon Policy Management</h2>
+
+            <!-- 등록 폼 -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>Register New Coupon Policy</h4>
+                    <form class="row login_form" action="/admin/mypage/couponPolicies" method="post">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="couponPolicyName" placeholder="쿠폰정책명" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="number" class="form-control" name="couponPolicyMinimum" placeholder="최소주문금액" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="number" class="form-control" name="couponPolicyDiscountRate" placeholder="할인률 (%, 선택)">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="number" class="form-control" name="couponPolicySalePrice" placeholder="할인금액 (선택)">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="number" class="form-control" name="couponPolicyMaximumAmount" placeholder="최대할인금액 (선택)">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="datetime-local" class="form-control" name="couponPolicyCreatedAt" placeholder="정책생성일" required>
+                        </div>
+                        <div class="col-md-12 form-group mt-3">
+                            <button type="submit" class="button button-register w-100">Register Policy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 조회 영역 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>Coupon Policy List</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>쿠폰정책명</th>
+                            <th>최소주문금액</th>
+                            <th>할인률 (%)</th>
+                            <th>최대할인금액</th>
+                            <th>할인금액</th>
+                            <th>정책생성일</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="policy : ${couponPolicies}">
+                            <td><a th:href="@{/admin/mypage/couponPolicies/{id}(id=${policy.getCouponPolicyId()})}"
+                                   th:text="${policy.couponPolicyName}">Policy Name</a></td>
+                            <td th:text="${policy.couponPolicyMinimum}">0</td>
+                            <td th:text="${policy.couponPolicyDiscountRate}">10</td>
+                            <td th:text="${policy.couponPolicyMaximumAmount}">10000</td>
+                            <td th:text="${policy.couponPolicySalePrice}">500</td>
+                            <td th:text="${#temporals.format(policy.couponPolicyCreatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 페이징 영역 -->
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination">
+                                    <!-- 처음 버튼 -->
+                                    <li class="page-item" th:classappend="${!couponPolicies.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link" th:href="@{'/admin/mypage/couponPolicies'(page=0, size=5)}">처음</a>
+                                    </li>
+
+                                    <!-- 전체 페이지 번호 출력 -->
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, couponPolicies.totalPages - 1)}"
+                                        th:classappend="${i == couponPolicies.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/couponPolicies'(page=${i}, size=5)}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <!-- 마지막 버튼 -->
+                                    <li class="page-item" th:classappend="${!couponPolicies.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/couponPolicies'(page=${couponPolicies.totalPages - 1}, size=5)}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+</body>
+</html>

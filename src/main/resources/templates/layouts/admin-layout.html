@@ -21,9 +21,18 @@
 
 <body>
 
-<div th:replace="fragments/header::admin-header"></div>
+<div th:replace="fragments/header::header"></div>
+<section class="section-margin--small mb-5">
+    <div class="container">
+        <div class="row">
+            <div th:replace="fragments/sidebar :: admin-sidebar"></div>
 
-<div layout:fragment="content" class="content"></div>
+            <div class="col-xl-9 col-lg-8 col-md-7">
+                <div layout:fragment="content" class="content"></div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <div th:replace="fragments/footer::footer"></div>
 
