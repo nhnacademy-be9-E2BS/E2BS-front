@@ -31,7 +31,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			.orElse("ROLE_USER");
 
 		RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(memberId, memberRole);
-		authService.postAuthCreateJwtToken(requestJwtTokenDTO);
+		authService.postAuthCreateJwtToken(requestJwtTokenDTO, response);
 
 		response.sendRedirect("/index");
 	}
