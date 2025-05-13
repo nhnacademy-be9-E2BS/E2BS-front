@@ -19,8 +19,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
-import com.nhnacademy.front.product.publisher.controller.PublisherController;
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.publisher.controller.PublisherController;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 import com.nhnacademy.front.product.publisher.service.PublisherService;
 
