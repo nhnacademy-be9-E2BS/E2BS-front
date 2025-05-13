@@ -1,4 +1,4 @@
-<!--관리자 페이지 - 출판사-->
+<!--관리자 페이지 - 포장지-->
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
@@ -6,9 +6,79 @@
       layout:decorate="~{layouts/admin-layout}">
 <body>
 <div layout:fragment="content">
-    <h2>포장지 목록</h2>
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <h2>포장지 목록</h2>
 
+            <!-- 등록 폼 -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>Register New Wrapper</h4>
+                    <form class="row login_form" action="/admin/mypage/wrappers" method="post">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="wrapperName" placeholder="포장지명" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="number" class="form-control" name="wrapperPrice" placeholder="포장지 가격" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="wrapperIamge" placeholder="포장지 이미지" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="wrapperSaleable" placeholder="판매 여부" required>
+                        </div>
+                        <div class="col-md-12 form-group mt-3">
+                            <button type="submit" class="button button-register w-100">Register Wrapper</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
+            <!-- 조회 영역 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>Wrapper List</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>포장지명</th>
+                            <th>포장지 가격</th>
+                            <th>포장지 이미지</th>
+                            <th>판매 여부</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="wrapper : ${wrappers.content}">
+                            <td th:text="${wrapper.wrapperName}"></td>
+                            <td th:text="${wrapper.wrapperPrice}"></td>
+                            <td th:text="${wrapper.wrapperSaleable}"></td>
+                            <td th:text="${wrapper.wrapperImage}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 페이징 영역 -->
+<!--                    <div>-->
+<!--                        <ul>-->
+<!--                            <li th:if="${publishers.hasPrevious()}">-->
+<!--                                <a th:href="@{/admin/mypage/publishers(page=${publishers.number - 1}, size=${publishers.size})}">이전</a>-->
+<!--                            </li>-->
+<!--                            <li th:each="i : ${#numbers.sequence(0, publishers.totalPages - 1)}"-->
+<!--                                th:classappend="${i == publishers.number} ? 'active'">-->
+<!--                                <a th:href="@{/admin/mypage/publishers(page=${i}, size=${publishers.size})}"-->
+<!--                                   th:text="${i + 1}"></a>-->
+<!--                            </li>-->
+<!--                            <li th:if="${publishers.hasNext()}">-->
+<!--                                <a th:href="@{/admin/mypage/publishers(page=${publishers.number + 1}, size=${publishers.size})}">다음</a>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+
+                </div>
+            </div>
+
+        </div>
+    </section>
 </div>
 </body>
 </html>
