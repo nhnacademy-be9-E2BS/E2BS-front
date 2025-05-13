@@ -37,7 +37,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="publisher : ${publishers.content}">
+                        <tr th:each="publisher : ${publishers}">
                             <td th:text="${publisher.publisherId}"></td>
                             <td th:text="${publisher.publisherName}"></td>
                         </tr>
@@ -45,20 +45,32 @@
                     </table>
 
                     <!-- 페이징 영역 -->
-                    <div>
-                        <ul>
-                            <li th:if="${publishers.hasPrevious()}">
-                                <a th:href="@{/admin/mypage/publishers(page=${publishers.number - 1}, size=${publishers.size})}">이전</a>
-                            </li>
-                            <li th:each="i : ${#numbers.sequence(0, publishers.totalPages - 1)}"
-                                th:classappend="${i == publishers.number} ? 'active'">
-                                <a th:href="@{/admin/mypage/publishers(page=${i}, size=${publishers.size})}"
-                                   th:text="${i + 1}"></a>
-                            </li>
-                            <li th:if="${publishers.hasNext()}">
-                                <a th:href="@{/admin/mypage/publishers(page=${publishers.number + 1}, size=${publishers.size})}">다음</a>
-                            </li>
-                        </ul>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination">
+                                    <!-- 처음 버튼 -->
+                                    <li class="page-item" th:classappend="${!publishers.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link" th:href="@{'/admin/mypage/publishers'(page=0, size=10)}">처음</a>
+                                    </li>
+
+                                    <!-- 전체 페이지 번호 출력 -->
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, publishers.totalPages - 1)}"
+                                        th:classappend="${i == publishers.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/publishers'(page=${i}, size=10)}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <!-- 마지막 버튼 -->
+                                    <li class="page-item" th:classappend="${!publishers.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/publishers'(page=${publishers.totalPages - 1}, size=10)}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
 
                 </div>
