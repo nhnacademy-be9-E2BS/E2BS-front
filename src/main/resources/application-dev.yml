@@ -11,6 +11,24 @@ eureka:
   instance:
     prefer-ip-address: true # 서비스 등록 시 도메인 대신 IP 주소로 등록
 
+member:
+  login:
+    url: http://localhost:10236/api/login
+
+  register:
+    url: http://localhost:10236/api/register
+
+auth:
+  jwt:
+    create:
+      url:
+        http://localhost:10234/api/auth
+
+# 쿠폰 정책
+coupon:
+  policy:
+    url: http://localhost:10236/api/admin/couponPolicies
+
 product:
   publisher:
     url: http://localhost:10236/api/admin/publishers

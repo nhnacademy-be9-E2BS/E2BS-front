@@ -8,6 +8,23 @@ eureka:
   instance:
     prefer-ip-address: true # 서비스 등록 시 도메인 대신 IP 주소로 등록
 
+member:
+  login:
+    url: https://e2bs.shop/api/login
+
+  register:
+    url: https://e2bs.shop/api/register
+
+auth:
+  jwt:
+    create:
+      url: https://e2bs.shop/api/auth
+
+# 쿠폰 정책
+coupon:
+  policy:
+    url: http://e2bs.shop/api/admin/couponPolicies
+
 product:
   publisher:
     url: https://e2bs.shop/api/admin/publishers
