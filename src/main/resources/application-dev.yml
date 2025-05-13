@@ -29,10 +29,15 @@ coupon:
   policy:
     url: http://localhost:10232/api/admin/couponPolicies
 
-# 출판사
+# 상품 - 출판사, 기여자 역할
 product:
   publisher:
     url: http://localhost:10232/api/admin/publishers
+
+  contributor:
+    position:
+      url: http://localhost:10232/api/admin/positions
+
 
 order:
   wrapper:
