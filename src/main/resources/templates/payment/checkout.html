@@ -50,7 +50,7 @@
                     </tr>
 
                     <!-- 상품 예시 -->
-                    <tr>
+                    <tr id="wrap1-product-row" data-wrap-available="true" data-product-id="1">
                         <td>
                             <img src="/img/product/product1.png" alt="" width="100">
                         </td>
@@ -58,7 +58,7 @@
                             <span>해리포터</span>
                         </td>
                         <td>
-                            <span>12,000</span>
+                            <span>10,000</span>
                         </td>
                         <td>
                             <span>2</span>
@@ -78,23 +78,49 @@
                             <div class="row" style="display: flex; text-align: center;">
                                 <div class="col-4">
                                     <label>
-                                        <input type="radio" name="wrap1" value="red"> 빨간 포장지
+                                        <input type="radio" name="wrap1" value="1"> 빨간 포장지
+                                        <span>700</span>원
                                     </label>
                                 </div>
                                 <div class="col-4">
                                     <label>
-                                        <input type="radio" name="wrap1" value="red"> 빨간 포장지
+                                        <input type="radio" name="wrap1" value="2"> 파랑 포장지
+                                        <span>1000</span>원
                                     </label>
                                 </div>
                                 <div class="col-4">
                                     <label>
-                                        <input type="radio" name="wrap1" value="red"> 빨간 포장지
+                                        <input type="radio" name="wrap1" value="3"> 초록 포장지
+                                        <span>500</span>원
                                     </label>
                                 </div>
                             </div>
                             <div>
+                                <label>
+                                    <input type="radio" name="wrap1" value="1" checked> 포장하지 않음
+                                </label>
+                                <br>
                                 <span> ● 도서의 종류마다 포장이 가능하며, 한 종류의 도서의 일부만 포장은 불가합니다.</span>
                             </div>
+                        </td>
+                    </tr>
+
+                    <!-- 상품 예시 -->
+                    <tr id="wrap2-product-row" data-wrap-available="false" data-product-id="2">
+                        <td>
+                            <img src="/img/product/product2.png" alt="" width="100">
+                        </td>
+                        <td>
+                            <span>채식주의자</span>
+                        </td>
+                        <td>
+                            <span>8,000</span>
+                        </td>
+                        <td>
+                            <span>1</span>
+                        </td>
+                        <td>
+                            <span>포장 불가 도서</span>
                         </td>
                     </tr>
                 </table>
@@ -117,7 +143,7 @@
                                     <strong>수령인</strong>
                                 </td>
                                 <td>
-                                    <input type="text">
+                                    <input type="text" id="receiverName">
                                 </td>
                             </tr>
                             <tr>
@@ -126,11 +152,11 @@
                                     <strong>주소</strong>
                                 </td>
                                 <td>
-                                    <input type="text" id="sample6_postcode" placeholder="우편번호">
+                                    <input type="text" id="sample6_postcode" placeholder="우편번호" disabled>
                                     <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-                                    <input type="text" id="sample6_address" placeholder="주소"><br>
+                                    <input type="text" id="sample6_address" placeholder="주소" disabled><br>
                                     <input type="text" id="sample6_detailAddress" placeholder="상세주소">
-                                    <input type="text" id="sample6_extraAddress" placeholder="참고항목">
+                                    <input type="text" id="sample6_extraAddress" placeholder="참고항목" disabled>
                                 </td>
                             </tr>
 
@@ -140,7 +166,7 @@
                                     <strong>휴대전화 번호</strong>
                                 </td>
                                 <td>
-                                    <input type="text">
+                                    <input id="receiverPhone" type="tel" placeholder="010-1234-5678" maxlength="13"/>
                                 </td>
                             </tr>
 
@@ -149,7 +175,7 @@
                                     <strong>전화번호</strong>
                                 </td>
                                 <td>
-                                    <input type="text">
+                                    <input id="receiverTel" type="tel" placeholder="010-1234-5678" maxlength="13"/>
                                 </td>
                             </tr>
 
@@ -158,7 +184,7 @@
                                     <strong>메모</strong>
                                 </td>
                                 <td>
-                                    <textarea></textarea>
+                                    <textarea id="receiverMemo"></textarea>
                                 </td>
                             </tr>
 
@@ -190,34 +216,104 @@
                     <div class="col-lg-4">
                         <div class="order_box">
                             <h2>주문 내역</h2>
-                            <ul class="list">
-                                <li><a href="#"><h4>상품 명 <span>금액</span></h4></a></li>
-                                <li><a href="#">해리포터 <span class="middle">x 2</span>
-                                    <span class="last">24,000</span></a>
+                            <ul class="list list-unstyled">
+                                <li class="d-flex justify-content-between align-items-center py-2">
+                                    <h4 class="mb-0 text-start">상품 명</h4>
+                                    <h4 class="mb-0 text-end">금액</h4>
+                                </li>
+                                <li id="wrap1-item" class="d-flex justify-content-between align-items-center py-2"
+                                    data-product-id="1">
+                                    <span class="text-start">해리포터</span>
+                                    <span class="text-center">x 2</span>
+                                    <span class="text-end last">20,000</span>
+                                </li>
+                                <li id="wrap2-item" class="d-flex justify-content-between align-items-center py-2"
+                                    data-product-id="2">
+                                    <span class="text-start">채식주의자</span>
+                                    <span class="text-center">x 1</span>
+                                    <span class="text-end last">8,000</span>
                                 </li>
                             </ul>
                             <hr>
                             <ul class="list list_2">
-                                <li><a href="#">상품 금액 <span>24,000</span></a></li>
-                                <li><a href="#">배송비 <span>5,000</span></a></li>
-                                <li><a href="#">포인트 사용 <span>520</span></a></li>
-                                <li><a href="#">쿠폰 할인 <span>1000</span></a></li>
-                                <li><a href="#">결제금액 <span id="payment_amount">27,480</span></a></li>
+                                <li class="d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-start">상품 금액</span>
+                                    <span class="text-end">24,000</span>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-start">배송비</span>
+                                    <span class="text-end">5,000</span>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-start">포인트 사용</span>
+                                    <span class="text-end">500</span>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-start">쿠폰 할인</span>
+                                    <span class="text-end">0</span>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-start">결제금액</span>
+                                    <span class="text-end" id="payment_amount">27,480</span>
+                                </li>
                             </ul>
 
                             <!--포인트 적용-->
-                            <div>
-                                <h6>포인트 <input type="number" id="pointInput" max="2500"><span>/ 2500</span></h6>
+                            <div class="d-flex justify-content-between align-items-center py-2">
+                                <h6 class="text-start">포인트 사용</h6>
+                                <div class="text-end">
+                                    <input type="number" id="pointInput" max="2500">
+                                    <span>/ 2500</span>
+                                </div>
                             </div>
 
                             <!--쿠폰 적용-->
                             <div>
-                                <h6>▽ 쿠폰 사용하기</h6>
+                                <h6 onclick="toggleCouponList()">▽ 쿠폰 사용하기</h6>
                                 <!--사용 가능한 쿠폰 리스트-->
-                                <div>
-                                    <input type="checkbox" id="coupon-box"/>
-                                    <label for="coupon-box"> 5,000원 쿠폰 적용 </label>
+                                <div id="couponList" style="display: none;">
+                                    <div>
+                                        <input type="radio" name="coupon" id="couponId0" checked>
+                                        <label for="couponId0">쿠폰 사용 안 함</label>
+                                        <span hidden="hidden">0</span>
+                                        <span hidden="hidden">0</span>
+                                    </div>
+
+                                    <div>
+                                        <input type="radio" name="coupon" id="couponId">
+                                        <label for="couponId">쿠폰 이름(10,000원 이상 구매 시 1000원 할인)</label>
+                                        <!-- 추후 타임 리프로 할인 금액이 if로 확인해 NULL이면 할인률 표시-->
+
+                                        <span hidden="hidden">10000</span>
+                                        <span hidden="hidden">1000</span>
+                                    </div>
+
+                                    <div>
+                                        <input type="radio" name="coupon" id="couponId2">
+                                        <label for="couponId2">쿠폰 이름(10,000원 이상 구매 시 10% 할인, 최대 3,000원)</label>
+
+                                        <span hidden="hidden">10000</span>
+                                        <span hidden="hidden">10</span>
+                                        <span hidden="hidden">3000</span>
+                                    </div>
+
+                                    <div>
+                                        <input type="radio" name="coupon" id="couponId3">
+                                        <label for="couponId3">쿠폰 이름(30,000원 이상 구매 시 3000원 할인)</label>
+
+                                        <span hidden="hidden">30000</span>
+                                        <span hidden="hidden">3000</span>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <!--결제 방식 선택-->
+                            <div>
+                                <h6>결제 수단 선택</h6>
+                                <input type="radio" id="point_payment_method" name="payment_method" value="point">
+                                <label for="point_payment_method">포인트 결제</label>
+                                <input type="radio" id="tossPay_payment_method" name="payment_method" value="tossPay">
+                                <label for="tossPay_payment_method">토스 결제</label>
                             </div>
 
                             <div class="creat_account">
@@ -225,9 +321,8 @@
                                 <label for="f-option4">다음의 이용약관을 읽었으며 동의합니다.</label>
                                 <a href="#">개인정보 수집 및 이용에 동의*</a>
                             </div>
-                            <div class="text-center">
 
-                                <span>결제 금액이 0원이 아닐 경우 자동으로 토스 결제가 진행됩니다.</span>
+                            <div class="text-center">
                                 <button class="btn primary w-100" id="payment-button"
                                         style="margin-top: 30px">결제하기
                                 </button>
@@ -239,10 +334,11 @@
             </div>
         </div>
 
+
         <script src="https://js.tosspayments.com/v1/payment"></script>
         <script>
 
-            function parseCurrency(value) {
+            async function parseCurrency(value) {
                 return parseInt(value.replace(/[^0-9]/g, "")) || 0;
             }
 
@@ -252,6 +348,158 @@
 
             // ------ 결제창 띄우기 ------
             document.getElementById("payment-button").addEventListener("click", function () {
+                const selected = document.querySelector('input[name="payment_method"]:checked');
+                const checkbox = document.getElementById('f-option4'); // 이용약관 체크 확인
+                if (!selected) {
+                    alert("결제 수단을 선택해주세요.");
+                    return;
+                }
+                if (!checkbox.checked) {
+                    alert("이용 약관에 동의해야 합니다.")
+                    return;
+                }
+
+                // 필수 입력 필드 중 문제가 있을 경우 결제 종료
+                if (!validateField()) {
+                    return;
+                }
+
+                console.log(createOrderData());
+                const method = selected.value;
+
+                if (method === "tossPay") {
+                    tossPayWidget();
+                } else if (method === "point") {
+
+                    // 포인트 결제 로직
+                    const payAmount = parseInt(parseCurrency(document.getElementById("payment_amount").innerText));
+                    if (payAmount !== 0) {
+                        alert("사용 포인트가 부족합니다.");
+                        return;
+                    } else {
+                        // 결제 진행
+                    }
+
+                } else {
+                    alert("지원하지 않는 결제 수단입니다.")
+                }
+            });
+
+            // 주문서의 필수 필드 확인
+            function validateField() {
+                if (document.getElementById("receiverName").value === "") {
+                    alert("수령인 이름을 작성해주세요.");
+                    return false;
+                }
+                if (document.getElementById("sample6_postcode").value === "") {
+                    alert("배송지를 입력해주세요.");
+                    return false;
+                }
+                if (document.getElementById("receiverPhone").value === "") {
+                    alert("전화번호를 입력해주세요.");
+                    return false;
+                }
+                if (!isValidPhone(document.getElementById("receiverPhone").value)) {
+                    alert("전화번호 형식이 올바르지 않습니다.");
+                    return false;
+                }
+                if (document.getElementById('receiverTel').value !== "") {
+                    if (!isValidPhone(document.getElementById('receiverTel').value)) {
+                        alert("전화번호 형식이 올바르지 않습니다.");
+                        return false;
+                    }
+                }
+
+                return true;
+
+            }
+
+            // 전화번호 검증
+            function isValidPhone(phone) {
+                const regex = /^01[0|1|6-9]-\d{3,4}-\d{4}$/;
+                return regex.test(phone);
+            }
+
+            // 백에 주문서를 저장하고 주문 코드, 결제 금액, 결제 이름을 반환하는 메서드
+            async function saveOrder() {
+                const response = await fetch("/order", {
+                        method: "POST",
+                        header: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(createOrderData())
+                    }
+                )
+            }
+
+            function createOrderData() {
+                // 선택한 쿠폰 id 가져오기
+                const couponRadio = document.querySelector('input[name="coupon"]:checked');
+                let selectedCouponId = null;
+                if (couponRadio.id !== "couponId0") {
+                    // 쿠폰 선택 안 함의 경우 null로 두기
+                    selectedCouponId = couponRadio.id;
+                }
+                let pointAmountData = document.getElementById("pointInput").textContent;
+                if (pointAmountData === "") {
+                    pointAmountData = "0";
+                }
+
+                // 지금은 외래키(배달비, 회원id)는 임의로 넣어둠
+                const order = {
+                    memberCouponId: selectedCouponId,
+                    deliveryFeeId: 0,
+                    customerId: 0,
+                    orderReceiverName: document.getElementById("receiverName").value,
+                    orderReceiverPhone: document.getElementById("receiverPhone").value,
+                    orderReceiverTel: document.getElementById("receiverTel").value,
+                    orderAddressCode: document.getElementById("sample6_postcode").value,
+                    orderAddressInfo: document.getElementById("sample6_address").value,
+                    orderAddressDetail: document.getElementById("sample6_detailAddress").value,
+                    orderAddressExtra: document.getElementById("sample6_extraAddress").value,
+                    orderPointAmount: parseInt(pointAmountData),
+                    orderMemo: document.getElementById("receiverMemo").value,
+                    orderPaymentStatus: false,
+                    orderReceivedDate: document.querySelector('input[name="order_receive_date"]:checked').value,
+                    orderShipmentDate: null,
+                    orderCreatedAt: null,
+                    orderPaymentAmount: parseCurrency(document.getElementById("payment_amount").textContent)
+                };
+
+                const productList = document.querySelectorAll(".list li:not(:first-child)");
+                const orderDetails = [];
+
+                productList.forEach(row => {
+                    // 상품 id 속성이 없으면 포장지 정보이므로 스킵
+                    if (!row.hasAttribute("data-product-id")) {
+                        return;
+                    }
+                    const quantity = parseCurrency(row.querySelector('.text-center').textContent.trim());
+                    let wrapperIdData = row.getAttribute("data-wrapper-id");
+                    if (wrapperIdData === null) {
+                        wrapperIdData = "0";
+                    }
+                    const detail = {
+                        productId: parseInt(row.getAttribute("data-product-id")),
+                        orderStateId: 0,
+                        orderCode: "temp-order-code",
+                        wrapperId: parseInt(wrapperIdData),
+                        orderQuantity: quantity,
+                        orderDetailPerPrice: parseCurrency(row.querySelector('.last').textContent.trim()) / quantity
+                    };
+                    orderDetails.push(detail);
+                });
+
+
+                const requestOrderWrapperDTO = {
+                    order: order,
+                    orderDetails: orderDetails
+                };
+
+                return requestOrderWrapperDTO;
+            }
+
+            function tossPayWidget() {
                 tossPayments
                     .requestPayment("토스페이", {
                         amount: parseInt(parseCurrency(document.getElementById("payment_amount").innerText)),
@@ -271,7 +519,7 @@
                             console.error(error);
                         }
                     });
-            });
+            }
         </script>
 
 
@@ -417,7 +665,7 @@
             }
         </script>
 
-        <!--테이블의 포장지 선택 창 토글 JS-->
+        <!--테이블의 포장지 선택 창, 쿠폰 리스트 토글 JS-->
         <script>
             function toggleWrapOptions(id) {
                 const elem = document.getElementById(id);
@@ -427,90 +675,249 @@
                     elem.style.display = 'none';
                 }
             }
+
+            function toggleCouponList() {
+                const elem = document.getElementById("couponList");
+                if (elem.style.display === 'none' || elem.style.display === '') {
+                    elem.style.display = 'block';
+                } else {
+                    elem.style.display = 'none';
+                }
+            }
         </script>
 
-        <!--결제 정보 창 JS-->
+        <!--결제 정보 창 관련 JS-->
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                // 결제 상품 리스트의 가격 리스트
-                const productList = document.querySelectorAll(".list li:not(:first-child) .last");
-                // 결제 상품 들의 가격 총 합 칸
-                const productAmountSpan = document.querySelector(".list_2 li:nth-child(1) span");
-                // 배송비 칸
-                const shippingFeeSpan = document.querySelector(".list_2 li:nth-child(2) span");
-                // 포인트 입력 창
-                const pointInput = document.getElementById("pointInput");
-                // 포인트 적용 금액 칸
-                const pointSpan = document.querySelector(".list_2 li:nth-child(3) span");
-                // 쿠폰 적용 금액 칸
-                const couponSpan = document.querySelector(".list_2 li:nth-child(4) span");
-                // 결제 총 금액 칸
-                const totalAmountSpan = document.querySelector(".list_2 li:nth-child(5) span");
+            // 포장지 관련 JS
+            const wrapPrices = {};
 
-                const FREE_SHIPPING_THRESHOLD = 30000;
-                const SHIPPING_COST = 5000;
-                const MAX_POINT = 2500;
+            function updateWrapDisplay(productId, wrapLabel, wrapUnitPrice, count, radio) {
+                // 결제 정보 창에서의 해당하는 상품의 li
+                const listItem = document.querySelector(`#${productId}-item`);
+                // 포장지 정보 li
+                let wrapDetail = document.querySelector(`#${productId}-wrap`);
 
-                // 금액에서 , 제거하기
-                function parseCurrency(value) {
-                    return parseInt(value.replace(/[^0-9]/g, "")) || 0;
-                }
+                // 포장지 가격 = 포장지 단일 가격 * 상품 수량
+                const totalWrapPrice = wrapUnitPrice * count;
 
-                // 금액에 , 붙이기
-                function formatCurrency(value) {
-                    return value.toLocaleString("ko-KR");
-                }
-
-                function calculateTotal() {
-                    let productTotal = 0;
-
-                    // 각 상품의 금액을 더하기
-                    productList.forEach(el => {
-                        productTotal += parseCurrency(el.textContent);
-                    });
-
-                    // 상품 금액 적용
-                    productAmountSpan.textContent = formatCurrency(productTotal);
-
-                    // 배송비 적용 여부 계산
-                    let shippingCost = productTotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-                    shippingFeeSpan.textContent = formatCurrency(shippingCost);
-
-                    // 포인트 계산
-                    let pointUsed = Math.min(parseCurrency(pointInput.value), MAX_POINT, productTotal + shippingCost);
-                    pointSpan.textContent = "-" + formatCurrency(pointUsed);
-
-                    // 쿠폰 값 적용
-                    let couponDiscount = parseCurrency(couponSpan.textContent); // 기본값 -1000이라 가정
-
-                    couponSpan.textContent = "-" + formatCurrency(couponDiscount);
-
-                    // 결제 금액 상품 금액 + 배송비 - 포인트 - 쿠폰 할인
-                    let finalAmount = productTotal + shippingCost - pointUsed - couponDiscount;
-                    totalAmountSpan.textContent = formatCurrency(finalAmount);
-                }
-
-                // 이벤트 바인딩
-                pointInput.addEventListener("input", calculateTotal);
-
-                pointInput.addEventListener("input", () => {
-                    const max = parseInt(pointInput.max);
-                    const value = pointInput.value;
-
-                    if (value > max) {
-                        pointInput.value = max;
+                // 포장하지 않는 경우 or 가격이 0원인 경우
+                if (wrapLabel.includes("포장하지 않음") || wrapUnitPrice === 0) {
+                    // 포장지 정보 li를 제거, 결제 정보 창의 상품 li에 속성으로 저장된 포장지 정보도 제거
+                    if (wrapDetail) wrapDetail.remove();
+                    listItem.removeAttribute("data-wrapper-id");
+                    delete wrapPrices[productId];
+                } else {
+                    // 포장지 li가 존재하지 않는다면 새로 li 엘레멘트를 생성한다.
+                    if (!wrapDetail) {
+                        wrapDetail = document.createElement("li");
+                        wrapDetail.id = `${productId}-wrap`;
+                        wrapDetail.classList.add(
+                            "wrap-detail",
+                            "d-flex",
+                            "justify-content-between",
+                            "align-items-center",
+                            "py-2"
+                        );
+                        // li에 속성을 부여하고 상품 li에도 포장지 정보를 부여, 상품 li 뒤에 포장지 li를 추가
+                        wrapDetail.setAttribute("data-wrapper-id", radio.value);
+                        listItem.insertAdjacentElement("afterend", wrapDetail);
+                        listItem.setAttribute("data-wrapper-id", radio.value);
                     }
-                });
 
-                // 초기 실행
+                    // 해당 포장지 정보 li의 내부 html
+                    wrapDetail.innerHTML = `<span class="text-start">└${wrapLabel}</span><span class="text-center">x ${count}</span><span class="text-end last">${formatCurrency(totalWrapPrice)}</span>`;
+                    wrapPrices[productId] = {price: totalWrapPrice};
+                }
+
+                calculateTotal();
+                // 포장지 가격은 상품 가격에 포함되므로 라디오 버튼 활성화를 다시 검사한다.
+                setupCoupons();
+            }
+
+            // 포장지 선택을 위한 라디오 입력에 이벤트 등록
+            document.querySelectorAll("[name^='wrap']").forEach(radio => {
+                radio.addEventListener("change", () => {
+                    const name = radio.name; // wrap1
+                    const productId = name;
+                    // 각 상품의 주문 수량 확인
+                    const wrapRow = document.querySelector(`#${productId}-product-row`);
+                    const count = parseInt(wrapRow.querySelectorAll("td")[3].textContent.trim());
+
+                    // 각 포장지의 가격 확인, 가격이 적힌 span이 없다면 포장 안함으로 0원
+                    const label = radio.closest("label");
+                    const wrapLabel = label.textContent.trim().split("\n")[0].trim();
+                    const wrapUnitPrice = parseCurrency(label.querySelector("span")?.textContent || "0");
+
+                    // 결제 정보 창에 포장지 정보 업데이트
+                    updateWrapDisplay(productId, wrapLabel, wrapUnitPrice, count, radio);
+                });
+            });
+
+            // 결제 가격 최신화를 위한 JS
+            // 결제 상품 리스트의 가격 리스트
+            const productList = document.querySelectorAll(".list li:not(:first-child) .last");
+            // 결제 상품 들의 가격 총 합 칸
+            const productAmountSpan = document.querySelector(".list_2 li:nth-child(1) span:nth-child(2)");
+            // 배송비 칸
+            const shippingFeeSpan = document.querySelector(".list_2 li:nth-child(2) span:nth-child(2)");
+            // 포인트 입력 창
+            const pointInput = document.getElementById("pointInput");
+            // 포인트 적용 금액 칸
+            const pointSpan = document.querySelector(".list_2 li:nth-child(3) span:nth-child(2)");
+            // 쿠폰 적용 금액 칸
+            const couponSpan = document.querySelector(".list_2 li:nth-child(4) span:nth-child(2)");
+            // 결제 총 금액 칸
+            const totalAmountSpan = document.querySelector(".list_2 li:nth-child(5) span:nth-child(2)");
+            // 쿠폰 리스트 div
+            const couponDivs = document.querySelectorAll("#couponList > div");
+
+            const FREE_SHIPPING_THRESHOLD = 30000;
+            const SHIPPING_COST = 5000;
+            const MAX_POINT = 2500;
+
+            // 금액에서 , 제거하기
+            function parseCurrency(value) {
+                return parseInt(value.replace(/[^0-9]/g, "")) || 0;
+            }
+
+            // 금액에 , 붙이기
+            function formatCurrency(value) {
+                return value.toLocaleString("ko-KR");
+            }
+
+            // 상품 합계 금액 계산
+            function getProductTotal(wrapList) {
+                let total = 0;
+                productList.forEach(el => {
+                    total += parseCurrency(el.textContent);
+                });
+                wrapList.forEach(el => {
+                    total += parseCurrency(el.textContent);
+                });
+                return total;
+            }
+
+            function calculateTotal() {
+
+                // 주문 선택된 포장지 리스트
+                const wrapList = document.querySelectorAll('.list li[id*="-wrap"] .last');
+                const productTotal = getProductTotal(wrapList);
+
+                // 상품 금액 적용
+                productAmountSpan.textContent = formatCurrency(productTotal);
+
+                // 배송비 적용 여부 계산
+                let shippingCost = productTotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+                shippingFeeSpan.textContent = formatCurrency(shippingCost);
+
+                // 포인트 계산
+                let pointUsed = Math.min(parseCurrency(pointInput.value), MAX_POINT, productTotal + shippingCost);
+                pointSpan.textContent = "-" + formatCurrency(pointUsed);
+
+                // 쿠폰 값 적용
+                let couponDiscount = parseCurrency(couponSpan.textContent);
+
+                couponSpan.textContent = "-" + formatCurrency(couponDiscount);
+
+                // 결제 금액 상품 금액 + 배송비 - 포인트 - 쿠폰 할인
+                let finalAmount = productTotal + shippingCost - pointUsed - couponDiscount;
+                if (finalAmount < 0) {
+                    finalAmount = 0;
+                }
+                totalAmountSpan.textContent = formatCurrency(finalAmount);
+            }
+
+            // 쿠폰에 대한 설정(최소 주문 금액 못 넘을 시 비활성화)
+            function setupCoupons() {
+                // 상품 가격 계산
+                const wrapList = document.querySelectorAll('.list li[id*="-wrap"] .last');
+                const productTotal = getProductTotal(wrapList);
+
+                couponDivs.forEach(div => {
+                    const radio = div.querySelector('input[type="radio"]');
+                    const spans = div.querySelectorAll("span");
+
+                    const minAmount = parseCurrency(spans[0].textContent);
+                    radio.disabled = productTotal < minAmount
+                    // 해당 라디오가 비활성화 처리되었는데 이전에 체크된 경우
+                    // 체크를 해제하고 쿠폰 사용안함으로 체크 변경 후 가격 최신화
+                    if (radio.disabled && radio.checked) {
+                        radio.checked = false;
+                        document.getElementById("couponId0").checked = true;
+                        couponSpan.textContent = 0;
+                        calculateTotal();
+                    }
+
+                    radio.addEventListener("change", () => {
+
+                        // 이벤트 최초 등록 시 상품 가격이 유지되고, 포장지 가격이 최신화되지 않아 상품 가격 재계산
+                        const wrapList = document.querySelectorAll('.list li[id*="-wrap"] .last');
+                        const productTotal = getProductTotal(wrapList);
+                        let discount = 0;
+
+                        if (spans.length === 2) {
+                            // 정액 할인
+                            discount = parseCurrency(spans[1].textContent);
+                        } else if (spans.length === 3) {
+                            // 퍼센트 할인
+                            const percent = parseCurrency(spans[1].textContent);
+                            const maxDiscount = parseCurrency(spans[2].textContent);
+
+                            const calc = Math.floor(productTotal * percent / 100);
+                            console.log(calc, maxDiscount);
+                            discount = Math.min(calc, maxDiscount);
+                        }
+
+                        couponSpan.textContent = discount; // calculateTotal에서 - 처리함
+                        calculateTotal();
+                    });
+                });
+            }
+
+            const phoneInput = document.getElementById('receiverPhone');
+            const telInput = document.getElementById('receiverTel');
+            // 전화번호에 대한 입력 제한 이벤트 등록
+            phoneInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/[^0-9]/g, '');
+                if (value.length <= 3) {
+                    e.target.value = value;
+                } else if (value.length <= 7) {
+                    e.target.value = value.slice(0, 3) + '-' + value.slice(3);
+                } else {
+                    e.target.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+                }
+            });
+
+            telInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/[^0-9]/g, '');
+                if (value.length <= 3) {
+                    e.target.value = value;
+                } else if (value.length <= 7) {
+                    e.target.value = value.slice(0, 3) + '-' + value.slice(3);
+                } else {
+                    e.target.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+                }
+            });
+
+            // 포인트 입력 창에 대한 제한 이벤트 등록
+            pointInput.addEventListener("input", () => {
+                const max = parseInt(pointInput.max);
+                const value = pointInput.value;
+
+                if (value > max) {
+                    pointInput.value = max;
+                }
+                if (value < 0) {
+                    pointInput.value = 0;
+                }
+                // 포인트를 입력한 후에는 가격 계산 재 실행
                 calculateTotal();
             });
+
+            // 초기 실행
+            calculateTotal();
+            setupCoupons();
         </script>
-
-        <script>
-
-        </script>
-
     </section>
     <!--================End Checkout Area =================-->
 </div>
