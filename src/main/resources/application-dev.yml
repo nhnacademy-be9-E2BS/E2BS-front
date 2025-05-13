@@ -13,26 +13,27 @@ eureka:
 
 member:
   login:
-    url: http://localhost:10236/api/login
+    url: http://localhost:10232/api/login
 
   register:
-    url: http://localhost:10236/api/register
+    url: http://localhost:10232/api/register
 
 auth:
   jwt:
     create:
       url:
-        http://localhost:10234/api/auth
+        http://localhost:10232/api/auth
 
 # 쿠폰 정책
 coupon:
   policy:
-    url: http://localhost:10236/api/admin/couponPolicies
+    url: http://localhost:10232/api/admin/couponPolicies
 
+# 출판사
 product:
   publisher:
-    url: http://localhost:10236/api/admin/publishers
+    url: http://localhost:10232/api/admin/publishers
 
 order:
   wrapper:
-    url: http://localhost:10236/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
+    url: http://localhost:10232/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
