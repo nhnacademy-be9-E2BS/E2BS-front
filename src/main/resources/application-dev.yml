@@ -33,4 +33,4 @@ coupon:
 product:
   contributor:
     position:
-      url: http://localhost:10236/api/admin/positions
+      url: http://localhost:10232/api/admin/positions
