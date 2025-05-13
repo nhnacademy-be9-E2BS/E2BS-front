@@ -1,0 +1,95 @@
+<!--관리자 페이지 - 포장지-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <h2>Wrapper Management</h2>
+
+            <!-- 등록 폼 -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>Register New Wrapper</h4>
+                    <form class="row login_form" action="/admin/mypage/wrappers" method="post">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="wrapperName" placeholder="포장지명" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="number" class="form-control" name="wrapperPrice" placeholder="포장지 가격" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="wrapperIamge" placeholder="포장지 이미지" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="wrapperSaleable" placeholder="판매 여부" required>
+                        </div>
+                        <div class="col-md-12 form-group mt-3">
+                            <button type="submit" class="button button-register w-100">Register Wrapper</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 조회 영역 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>Wrapper List</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>포장지명</th>
+                            <th>포장지 가격</th>
+                            <th>포장지 이미지</th>
+                            <th>판매 여부</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="wrapper : ${wrappers}">
+                            <td th:text="${wrapper.wrapperName}"></td>
+                            <td th:text="${wrapper.wrapperPrice}"></td>
+                            <td th:text="${wrapper.wrapperSaleable}"></td>
+                            <td th:text="${wrapper.wrapperImage}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination">
+                                    <!-- 처음 버튼 -->
+                                    <li class="page-item" th:classappend="${!wrappers.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link" th:href="@{'/admin/mypage/wrappers'(page=0, size=5)}">처음</a>
+                                    </li>
+
+                                    <!-- 전체 페이지 번호 출력 -->
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, wrappers.totalPages - 1)}"
+                                        th:classappend="${i == wrappers.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/wrappers'(page=${i}, size=5)}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <!-- 마지막 버튼 -->
+                                    <li class="page-item" th:classappend="${!wrappers.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/wrappers'(page=${wrappers.totalPages - 1}, size=5)}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+</body>
+</html>
