@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.nhnacademy.front.account.member.adaptor.MemberLoginAdaptor;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
-import com.nhnacademy.front.account.member.model.domain.RankName;
+import com.nhnacademy.front.account.member.model.domain.MemberRoleName;
 import com.nhnacademy.front.account.member.model.dto.request.RequestLoginMemberDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseLoginMemberDTO;
 
@@ -34,9 +34,10 @@ class MemberLoginUserDetailsServiceTest {
 		// Given
 		String memberId = "nhn1";
 		String memberPassword = "1234";
-		RankName rankName = RankName.NORMAL;
+		MemberRoleName memberRoleName = MemberRoleName.MEMBER;
 
-		ResponseLoginMemberDTO responseLoginMemberDTO = new ResponseLoginMemberDTO(memberId, memberPassword, rankName);
+		ResponseLoginMemberDTO responseLoginMemberDTO = new ResponseLoginMemberDTO(memberId, memberPassword,
+			memberRoleName);
 
 		when(memberLoginAdaptor.postLoginMember(any(RequestLoginMemberDTO.class)))
 			.thenReturn(responseLoginMemberDTO);
@@ -59,9 +60,9 @@ class MemberLoginUserDetailsServiceTest {
 		// Given
 		String memberId = "nhn1";
 		String memberPassword = "1234";
-		RankName rankName = RankName.NORMAL;
+		MemberRoleName memberRoleName = MemberRoleName.MEMBER;
 
-		ResponseLoginMemberDTO responseLoginMemberDTO = new ResponseLoginMemberDTO(memberId, null, rankName);
+		ResponseLoginMemberDTO responseLoginMemberDTO = new ResponseLoginMemberDTO(memberId, null, memberRoleName);
 
 		when(memberLoginAdaptor.postLoginMember(any(RequestLoginMemberDTO.class)))
 			.thenReturn(responseLoginMemberDTO);

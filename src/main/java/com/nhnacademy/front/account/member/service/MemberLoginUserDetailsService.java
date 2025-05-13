@@ -41,7 +41,7 @@ public class MemberLoginUserDetailsService implements UserDetailsService {
 
 			return new LoginProcessMember(loginMemberDTO.getMemberId(),
 				loginMemberDTO.getCustomerPassword(),
-				loginMemberDTO.getMemberRankName());
+				loginMemberDTO.getMemberRoleName());
 
 		} catch (FeignException e) {
 			throw new LoginProcessException("로그인 실패");

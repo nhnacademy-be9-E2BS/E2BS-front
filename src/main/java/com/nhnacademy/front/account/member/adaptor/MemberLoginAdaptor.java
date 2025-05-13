@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.member.model.dto.request.RequestLoginMemberDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseLoginMemberDTO;
 
-@FeignClient(name = "member-login-user-details-service", url = "http://e2bs.shop/api/login")
+@FeignClient(name = "member-login-adaptor", url = "${member.login.url}")
 public interface MemberLoginAdaptor {
 
 	@PostMapping
