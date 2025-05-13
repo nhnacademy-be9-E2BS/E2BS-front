@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="section-margin">
+        <div class="container">
+            <h2>Coupon Policy Detail</h2>
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <th>쿠폰정책명</th>
+                    <td th:text="${couponPolicy.couponPolicyName}">정책명</td>
+                </tr>
+                <tr>
+                    <th>최소주문금액</th>
+                    <td th:text="${couponPolicy.couponPolicyMinimum}">0</td>
+                </tr>
+                <tr>
+                    <th>할인률 (%)</th>
+                    <td th:text="${couponPolicy.couponPolicyDiscountRate}">10</td>
+                </tr>
+                <tr>
+                    <th>최대할인금액</th>
+                    <td th:text="${couponPolicy.couponPolicyMaximumAmount}">10000</td>
+                </tr>
+                <tr>
+                    <th>할인금액</th>
+                    <td th:text="${couponPolicy.couponPolicySalePrice}">500</td>
+                </tr>
+                <tr>
+                    <th>정책생성일</th>
+                    <td th:text="${#temporals.format(couponPolicy.couponPolicyCreatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
+                </tr>
+                </tbody>
+            </table>
+            <a class="btn btn-secondary mt-3" th:href="@{/admin/mypage/couponPolicies}">목록으로</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

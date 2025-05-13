@@ -1,7 +1,5 @@
 package com.nhnacademy.front.account.member.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -14,14 +12,16 @@ import com.nhnacademy.front.account.member.model.dto.request.RequestRegisterMemb
 import com.nhnacademy.front.account.member.service.MemberService;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/register")
 public class MemberRegisterController {
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	@Autowired
-	private MemberService memberService;
+	private final MemberService memberService;
 
 	/**
 	 *  회원가입 뷰
@@ -38,11 +38,15 @@ public class MemberRegisterController {
 	public String createRegister(@Validated @ModelAttribute RequestRegisterMemberDTO requestRegisterMemberDTO,
 		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
+			log.info("memberId:{}", requestRegisterMemberDTO.getMemberId());
+			log.info("customerName:{}", requestRegisterMemberDTO.getCustomerName());
+			log.info("customerPassword:{}", requestRegisterMemberDTO.getCustomerPassword());
+			log.info("customerPasswordCheck:{}", requestRegisterMemberDTO.getCustomerPasswordCheck());
+			log.info("customerEmail:{}", requestRegisterMemberDTO.getCustomerEmail());
+			log.info("memberBirth:{}", requestRegisterMemberDTO.getMemberBirth());
+			log.info("memberPhone:{}", requestRegisterMemberDTO.getMemberPhone());
 			throw new ValidationFailedException(bindingResult);
 		}
-
-		String customerPassword = passwordEncoder.encode(requestRegisterMemberDTO.getCustomerPassword());
-		requestRegisterMemberDTO.setCustomerPassword(customerPassword);
 
 		memberService.createMember(requestRegisterMemberDTO);
 
