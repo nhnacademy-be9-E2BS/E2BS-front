@@ -13,13 +13,13 @@ eureka:
 
 member:
   login:
-    url: http://localhost:10236/api/login
+    url: http://localhost:10232/api/login
 
   register:
-    url: http://localhost:10236/api/register
+    url: http://localhost:10232/api/register
 
 auth:
   jwt:
     create:
       url:
-        http://localhost:10234/api/auth
+        http://localhost:10232/api/auth
