@@ -1,15 +1,15 @@
 package com.nhnacademy.front.order.order.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.order.order.model.dto.request.RequestOrderDTO;
-import com.nhnacademy.front.order.order.model.dto.request.RequestOrderDetailDTO;
+import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
@@ -32,11 +32,44 @@ public class OrderController {
 		return "payment/checkout";
 	}
 
+	/**
+	 * 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 미리 저장하는 기능
+	 */
 	@PostMapping("/order")
-	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(@RequestBody RequestOrderWrapperDTO request) {
-		RequestOrderDTO orderDTO = request.getOrder();
-		List<RequestOrderDetailDTO> orderDetailDTOs = request.getOrderDetails();
+	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(@Validated @RequestBody RequestOrderWrapperDTO request,
+		BindingResult bindingResult) {
+		if(bindingResult.hasErrors()) {
+			throw new ValidationFailedException(bindingResult);
+		}
+		return orderService.createOrder(request);
+	}
 
-		return orderService.createOrder(new RequestOrderWrapperDTO(orderDTO, orderDetailDTOs));
+	/**
+	 * 결제 완료 시 이동될 페이지
+	 * 여기에서 토스에서 제공한 데이터를 back으로 요청하여 결제 승인을 진행
+	 */
+	@GetMapping("/order/success")
+	public String getSuccessOrder(@RequestParam String orderId, @RequestParam String paymentKey,
+		@RequestParam long amount) {
+		// 결제 승인 요청
+		ResponseEntity<Void> response = orderService.confirmOrder(orderId, paymentKey, amount);
+
+		if (response.getStatusCode().is2xxSuccessful()) {
+			// 결제 성공창으로 리다이렉트
+			return "redirect:/order/confirm";
+		} else {
+			// 결제 실패 창으로 리다이렉트, 추후 제작 예정
+			return "";
+		}
+	}
+
+	/**
+	 * 외부 API의 경우 결제 승인까지 완료
+	 * 포인트라면 결제 완료 시 이동하는 주문 완료 페이지
+	 */
+	@GetMapping("/order/confirm")
+	public String getConfirmOrder() {
+		// 추후 정보를 더 넣을지는 모름
+		return "payment/confirmation";
 	}
 }

@@ -28,3 +28,11 @@ auth:
 coupon:
   policy:
     url: http://localhost:10232/api/admin/couponPolicies
+
+# 주문
+order:
+  create:
+    url: http://localhost:10236/api/createOrder
+
+  confirm:
+    url: http://localhost:10236/api/orderConfirm

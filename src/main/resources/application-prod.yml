@@ -24,3 +24,11 @@ auth:
 coupon:
   policy:
     url: http://e2bs.shop/api/admin/couponPolicies
+
+# 주문
+order:
+  create:
+    url: https://e2bs.shop/api/createOrder
+
+  confirm:
+    url: https://e2bs.shop/api/orderConfirm

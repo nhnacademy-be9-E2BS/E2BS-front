@@ -78,19 +78,19 @@
                             <div class="row" style="display: flex; text-align: center;">
                                 <div class="col-4">
                                     <label>
-                                        <input type="radio" name="wrap1" value="1"> 빨간 포장지
+                                        <input type="radio" name="wrap1" value="2"> 빨간 포장지
                                         <span>700</span>원
                                     </label>
                                 </div>
                                 <div class="col-4">
                                     <label>
-                                        <input type="radio" name="wrap1" value="2"> 파랑 포장지
+                                        <input type="radio" name="wrap1" value="3"> 파랑 포장지
                                         <span>1000</span>원
                                     </label>
                                 </div>
                                 <div class="col-4">
                                     <label>
-                                        <input type="radio" name="wrap1" value="3"> 초록 포장지
+                                        <input type="radio" name="wrap1" value="4"> 초록 포장지
                                         <span>500</span>원
                                     </label>
                                 </div>
@@ -323,6 +323,7 @@
                             </div>
 
                             <div class="text-center">
+                                <span>현재 토스 결제만 구현 되어있습니다.</span>
                                 <button class="btn primary w-100" id="payment-button"
                                         style="margin-top: 30px">결제하기
                                 </button>
@@ -347,7 +348,7 @@
             var tossPayments = TossPayments(clientKey);
 
             // ------ 결제창 띄우기 ------
-            document.getElementById("payment-button").addEventListener("click", function () {
+            document.getElementById("payment-button").addEventListener("click", async function () {
                 const selected = document.querySelector('input[name="payment_method"]:checked');
                 const checkbox = document.getElementById('f-option4'); // 이용약관 체크 확인
                 if (!selected) {
@@ -364,11 +365,13 @@
                     return;
                 }
 
-                console.log(createOrderData());
+                // 결제 방식
                 const method = selected.value;
 
                 if (method === "tossPay") {
-                    tossPayWidget();
+                    // 주문서 저장
+                    const response = await saveOrder();
+                    tossPayWidget(response.orderId, response.amount);
                 } else if (method === "point") {
 
                     // 포인트 결제 로직
@@ -424,12 +427,23 @@
             async function saveOrder() {
                 const response = await fetch("/order", {
                         method: "POST",
-                        header: {
+                        headers: {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify(createOrderData())
                     }
                 )
+                if (response.ok) { // 200 ~ 299
+                    const data = await response.json(); // DTO 파싱
+                    const {orderId, amount} = data;   // 필요한 값 디스트럭처링
+
+                    console.log("Order ID:", orderId);
+                    console.log("Amount:", amount);
+
+                    return data;
+                } else {
+                    return null;
+                }
             }
 
             function createOrderData() {
@@ -448,8 +462,8 @@
                 // 지금은 외래키(배달비, 회원id)는 임의로 넣어둠
                 const order = {
                     memberCouponId: selectedCouponId,
-                    deliveryFeeId: 0,
-                    customerId: 0,
+                    deliveryFeeId: 1,
+                    customerId: 1,
                     orderReceiverName: document.getElementById("receiverName").value,
                     orderReceiverPhone: document.getElementById("receiverPhone").value,
                     orderReceiverTel: document.getElementById("receiverTel").value,
@@ -475,13 +489,11 @@
                         return;
                     }
                     const quantity = parseCurrency(row.querySelector('.text-center').textContent.trim());
-                    let wrapperIdData = row.getAttribute("data-wrapper-id");
-                    if (wrapperIdData === null) {
-                        wrapperIdData = "0";
-                    }
+                    let wrapperIdData = row.getAttribute("data-wrapper-id") || "1";
+                    console.log(wrapperIdData);
                     const detail = {
                         productId: parseInt(row.getAttribute("data-product-id")),
-                        orderStateId: 0,
+                        orderStateId: 5,
                         orderCode: "temp-order-code",
                         wrapperId: parseInt(wrapperIdData),
                         orderQuantity: quantity,
@@ -499,14 +511,14 @@
                 return requestOrderWrapperDTO;
             }
 
-            function tossPayWidget() {
+            function tossPayWidget(orderId, payAmount) {
                 tossPayments
                     .requestPayment("토스페이", {
-                        amount: parseInt(parseCurrency(document.getElementById("payment_amount").innerText)),
-                        orderId: 'vGKm2kJVZYo5AqHqL3riW',
-                        orderName: "테스트 결제",
+                        amount: payAmount,
+                        orderId: orderId,
+                        orderName: "테스트 결제", // 프론트에서 임의 처리 예정
                         customerName: "김토스",
-                        successUrl: "https://docs.tosspayments.com/guides/payment/test-success",
+                        successUrl: "http://localhost:10238/order/success",
                         failUrl: "https://docs.tosspayments.com/guides/payment/test-fail",
                     })
                     .catch(function (error) {
