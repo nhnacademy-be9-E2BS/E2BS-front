@@ -1,9 +1,8 @@
-package com.nhnacademy.front.product.contributor.controller;
+package com.nhnacademy.front.product.contributor.position.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +18,9 @@ import org.springframework.ui.Model;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
-import com.nhnacademy.front.product.contributor.model.dto.request.RequestPositionDTO;
-import com.nhnacademy.front.product.contributor.model.dto.response.ResponsePositionDTO;
-import com.nhnacademy.front.product.contributor.service.PositionService;
+import com.nhnacademy.front.product.contributor.position.dto.request.RequestPositionDTO;
+import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePositionDTO;
+import com.nhnacademy.front.product.contributor.position.service.PositionService;
 
 import lombok.RequiredArgsConstructor;
 

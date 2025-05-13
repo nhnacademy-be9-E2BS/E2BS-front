@@ -37,9 +37,30 @@
                         <tbody>
                         <tr th:each="position : ${positions.content}">
                             <td th:text="${position.positionId}">1</td>
-                            <td th:text="${position.positionName}">관리자</td>
+                            <td>
+                                <form th:action="@{'/admin/mypage/positions/' + ${position.positionId}}" method="post">
+                                    <input type="hidden" name="_method" value="put"/>
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!-- 이름 입력 필드: 기본은 readonly -->
+                                        <input type="text"
+                                               th:value="${position.positionName}"
+                                               name="positionName"
+                                               class="form-control"
+                                               readonly />
+
+                                        <!-- 수정 버튼 -->
+                                        <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
+
+                                        <!-- 저장 버튼: 기본은 숨김 -->
+                                        <button type="submit" class="btn btn-sm btn-primary d-none save-btn">저장</button>
+                                    </div>
+                                </form>
+                            </td>
                         </tr>
                         </tbody>
+
+
                     </table>
 
                     <!-- 페이징 영역 -->
@@ -67,11 +88,38 @@
                             </nav>
                         </div>
                     </div>
+
+                    <!-- 역할 수정 -->
+                    <div>
+
+                    </div>
                 </div>
             </div>
 
         </div>
     </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = document.querySelectorAll("tr");
+
+            rows.forEach(row => {
+                const editBtn = row.querySelector(".edit-btn");
+                const saveBtn = row.querySelector(".save-btn");
+                const input = row.querySelector("input[name='positionName']");
+
+                if (editBtn && saveBtn && input) {
+                    editBtn.addEventListener("click", () => {
+                        input.removeAttribute("readonly");
+                        input.focus();
+                        editBtn.classList.add("d-none");
+                        saveBtn.classList.remove("d-none");
+                    });
+                }
+            });
+        });
+    </script>
+
 </div>
 </body>
 </html>

@@ -28,3 +28,9 @@ auth:
 coupon:
   policy:
     url: http://localhost:10236/api/admin/couponPolicies
+
+# 상품 기여자 역할
+product:
+  contributor:
+    position:
+      url: http://localhost:10236/api/admin/positions

@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -22,10 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.product.contributor.controller.PositionController;
-import com.nhnacademy.front.product.contributor.model.dto.response.ResponsePositionDTO;
-import com.nhnacademy.front.product.contributor.service.PositionService;
-import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
+import com.nhnacademy.front.product.contributor.position.controller.PositionController;
+import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePositionDTO;
+import com.nhnacademy.front.product.contributor.position.service.PositionService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = PositionController.class)

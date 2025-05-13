@@ -19,12 +19,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.product.contributor.adaptor.PositionAdaptor;
-import com.nhnacademy.front.product.contributor.exception.PositionGetProcessException;
-import com.nhnacademy.front.product.contributor.exception.PositionProcessException;
-import com.nhnacademy.front.product.contributor.model.dto.request.RequestPositionDTO;
-import com.nhnacademy.front.product.contributor.model.dto.response.ResponsePositionDTO;
-import com.nhnacademy.front.product.contributor.service.PositionService;
+import com.nhnacademy.front.product.contributor.position.adaptor.PositionAdaptor;
+import com.nhnacademy.front.product.contributor.position.exception.PositionGetProcessException;
+import com.nhnacademy.front.product.contributor.position.exception.PositionProcessException;
+import com.nhnacademy.front.product.contributor.position.dto.request.RequestPositionDTO;
+import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePositionDTO;
+import com.nhnacademy.front.product.contributor.position.service.PositionService;
 
 import feign.FeignException;
 

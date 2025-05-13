@@ -1,19 +1,18 @@
-package com.nhnacademy.front.product.contributor.model.dto.response;
+package com.nhnacademy.front.product.contributor.position.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponsePositionDTO {
-	@NotNull
-	private long positionId;
+public class RequestPositionDTO {
 	@NotBlank
 	private String positionName;
+
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
 }
