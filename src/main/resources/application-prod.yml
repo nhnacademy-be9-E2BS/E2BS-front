@@ -19,3 +19,8 @@ auth:
   jwt:
     create:
       url: https://e2bs.shop/api/auth
+
+# 쿠폰 정책
+coupon:
+  policy:
+    url: http://e2bs.shop/api/admin/couponPolicies

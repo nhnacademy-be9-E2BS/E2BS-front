@@ -23,3 +23,8 @@ auth:
     create:
       url:
         http://localhost:10234/api/auth
+
+# 쿠폰 정책
+coupon:
+  policy:
+    url: http://localhost:10236/api/admin/couponPolicies
