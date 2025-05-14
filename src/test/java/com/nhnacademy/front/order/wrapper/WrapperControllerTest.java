@@ -1,4 +1,4 @@
-package com.nhnacademy.front.product.publisher;
+package com.nhnacademy.front.order.wrapper;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -22,31 +22,33 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.product.publisher.controller.PublisherController;
-import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
-import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
-import com.nhnacademy.front.product.publisher.service.PublisherService;
+import com.nhnacademy.front.order.wrapper.controller.WrapperController;
+import com.nhnacademy.front.order.wrapper.model.dto.request.RequestModifyWrapperDTO;
+import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
+import com.nhnacademy.front.order.wrapper.service.WrapperService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
-@WebMvcTest(controllers = PublisherController.class)
+@WebMvcTest(controllers = WrapperController.class)
 @ActiveProfiles("dev")
-public class PublisherControllerTest {
+public class WrapperControllerTest {
+
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockitoBean
-	private PublisherService publisherService;
+	private WrapperService wrapperService;
 
 	@Autowired
 	private ObjectMapper objectMapper;
 
 	@Test
-	@DisplayName("출판사 리스트 조회")
-	void get_publishers_test() throws Exception {
+	@DisplayName("모든 포장지 리스트 조회")
+	void get_wrappers_test() throws Exception {
 		// given
-		ResponsePublisherDTO responseA = new ResponsePublisherDTO(1L, "Publisher A");
-		ResponsePublisherDTO responseB = new ResponsePublisherDTO(2L, "Publisher B");
-		List<ResponsePublisherDTO> publishers = List.of(responseA, responseB);
+		ResponseWrapperDTO responseA = new ResponseWrapperDTO(1L, 1000, "Wrapper A", "a.jpg", true);
+		ResponseWrapperDTO responseB = new ResponseWrapperDTO(2L, 1500, "Wrapper B", "b.jpg", false);
+		ResponseWrapperDTO responseC = new ResponseWrapperDTO(3L, 1200, "Wrapper C", "c.jpg", true);
+		List<ResponseWrapperDTO> wrappers = List.of(responseA, responseB, responseC);
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
 		sortInfo.setEmpty(true);
@@ -61,40 +63,46 @@ public class PublisherControllerTest {
 		pageableInfo.setPaged(true);
 		pageableInfo.setUnpaged(false);
 
-		PageResponse<ResponsePublisherDTO> pageResponse = new PageResponse<>(
-			publishers, pageableInfo, true, 2, 1, 10, 0,
-			sortInfo, true, 2, false
+		PageResponse<ResponseWrapperDTO> pageResponse = new PageResponse<>(
+			wrappers, pageableInfo, true, 3, 1, 10, 0,
+			sortInfo, true, 3, false
 		);
 
-		Mockito.when(publisherService.getPublishers(any())).thenReturn(pageResponse);
+		Mockito.when(wrapperService.getWrappers(any())).thenReturn(pageResponse);
 
 		// when & then
-		mockMvc.perform(get("/admin/mypage/publishers"))
+		mockMvc.perform(get("/admin/mypage/wrappers"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("admin/publishers"))
-			.andExpect(model().attributeExists("publishers"));
+			.andExpect(view().name("admin/wrappers"))
+			.andExpect(model().attributeExists("wrappers"));
 	}
 
 	@Test
-	@DisplayName("출판사 생성 - success")
-	void create_publisher_success_test() throws Exception {
+	@DisplayName("포장지 생성 - success")
+	void create_wrapper_success_test() throws Exception {
 		// given & when & then
-		mockMvc.perform(post("/admin/mypage/publishers")
-				.param("publisherName", "Publisher A")
+		mockMvc.perform(post("/admin/mypage/wrappers")
+				.param("wrapperPrice", String.valueOf(1000L))
+				.param("wrapperName", "Wrapper A")
+				.param("wrapperImage", "a.jpg")
+				.param("wrapperSaleable", String.valueOf(true))
 				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/admin/mypage/publishers"));
+			.andExpect(redirectedUrl("/admin/mypage/wrappers"));
 	}
 
 	@Test
-	@DisplayName("출판사 생성 - fail")
-	void create_publisher_fail_test() throws Exception {
+	@DisplayName("포장지 생성 - fail")
+	void create_wrapper_fail_test() throws Exception {
 		// given
-		String publisherName = null;
+		String wrapperName = null;
 
 		// when & then
-		mockMvc.perform(post("/admin/mypage/publishers")
-				.param("publisherName", publisherName)
+		mockMvc.perform(post("/admin/mypage/wrappers")
+				.param("wrapperPrice", String.valueOf(1000L))
+				.param("wrapperName", wrapperName)
+				.param("wrapperImage", "a.jpg")
+				.param("wrapperSaleable", String.valueOf(true))
 				.with(csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(result -> assertThat(result.getResolvedException())
@@ -102,14 +110,14 @@ public class PublisherControllerTest {
 	}
 
 	@Test
-	@DisplayName("출판사 수정 - success")
-	void update_publisher_success_test() throws Exception {
+	@DisplayName("포장지 수정 - success")
+	void update_wrapper_success_test() throws Exception {
 		// given
-		RequestPublisherDTO dto = new RequestPublisherDTO();
-		dto.setPublisherName("Publisher A");
+		RequestModifyWrapperDTO dto = new RequestModifyWrapperDTO();
+		dto.setWrapperSaleable(true);
 
 		// when & then
-		mockMvc.perform(put("/admin/mypage/publishers/1")
+		mockMvc.perform(put("/admin/mypage/wrappers/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))
@@ -117,14 +125,14 @@ public class PublisherControllerTest {
 	}
 
 	@Test
-	@DisplayName("출판사 수정 - fail")
-	void update_publisher_fail_test() throws Exception {
+	@DisplayName("포장지 수정 - fail")
+	void update_wrapper_fail_test() throws Exception {
 		// given
-		RequestPublisherDTO dto = new RequestPublisherDTO();
-		dto.setPublisherName(null);
+		RequestModifyWrapperDTO dto = new RequestModifyWrapperDTO();
+		dto.setWrapperSaleable(null);
 
 		// when & then
-		mockMvc.perform(put("/admin/mypage/publishers/1")
+		mockMvc.perform(put("/admin/mypage/wrappers/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))

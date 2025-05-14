@@ -1,4 +1,4 @@
-package com.nhnacademy.front.product.publisher;
+package com.nhnacademy.front.product.tag;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -22,31 +22,28 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.product.publisher.controller.PublisherController;
-import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
-import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
-import com.nhnacademy.front.product.publisher.service.PublisherService;
+import com.nhnacademy.front.product.tag.controller.TagController;
+import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
+import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
+import com.nhnacademy.front.product.tag.service.TagService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
-@WebMvcTest(controllers = PublisherController.class)
+@WebMvcTest(controllers = TagController.class)
 @ActiveProfiles("dev")
-public class PublisherControllerTest {
+public class TagControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockitoBean
-	private PublisherService publisherService;
-
-	@Autowired
-	private ObjectMapper objectMapper;
+	private TagService tagService;
 
 	@Test
-	@DisplayName("출판사 리스트 조회")
-	void get_publishers_test() throws Exception {
-		// given
-		ResponsePublisherDTO responseA = new ResponsePublisherDTO(1L, "Publisher A");
-		ResponsePublisherDTO responseB = new ResponsePublisherDTO(2L, "Publisher B");
-		List<ResponsePublisherDTO> publishers = List.of(responseA, responseB);
+	@DisplayName("태그 리스트 조회")
+	void getTagsTest() throws Exception {
+		//given
+		ResponseTagDTO responseA = new ResponseTagDTO(1L, "Tag A");
+		ResponseTagDTO responseB = new ResponseTagDTO(2L, "Tag B");
+		List<ResponseTagDTO> tags = List.of(responseA, responseB);
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
 		sortInfo.setEmpty(true);
@@ -61,40 +58,40 @@ public class PublisherControllerTest {
 		pageableInfo.setPaged(true);
 		pageableInfo.setUnpaged(false);
 
-		PageResponse<ResponsePublisherDTO> pageResponse = new PageResponse<>(
-			publishers, pageableInfo, true, 2, 1, 10, 0,
+		PageResponse<ResponseTagDTO> pageResponse = new PageResponse<>(
+			tags, pageableInfo, true, 2, 1, 10, 0,
 			sortInfo, true, 2, false
 		);
 
-		Mockito.when(publisherService.getPublishers(any())).thenReturn(pageResponse);
+		Mockito.when(tagService.getTags(any())).thenReturn(pageResponse);
 
-		// when & then
-		mockMvc.perform(get("/admin/mypage/publishers"))
+		//when & then
+		mockMvc.perform(get("/admin/mypage/tags"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("admin/publishers"))
-			.andExpect(model().attributeExists("publishers"));
+			.andExpect(view().name("admin/tags"))
+			.andExpect(model().attributeExists("tags"));
 	}
 
 	@Test
-	@DisplayName("출판사 생성 - success")
-	void create_publisher_success_test() throws Exception {
+	@DisplayName("태그 생성 - success")
+	void createTagSuccessTest() throws Exception {
 		// given & when & then
-		mockMvc.perform(post("/admin/mypage/publishers")
-				.param("publisherName", "Publisher A")
+		mockMvc.perform(post("/admin/mypage/tags")
+				.param("tagName", "Tag A")
 				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/admin/mypage/publishers"));
+			.andExpect(redirectedUrl("/admin/mypage/tags"));
 	}
 
 	@Test
-	@DisplayName("출판사 생성 - fail")
-	void create_publisher_fail_test() throws Exception {
+	@DisplayName("태그 생성 - fail")
+	void createTagFailTest() throws Exception {
 		// given
-		String publisherName = null;
+		String tagName = null;
 
 		// when & then
-		mockMvc.perform(post("/admin/mypage/publishers")
-				.param("publisherName", publisherName)
+		mockMvc.perform(post("/admin/mypage/tags")
+				.param("tagName", tagName)
 				.with(csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(result -> assertThat(result.getResolvedException())
@@ -102,34 +99,36 @@ public class PublisherControllerTest {
 	}
 
 	@Test
-	@DisplayName("출판사 수정 - success")
-	void update_publisher_success_test() throws Exception {
+	@DisplayName("태그 수정 - success")
+	void updateTagSuccessTest() throws Exception {
 		// given
-		RequestPublisherDTO dto = new RequestPublisherDTO();
-		dto.setPublisherName("Publisher A");
+		RequestTagDTO requestTagDTO = new RequestTagDTO();
+		requestTagDTO.setTagName("Tag A");
 
 		// when & then
-		mockMvc.perform(put("/admin/mypage/publishers/1")
+		mockMvc.perform(put("/admin/mypage/tags/1")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(dto))
+				.content(new ObjectMapper().writeValueAsString(requestTagDTO))
 				.with(csrf()))
 			.andExpect(status().isOk());
 	}
 
 	@Test
-	@DisplayName("출판사 수정 - fail")
-	void update_publisher_fail_test() throws Exception {
+	@DisplayName("태그 수정 - fail")
+	void updateTagFailTest() throws Exception {
 		// given
-		RequestPublisherDTO dto = new RequestPublisherDTO();
-		dto.setPublisherName(null);
+		RequestTagDTO requestTagDTO = new RequestTagDTO();
+		requestTagDTO.setTagName(null); // 유효성 검사 실패를 유도
 
 		// when & then
-		mockMvc.perform(put("/admin/mypage/publishers/1")
+		mockMvc.perform(put("/admin/mypage/tags/1")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(dto))
+				.content(new ObjectMapper().writeValueAsString(requestTagDTO))
 				.with(csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(result -> assertThat(result.getResolvedException())
 				.isInstanceOf(ValidationFailedException.class));
 	}
+
+
 }

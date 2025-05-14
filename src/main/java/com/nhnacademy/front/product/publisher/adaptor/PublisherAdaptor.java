@@ -14,7 +14,7 @@ import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisher
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 
-@FeignClient(name = "publisher-service", url = "http://localhost:10236/api/admin/publishers")
+@FeignClient(name = "publisher-service", url = "${product.publisher.url}")
 public interface PublisherAdaptor {
 
 	@GetMapping

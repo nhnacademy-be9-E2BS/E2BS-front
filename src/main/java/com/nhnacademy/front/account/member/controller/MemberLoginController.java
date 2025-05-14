@@ -13,7 +13,7 @@ public class MemberLoginController {
 	 */
 	@GetMapping
 	public String getLogin() {
-		return "member/login";
+		return "/member/login";
 	}
 
 }

@@ -1,0 +1,133 @@
+<!--관리자 페이지 - 포장지-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <h2>Wrapper Management</h2>
+
+            <!-- 등록 폼 -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>Register New Wrapper</h4>
+                    <form class="row login_form" action="/admin/mypage/wrappers" method="post">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="wrapperName" placeholder="포장지명" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="number" class="form-control" name="wrapperPrice" placeholder="포장지 가격" required>
+                        </div>
+                        <!-- 추후에 이미지 업로드로 수정 필요 -->
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="wrapperImage" placeholder="포장지 이미지" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wrapperSaleable" id="saleableTrue" value="true" required>
+                                <label class="form-check-label" for="saleableTrue">판매 가능</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wrapperSaleable" id="saleableFalse" value="false">
+                                <label class="form-check-label" for="saleableFalse">판매 불가</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group mt-3">
+                            <button type="submit" class="button button-register w-100">Register Wrapper</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 조회 영역 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>Wrapper List</h4>
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                        <thead>
+                        <tr>
+                            <th style="width: 25%;">포장지명</th>
+                            <th style="width: 25%;">포장지 가격</th>
+                            <th style="width: 25%;">포장지 이미지</th>
+                            <th style="width: 25%;">판매 여부</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="wrapper : ${wrappers}">
+                                <td th:text="${wrapper.wrapperName}"></td>
+                                <td th:text="${wrapper.wrapperPrice}"></td>
+                                <td th:text="${wrapper.wrapperImage}"></td>
+                                <td th:id="'saleable-' + ${wrapper.wrapperId}">
+                                    <select
+                                            class="form-control saleable-dropdown"
+                                            th:onchange="'updateWrapperSaleable(' + ${wrapper.wrapperId} + ')'">
+                                        <option value="true" th:selected="${wrapper.wrapperSaleable}">판매 중</option>
+                                        <option value="false" th:selected="${!wrapper.wrapperSaleable}">판매 중지</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination" th:if="${wrappers.totalPages > 0}">
+                                    <!-- 처음 버튼 -->
+                                    <li class="page-item" th:classappend="${!wrappers.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link" th:href="@{'/admin/mypage/wrappers'(page=0, size=5)}">처음</a>
+                                    </li>
+
+                                    <!-- 전체 페이지 번호 출력 -->
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, wrappers.totalPages - 1)}"
+                                        th:classappend="${i == wrappers.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/wrappers'(page=${i}, size=5)}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <!-- 마지막 버튼 -->
+                                    <li class="page-item" th:classappend="${!wrappers.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/wrappers'(page=${wrappers.totalPages - 1}, size=5)}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            function updateWrapperSaleable(wrapperId) {
+                const selectedValue = document.querySelector(`#saleable-${wrapperId} > div > span`).innerHTML;
+                const wrapperSaleable = selectedValue === "판매 중";
+
+                console.log("Selected saleable value:", selectedValue);
+                console.log("Converted boolean:", wrapperSaleable);
+
+                fetch("/admin/mypage/wrappers/" + wrapperId, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({wrapperSaleable: wrapperSaleable})
+                }).then(res => {
+                    if (!res.ok) {
+                        alert("수정 실패");
+                    }
+                });
+            }
+        </script>
+    </section>
+</div>
+</body>
+</html>
