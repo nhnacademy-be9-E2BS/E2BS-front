@@ -65,6 +65,7 @@ public class PositionController {
 		ResponsePositionDTO responsePositionDTO = positionService.getPositionById(positionId);
 
 		model.addAttribute("position", responsePositionDTO);
+		model.addAttribute("positions", Page.empty());
 		return "/admin/product/positions";
 	}
 
