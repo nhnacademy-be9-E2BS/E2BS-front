@@ -24,8 +24,9 @@ auth:
       url:
         http://localhost:10232/api/auth
 
-# 쿠폰 정책
+# 쿠폰
 coupon:
+  url: http://localhost:10232/api/admin/coupons
   policy:
     url: http://localhost:10232/api/admin/couponPolicies
 

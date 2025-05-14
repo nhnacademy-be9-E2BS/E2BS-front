@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <h2>Coupon Detail</h2>
+
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <th>쿠폰 ID</th>
+                    <td th:text="${coupon.couponId}">1</td>
+                </tr>
+                <tr>
+                    <th>쿠폰명</th>
+                    <td th:text="${coupon.couponName}">할인쿠폰</td>
+                </tr>
+                <tr>
+                    <th>쿠폰정책 ID</th>
+                    <td th:text="${coupon.couponPolicyId}">1</td>
+                </tr>
+                <tr>
+                    <th>쿠폰정책명</th>
+                    <td>
+                        <a th:href="@{/admin/mypage/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
+                           th:text="${coupon.couponPolicyName}">정책명</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>카테고리 ID</th>
+                    <td th:text="${coupon.categoryId != null ? coupon.categoryId : '-'}">100</td>
+                </tr>
+                <tr>
+                    <th>카테고리명</th>
+                    <td th:text="${coupon.categoryName != null ? coupon.categoryName : '-'}">소설</td>
+                </tr>
+                <tr>
+                    <th>도서 ID</th>
+                    <td th:text="${coupon.productId != null ? coupon.productId : '-'}">200</td>
+                </tr>
+                <tr>
+                    <th>도서명</th>
+                    <td th:text="${coupon.productTitle != null ? coupon.productTitle : '-'}">책 제목</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-3">
+                <a class="btn btn-secondary" th:href="@{/admin/mypage/coupons}">목록으로</a>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>
