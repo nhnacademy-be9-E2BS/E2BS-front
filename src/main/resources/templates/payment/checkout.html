@@ -50,7 +50,7 @@
                     </tr>
 
                     <!-- 상품 예시 -->
-                    <tr id="wrap1-product-row" data-wrap-available="true" data-product-id="1">
+                    <tr id="wrap1-product-row" data-wrap-available="true" data-product-id="1" class="product">
                         <td>
                             <img src="/img/product/product1.png" alt="" width="100">
                         </td>
@@ -106,7 +106,7 @@
                     </tr>
 
                     <!-- 상품 예시 -->
-                    <tr id="wrap2-product-row" data-wrap-available="false" data-product-id="2">
+                    <tr id="wrap2-product-row" data-wrap-available="false" data-product-id="2" class="product">
                         <td>
                             <img src="/img/product/product2.png" alt="" width="100">
                         </td>
@@ -347,7 +347,7 @@
             var clientKey = "test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO";
             var tossPayments = TossPayments(clientKey);
 
-            // ------ 결제창 띄우기 ------
+            // ------ 결제 진행 이벤트 ------
             document.getElementById("payment-button").addEventListener("click", async function () {
                 const selected = document.querySelector('input[name="payment_method"]:checked');
                 const checkbox = document.getElementById('f-option4'); // 이용약관 체크 확인
@@ -371,6 +371,13 @@
                 if (method === "tossPay") {
                     // 주문서 저장
                     const response = await saveOrder();
+
+                    if (await response === null) {
+                        // 재고 부족, 포인트 부족, 쿠폰 사용 불가, 없는 외래키 접근 등
+                        alert("주문에 문제가 있어 결제를 시도할 수 없습니다.");
+                        return;
+                    }
+
                     tossPayWidget(response.orderId, response.amount);
                 } else if (method === "point") {
 
@@ -435,13 +442,9 @@
                 )
                 if (response.ok) { // 200 ~ 299
                     const data = await response.json(); // DTO 파싱
-                    const {orderId, amount} = data;   // 필요한 값 디스트럭처링
-
-                    console.log("Order ID:", orderId);
-                    console.log("Amount:", amount);
-
                     return data;
                 } else {
+                    // 응답이 400번대, 500번대의 경우 주문서 저장 실패(재고 부족 등 예외)
                     return null;
                 }
             }
@@ -512,6 +515,7 @@
             }
 
             function tossPayWidget(orderId, payAmount) {
+                const orderName = document.querySelectorAll('.product');
                 tossPayments
                     .requestPayment("토스페이", {
                         amount: payAmount,
@@ -519,18 +523,33 @@
                         orderName: "테스트 결제", // 프론트에서 임의 처리 예정
                         customerName: "김토스",
                         successUrl: "http://localhost:10238/order/success",
-                        failUrl: "https://docs.tosspayments.com/guides/payment/test-fail",
+                        failUrl: "https://localhost:10238/order/fail",
+                        // 결제 승인 중 실패 할 경우 자동 리다이렉트 경로, 우리는 백에서 승인 처리를 하므로 여기서 작동할 일이 없음
                     })
                     .catch(function (error) {
                         if (error.code === "USER_CANCEL") {
-                            alert("결제가 취소되었습니다.");
+                            // alert("결제가 취소되었습니다.");
+                            deleteOrder(orderId);
                         } else if (error.code === "INVALID_CARD_COMPANY") {
                             alert("유효하지 않은 카드입니다.");
+                        } else if (error.code === "OUT_OF_BALANCE") { // 테스트에서는 작동하지 않음
+                            alert("잔액이 부족합니다.");
                         } else {
                             alert("에러 발생: " + error.message);
                             console.error(error);
                         }
                     });
+            }
+
+            // 결제창 호출 후 꺼서 주문 취소 시 백에 주문서 삭제 요청
+            function deleteOrder(orderId){
+                fetch("/order/cancel?orderId=" + orderId,{
+                    method:"POST",
+                    headers:{
+                        "Content-Type": "application/json",
+                    },
+                    body :{}
+                });
             }
         </script>
 

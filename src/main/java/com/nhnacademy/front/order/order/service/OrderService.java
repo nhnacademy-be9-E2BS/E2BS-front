@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.order.order.adaptor.OrderCancelAdaptor;
 import com.nhnacademy.front.order.order.adaptor.OrderConfirmAdaptor;
 import com.nhnacademy.front.order.order.adaptor.OrderCreateAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderService {
 	private final OrderCreateAdaptor orderCreateAdaptor;
 	private final OrderConfirmAdaptor orderConfirmAdaptor;
+	private final OrderCancelAdaptor orderCancelAdaptor;
 
 	/**
 	 * 주문서 정보를 back에 저장 요청하는 서비스
@@ -32,5 +34,9 @@ public class OrderService {
 	public ResponseEntity<Void> confirmOrder(@RequestParam String orderId, @RequestParam String paymentKey,
 		@RequestParam long amount) {
 		return orderConfirmAdaptor.confirmOrder(orderId, paymentKey, amount);
+	}
+
+	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
+		return orderCancelAdaptor.cancelOrder(orderId);
 	}
 }

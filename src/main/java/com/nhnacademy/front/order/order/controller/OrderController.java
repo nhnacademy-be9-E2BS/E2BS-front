@@ -38,7 +38,7 @@ public class OrderController {
 	@PostMapping("/order")
 	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(@Validated @RequestBody RequestOrderWrapperDTO request,
 		BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		return orderService.createOrder(request);
@@ -59,7 +59,7 @@ public class OrderController {
 			return "redirect:/order/confirm";
 		} else {
 			// 결제 실패 창으로 리다이렉트, 추후 제작 예정
-			return "";
+			return "/payment/fail";
 		}
 	}
 
@@ -71,5 +71,10 @@ public class OrderController {
 	public String getConfirmOrder() {
 		// 추후 정보를 더 넣을지는 모름
 		return "payment/confirmation";
+	}
+
+	@PostMapping("/order/cancel")
+	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
+		return orderService.cancelOrder(orderId);
 	}
 }

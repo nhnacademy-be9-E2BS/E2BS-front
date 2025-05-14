@@ -47,3 +47,5 @@ order:
 
   confirm:
     url: http://localhost:10236/api/orderConfirm
+  cancel:
+    url: http://localhost:10236/api/order/cancel

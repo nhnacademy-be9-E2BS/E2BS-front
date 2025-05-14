@@ -37,3 +37,5 @@ order:
 
   confirm:
     url: https://e2bs.shop/api/orderConfirm
+  cancel:
+    url: https://e2bs.shop/api/order/cancel
