@@ -1,7 +1,9 @@
 package com.nhnacademy.front.order.order.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Controller
 public class OrderController {
+	@Value("${order.toss.client-key}")
+	private String tossClientKey;
+
+	@Value("${order.toss.success-url}")
+	private String tossSuccessUrl;
+
+	@Value("${order.toss.fail-url}")
+	private String tossFailUrl;
 
 	private final OrderService orderService;
 
@@ -26,9 +36,12 @@ public class OrderController {
 	 * 결제 주문서 작성 페이지
 	 */
 	@GetMapping("/order")
-	public String getCheckOut() {
+	public String getCheckOut(Model model) {
 		// 사용자가 주문하려는 상품 정보,쿠폰 내역, 포인트 정보 등을 보내줘야 함
 		// 지금은 임시 값을 넣어 확인
+		model.addAttribute("tossClientKey", tossClientKey);
+		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
+		model.addAttribute("tossFailUrl", tossFailUrl);
 		return "payment/checkout";
 	}
 

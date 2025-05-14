@@ -39,3 +39,7 @@ order:
     url: https://e2bs.shop/api/orderConfirm
   cancel:
     url: https://e2bs.shop/api/order/cancel
+  toss:
+    client-key: test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO
+    success-url: https://e2bs.shop/order/success
+    fail-url: https://e2bs.shop/order/fail
