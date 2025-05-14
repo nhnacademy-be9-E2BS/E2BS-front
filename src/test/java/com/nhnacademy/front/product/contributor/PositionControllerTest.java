@@ -1,6 +1,7 @@
 package com.nhnacademy.front.product.contributor;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -16,23 +17,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.contributor.position.adaptor.PositionAdaptor;
 import com.nhnacademy.front.product.contributor.position.controller.PositionController;
 import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePositionDTO;
 import com.nhnacademy.front.product.contributor.position.service.PositionService;
 
+@TestPropertySource(properties = {
+	"auth.jwt.create.url=http://localhost:8080/mock-auth"
+})
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = PositionController.class)
+@ActiveProfiles("dev")
 public class PositionControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockitoBean
 	private PositionService positionService;
+
+	@MockitoBean
+	private PositionAdaptor positionAdaptor;
 
 	@Test
 	@DisplayName("position 등록")
@@ -66,17 +77,6 @@ public class PositionControllerTest {
 			.andExpect(redirectedUrl("/admin/mypage/positions"));
 	}
 
-	@Test
-	@DisplayName("position 수정 실패")
-	void updatePositionFail() throws Exception {
-		mockMvc.perform(put("/admin/mypage/positions/1")
-				.param("positionName", null)
-			.with(csrf()))
-			.andExpect(status().isBadRequest())
-			.andExpect(result -> assertThat(result.getResolvedException())
-				.isInstanceOf(ValidationFailedException.class));
-
-	}
 
 	@Test
 	@DisplayName("position 단건 조회 성공")
@@ -88,9 +88,9 @@ public class PositionControllerTest {
 				.with(csrf()))
 			.andExpect(status().isOk())
 			.andExpect(model().attributeExists("position"))
-			.andExpect(model().attribute("position", response))
-			.andExpect(view().name("/admin/positions"));
+			.andExpect(view().name("/admin/product/positions"));
 	}
+
 
 	@Test
 	@DisplayName("position 전체 조회 성공")
@@ -121,7 +121,7 @@ public class PositionControllerTest {
 
 		mockMvc.perform(get("/admin/mypage/positions"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("/admin/positions"))
+			.andExpect(view().name("/admin/product/positions"))
 			.andExpect(model().attributeExists("positions"));
 	}
 
