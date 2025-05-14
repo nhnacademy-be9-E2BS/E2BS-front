@@ -1,4 +1,4 @@
-<!--관리자 페이지 - 출판사-->
+<!-- 관리자 페이지 - 출판사 -->
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
@@ -29,18 +29,37 @@
             <div class="row mb-5">
                 <div class="col-12">
                     <h4>Publisher List</h4>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>출판사명</th>
+                            <th style="width: 80%;">출판사명</th>
+                            <th style="width: 20%;">관리</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="publisher : ${publishers}">
-                            <td th:text="${publisher.publisherId}"></td>
-                            <td th:text="${publisher.publisherName}"></td>
-                        </tr>
+                            <tr th:each="publisher : ${publishers}">
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="text"
+                                               th:value="${publisher.publisherName}"
+                                               name="publisherName"
+                                               th:id="'pub-' + ${publisher.publisherId}"
+                                               class="form-control text-truncate"
+                                               style="width: 100%; overflow: hidden; text-overflow: ellipsis;"
+                                               readonly />
+                                    </div>
+                                </td>
+                                <td>
+                                    <!-- 수정 버튼 -->
+                                    <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
+
+                                    <!-- 저장 버튼 -->
+                                    <button type="button" class="btn btn-sm btn-primary d-none save-btn" th:onclick="'updatePublisher('+${publisher.publisherId}+')'">저장</button>
+
+                                    <!-- 취소 버튼 (초기에는 숨김) -->
+                                    <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
 
@@ -48,7 +67,7 @@
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             <nav>
-                                <ul class="pagination">
+                                <ul class="pagination" th:if="${publishers.totalPages > 0}">
                                     <!-- 처음 버튼 -->
                                     <li class="page-item" th:classappend="${!publishers.hasPrevious()} ? 'disabled'">
                                         <a class="page-link" th:href="@{'/admin/mypage/publishers'(page=0, size=10)}">처음</a>
@@ -78,6 +97,57 @@
 
         </div>
     </section>
+
+    <script>
+        function updatePublisher(publisherId) {
+            fetch("/admin/mypage/publishers/" + publisherId, {
+                method:"PUT",
+                headers:{
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({publisherName: document.getElementById("pub-"+publisherId).value})
+            }).then(res=>{
+                if(res.ok){
+                    window.location.reload();
+                } else {
+                    alert("수정 실패");
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = document.querySelectorAll("tr");
+
+            rows.forEach(row => {
+                const editBtn = row.querySelector(".edit-btn");
+                const saveBtn = row.querySelector(".save-btn");
+                const cancelBtn = row.querySelector(".cancel-btn");
+                const input = row.querySelector("input[name='publisherName']");
+
+                if (editBtn && saveBtn && cancelBtn && input) {
+                    // 원래 값을 저장할 변수
+                    let originalValue;
+
+                    editBtn.addEventListener("click", () => {
+                        originalValue = input.value;
+                        input.removeAttribute("readonly");
+                        input.focus();
+                        editBtn.classList.add("d-none");
+                        saveBtn.classList.remove("d-none");
+                        cancelBtn.classList.remove("d-none");
+                    });
+
+                    cancelBtn.addEventListener("click", () => {
+                        input.value = originalValue;
+                        input.setAttribute("readonly", true);
+                        editBtn.classList.remove("d-none");
+                        saveBtn.classList.add("d-none");
+                        cancelBtn.classList.add("d-none");
+                    });
+                }
+            });
+        });
+    </script>
 </div>
 </body>
 </html>
