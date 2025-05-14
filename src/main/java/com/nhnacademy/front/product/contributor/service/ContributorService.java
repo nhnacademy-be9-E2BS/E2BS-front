@@ -9,7 +9,6 @@ import com.nhnacademy.front.product.contributor.adaptor.ContributorAdaptor;
 import com.nhnacademy.front.product.contributor.dto.request.RequestContributorDTO;
 import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
 import com.nhnacademy.front.product.contributor.exception.ContributorProcessException;
-import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePositionDTO;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -34,16 +33,29 @@ public class ContributorService {
 	}
 
 	/**
-	 * contributor 수정
+	 * contributor 이름 수정
 	 */
-	public void updateContributor(Long contributorId, RequestContributorDTO requestContributorDTO) {
+	// public void updateContributor(long contributorId, RequestContributorNameDTO requestContributorNameDTO) {
+	// 	System.out.println("수정 요청 ID: " + contributorId);
+	// 	System.out.println("수정 요청 이름: " + requestContributorNameDTO.getContributorName());
+	//
+	// 	try {
+	// 		ResponseContributorDTO responseContributorDTO
+	// 			= contributorAdaptor.putUpdateContributor(contributorId, requestContributorNameDTO);
+	// 	} catch (FeignException e) {
+	// 		throw new ContributorProcessException("contributor 수정 실패");
+	// 	}
+	// }
+
+	public void updateContributor(long contributorId, RequestContributorDTO requestContributorDTO) {
 		try {
-			ResponseContributorDTO responseContributorDTO
-				= contributorAdaptor.putUpdateContributor(contributorId, requestContributorDTO);
+			ResponseContributorDTO response = contributorAdaptor.putUpdateContributor(contributorId, requestContributorDTO);
+			log.info("Updated contributor: {}", response);
 		} catch (FeignException e) {
 			throw new ContributorProcessException("contributor 수정 실패");
 		}
 	}
+
 	/**
 	 * contributor 단건 조회
 	 */
@@ -66,4 +78,16 @@ public class ContributorService {
 			throw new ContributorProcessException("contributor 리스트 조회 실패");
 		}
 	}
+
+	// /**
+	//  * contributor 역할 수정
+	//  */
+	// public void updateContributorPosition(long contributorId, long positionId, RequestPositionDTO requestPositionDTO) {
+	// 	try {
+	// 		ResponseContributorDTO responsePositionDTO =
+	// 			contributorAdaptor.putUpdateContributorPosition(contributorId, positionId ,requestPositionDTO);
+	// 	} catch (FeignException e) {
+	// 		throw new ContributorProcessException("contributor position 조회 실패");
+	// 	}
+	// }
 }

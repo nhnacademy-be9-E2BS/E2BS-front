@@ -35,9 +35,14 @@ public class ContributorController {
 	private final ContributorService contributorService;
 	private final PositionService positionService;
 
+	/**
+	 * 기여자 생성
+	 */
 	@PostMapping
 	public String createContributor(@Validated @ModelAttribute RequestContributorDTO requestContributorDTO,
 		BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		System.out.println(requestContributorDTO.getContributorName());
+		System.out.println(requestContributorDTO.getPositionId());
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -48,32 +53,38 @@ public class ContributorController {
 		return "redirect:/admin/mypage/contributors";
 	}
 
-
+	/**
+	 * 기여자 이름 or 역할 수정
+	 */
 	@PutMapping("/{contributorId}")
-	public String updateContributor(@Validated @ModelAttribute RequestContributorDTO requestContributorDTO, @PathVariable Long contributorId, BindingResult bindingResult) {
+	public String updateContributor(@Validated @ModelAttribute RequestContributorDTO request,
+		@PathVariable Long contributorId,
+		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		contributorService.updateContributor(contributorId, requestContributorDTO);
+		contributorService.updateContributor(contributorId, request);
 		return "redirect:/admin/mypage/contributors";
 	}
 
+	/**
+	 * 기여자 단건 조회
+	 */
 	@GetMapping("/{contributorId}")
 	public String getContributor(@PathVariable Long contributorId, Model model) {
 		ResponseContributorDTO responseContributorDTO = contributorService.getContributor(contributorId);
 		return "/admin/product/contributors";
 	}
-
+	/**기여자 전체 조회
+	 */
 	@GetMapping()
 	public String getAllContributors(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
+		List<ResponsePositionDTO> positions = positionService.getPositionList();
+		model.addAttribute("positions", positions);
+
 		PageResponse<ResponseContributorDTO> response = contributorService.getContributors(pageable);
 		Page<ResponseContributorDTO> contributors = PageResponseConverter.toPage(response);
-
-		if (!model.containsAttribute("positions")) {
-			List<ResponsePositionDTO> positions = positionService.getPositionList();
-			model.addAttribute("positions", positions);
-		}
 
 		model.addAttribute("contributors", contributors);
 		return "/admin/product/contributors";

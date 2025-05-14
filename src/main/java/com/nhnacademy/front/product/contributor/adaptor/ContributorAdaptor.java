@@ -15,7 +15,6 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.contributor.dto.request.RequestContributorDTO;
 import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
 
-
 @FeignClient(name = "contributor-service", url = "${product.contributor.url}")
 public interface ContributorAdaptor {
 	@GetMapping
@@ -27,6 +26,9 @@ public interface ContributorAdaptor {
 	@PostMapping
 	ResponseContributorDTO postCreateContributor(@RequestBody RequestContributorDTO contributorDTO);
 
+
 	@PutMapping("/{contributorId}")
-	ResponseContributorDTO putUpdateContributor(@PathVariable long contributorId, @RequestBody RequestContributorDTO contributorDTO);
+	ResponseContributorDTO putUpdateContributor(@PathVariable long contributorId,
+		@RequestBody RequestContributorDTO requestContributorDTO);
+
 }

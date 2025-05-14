@@ -36,12 +36,12 @@ product:
 
   contributor:
     position:
-      url: http://localhost:10236/api/admin/positions
-    url: http://localhost:10236/api/admin/contributors
+      url: http://localhost:10232/api/admin/positions
+    url: http://localhost:10232/api/admin/contributors
 
 
   tag:
-    url: http://localhost:10232/api/admin/tags
+    url: http://localhost:10236/api/admin/tags
 
 
 order:
