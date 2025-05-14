@@ -50,12 +50,12 @@
                     </tr>
 
                     <!-- 상품 예시 -->
-                    <tr id="wrap1-product-row" data-wrap-available="true" data-product-id="1" class="product">
+                    <tr id="wrap1-product-row" data-wrap-available="true" data-product-id="1">
                         <td>
                             <img src="/img/product/product1.png" alt="" width="100">
                         </td>
                         <td>
-                            <span>해리포터</span>
+                            <span class="product-name">해리포터</span>
                         </td>
                         <td>
                             <span>10,000</span>
@@ -111,7 +111,7 @@
                             <img src="/img/product/product2.png" alt="" width="100">
                         </td>
                         <td>
-                            <span>채식주의자</span>
+                            <span class="product-name">채식주의자</span>
                         </td>
                         <td>
                             <span>8,000</span>
@@ -515,13 +515,12 @@
             }
 
             function tossPayWidget(orderId, payAmount) {
-                const orderName = document.querySelectorAll('.product');
                 tossPayments
                     .requestPayment("토스페이", {
                         amount: payAmount,
                         orderId: orderId,
-                        orderName: "테스트 결제", // 프론트에서 임의 처리 예정
-                        customerName: "김토스",
+                        orderName: gerOrderName(),
+                        customerName: "김토스", // 나중에 유저 정보를 직접 넣을 예정
                         successUrl: "http://localhost:10238/order/success",
                         failUrl: "https://localhost:10238/order/fail",
                         // 결제 승인 중 실패 할 경우 자동 리다이렉트 경로, 우리는 백에서 승인 처리를 하므로 여기서 작동할 일이 없음
@@ -541,14 +540,32 @@
                     });
             }
 
+            // 주문 이름 제작
+            function gerOrderName() {
+                // 모든 .product-name span 가져오기
+                const productNameSpans = document.querySelectorAll(".product-name");
+
+                // 이름 텍스트만 배열로 뽑기
+                const names = Array.from(productNameSpans).map(span => span.textContent.trim());
+
+                // 조건에 따라 문자열 생성
+                if (names.length === 1) {
+                    return names[0]; // ex. "해리포터"
+                } else if (names.length > 1) {
+                    return `${names[0]} 외 ${names.length - 1}건`; // ex. "해리포터 외 1건"
+                } else {
+                    return ""; // 상품이 없는 경우
+                }
+            }
+
             // 결제창 호출 후 꺼서 주문 취소 시 백에 주문서 삭제 요청
-            function deleteOrder(orderId){
-                fetch("/order/cancel?orderId=" + orderId,{
-                    method:"POST",
-                    headers:{
+            function deleteOrder(orderId) {
+                fetch("/order/cancel?orderId=" + orderId, {
+                    method: "POST",
+                    headers: {
                         "Content-Type": "application/json",
                     },
-                    body :{}
+                    body: {}
                 });
             }
         </script>
