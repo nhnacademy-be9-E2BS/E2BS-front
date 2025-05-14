@@ -18,5 +18,5 @@ public class RequestRegisterWrapperDTO {
 	@NotNull
 	private String wrapperImage;
 	@NotNull
-	private boolean wrapperSaleable;
+	private Boolean wrapperSaleable;
 }
