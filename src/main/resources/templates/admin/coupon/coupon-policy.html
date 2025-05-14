@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             <nav>
-                                <ul class="pagination">
+                                <ul class="pagination" th:if="${couponPolicies.totalPages > 0}">
                                     <!-- 처음 버튼 -->
                                     <li class="page-item" th:classappend="${!couponPolicies.hasPrevious()} ? 'disabled'">
                                         <a class="page-link" th:href="@{'/admin/mypage/couponPolicies'(page=0, size=5)}">처음</a>
