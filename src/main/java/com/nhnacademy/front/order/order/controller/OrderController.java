@@ -35,13 +35,26 @@ public class OrderController {
 	/**
 	 * 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 미리 저장하는 기능
 	 */
-	@PostMapping("/order")
+	@PostMapping("/order/tossPay")
 	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(@Validated @RequestBody RequestOrderWrapperDTO request,
 		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		return orderService.createOrder(request);
+	}
+
+	/**
+	 * 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 미리 저장하는 기능
+	 */
+	@PostMapping("/order/point")
+	public ResponseEntity<ResponseOrderResultDTO> postPointCheckOut(
+		@Validated @RequestBody RequestOrderWrapperDTO request,
+		BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new ValidationFailedException(bindingResult);
+		}
+		return orderService.createPointOrder(request);
 	}
 
 	/**

@@ -10,6 +10,10 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDT
 
 @FeignClient(name = "order-service", url = "${order.create.url}")
 public interface OrderCreateAdaptor {
-	@PostMapping
+	@PostMapping("/tossPay")
 	ResponseEntity<ResponseOrderResultDTO> postCreateOrder(@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO);
+
+	@PostMapping("/point")
+	ResponseEntity<ResponseOrderResultDTO> postPointCreateOrder(
+		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO);
 }

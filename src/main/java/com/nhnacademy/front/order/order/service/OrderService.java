@@ -29,6 +29,14 @@ public class OrderService {
 	}
 
 	/**
+	 * 포인트 주문 요청
+	 */
+	public ResponseEntity<ResponseOrderResultDTO> createPointOrder(
+		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO) {
+		return orderCreateAdaptor.postPointCreateOrder(requestOrderWrapperDTO);
+	}
+
+	/**
 	 * 결제 완료 후 결제 승인 요청을 back에 요청하는 서비스
 	 */
 	public ResponseEntity<Void> confirmOrder(@RequestParam String orderId, @RequestParam String paymentKey,
