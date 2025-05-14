@@ -17,7 +17,9 @@ import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublish
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PublisherService {
@@ -56,6 +58,7 @@ public class PublisherService {
 			return response.getBody();
 
 		} catch (FeignException ex) {
+			log.error("출판사 리스트 조회 실패. 원인: {}", ex.getMessage(), ex);
 			throw new PublisherGetProcessException("출판사 리스트 조회 실패");
 		}
 	}

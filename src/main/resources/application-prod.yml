@@ -24,4 +24,16 @@ auth:
 coupon:
   url: http://e2bs.shop/api/admin/coupons
   policy:
-    url: http://e2bs.shop/api/admin/couponPolicies
+    url: https://e2bs.shop/api/admin/couponPolicies
+
+product:
+  publisher:
+    url: https://e2bs.shop/api/admin/publishers
+
+  tag:
+    url: https://e2bs.shop/api/admin/tags
+
+
+order:
+  wrapper:
+    url: https://e2bs.shop/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
