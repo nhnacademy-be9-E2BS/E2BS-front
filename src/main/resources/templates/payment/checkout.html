@@ -262,8 +262,8 @@
                             <div class="d-flex justify-content-between align-items-center py-2">
                                 <h6 class="text-start">포인트 사용</h6>
                                 <div class="text-end">
-                                    <input type="number" id="pointInput" max="2500">
-                                    <span>/ 2500</span>
+                                    <input type="number" id="pointInput" max="50000">
+                                    <span>/ 50,000</span>
                                 </div>
                             </div>
 
@@ -323,7 +323,6 @@
                             </div>
 
                             <div class="text-center">
-                                <span>현재 토스 결제만 구현 되어있습니다.</span>
                                 <button class="btn primary w-100" id="payment-button"
                                         style="margin-top: 30px">결제하기
                                 </button>
@@ -374,7 +373,7 @@
 
                     if (await response === null) {
                         // 재고 부족, 포인트 부족, 쿠폰 사용 불가, 없는 외래키 접근 등
-                        alert("주문에 문제가 있어 결제를 시도할 수 없습니다.");
+                        window.location.href = "/order/fail"
                         return;
                     }
 
@@ -385,9 +384,17 @@
                     const payAmount = parseInt(parseCurrency(document.getElementById("payment_amount").innerText));
                     if (payAmount !== 0) {
                         alert("사용 포인트가 부족합니다.");
-                        return;
                     } else {
                         // 결제 진행
+                        const response = await saveOrder();
+                        // 응답의 data가 null이 아니면 정상 저장 된거이므로 성공 url이동
+                        // null이면 주문 처리 실패니까 실패 url로 리다이렉트
+                        // 프론트에서는 포인트가 충분했으나 DB에서는 부족한 경우
+                        if (response !== null) {
+                            window.location.href = "/order/confirm";
+                        } else {
+                            window.location.href = "/order/fail"
+                        }
                     }
 
                 } else {
@@ -457,7 +464,7 @@
                     // 쿠폰 선택 안 함의 경우 null로 두기
                     selectedCouponId = couponRadio.id;
                 }
-                let pointAmountData = document.getElementById("pointInput").textContent;
+                let pointAmountData = document.getElementById("pointInput").value;
                 if (pointAmountData === "") {
                     pointAmountData = "0";
                 }
@@ -821,7 +828,7 @@
 
             const FREE_SHIPPING_THRESHOLD = 30000;
             const SHIPPING_COST = 5000;
-            const MAX_POINT = 2500;
+            const MAX_POINT = parseInt(pointInput.max);
 
             // 금액에서 , 제거하기
             function parseCurrency(value) {
@@ -858,20 +865,32 @@
                 let shippingCost = productTotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
                 shippingFeeSpan.textContent = formatCurrency(shippingCost);
 
-                // 포인트 계산
-                let pointUsed = Math.min(parseCurrency(pointInput.value), MAX_POINT, productTotal + shippingCost);
-                pointSpan.textContent = "-" + formatCurrency(pointUsed);
-
                 // 쿠폰 값 적용
                 let couponDiscount = parseCurrency(couponSpan.textContent);
 
                 couponSpan.textContent = "-" + formatCurrency(couponDiscount);
 
-                // 결제 금액 상품 금액 + 배송비 - 포인트 - 쿠폰 할인
-                let finalAmount = productTotal + shippingCost - pointUsed - couponDiscount;
+                // 포인트 계산
+                let pointUsed = Math.min(parseCurrency(pointInput.value), MAX_POINT, productTotal + shippingCost - couponDiscount);
+                pointSpan.textContent = "-" + formatCurrency(pointUsed);
+
+                // 결제 금액 상품 금액 + 배송비 - 쿠폰 할인 (포인트 추후 제외)
+                let finalAmount = productTotal + shippingCost - couponDiscount;
+
+                // 할인 내역이 전체 금액이 넘을 경우 전체 금액은 0원 설정
                 if (finalAmount < 0) {
                     finalAmount = 0;
                 }
+
+                // 사용하려한 포인트가 결제 금액보다 많은 경우
+                // 사용 가능한 포인트는 최대 결제 금액까지만 입력 가능하게 제한
+                if (pointInput.value > finalAmount) {
+                    pointInput.value = finalAmount;
+                    finalAmount = 0;
+                } else {
+                    finalAmount = finalAmount - pointUsed;
+                }
+
                 totalAmountSpan.textContent = formatCurrency(finalAmount);
             }
 

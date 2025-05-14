@@ -58,8 +58,8 @@ public class OrderController {
 			// 결제 성공창으로 리다이렉트
 			return "redirect:/order/confirm";
 		} else {
-			// 결제 실패 창으로 리다이렉트, 추후 제작 예정
-			return "/payment/fail";
+			// 결제 실패 창으로 리다이렉트
+			return "redirect:/order/fail";
 		}
 	}
 
@@ -71,6 +71,11 @@ public class OrderController {
 	public String getConfirmOrder() {
 		// 추후 정보를 더 넣을지는 모름
 		return "payment/confirmation";
+	}
+
+	@GetMapping("/order/fail")
+	public String getFailOrder() {
+		return "payment/fail";
 	}
 
 	@PostMapping("/order/cancel")
