@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <h2>Contributor Management</h2>
+
+            <!-- 등록 폼 -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>Register New Contributor</h4>
+                    <form class="row login_form" action="/admin/mypage/contributors" method="post">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="contributorName" placeholder="기여자 이름" required>
+                                <label for="contributor-position"></label>
+                                    <select id="contributor-position" name="positionId" class="form-control" required>
+                                        <option value="" disabled selected>선택하세요</option>
+                                        <option th:each="position : ${positions}"
+                                                th:value="${position.positionId}"
+                                                th:text="${position.positionName}">
+                                        </option>
+                                    </select>
+                        </div>
+                        <div class="col-md-12 form-group mt-3">
+                            <button type="submit" class="button button-register w-100">Register Position</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            <!-- 역할 목록 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>Position List</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>기여자 아이디</th>
+                            <th>기여자 이름</th>
+                            <th>기여자 역할 아이디</th>
+                            <th>기여자 역할</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- contributor 목록 출력 -->
+                        <tbody>
+                        <tr th:each="contributor : ${contributors}">
+                            <td th:text="${contributor.contributorId}"></td>
+                            <td th:text="${contributor.contributorName}"></td>
+                            <td th:text="${contributor.positionId}"></td>
+                            <td th:text="${contributor.positionName}"></td>
+                        </tr>
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+            </div>
+
+            <!-- 페이징 영역 -->
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination">
+                            <!-- 처음 버튼 -->
+                            <li class="page-item" th:classappend="${!contributors.hasPrevious()} ? 'disabled'">
+                                <a class="page-link" th:href="@{'/admin/mypage/contributors'(page=0, size=10)}">처음</a>
+                            </li>
+
+                            <!-- 전체 페이지 번호 출력 -->
+                            <li class="page-item"
+                                th:each="i : ${#numbers.sequence(0, contributors.totalPages - 1)}"
+                                th:classappend="${i == contributors.number} ? 'active'">
+                                <a class="page-link"
+                                   th:href="@{'/admin/mypage/contributors'(page=${i}, size=10)}"
+                                   th:text="${i + 1}">1</a>
+                            </li>
+
+                            <!-- 마지막 버튼 -->
+                            <li class="page-item" th:classappend="${!contributors.hasNext()} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{'/admin/mypage/contributors'(page=${contributors.totalPages - 1}, size=10)}">마지막</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+</div>
+</body>
+</html>
