@@ -38,6 +38,9 @@ product:
     position:
       url: http://localhost:10232/api/admin/positions
 
+  tag:
+    url: http://localhost:10232/api/admin/tags
+
 
 order:
   wrapper:
