@@ -1,7 +1,9 @@
 package com.nhnacademy.front.product.contributor.position.service;
 
+import java.util.List;
 import java.util.Objects;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -94,6 +96,24 @@ public class PositionService {
 			return response.getBody();
 		} catch (FeignException e) {
 			throw new PositionProcessException("position 리스트 조회 실패");
+		}
+	}
+
+	/**
+	 * position 리스트 가져오기
+	 */
+	public List<ResponsePositionDTO> getPositionList() {
+		try {
+			ResponseEntity<PageResponse<ResponsePositionDTO>> response = positionAdaptor.getPositions(PageRequest.of(0, 100));
+
+			if (response == null || response.getBody() == null || !response.getStatusCode().is2xxSuccessful()) {
+				throw new PositionGetProcessException("포지션 목록 가져오기 실패");
+			}
+
+			return response.getBody().getContent();
+		} catch (FeignException e) {
+			log.error("Feign 예외 발생: {}", e.getMessage());
+			throw new PositionGetProcessException("Feign 오류로 포지션 목록 가져오기 실패");
 		}
 	}
 

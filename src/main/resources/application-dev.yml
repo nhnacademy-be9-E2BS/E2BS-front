@@ -40,6 +40,9 @@ product:
     url: http://localhost:10236/api/admin/contributors
 
 
+  tag:
+    url: http://localhost:10232/api/admin/tags
+
 
 order:
   wrapper:
