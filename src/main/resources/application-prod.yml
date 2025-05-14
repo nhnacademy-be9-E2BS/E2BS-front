@@ -20,7 +20,8 @@ auth:
     create:
       url: https://e2bs.shop/api/auth
 
-# 쿠폰 정책
+# 쿠폰
 coupon:
+  url: http://e2bs.shop/api/admin/coupons
   policy:
     url: http://e2bs.shop/api/admin/couponPolicies
