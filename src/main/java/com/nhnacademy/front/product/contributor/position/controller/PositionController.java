@@ -1,5 +1,7 @@
 package com.nhnacademy.front.product.contributor.position.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -65,7 +67,7 @@ public class PositionController {
 		ResponsePositionDTO responsePositionDTO = positionService.getPositionById(positionId);
 
 		model.addAttribute("position", responsePositionDTO);
-		return "/admin/positions";
+		return "/admin/product/positions";
 	}
 
 	/**
@@ -78,8 +80,7 @@ public class PositionController {
 		Page<ResponsePositionDTO> positions = PageResponseConverter.toPage(response);
 
 		model.addAttribute("positions", positions);
-		return "/admin/positions";
+		return "/admin/product/positions";
 	}
-
 
 }
