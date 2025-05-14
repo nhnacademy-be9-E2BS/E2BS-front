@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <h2>Coupon Register</h2>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4>Register New Coupon</h4>
+
+                    <!-- 쿠폰 등록 폼 -->
+                    <form class="row login_form" action="/admin/mypage/coupons/register" method="post">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <!-- 쿠폰명 -->
+                            <tr>
+                                <th style="width: 180px;">쿠폰명</th>
+                                <td>
+                                    <input type="text" class="form-control" name="couponName" placeholder="쿠폰명을 입력하세요" required>
+                                </td>
+                            </tr>
+
+                            <!-- 쿠폰 정책 -->
+                            <tr>
+                                <th>쿠폰 정책</th>
+                                <td>
+                                    <select class="form-control" name="couponPolicyId" required>
+                                        <option value="" disabled selected>선택해주세요</option>
+                                        <option th:each="policy : ${couponPolicies}"
+                                                th:value="${policy.couponPolicyId}"
+                                                th:text="${policy.couponPolicyName + ' (' + #temporals.format(policy.couponPolicyCreatedAt, 'yyyy-MM-dd') + ')'}">
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <!-- 쿠폰 종류 -->
+                            <tr>
+                                <th>쿠폰 종류</th>
+                                <td>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="couponType" id="typeTotal" value="total" checked>
+                                        <label class="form-check-label" for="typeTotal">전체 할인 (일반, 생일, Welcome)</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="couponType" id="typeCategory" value="category">
+                                        <label class="form-check-label" for="typeCategory">카테고리 할인</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="couponType" id="typeProduct" value="product">
+                                        <label class="form-check-label" for="typeProduct">도서 할인</label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- 카테고리 선택 -->
+                            <tr id="categoryRow" class="hidden">
+                                <th>카테고리</th>
+                                <td>
+                                    <select class="form-control" name="categoryId" multiple size="8">
+                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">카테고리</option>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <!-- 도서 선택 -->
+                            <tr id="productRow" class="hidden">
+                                <th>도서</th>
+                                <td>
+                                    <select class="form-control" name="productId" multiple size="8">
+                                        <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}">도서</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- 제출 버튼 -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="button button-register w-100">REGISTER COUPON</button>
+                        </div>
+                    </form>
+
+                    <!-- 스크립트 및 스타일 -->
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const radios = document.querySelectorAll("input[name='couponType']");
+                            const categoryRow = document.getElementById("categoryRow");
+                            const productRow = document.getElementById("productRow");
+
+                            function updateVisibility(value) {
+                                categoryRow.classList.toggle("hidden", value !== "category");
+                                productRow.classList.toggle("hidden", value !== "product");
+                            }
+
+                            updateVisibility(document.querySelector("input[name='couponType']:checked").value);
+
+                            radios.forEach(radio => {
+                                radio.addEventListener("change", function () {
+                                    updateVisibility(this.value);
+                                });
+                            });
+                        });
+                    </script>
+
+                    <style>
+                        .hidden {
+                            display: none;
+                        }
+
+                        select[multiple] {
+                            height: 300px;
+                        }
+
+                        table th {
+                            white-space: nowrap;
+                            vertical-align: top;
+                            text-align: left;
+                        }
+                    </style>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+</body>
+</html>
