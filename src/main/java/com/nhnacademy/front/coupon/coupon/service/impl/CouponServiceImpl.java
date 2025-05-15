@@ -8,9 +8,9 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.coupon.coupon.adaptor.CouponAdaptor;
 import com.nhnacademy.front.coupon.coupon.exception.CouponCreateProcessException;
 import com.nhnacademy.front.coupon.coupon.exception.CouponGetProcessException;
+import com.nhnacademy.front.coupon.coupon.model.dto.RequestCouponDTO;
+import com.nhnacademy.front.coupon.coupon.model.dto.ResponseCouponDTO;
 import com.nhnacademy.front.coupon.coupon.exception.CouponUpdateProcessException;
-import com.nhnacademy.front.coupon.coupon.model.dto.request.RequestCouponDTO;
-import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 import com.nhnacademy.front.coupon.coupon.service.CouponService;
 
 import feign.FeignException;
