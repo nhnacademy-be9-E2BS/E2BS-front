@@ -6,7 +6,7 @@ $(document).ready(function () {
             return;
         }
 
-        const cartItemsId = $(this).data('id');
+        const cartItemsId = $(this).data('cartitemsid');
         console.log("삭제할 cartItemsId: ", cartItemsId);
 
         const row = $(this).closest('tr');
