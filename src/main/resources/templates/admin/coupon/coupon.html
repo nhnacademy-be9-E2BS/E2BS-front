@@ -10,6 +10,13 @@
 
             <a th:href="@{/admin/mypage/coupons/register}">쿠폰 등록</a>
 
+            <!-- 스타일 추가 -->
+            <style>
+                th {
+                    white-space: nowrap;
+                }
+            </style>
+
             <!-- 쿠폰 목록 -->
             <div class="row mb-5">
                 <div class="col-12">
@@ -21,12 +28,15 @@
                             <th>쿠폰정책</th>
                             <th>할인 카테고리</th>
                             <th>할인 도서</th>
-                            <th>상세보기</th>
+                            <th>활성여부</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="coupon : ${coupons}">
-                            <td th:text="${coupon.couponName}">쿠폰명</td>
+                            <td>
+                                <a th:href="@{/admin/mypage/coupons/{id}(id=${coupon.couponId})}"
+                                   th:text="${coupon.couponName}">쿠폰상세보기</a>
+                            </td>
                             <td>
                                 <a th:href="@{/admin/mypage/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
                                    th:text="${coupon.couponPolicyName}">1</a>
@@ -34,7 +44,12 @@
                             <td th:text="${coupon.categoryId != null ? coupon.categoryId : '-'}">-</td>
                             <td th:text="${coupon.productId != null ? coupon.productId : '-'}">-</td>
                             <td>
-                                <a th:href="@{/admin/mypage/coupons/{id}(id=${coupon.couponId})}">상세보기</a>
+                                <button class="btn btn-sm"
+                                        th:attr="data-id=${coupon.couponId}"
+                                        th:text="${coupon.couponIsActive ? '활성' : '비활성'}"
+                                        th:classappend="${coupon.couponIsActive ? 'btn-success' : 'btn-danger'}"
+                                        onclick="toggleCouponStatus(this)">
+                                </button>
                             </td>
                         </tr>
                         </tbody>
@@ -72,6 +87,29 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            function toggleCouponStatus(button) {
+                const couponId = button.getAttribute('data-id');
+
+                fetch("/admin/mypage/coupons/" + couponId, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('상태 변경 실패');
+                        }else{
+                            window.location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        alert("에러 발생: " + error.message);
+                    });
+            }
+        </script>
     </section>
 </div>
 </body>

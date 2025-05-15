@@ -1,0 +1,155 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <h2>Contributor Management</h2>
+
+            <!-- 등록 폼 -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>Register New Contributor</h4>
+                    <form class="row login_form" action="/admin/mypage/contributors" method="post">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="contributorName" placeholder="기여자 이름" required>
+
+                            <label for="contributor-position">역할 선택</label>
+                            <select id="contributor-position" name="positionId" class="form-control" required>
+                                <option value="" disabled selected>선택하세요</option>
+                                <option th:each="position : ${positions}"
+                                        th:value="${position.positionId}"
+                                        th:text="${position.positionName}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12 form-group mt-3">
+                            <button type="submit" class="button button-register w-100">Register Position</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 역할 목록 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>Position List</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>기여자 아이디</th>
+                            <th>기여자 정보</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="contributor : ${contributors}">
+                            <td th:text="${contributor.contributorId}"></td>
+                            <td>
+                                <form th:action="@{'/admin/mypage/contributors/' + ${contributor.contributorId}}" method="post">
+                                    <input type="hidden" name="_method" value="put"/>
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="text"
+                                               th:value="${contributor.contributorName}"
+                                               name="contributorName"
+                                               class="form-control"
+                                               readonly
+                                               style="width: 100%; overflow: hidden; text-overflow: ellipsis;" />
+
+                                        <select name="positionId" class="form-select">
+                                            <option th:each="position : ${positions}"
+                                                    th:value="${position.positionId}"
+                                                    th:text="${position.positionName}"
+                                                    th:selected="${position.positionId == contributor.positionId}">
+                                            </option>
+                                        </select>
+
+                                        <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
+                                        <button type="submit" class="btn btn-sm btn-primary d-none save-btn">저장</button>
+                                        <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 페이징 영역 -->
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination" th:if="${contributors.totalPages > 0}">
+                                    <li class="page-item" th:classappend="${!contributors.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link" th:href="@{'/admin/mypage/contributors'(page=0, size=10)}">처음</a>
+                                    </li>
+
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, contributors.totalPages - 1)}"
+                                        th:classappend="${i == contributors.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/contributors'(page=${i}, size=10)}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <li class="page-item" th:classappend="${!contributors.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/contributors'(page=${contributors.totalPages - 1}, size=10)}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll("tr").forEach(row => {
+                const nameInput = row.querySelector("input[name='contributorName']");
+                const roleSelect = row.querySelector("select[name='positionId']");
+                const saveBtn = row.querySelector(".save-btn");
+                const cancelBtn = row.querySelector(".cancel-btn");
+                const editBtn = row.querySelector(".edit-btn");
+
+                let originalName = "";
+                let originalRole = "";
+
+                if (!editBtn || !saveBtn || !cancelBtn || !roleSelect) return;
+
+
+
+                editBtn.addEventListener("click", () => {
+                    originalName = nameInput.value;
+                    originalRole = roleSelect.value;
+
+                    nameInput.readOnly = false;
+                    roleSelect.disabled = false;
+
+                    editBtn.classList.add("d-none");
+                    saveBtn.classList.remove("d-none");
+                    cancelBtn.classList.remove("d-none");
+                });
+
+                cancelBtn.addEventListener("click", () => {
+                    nameInput.value = originalName;
+                    roleSelect.value = originalRole;
+
+                    nameInput.readOnly = true;
+                    roleSelect.disabled = true;
+
+                    editBtn.classList.remove("d-none");
+                    saveBtn.classList.add("d-none");
+                    cancelBtn.classList.add("d-none");
+                });
+            });
+        });
+    </script>
+
+</div>
+</body>
+</html>

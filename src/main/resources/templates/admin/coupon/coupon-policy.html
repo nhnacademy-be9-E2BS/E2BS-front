@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/admin-layout}">
 <body>
 <div layout:fragment="content">
-    <section class="login_box_area section-margin">
+    <section>
         <div class="container">
             <h2>Coupon Policy Management</h2>
 
@@ -42,9 +42,9 @@
             <div class="row mb-5">
                 <div class="col-12">
                     <h4>Coupon Policy List</h4>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" style="table-layout: auto; width: 100%;">
                         <thead>
-                        <tr>
+                        <tr style="white-space: nowrap;">
                             <th>쿠폰정책명</th>
                             <th>최소주문금액</th>
                             <th>할인률 (%)</th>
@@ -73,7 +73,7 @@
                                 <ul class="pagination" th:if="${couponPolicies.totalPages > 0}">
                                     <!-- 처음 버튼 -->
                                     <li class="page-item" th:classappend="${!couponPolicies.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link" th:href="@{'/admin/mypage/couponPolicies'(page=0, size=5)}">처음</a>
+                                        <a class="page-link" th:href="@{'/admin/mypage/couponPolicies'(page=0, size=${couponPolicies.size})}">처음</a>
                                     </li>
 
                                     <!-- 전체 페이지 번호 출력 -->
@@ -81,14 +81,14 @@
                                         th:each="i : ${#numbers.sequence(0, couponPolicies.totalPages - 1)}"
                                         th:classappend="${i == couponPolicies.number} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/couponPolicies'(page=${i}, size=5)}"
+                                           th:href="@{'/admin/mypage/couponPolicies'(page=${i}, size=${couponPolicies.size})}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
                                     <!-- 마지막 버튼 -->
                                     <li class="page-item" th:classappend="${!couponPolicies.hasNext()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/couponPolicies'(page=${couponPolicies.totalPages - 1}, size=5)}">마지막</a>
+                                           th:href="@{'/admin/mypage/couponPolicies'(page=${couponPolicies.totalPages - 1}, size=${couponPolicies.size})}">마지막</a>
                                     </li>
                                 </ul>
                             </nav>
