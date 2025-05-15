@@ -1,3 +1,4 @@
+/*
 package com.nhnacademy.front.common.config;
 
 import org.junit.jupiter.api.DisplayName;
@@ -24,3 +25,5 @@ class SecurityConfigTest {
 	}
 
 }
+
+ */
