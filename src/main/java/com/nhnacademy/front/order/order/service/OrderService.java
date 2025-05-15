@@ -1,0 +1,49 @@
+package com.nhnacademy.front.order.order.service;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
+import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+	private final OrderAdaptor orderAdaptor;
+
+	/**
+	 * 주문서 정보를 back에 저장 요청하는 서비스
+	 */
+	public ResponseEntity<ResponseOrderResultDTO> createOrder(
+		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO) {
+		return orderAdaptor.postCreateOrder(requestOrderWrapperDTO);
+	}
+
+	/**
+	 * 포인트 주문 요청
+	 */
+	public ResponseEntity<ResponseOrderResultDTO> createPointOrder(
+		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO) {
+		return orderAdaptor.postPointCreateOrder(requestOrderWrapperDTO);
+	}
+
+	/**
+	 * 결제 완료 후 결제 승인 요청을 back에 요청하는 서비스
+	 */
+	public ResponseEntity<Void> confirmOrder(@RequestParam String orderId, @RequestParam String paymentKey,
+		@RequestParam long amount) {
+		return orderAdaptor.confirmOrder(orderId, paymentKey, amount);
+	}
+
+	/**
+	 * 토스 결제 모달 창을 끌 시 저장된 주문서를 삭제하는 서비스
+	 */
+	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
+		return orderAdaptor.cancelOrder(orderId);
+	}
+}
