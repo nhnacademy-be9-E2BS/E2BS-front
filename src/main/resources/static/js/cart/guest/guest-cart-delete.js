@@ -6,7 +6,7 @@ $(document).ready(function () {
             return;
         }
 
-        const productId = $(this).data('id');
+        const productId = $(this).data('productid');
         console.log("삭제할 productId: ", productId);
 
         const row = $(this).closest('tr');

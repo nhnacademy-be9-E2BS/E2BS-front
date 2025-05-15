@@ -40,7 +40,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: '/carts/items',
+            url: '/guests/carts/items',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(

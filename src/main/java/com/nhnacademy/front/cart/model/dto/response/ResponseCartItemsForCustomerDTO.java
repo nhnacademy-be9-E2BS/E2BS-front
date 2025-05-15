@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseCartItemsForCustomerDTO {
 
-	private long cartItemId;
+	private long cartItemsId;
 
 	private long productId;
 

@@ -2,19 +2,23 @@
 document.addEventListener('DOMContentLoaded', function () {
     const increaseButtons = document.querySelectorAll('.increase.items-count');
     const decreaseButtons = document.querySelectorAll('.reduced.items-count');
-    const productId = document.getElementById("productId").textContent;
 
     increaseButtons.forEach(button => {
-        button.addEventListener('click', () => updateQuantity(productId, button.dataset.id, 1));
+        button.addEventListener('click', () => updateQuantity(button.dataset.productid, button.dataset.cartitemsid, 1));
     });
 
     decreaseButtons.forEach(button => {
-        button.addEventListener('click', () => updateQuantity(productId, button.dataset.id, -1));
+        button.addEventListener('click', () => updateQuantity(button.dataset.productid, button.dataset.cartitemsid, -1));
     });
 
     function updateQuantity(productId, cartItemsId, change) {
-        const quantityInput = document.getElementById(`quantity-${cartItemsId}`);
+        console.log('cartItemsId: ' + cartItemsId)
+        console.log('productId: ' + productId)
+
+        const quantityInput = document.getElementById(`quantity-${productId}`);
         let quantity = parseInt(quantityInput.value);
+        console.log('quantityInput: ' + quantityInput.value);
+        console.log('quantity: ' + quantity);
         if (isNaN(quantity)) {
             quantity = 0;
         }
@@ -38,9 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         updateTotalPaymentAmount();
         sendCartUpdate(productId, cartItemsId, quantity);
-
-        console.log('cartItemsId: ' + cartItemsId)
-        console.log('productId: ' + productId)
     }
 });
 
