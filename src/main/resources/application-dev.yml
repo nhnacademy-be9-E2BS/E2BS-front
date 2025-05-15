@@ -11,6 +11,8 @@ eureka:
   instance:
     prefer-ip-address: true # 서비스 등록 시 도메인 대신 IP 주소로 등록
 
+
+
 member:
   login:
     url: http://localhost:10232/api/login

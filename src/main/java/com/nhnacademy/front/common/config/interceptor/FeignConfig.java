@@ -1,4 +1,4 @@
-package com.nhnacademy.front.common.config;
+package com.nhnacademy.front.common.config.interceptor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

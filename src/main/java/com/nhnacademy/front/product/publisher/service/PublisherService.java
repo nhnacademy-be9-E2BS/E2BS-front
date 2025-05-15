@@ -7,12 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.exception.EmptyRequestException;
+import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.adaptor.PublisherAdaptor;
 import com.nhnacademy.front.product.publisher.exception.PublisherCreateProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherGetProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherUpdateProcessException;
 import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
-import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 
 import feign.FeignException;
@@ -48,7 +48,7 @@ public class PublisherService {
 	/**
 	 * Publisher 리스트를 back에서 조회
 	 */
-	public PageResponse<ResponsePublisherDTO> getPublishers(Pageable pageable) {
+	public PageResponse<ResponsePublisherDTO> getPublishers(Pageable pageable) throws FeignException {
 		try {
 			ResponseEntity<PageResponse<ResponsePublisherDTO>> response = publisherAdaptor.getPublishers(pageable);
 
@@ -57,9 +57,8 @@ public class PublisherService {
 			}
 			return response.getBody();
 
-		} catch (FeignException ex) {
-			log.error("출판사 리스트 조회 실패. 원인: {}", ex.getMessage(), ex);
-			throw new PublisherGetProcessException("출판사 리스트 조회 실패");
+		} catch (PublisherGetProcessException e) {
+			throw new RuntimeException(e);
 		}
 	}
 

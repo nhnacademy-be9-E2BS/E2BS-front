@@ -1,7 +1,13 @@
 package com.nhnacademy.front.common.interceptor;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.nhnacademy.front.jwt.rule.JwtRule;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -16,20 +22,46 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 	public void apply(RequestTemplate requestTemplate) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 
-		Cookie[] cookies = request.getCookies();
-		if (cookies.length <= 0) {
-			return;
-		}
+		Optional<Cookie> newCookie = Arrays.stream(request.getCookies())
+			.filter(v -> v.getName().equals("Set-Cookie"))
+			.findFirst();
 
 		StringBuilder cookieHeaders = new StringBuilder();
 
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals("Set-Cookie")) {
-				cookieHeaders.append(cookie.getName() + "=" + cookie.getValue());
-				break;
+		if (newCookie.isEmpty()) {
+			String path = request.getRequestURI();
+			if (path.equals("/") || path.startsWith("/login") || path.startsWith("/register")) {
+				return;
 			}
+
+			Cookie[] cookies = request.getCookies();
+			if (cookies.length <= 0) {
+				return;
+			}
+
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(JwtRule.JWT_ISSUE_HEADER.getValue())) {
+					cookieHeaders.append(cookie.getName() + "=" + cookie.getValue());
+					break;
+				}
+			}
+			log.info("FeignCookieInterceptor:{}", cookieHeaders.toString());
+
+			requestTemplate.header(JwtRule.JWT_ISSUE_HEADER.getValue(), cookieHeaders.toString());
+			return;
 		}
 
-		requestTemplate.header("Set-Cookie", cookieHeaders.toString());
+		String o = (String)request.getAttribute("access-refresh");
+		String data = "";
+		if (Objects.nonNull(o)) {
+			data = o;
+		} else {
+			data = newCookie.get().getValue();
+		}
+
+		cookieHeaders.append(JwtRule.JWT_ISSUE_HEADER.getValue() + "=" + data);
+		requestTemplate.header(JwtRule.JWT_ISSUE_HEADER.getValue(), cookieHeaders.toString());
+
 	}
+
 }

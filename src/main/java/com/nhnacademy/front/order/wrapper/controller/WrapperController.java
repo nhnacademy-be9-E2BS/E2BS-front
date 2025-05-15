@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
@@ -35,6 +36,7 @@ public class WrapperController {
 	 * 관리자 페이지 -> 포장지 뷰
 	 * 등록 되어 있는 모든 포장지 리스트가 보여짐 (판매 여부 상관 없음)
 	 */
+	@JwtTokenCheck
 	@GetMapping
 	public String getWrappers(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
 		PageResponse<ResponseWrapperDTO> response = wrapperService.getWrappers(pageable);
@@ -47,10 +49,11 @@ public class WrapperController {
 	/**
 	 * 포장지 생성
 	 */
+	@JwtTokenCheck
 	@PostMapping
 	public String createWrapper(@Validated @ModelAttribute RequestRegisterWrapperDTO requestRegisterWrapperDTO,
 		BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
@@ -62,10 +65,11 @@ public class WrapperController {
 	/**
 	 * 포장지 수정 (판매 여부만 수정 가능)
 	 */
+	@JwtTokenCheck
 	@PutMapping("{wrapperId}")
 	public String updateWrapper(@Validated @ModelAttribute RequestModifyWrapperDTO requestModifyWrapperDTO,
 		BindingResult bindingResult, @PathVariable Long wrapperId) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
