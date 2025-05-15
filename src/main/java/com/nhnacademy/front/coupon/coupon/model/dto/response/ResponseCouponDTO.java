@@ -1,4 +1,4 @@
-package com.nhnacademy.front.coupon.coupon.model.dto;
+package com.nhnacademy.front.coupon.coupon.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,4 +18,5 @@ public class ResponseCouponDTO {
 	private String categoryName;
 	private Long productId;
 	private String productTitle;
+	private boolean couponIsActive;
 }
