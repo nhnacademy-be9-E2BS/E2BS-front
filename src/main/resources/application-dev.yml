@@ -42,7 +42,7 @@ product:
 
 
   tag:
-    url: http://localhost:10236/api/admin/tags
+    url: http://localhost:10232/api/admin/tags
 
 
 order:
