@@ -4,197 +4,142 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/user-layout}">
+
 <body>
 <div layout:fragment="content">
-  <!--================Cart Area =================-->
-  <section class="cart_area">
-      <div class="container">
-          <div class="cart_inner">
-              <div class="table-responsive">
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th scope="col">Product</th>
-                              <th scope="col">Price</th>
-                              <th scope="col">Quantity</th>
-                              <th scope="col">Total</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>
-                                  <div class="media">
-                                      <div class="d-flex">
-                                          <img src="../../static/img/cart/cart1.png" alt="">
-                                      </div>
-                                      <div class="media-body">
-                                          <p>Minimalistic shop for multipurpose use</p>
-                                      </div>
-                                  </div>
-                              </td>
-                              <td>
-                                  <h5>$360.00</h5>
-                              </td>
-                              <td>
-                                  <div class="product_count">
-                                      <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:"
-                                          class="input-text qty">
-                                      <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                          class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                      <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-                                          class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                  </div>
-                              </td>
-                              <td>
-                                  <h5>$720.00</h5>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  <div class="media">
-                                      <div class="d-flex">
-                                          <img src="../../static/img/cart/cart2.png" alt="">
-                                      </div>
-                                      <div class="media-body">
-                                          <p>Minimalistic shop for multipurpose use</p>
-                                      </div>
-                                  </div>
-                              </td>
-                              <td>
-                                  <h5>$360.00</h5>
-                              </td>
-                              <td>
-                                  <div class="product_count">
-                                      <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:"
-                                          class="input-text qty">
-                                      <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                          class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                      <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-                                          class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                  </div>
-                              </td>
-                              <td>
-                                  <h5>$720.00</h5>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  <div class="media">
-                                      <div class="d-flex">
-                                          <img src="../../static/img/cart/cart3.png" alt="">
-                                      </div>
-                                      <div class="media-body">
-                                          <p>Minimalistic shop for multipurpose use</p>
-                                      </div>
-                                  </div>
-                              </td>
-                              <td>
-                                  <h5>$360.00</h5>
-                              </td>
-                              <td>
-                                  <div class="product_count">
-                                      <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:"
-                                          class="input-text qty">
-                                      <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                          class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                      <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-                                          class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                  </div>
-                              </td>
-                              <td>
-                                  <h5>$720.00</h5>
-                              </td>
-                          </tr>
-                          <tr class="bottom_button">
-                              <td>
-                                  <a class="button" href="#">Update Cart</a>
-                              </td>
-                              <td>
+    <div class="row">
+        <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product" data-product-id="4">
+                <div class="card-product__img">
+                    <img class="card-img" src="/img/product/product1.png" alt="">
+                    <ul class="card-product__imgOverlay">
+                        <li><button><i class="ti-search"></i></button></li>
+                        <li><button class="add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
+                        <li><button><i class="ti-heart"></i></button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                              </td>
-                              <td>
 
-                              </td>
-                              <td>
-                                  <div class="cupon_text d-flex align-items-center">
-                                      <input type="text" placeholder="Coupon Code">
-                                      <a class="primary-btn" href="#">Apply</a>
-                                      <a class="button" href="#">Have a Coupon?</a>
-                                  </div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
 
-                              </td>
-                              <td>
+    <!--================Cart Area =================-->
+    <section class="cart_area">
+        <div class="container">
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <div class="cart-header d-flex justify-content-between align-items-center mb-3">
+                        <h3>장바구니</h3>
+                        <button type="button"
+                                class="btn btn-danger btn-sm"
+                                id="clear-cart-btn">
+                            <i class="ti-trash"></i> 전체 비우기
+                        </button>
+                    </div>
 
-                              </td>
-                              <td>
-                                  <h5>Subtotal</h5>
-                              </td>
-                              <td>
-                                  <h5>$2160.00</h5>
-                              </td>
-                          </tr>
-                          <tr class="shipping_area">
-                              <td class="d-none d-md-block">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">선택</th>
+                            <th scope="col">상품</th>
+                            <th scope="col">판매가</th>
+                            <th scope="col">수량</th>
+                            <th scope="col">결제 금액</th>
+                        </tr>
+                        </thead>
+                        <tbody id="cart-container">
+                        <tr th:each="cartItem : ${cartItemsByGuest}">
+                            <!-- 카테고리 id 를 공백으로 구분하여 하나의 문자열로 결합하고, hidden 속성에 넣음 -->
+                            <span id="categoryIds"
+                                  th:attr="hidden=${true}"
+                                  th:text="${#strings.arrayJoin(cartItem?.categoryIds, ',')}">Categories</span>
 
-                              </td>
-                              <td>
+                            <span id="productId" hidden th:text="${cartItem.productId}"></span>
 
-                              </td>
-                              <td>
-                                  <h5>Shipping</h5>
-                              </td>
-                              <td>
-                                  <div class="shipping_box">
-                                      <ul class="list">
-                                          <li><a href="#">Flat Rate: $5.00</a></li>
-                                          <li><a href="#">Free Shipping</a></li>
-                                          <li><a href="#">Flat Rate: $10.00</a></li>
-                                          <li class="active"><a href="#">Local Delivery: $2.00</a></li>
-                                      </ul>
-                                      <h6>Calculate Shipping <i class="fa fa-caret-down" aria-hidden="true"></i></h6>
-                                      <select class="shipping_select">
-                                          <option value="1">Bangladesh</option>
-                                          <option value="2">India</option>
-                                          <option value="4">Pakistan</option>
-                                      </select>
-                                      <select class="shipping_select">
-                                          <option value="1">Select a State</option>
-                                          <option value="2">Select a State</option>
-                                          <option value="4">Select a State</option>
-                                      </select>
-                                      <input type="text" placeholder="Postcode/Zipcode">
-                                      <a class="gray_btn" href="#">Update Details</a>
-                                  </div>
-                              </td>
-                          </tr>
-                          <tr class="out_button_area">
-                              <td class="d-none-l">
+                            <td>
+                                <input type="checkbox" class="cart-item-checkbox" checked
+                                       th:data-product-id="${cartItem.productId}" />
+                            </td>
+                            <td>
+                                <div class="media">
+                                    <div class="d-flex">
+                                        <img th:src="@{${cartItem.productImagePath}}" src="/img/cart/cart2.png" alt="">
+                                    </div>
+                                    <div class="media-body" th:text="${cartItem.productTitle}">
+                                        <p>상품명1</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <h5 class="unit-price" th:text="${cartItem.productSalePrice}">30000</h5>
+                            </td>
+                            <td>
+                                <div class="product_count">
+                                    <input type="text"
+                                           name="qty"
+                                           class="input-text qty"
+                                           th:id="'quantity-' + ${cartItem.productId}"
+                                           th:value="${cartItem.cartItemsQuantity}"
+                                           readonly>
 
-                              </td>
-                              <td class="">
+                                    <button type="button"
+                                            class="increase items-count"
+                                            th:data-id="${cartItem.productId}">+</button>
 
-                              </td>
-                              <td>
+                                    <button type="button"
+                                            class="reduced items-count"
+                                            th:data-id="${cartItem.productId}">-</button>
+                                </div>
+                                <button type="button"
+                                        class="delete-item-btn"
+                                        th:data-id="${cartItem.productId}"
+                                        style="background: none; border: none;">
+                                    <i class="ti-trash" style="color: #dc3545;"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <h5 class="total-price" th:text="${cartItem.productTotalPrice}">30000원</h5>
+                            </td>
+                        </tr>
 
-                              </td>
-                              <td>
-                                  <div class="checkout_btn_inner d-flex align-items-center">
-                                      <a class="gray_btn" href="#">Continue Shopping</a>
-                                      <a class="primary-btn ml-2" href="#">Proceed to checkout</a>
-                                  </div>
-                              </td>
-                          </tr>
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
-  </section>
-  <!--================End Cart Area =================-->
+                        <tr th:if="${#lists.isEmpty(cartItemsByGuest)}">
+                            <td colspan="5" style="text-align:center;">
+                                장바구니가 비어 있습니다.
+                            </td>
+                        </tr>
+                        <tr th:if="${not #lists.isEmpty(cartItemsByGuest)}">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><h5>최종 결제 금액</h5></td>
+                            <td><h5 class="total-payment-price" id="totalPaymentAmount" th:text="${totalPaymentAmount} + '원'">30000원</h5></td>
+                        </tr>
+                        <tr th:if="${not #lists.isEmpty(cartItemsByGuest)}" class="out_button_area">
+                            <td class="d-none-l"></td>
+                            <td class=""></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <div class="checkout_btn_inner d-flex align-items-center">
+                                    <button id="order-btn" type="button" class="primary-btn">주문하기</button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Cart Area =================-->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/cart/cart-add.js}"></script>
+    <script th:src="@{/js/cart/guest/guest-cart-update-quantity.js}"></script>
+    <script th:src="@{/js/cart/guest/guest-cart-delete.js}"></script>
+    <script th:src="@{/js/cart/guest/guest-cart-order.js}"></script>
 </div>
 </body>
 </html>

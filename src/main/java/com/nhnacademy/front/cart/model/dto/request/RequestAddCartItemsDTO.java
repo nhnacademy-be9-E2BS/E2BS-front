@@ -1,11 +1,9 @@
-package com.nhnacademy.front.cart.model.dto;
+package com.nhnacademy.front.cart.model.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +17,7 @@ public class RequestAddCartItemsDTO {
 	@NotNull
 	private long productId;
 
-	@NotNull
-	private int quantity;
+	/// 단일로만 담게 되는 경우가 있어 front단에서는 null제약이 필요 없음
+ 	private Integer quantity;
 
 }

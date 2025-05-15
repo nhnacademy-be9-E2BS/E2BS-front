@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.nhnacademy.front.cart.model.dto.RequestAddCartItemsDTO;
-import com.nhnacademy.front.cart.model.dto.RequestUpdateCartItemsDTO;
-import com.nhnacademy.front.cart.model.dto.ResponseCartItemsForCustomerDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
+import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForCustomerDTO;
 
 @FeignClient(name = "customer-cart-adaptor", url = "${customer.url}")
 public interface CustomerCartAdaptor {
@@ -33,14 +33,14 @@ public interface CustomerCartAdaptor {
 	/**
 	 * 비회원/회원 - 장바구니 항목 수량 변경
 	 */
-	@PutMapping("/carts/items/{cartItemId}")
-	ResponseEntity<Void> updateCartItemForCustomer(@PathVariable Long cartItemId, @RequestBody RequestUpdateCartItemsDTO requestDto);
+	@PutMapping("/carts/items/{cartItemsId}")
+	ResponseEntity<Void> updateCartItemForCustomer(@PathVariable long cartItemsId, @RequestBody RequestUpdateCartItemsDTO requestDto);
 
 	/**
 	 * 비회원/회원 - 장바구니 항목 삭제
 	 */
 	@DeleteMapping("/carts/items/{cartItemId}")
-	ResponseEntity<Void> deleteCartItemForCustomer(@PathVariable Long cartItemId);
+	ResponseEntity<Void> deleteCartItemForCustomer(@PathVariable long cartItemId);
 
 	/**
 	 * 비회원/회원 - 장바구니 전체 삭제

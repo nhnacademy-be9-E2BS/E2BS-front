@@ -52,4 +52,4 @@ order:
 customer:
     url: http://localhost:10236/api/customers
 guest:
-  url: http://localhost:10232/api/guests
+  url: http://localhost:10236/api/guests
