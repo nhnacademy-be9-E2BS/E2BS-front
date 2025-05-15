@@ -12,5 +12,5 @@ import lombok.Setter;
 @Getter
 public class RequestModifyWrapperDTO {
 	@NotNull
-	private boolean wrapperSaleable;
+	private Boolean wrapperSaleable;
 }

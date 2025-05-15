@@ -3,6 +3,7 @@ package com.nhnacademy.front.product.publisher.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
@@ -65,8 +68,9 @@ public class PublisherController {
 	 * 출판사 수정
 	 */
 	@JwtTokenCheck
+	@ResponseBody
 	@PutMapping("/{publisherId}")
-	public String updatePublisher(@Validated @ModelAttribute RequestPublisherDTO requestPublisherDTO,
+	public ResponseEntity<Void> updatePublisher(@Validated @RequestBody RequestPublisherDTO requestPublisherDTO,
 		BindingResult bindingResult, @PathVariable Long publisherId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
@@ -74,6 +78,6 @@ public class PublisherController {
 
 		publisherService.updatePublisher(publisherId, requestPublisherDTO);
 
-		return "redirect:/admin/mypage/publishers";
+		return ResponseEntity.ok().build();
 	}
 }

@@ -68,7 +68,8 @@ public class PositionController {
 		ResponsePositionDTO responsePositionDTO = positionService.getPositionById(positionId);
 
 		model.addAttribute("position", responsePositionDTO);
-		return "/admin/positions";
+		model.addAttribute("positions", Page.empty());
+		return "/admin/product/positions";
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class PositionController {
 		Page<ResponsePositionDTO> positions = PageResponseConverter.toPage(response);
 
 		model.addAttribute("positions", positions);
-		return "/admin/positions";
+		return "/admin/product/positions";
 	}
 
 }

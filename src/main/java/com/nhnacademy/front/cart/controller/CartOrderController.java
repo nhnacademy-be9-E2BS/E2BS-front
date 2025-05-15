@@ -1,0 +1,25 @@
+package com.nhnacademy.front.cart.controller;
+
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequiredArgsConstructor
+public class CartOrderController {
+	
+	@PostMapping("/orders")
+	public ResponseEntity<?> order(@RequestBody RequestCartOrderDTO requestDto) {
+		log.info("dto: {}", requestDto.toString());
+		return ResponseEntity.ok().body(Map.of("message", "success"));
+	}
+
+}
