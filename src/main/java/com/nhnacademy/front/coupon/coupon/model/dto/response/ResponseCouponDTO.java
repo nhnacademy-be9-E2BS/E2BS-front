@@ -1,4 +1,4 @@
-package com.nhnacademy.front.coupon.coupon.model.dto;
+package com.nhnacademy.front.coupon.coupon.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.nhnacademy.front.coupon.couponpolicy.service;
+package com.nhnacademy.front.coupon.couponpolicy;
 
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -9,7 +9,7 @@ import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDT
 import com.nhnacademy.front.coupon.couponpolicy.service.impl.CouponPolicyServiceImpl;
 
 import feign.FeignException;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,6 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
