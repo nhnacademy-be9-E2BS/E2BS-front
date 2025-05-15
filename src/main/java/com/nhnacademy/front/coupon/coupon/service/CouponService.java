@@ -3,8 +3,8 @@ package com.nhnacademy.front.coupon.coupon.service;
 import org.springframework.data.domain.Pageable;
 
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.coupon.coupon.model.dto.RequestCouponDTO;
-import com.nhnacademy.front.coupon.coupon.model.dto.ResponseCouponDTO;
+import com.nhnacademy.front.coupon.coupon.model.dto.request.RequestCouponDTO;
+import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 
 public interface CouponService {
 	/**

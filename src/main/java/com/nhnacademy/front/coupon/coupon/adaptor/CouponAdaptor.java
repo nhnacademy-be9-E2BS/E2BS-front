@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.coupon.coupon.model.dto.RequestCouponDTO;
-import com.nhnacademy.front.coupon.coupon.model.dto.ResponseCouponDTO;
+import com.nhnacademy.front.coupon.coupon.model.dto.request.RequestCouponDTO;
+import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 
 @FeignClient(name = "coupon-service", url = "${coupon.url}")
 public interface CouponAdaptor {

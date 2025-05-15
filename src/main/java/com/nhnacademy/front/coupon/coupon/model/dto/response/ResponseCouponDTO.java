@@ -18,5 +18,4 @@ public class ResponseCouponDTO {
 	private String categoryName;
 	private Long productId;
 	private String productTitle;
-	private boolean couponIsActive;
 }
