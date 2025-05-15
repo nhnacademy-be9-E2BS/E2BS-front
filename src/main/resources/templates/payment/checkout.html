@@ -273,15 +273,15 @@
                                 <!--사용 가능한 쿠폰 리스트-->
                                 <div id="couponList" style="display: none;">
                                     <div>
-                                        <input type="radio" name="coupon" id="couponId0" checked>
+                                        <input type="radio" name="coupon" id="couponId0" data-coupon-id="0">
                                         <label for="couponId0">쿠폰 사용 안 함</label>
                                         <span hidden="hidden">0</span>
                                         <span hidden="hidden">0</span>
                                     </div>
 
                                     <div>
-                                        <input type="radio" name="coupon" id="couponId">
-                                        <label for="couponId">쿠폰 이름(10,000원 이상 구매 시 1000원 할인)</label>
+                                        <input type="radio" name="coupon" id="couponId1" data-coupon-id="1">
+                                        <label for="couponId1">쿠폰 이름(10,000원 이상 구매 시 1000원 할인)</label>
                                         <!-- 추후 타임 리프로 할인 금액이 if로 확인해 NULL이면 할인률 표시-->
 
                                         <span hidden="hidden">10000</span>
@@ -289,7 +289,7 @@
                                     </div>
 
                                     <div>
-                                        <input type="radio" name="coupon" id="couponId2">
+                                        <input type="radio" name="coupon" id="couponId2" data-coupon-id="2">
                                         <label for="couponId2">쿠폰 이름(10,000원 이상 구매 시 10% 할인, 최대 3,000원)</label>
 
                                         <span hidden="hidden">10000</span>
@@ -298,7 +298,7 @@
                                     </div>
 
                                     <div>
-                                        <input type="radio" name="coupon" id="couponId3">
+                                        <input type="radio" name="coupon" id="couponId3" data-coupon-id="3">
                                         <label for="couponId3">쿠폰 이름(30,000원 이상 구매 시 3000원 할인)</label>
 
                                         <span hidden="hidden">30000</span>
@@ -323,6 +323,7 @@
                             </div>
 
                             <div class="text-center">
+                                <span>현재 전체 적용 쿠폰만 작동합니다.</span>
                                 <button class="btn primary w-100" id="payment-button"
                                         style="margin-top: 30px">결제하기
                                 </button>
@@ -337,7 +338,6 @@
 
         <script src="https://js.tosspayments.com/v1/payment"></script>
         <script>
-
             async function parseCurrency(value) {
                 return parseInt(value.replace(/[^0-9]/g, "")) || 0;
             }
@@ -460,10 +460,17 @@
                 // 선택한 쿠폰 id 가져오기
                 const couponRadio = document.querySelector('input[name="coupon"]:checked');
                 let selectedCouponId = null;
-                if (couponRadio.id !== "couponId0") {
-                    // 쿠폰 선택 안 함의 경우 null로 두기
-                    selectedCouponId = couponRadio.id;
+                // 쿠폰 라디오 박스를 선택한 경우
+                if (couponRadio) {
+                    selectedCouponId = couponRadio.dataset.couponId;
+
+                    if (selectedCouponId === "0") {
+                        // 쿠폰 선택 안 함의 경우 null로 두기
+                        selectedCouponId = null;
+                    }
                 }
+
+                // 포인트 입력 없을 시 0원 처리
                 let pointAmountData = document.getElementById("pointInput").value;
                 if (pointAmountData === "") {
                     pointAmountData = "0";

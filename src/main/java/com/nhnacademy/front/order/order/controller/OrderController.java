@@ -99,11 +99,17 @@ public class OrderController {
 		return "payment/confirmation";
 	}
 
+	/**
+	 * 주문 실패 시 이동할 페이지
+	 */
 	@GetMapping("/order/fail")
 	public String getFailOrder() {
 		return "payment/fail";
 	}
 
+	/**
+	 * 결제 모달을 끌 시 호출 할 주문서 삭제 요청
+	 */
 	@PostMapping("/order/cancel")
 	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
 		return orderService.cancelOrder(orderId);
