@@ -41,8 +41,6 @@ public class ContributorController {
 	@PostMapping
 	public String createContributor(@Validated @ModelAttribute RequestContributorDTO requestContributorDTO,
 		BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		System.out.println(requestContributorDTO.getContributorName());
-		System.out.println(requestContributorDTO.getPositionId());
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
