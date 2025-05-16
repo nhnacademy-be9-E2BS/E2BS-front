@@ -33,6 +33,12 @@ product:
   tag:
     url: https://e2bs.shop/api/admin/tags
 
+  contributor:
+    position:
+      url: https://e2bs.shop/api/admin/positions
+    url: https://e2bs.shop/api/admin/contributors
+
+
 
 order:
   wrapper:
@@ -50,6 +56,6 @@ order:
     fail-url: https://e2bs.shop/order/fail
 
 customer:
-  url: http://e2bs.shop6/api/customers
+  url: https://e2bs.shop/api/customers
 guest:
-  url: http://e2bs.shop/api/guests
+  url: https://e2bs.shop/api/guests
