@@ -1,6 +1,7 @@
 package com.nhnacademy.front.product.contributor;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -177,4 +178,49 @@ class PositionServiceTest {
 		assertThat(result).isEqualTo(pageResponse);
 		verify(positionAdaptor, times(1)).getPositions(pageable);
 	}
+
+
+	@Test
+	@DisplayName("position 전체 조회 실패")
+	void getPositionsFail() {
+		Pageable pageable = PageRequest.of(0, 10);
+
+		when(positionAdaptor.getPositions(pageable)).thenThrow(FeignException.class);
+		assertThatThrownBy(() -> positionService.getPositions(pageable)).isInstanceOf(
+			PositionProcessException.class);
+	}
+
+
+	@Test
+	@DisplayName("position 리스트 조회 성공")
+	void getPositionListSuccess() {
+		List<ResponsePositionDTO> dtoList = List.of(
+			new ResponsePositionDTO(1L, "position1"),
+			new ResponsePositionDTO(2L, "position2")
+		);
+
+		PageResponse<ResponsePositionDTO> pageResponse = new PageResponse<>();
+		pageResponse.setContent(dtoList);
+		ResponseEntity<PageResponse<ResponsePositionDTO>> responseEntity = ResponseEntity.ok(pageResponse);
+
+		when(positionAdaptor.getPositions(any())).thenReturn(responseEntity);
+
+		List<ResponsePositionDTO> result = positionService.getPositionList();
+
+		assertEquals(2, result.size());
+		assertEquals("position1", result.get(0).getPositionName());
+		assertEquals("position2", result.get(1).getPositionName());
+	}
+
+	@Test
+	@DisplayName("position 리스트 조회 실패")
+	void getPositionListFail() {
+		when(positionAdaptor.getPositions(any()))
+			.thenThrow(FeignException.class);
+
+		assertThrows(PositionGetProcessException.class, () -> {
+			positionService.getPositionList();
+		});
+	}
+
 }

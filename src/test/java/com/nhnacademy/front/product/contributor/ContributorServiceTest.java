@@ -1,6 +1,10 @@
 package com.nhnacademy.front.product.contributor;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -107,6 +111,16 @@ class ContributorServiceTest {
 	}
 
 	@Test
+	@DisplayName("position 전체 조회 실패")
+	void getPositionsFail() {
+		Pageable pageable = PageRequest.of(0, 10);
+
+		when(contributorAdaptor.getContributors(pageable)).thenThrow(FeignException.class);
+		assertThatThrownBy(() -> contributorService.getContributors(pageable)).isInstanceOf(
+			ContributorProcessException.class);
+	}
+
+	@Test
 	@DisplayName("컨트리뷰터 단건 조회 성공")
 	void getContributorSuccess() {
 		ResponseContributorDTO response = new ResponseContributorDTO("name", 1L, "작가", 1L);
@@ -126,5 +140,7 @@ class ContributorServiceTest {
 		assertThatThrownBy(() -> contributorService.getContributor(999L))
 			.isInstanceOf(ContributorProcessException.class);
 	}
+
+
 
 }
