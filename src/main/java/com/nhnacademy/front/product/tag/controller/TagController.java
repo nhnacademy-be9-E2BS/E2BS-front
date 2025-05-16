@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -64,7 +63,6 @@ public class TagController {
 	/**
 	 * 태그 수정
 	 */
-	@ResponseBody
 	@PutMapping("/{tagId}")
 	public ResponseEntity<Void> updateTag(@Validated @RequestBody RequestTagDTO requestTagDTO,
 		BindingResult bindingResult, @PathVariable Long tagId) {

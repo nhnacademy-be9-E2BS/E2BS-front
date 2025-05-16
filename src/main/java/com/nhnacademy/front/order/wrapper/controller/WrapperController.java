@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
@@ -69,7 +68,6 @@ public class WrapperController {
 	 * 포장지 수정 (판매 여부만 수정 가능)
 	 */
 	@JwtTokenCheck
-	@ResponseBody
 	@PutMapping("/{wrapperId}")
 	public ResponseEntity<Void> updateWrapper(@Validated @RequestBody RequestModifyWrapperDTO requestModifyWrapperDTO,
 		BindingResult bindingResult, @PathVariable Long wrapperId) {

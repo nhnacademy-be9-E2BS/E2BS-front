@@ -1,8 +1,8 @@
 package com.nhnacademy.front.cart.controller;
 
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +36,7 @@ public class CustomerCartController {
 	 * 고객 장바구니 항목 추가
 	 */
 	@PostMapping("/customers/carts/items")
-	public ResponseEntity<?> customerAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult) {
+	public ResponseEntity<Void> customerAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -44,7 +44,7 @@ public class CustomerCartController {
 		requestDto.setCustomerId(1L);
 		customerCartService.createCartItemForCustomer(requestDto);
 
-		return ResponseEntity.ok().body(Map.of("message", "success"));
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	/**
@@ -52,8 +52,7 @@ public class CustomerCartController {
 	 */
 	@GetMapping("/customers/carts")
 	public String getCartsByCustomer(Model model) {
-		/// 고객 ID를 받아야함
-		// memberService.findByCustomerId();getCartItemsByCustomer
+		// 용경: 고객 ID를 받아야함
 		List<ResponseCartItemsForCustomerDTO> cartItemsByCustomer = customerCartService.getCartItemsByCustomer(1L);
 
 		long totalPaymentAmount = 0;
@@ -71,31 +70,31 @@ public class CustomerCartController {
 	 * 고객 장바구니 항목 수량 변경
 	 */
 	@PutMapping("/customers/carts/items/{cartItemsId}")
-	public ResponseEntity<?> updateCartItemForCustomer(@PathVariable long cartItemsId, @Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult) {
+	public ResponseEntity<Void> updateCartItemForCustomer(@PathVariable long cartItemsId, @Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		customerCartService.updateCartItemForCustomer(cartItemsId, requestDto);
-		return ResponseEntity.ok().body(Map.of("message", "success"));
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	/**
 	 * 고객 장바구니 항목 삭제
 	 */
 	@DeleteMapping("/customers/carts/items/{cartItemsId}")
-	public ResponseEntity<?> deleteCartItemForCustomer(@PathVariable long cartItemsId) {
+	public ResponseEntity<Void> deleteCartItemForCustomer(@PathVariable long cartItemsId) {
 		customerCartService.deleteCartItemForCustomer(cartItemsId);
-		return ResponseEntity.ok().body(Map.of("message", "success"));
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	/**
 	 * 고객 장바구니 전체 삭제
 	 */
 	@DeleteMapping("/customers/{customerId}/carts")
-	public ResponseEntity<?> deleteCartForCustomer(@PathVariable long customerId) {
+	public ResponseEntity<Void> deleteCartForCustomer(@PathVariable long customerId) {
 		customerCartService.deleteCartForCustomer(customerId);
-		return ResponseEntity.ok().body(Map.of("message", "success"));
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 }
