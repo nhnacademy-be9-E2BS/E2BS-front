@@ -59,6 +59,8 @@ public class AuthService {
 			}
 
 			Cookie accessCookie = new Cookie(JwtRule.JWT_ISSUE_HEADER.getValue(), token);
+			accessCookie.setSecure(true);
+			accessCookie.setHttpOnly(true);
 			response.addCookie(accessCookie);
 
 			request.setAttribute("access-refresh", token);
