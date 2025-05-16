@@ -40,6 +40,7 @@ public class PositionController {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
+		positionService.createPosition(requestPositionDTO);
 		return "redirect:/admin/mypage/positions";
 	}
 
