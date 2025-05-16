@@ -31,13 +31,11 @@ public class JwtExpParser {
 			Map<String, Object> claims = objectMapper.readValue(payloadJson, Map.class);
 			Object exp = claims.get("exp");
 
-			if (exp instanceof Number number) {
-				return number.longValue();
-			} else if (exp instanceof String str) {
-				return Long.parseLong(str);
-			} else {
-				return null;
-			}
+			return switch (exp) {
+				case Number number -> number.longValue();
+				case String str -> Long.parseLong(str);
+				default -> null;
+			};
 
 		} catch (Exception e) {
 			return null;
