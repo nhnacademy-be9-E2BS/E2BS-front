@@ -53,18 +53,9 @@ class PositionServiceTest {
 			EmptyRequestException.class);
 	}
 
+
 	@Test
 	@DisplayName("position 생성 - 실패1")
-	void createPositionFail1() {
-		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
-
-		when(positionAdaptor.postCreatePosition(requestPositionDTO)).thenReturn(null);
-		assertThatThrownBy(() -> positionService.createPosition(requestPositionDTO)).isInstanceOf(
-			PositionProcessException.class);
-	}
-
-	@Test
-	@DisplayName("position 생성 - 실패2")
 	void createPositionFail2() {
 		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
 

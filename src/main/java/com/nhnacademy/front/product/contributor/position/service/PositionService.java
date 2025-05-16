@@ -31,17 +31,13 @@ public class PositionService {
 	/**
 	 * position 생성
 	 */
-	public ResponsePositionDTO createPosition(RequestPositionDTO requestPositionDTO) {
+	public void createPosition(RequestPositionDTO requestPositionDTO) {
 		if (Objects.isNull(requestPositionDTO) || Objects.isNull(requestPositionDTO.getPositionName())) {
 			throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 		}
 
 		try {
-			ResponsePositionDTO responsePositionDTO = positionAdaptor.postCreatePosition(requestPositionDTO);
-			if (Objects.isNull(responsePositionDTO)) {
-				throw new PositionProcessException("position 등록 실패");
-			}
-			return responsePositionDTO;
+			positionAdaptor.postCreatePosition(requestPositionDTO);
 		} catch (FeignException e) {
 			log.error("FeignException: status={}, content={}", e.status(), e.contentUTF8(), e);
 			throw new PositionProcessException("position 등록 실패");

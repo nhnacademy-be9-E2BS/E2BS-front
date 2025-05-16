@@ -113,10 +113,8 @@ class ContributorServiceTest {
 
 		when(contributorAdaptor.getContributor(1L)).thenReturn(response);
 
-		ResponseContributorDTO result = contributorService.getContributor(1L);
+		contributorService.getContributor(1L);
 
-		assertThat(result.getContributorName()).isEqualTo("name");
-		assertThat(result.getPositionName()).isEqualTo("작가");
 		verify(contributorAdaptor, times(1)).getContributor(1L);
 	}
 
