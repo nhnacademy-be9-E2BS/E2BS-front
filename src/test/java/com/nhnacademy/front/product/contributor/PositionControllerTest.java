@@ -1,12 +1,10 @@
 package com.nhnacademy.front.product.contributor;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 import java.util.List;
 
@@ -35,7 +33,7 @@ import com.nhnacademy.front.product.contributor.position.service.PositionService
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = PositionController.class)
 @ActiveProfiles("dev")
-public class PositionControllerTest {
+class PositionControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 

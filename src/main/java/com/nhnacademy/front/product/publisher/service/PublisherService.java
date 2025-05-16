@@ -25,13 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 public class PublisherService {
 
 	private final PublisherAdaptor publisherAdaptor;
+	private static final String REQUEST_VALUE_MISSING_MESSAGE = "요청 값을 받지 못했습니다.";
 
 	/**
 	 * Publisher를 back - publisher table에 저장
 	 */
 	public void createPublisher(RequestPublisherDTO request) {
 		if (Objects.isNull(request)) {
-			throw new EmptyRequestException("요청 값을 받지 못했습니다.");
+			throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 		}
 
 		try {
@@ -62,7 +63,7 @@ public class PublisherService {
 	 */
 	public void updatePublisher(Long publisherId, RequestPublisherDTO request) {
 		if (Objects.isNull(request) || Objects.isNull(publisherId)) {
-			throw new EmptyRequestException("요청 값을 받지 못했습니다.");
+			throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 		}
 
 		try {

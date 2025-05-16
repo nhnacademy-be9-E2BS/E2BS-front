@@ -29,7 +29,7 @@ import com.nhnacademy.front.product.publisher.service.PublisherService;
 import feign.FeignException;
 
 @ExtendWith(MockitoExtension.class)
-public class PublisherServiceTest {
+class PublisherServiceTest {
 
 	@InjectMocks
 	private PublisherService publisherService;

@@ -25,8 +25,7 @@ public class ContributorService {
 	 */
 	public ResponseContributorDTO createContributor(RequestContributorDTO requestContributorDTO) {
 		try {
-			ResponseContributorDTO responseContributorDTO = contributorAdaptor.postCreateContributor(requestContributorDTO);
-			return responseContributorDTO;
+			return contributorAdaptor.postCreateContributor(requestContributorDTO);
 		} catch (FeignException e) {
 			throw new ContributorProcessException("contributor 등록 실패");
 		}
@@ -79,9 +78,9 @@ public class ContributorService {
 		}
 	}
 
-	// /**
-	//  * contributor 역할 수정
-	//  */
+	/**
+	 * contributor 역할 수정
+	 */
 	// public void updateContributorPosition(long contributorId, long positionId, RequestPositionDTO requestPositionDTO) {
 	// 	try {
 	// 		ResponseContributorDTO responsePositionDTO =
