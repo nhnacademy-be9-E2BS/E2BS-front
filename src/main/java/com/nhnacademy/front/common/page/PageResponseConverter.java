@@ -16,5 +16,7 @@ public class PageResponseConverter {
 
 		return new PageImpl<>(content, PageRequest.of(pageNumber, pageSize), totalElements);
 	}
+
+	private PageResponseConverter() {}
 }
 
