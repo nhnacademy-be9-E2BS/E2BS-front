@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JwtExpParser {
 
+	private JwtExpParser() {
+	}
+
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
 	public static Long getExp(String accessToken) {
@@ -28,10 +31,10 @@ public class JwtExpParser {
 			Map<String, Object> claims = objectMapper.readValue(payloadJson, Map.class);
 			Object exp = claims.get("exp");
 
-			if (exp instanceof Number) {
-				return ((Number)exp).longValue();
-			} else if (exp instanceof String) {
-				return Long.parseLong((String)exp);
+			if (exp instanceof Number number) {
+				return number.longValue();
+			} else if (exp instanceof String str) {
+				return Long.parseLong(str);
 			} else {
 				return null;
 			}

@@ -30,6 +30,8 @@ public class JwtTokenCheckAop {
 	private final RedisTemplate<String, String> redisTemplate;
 	private final AuthService authService;
 
+	private static final String UNAUTHORIZED_MESSAGE = "접근 권한이 없습니다. 다시 로그인 해주세요.";
+
 	@Around("@annotation(com.nhnacademy.front.common.annotation.JwtTokenCheck)")
 	public Object jwtTokenAndRoleAop(ProceedingJoinPoint joinPoint) throws Throwable {
 
@@ -50,23 +52,23 @@ public class JwtTokenCheckAop {
 
 			Long exp = JwtExpParser.getExp(accessToken);
 			if (exp == null) {
-				throw new AuthenticationException("접근 권한이 없습니다. 다시 로그인 해주세요.");
+				throw new AuthenticationException(UNAUTHORIZED_MESSAGE);
 			}
 
 			String memberId = JwtMemberIdParser.getMemberId(accessToken);
 			if (memberId == null) {
-				throw new AuthenticationException("접근 권한이 없습니다. 다시 로그인 해주세요.");
+				throw new AuthenticationException(UNAUTHORIZED_MESSAGE);
 			}
 
 			String refreshKey = JwtRule.REFRESH_PREFIX.getValue() + ":" + memberId;
 			refreshToken = redisTemplate.opsForValue().get(refreshKey);
 			if (refreshToken == null) {
-				throw new AuthenticationException("접근 권한이 없습니다. 다시 로그인 해주세요.");
+				throw new AuthenticationException(UNAUTHORIZED_MESSAGE);
 			}
 
 			Long refreshExp = JwtExpParser.getExp(refreshToken);
 			if (refreshExp == null || refreshExp <= 0) {
-				throw new AuthenticationException("접근 권한이 없습니다. 다시 로그인 해주세요.");
+				throw new AuthenticationException(UNAUTHORIZED_MESSAGE);
 			}
 
 			RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(memberId);
