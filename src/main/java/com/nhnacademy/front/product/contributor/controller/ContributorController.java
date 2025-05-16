@@ -47,7 +47,6 @@ public class ContributorController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		List<ResponsePositionDTO> positions = positionService.getPositionList();
-		ResponseContributorDTO result = contributorService.createContributor(requestContributorDTO);
 
 		redirectAttributes.addFlashAttribute("positions", positions);
 		return "redirect:/admin/mypage/contributors";
