@@ -10,6 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JwtMemberIdParser {
 
+	private JwtMemberIdParser() {
+	}
+
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
 	public static String getMemberId(String accessToken) {
