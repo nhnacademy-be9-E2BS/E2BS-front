@@ -1,28 +1,28 @@
 package com.nhnacademy.front.coupon.couponpolicy;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.coupon.couponpolicy.controller.CouponPolicyController;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
-import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.coupon.couponpolicy.controller.CouponPolicyController;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(CouponPolicyController.class)
