@@ -1,29 +1,31 @@
 package com.nhnacademy.front.product.contributor;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.contributor.adaptor.ContributorAdaptor;
 import com.nhnacademy.front.product.contributor.dto.request.RequestContributorDTO;
 import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
 import com.nhnacademy.front.product.contributor.exception.ContributorProcessException;
 import com.nhnacademy.front.product.contributor.service.ContributorService;
+
 import feign.FeignException;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class ContributorServiceTest {
+class ContributorServiceTest {
 
 	@InjectMocks
 	ContributorService contributorService;

@@ -47,6 +47,8 @@ public class ContributorController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		List<ResponsePositionDTO> positions = positionService.getPositionList();
+		// 어떤 코드인지 모르겠어서 일단 주석 처리 (소나큐브 이슈 발생)
+		// ResponseContributorDTO result = contributorService.createContributor(requestContributorDTO);
 
 		redirectAttributes.addFlashAttribute("positions", positions);
 		return "redirect:/admin/mypage/contributors";

@@ -4,7 +4,7 @@ eureka:
     fetch-registry: true # Eureka에서 다른 서비스 정보를 받아올지 여부
     register-with-eureka: true # 현재 애플리케이션을 Eureka에 등록할지 여부
     service-url:
-      defaultZone: http://admin:1234@s1.java21.net:10230/eureka # 로컬 Eureka 서버의 주소
+      defaultZone: https://admin:1234@s1.java21.net:10230/eureka # 로컬 Eureka 서버의 주소
   instance:
     prefer-ip-address: true # 서비스 등록 시 도메인 대신 IP 주소로 등록
 
@@ -22,7 +22,7 @@ auth:
 
 # 쿠폰
 coupon:
-  url: http://e2bs.shop/api/admin/coupons
+  url: https://e2bs.shop/api/admin/coupon
   policy:
     url: https://e2bs.shop/api/admin/couponPolicies
 
@@ -43,13 +43,9 @@ product:
 order:
   wrapper:
     url: https://e2bs.shop/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
-  create:
-    url: https://e2bs.shop/api/createOrder
+  order:
+    url: https://e2bs.shop/api/order
 
-  confirm:
-    url: https://e2bs.shop/api/orderConfirm
-  cancel:
-    url: https://e2bs.shop/api/order/cancel
   toss:
     client-key: test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO
     success-url: https://e2bs.shop/order/success

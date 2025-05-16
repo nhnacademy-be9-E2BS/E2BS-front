@@ -30,7 +30,7 @@ import com.nhnacademy.front.order.wrapper.service.WrapperService;
 import feign.FeignException;
 
 @ExtendWith(MockitoExtension.class)
-public class WrapperServiceTest {
+class WrapperServiceTest {
 
 	@InjectMocks
 	private WrapperService wrapperService;
@@ -89,7 +89,6 @@ public class WrapperServiceTest {
 	void get_wrappers_by_saleable_success_test() {
 		// given
 		ResponseWrapperDTO responseA = new ResponseWrapperDTO(1L, 1000, "Wrapper A", "a.jpg", true);
-		ResponseWrapperDTO responseB = new ResponseWrapperDTO(2L, 1500, "Wrapper B", "b.jpg", false);
 		ResponseWrapperDTO responseC = new ResponseWrapperDTO(3L, 1200, "Wrapper C", "c.jpg", true);
 		List<ResponseWrapperDTO> wrappers = List.of(responseA, responseC);
 

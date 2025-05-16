@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -46,7 +45,7 @@ public class CouponController {
 		PageResponse<ResponseCouponPolicyDTO> couponPolicyDTO = couponPolicyServiceImpl.getCouponPolicies(pageable);
 		Page<ResponseCouponPolicyDTO> couponPolicies = PageResponseConverter.toPage(couponPolicyDTO);
 
-		// todo 카테고리, 상품 정보도 받아오기 + coupon-register.html 수정
+		// 상준; 카테고리, 상품 정보도 받아오기 + coupon-register.html 수정
 
 		model.addAttribute("couponPolicies", couponPolicies);
 		return "admin/coupon/coupon-register";
@@ -92,9 +91,9 @@ public class CouponController {
 	 * 활성 <-> 비활성 상태 변경
 	 */
 	@PutMapping("/{couponId}")
-	@ResponseBody
 	public ResponseEntity<Void> updateCoupon(@PathVariable Long couponId) {
 		couponServiceImpl.updateCoupon(couponId);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+
 }
