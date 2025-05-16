@@ -30,7 +30,7 @@ import com.nhnacademy.front.product.tag.service.TagService;
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = TagController.class)
 @ActiveProfiles("dev")
-public class TagControllerTest {
+class TagControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
