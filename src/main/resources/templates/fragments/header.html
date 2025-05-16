@@ -1,139 +1,147 @@
 <!DOCTYPE html>
 <html lang="kor" xmlns:th="http://www.thymeleaf.org">
-    <div th:fragment="header">
-        <header class="header_area">
-            <div class="main_menu">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <div class="container">
-                        <a class="navbar-brand logo_h" href="../index"><h1>E2BS</h1></a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-                            <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
-                                <li class="nav-item active"><a class="nav-link" href="../index">Home</a></li>
+<div th:fragment="header">
+    <header class="header_area">
+        <div class="main_menu">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container">
+                    <a class="navbar-brand logo_h" href="../index"><h1>E2BS</h1></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
+                            <li class="nav-item active"><a class="nav-link" href="../index">Home</a></li>
 
 
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
-                                        국내도서
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item dropdown-toggle" href="#">소설/시/희곡</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">한국소설</a></li>
-                                                <li><a class="dropdown-item" href="#">일본소설</a></li>
-                                                <li><a class="dropdown-item" href="#">영미소설</a></li>
-                                            </ul>
-                                        </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
+                                    국내도서
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">소설/시/희곡</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">한국소설</a></li>
+                                            <li><a class="dropdown-item" href="#">일본소설</a></li>
+                                            <li><a class="dropdown-item" href="#">영미소설</a></li>
+                                        </ul>
+                                    </li>
 
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item dropdown-toggle" href="#">경제/경영</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">경제학/경제일반</a></li>
-                                                <li><a class="dropdown-item" href="#">기업 경영</a></li>
-                                                <li><a class="dropdown-item" href="#">마케팅 세일즈</a></li>
-                                                <li><a class="dropdown-item" href="#">제테크/투자</a></li>
-                                            </ul>
-                                        </li>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">경제/경영</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">경제학/경제일반</a></li>
+                                            <li><a class="dropdown-item" href="#">기업 경영</a></li>
+                                            <li><a class="dropdown-item" href="#">마케팅 세일즈</a></li>
+                                            <li><a class="dropdown-item" href="#">제테크/투자</a></li>
+                                        </ul>
+                                    </li>
 
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item dropdown-toggle" href="#">과학</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">기초과학/교양과학</a></li>
-                                                <li><a class="dropdown-item" href="#">과학의 이해</a></li>
-                                                <li><a class="dropdown-item" href="#">뇌과학</a></li>
-                                                <li><a class="dropdown-item" href="#">생명과학</a></li>
-                                                <li><a class="dropdown-item" href="#">수학</a></li>
-                                            </ul>
-                                        </li>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">과학</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">기초과학/교양과학</a></li>
+                                            <li><a class="dropdown-item" href="#">과학의 이해</a></li>
+                                            <li><a class="dropdown-item" href="#">뇌과학</a></li>
+                                            <li><a class="dropdown-item" href="#">생명과학</a></li>
+                                            <li><a class="dropdown-item" href="#">수학</a></li>
+                                        </ul>
+                                    </li>
 
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item dropdown-toggle" href="#">역사</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">동양사일반</a></li>
-                                                <li><a class="dropdown-item" href="#">한국사</a></li>
-                                                <li><a class="dropdown-item" href="#">조선사</a></li>
-                                                <li><a class="dropdown-item" href="#">일본사</a></li>
-                                                <li><a class="dropdown-item" href="#">서양사</a></li>
-                                            </ul>
-                                        </li>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">역사</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">동양사일반</a></li>
+                                            <li><a class="dropdown-item" href="#">한국사</a></li>
+                                            <li><a class="dropdown-item" href="#">조선사</a></li>
+                                            <li><a class="dropdown-item" href="#">일본사</a></li>
+                                            <li><a class="dropdown-item" href="#">서양사</a></li>
+                                        </ul>
+                                    </li>
 
-                                        <li><a class="dropdown-item" href="#">공무원 수험서</a></li>
-                                    </ul>
-                                </li>
+                                    <li><a class="dropdown-item" href="#">공무원 수험서</a></li>
+                                </ul>
+                            </li>
 
 
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop2" data-toggle="dropdown">외국도서</a>
-                                    <ul class="dropdown-menu">
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item dropdown-toggle" href="#">영미도서</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">한국소설</a></li>
-                                                <li><a class="dropdown-item" href="#">일본소설</a></li>
-                                                <li><a class="dropdown-item" href="#">영미소설</a></li>
-                                            </ul>
-                                        </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbardrop2" data-toggle="dropdown">외국도서</a>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">영미도서</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">한국소설</a></li>
+                                            <li><a class="dropdown-item" href="#">일본소설</a></li>
+                                            <li><a class="dropdown-item" href="#">영미소설</a></li>
+                                        </ul>
+                                    </li>
 
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item dropdown-toggle" href="#">대학교재/전문서</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">경제학/경제일반</a></li>
-                                                <li><a class="dropdown-item" href="#">기업 경영</a></li>
-                                                <li><a class="dropdown-item" href="#">마케팅 세일즈</a></li>
-                                                <li><a class="dropdown-item" href="#">제테크/투자</a></li>
-                                            </ul>
-                                        </li>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">대학교재/전문서</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">경제학/경제일반</a></li>
+                                            <li><a class="dropdown-item" href="#">기업 경영</a></li>
+                                            <li><a class="dropdown-item" href="#">마케팅 세일즈</a></li>
+                                            <li><a class="dropdown-item" href="#">제테크/투자</a></li>
+                                        </ul>
+                                    </li>
 
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item dropdown-toggle" href="#">기타언어권</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">기초과학/교양과학</a></li>
-                                                <li><a class="dropdown-item" href="#">과학의 이해</a></li>
-                                                <li><a class="dropdown-item" href="#">뇌과학</a></li>
-                                                <li><a class="dropdown-item" href="#">생명과학</a></li>
-                                                <li><a class="dropdown-item" href="#">수학</a></li>
-                                            </ul>
-                                        </li>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">기타언어권</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">기초과학/교양과학</a></li>
+                                            <li><a class="dropdown-item" href="#">과학의 이해</a></li>
+                                            <li><a class="dropdown-item" href="#">뇌과학</a></li>
+                                            <li><a class="dropdown-item" href="#">생명과학</a></li>
+                                            <li><a class="dropdown-item" href="#">수학</a></li>
+                                        </ul>
+                                    </li>
 
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item dropdown-toggle" href="#">어린이</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">동양사일반</a></li>
-                                                <li><a class="dropdown-item" href="#">한국사</a></li>
-                                                <li><a class="dropdown-item" href="#">조선사</a></li>
-                                                <li><a class="dropdown-item" href="#">일본사</a></li>
-                                                <li><a class="dropdown-item" href="#">서양사</a></li>
-                                            </ul>
-                                        </li>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">어린이</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">동양사일반</a></li>
+                                            <li><a class="dropdown-item" href="#">한국사</a></li>
+                                            <li><a class="dropdown-item" href="#">조선사</a></li>
+                                            <li><a class="dropdown-item" href="#">일본사</a></li>
+                                            <li><a class="dropdown-item" href="#">서양사</a></li>
+                                        </ul>
+                                    </li>
 
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item dropdown-toggle" href="#">일본도서</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">동양사일반</a></li>
-                                                <li><a class="dropdown-item" href="#">한국사</a></li>
-                                                <li><a class="dropdown-item" href="#">조선사</a></li>
-                                                <li><a class="dropdown-item" href="#">일본사</a></li>
-                                                <li><a class="dropdown-item" href="#">서양사</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">일본도서</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">동양사일반</a></li>
+                                            <li><a class="dropdown-item" href="#">한국사</a></li>
+                                            <li><a class="dropdown-item" href="#">조선사</a></li>
+                                            <li><a class="dropdown-item" href="#">일본사</a></li>
+                                            <li><a class="dropdown-item" href="#">서양사</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
 
-                            <ul class="nav-shop">
-                                <li class="nav-item"><a class="button button-header" href="#">Login</a></li>
-                                <li class="nav-item"><button><i class="ti-shopping-cart"></i><span class="nav-shop__circle">3</span></button> </li>
-                            </ul>
-                        </div>
+                        <ul class="nav-shop">
+                            <li class="nav-item"><a class="button button-header" href="#">Login</a></li>
+                            <li class="nav-item">
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="button button-header">Logout</button>
+                                </form>
+                            </li>
+                            <li class="nav-item">
+                                <button><i class="ti-shopping-cart"></i><span class="nav-shop__circle">3</span></button>
+                            </li>
+                        </ul>
                     </div>
-                </nav>
-            </div>
-        </header>
-    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+</div>
 </html>
