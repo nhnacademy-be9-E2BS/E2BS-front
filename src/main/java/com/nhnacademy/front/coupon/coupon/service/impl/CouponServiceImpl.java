@@ -12,6 +12,7 @@ import com.nhnacademy.front.coupon.coupon.model.dto.request.RequestCouponDTO;
 import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 import com.nhnacademy.front.coupon.coupon.exception.CouponUpdateProcessException;
 import com.nhnacademy.front.coupon.coupon.service.CouponService;
+import com.nhnacademy.front.coupon.membercoupon.exception.IssueCouponToAllMemberProcessException;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +67,19 @@ public class CouponServiceImpl implements CouponService {
 			couponAdaptor.updateCoupon(couponId);
 		} catch (FeignException ex) {
 			throw new CouponUpdateProcessException("쿠폰 활성 상태 변경 실패");
+		}
+	}
+
+	@Override
+	public PageResponse<ResponseCouponDTO> getCouponsIsActive(Pageable pageable) {
+		try {
+			ResponseEntity<PageResponse<ResponseCouponDTO>> response = couponAdaptor.getCouponsIsActive(pageable);
+			if(!response.getStatusCode().is2xxSuccessful()) {
+				throw new CouponGetProcessException("쿠폰 리스트 조회 실패");
+			}
+			return response.getBody();
+		} catch (FeignException ex){
+			throw new CouponGetProcessException("쿠폰 리스트 조회 실패");
 		}
 	}
 }

@@ -24,7 +24,7 @@ import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.coupon.coupon.model.dto.request.RequestCouponDTO;
 import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 import com.nhnacademy.front.coupon.coupon.service.CouponService;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.response.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
 
 import lombok.RequiredArgsConstructor;
