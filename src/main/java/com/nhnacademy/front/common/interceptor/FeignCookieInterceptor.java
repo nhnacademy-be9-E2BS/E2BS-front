@@ -36,7 +36,7 @@ public class FeignCookieInterceptor implements RequestInterceptor {
             }
 
             Cookie[] cookies = request.getCookies();
-            if (cookies.length <= 0) {
+            if (cookies == null || cookies.length == 0) {
                 return;
             }
 
