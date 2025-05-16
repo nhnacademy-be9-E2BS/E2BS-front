@@ -128,7 +128,9 @@
                         </ul>
 
                         <ul class="nav-shop">
-                            <li class="nav-item"><a class="button button-header" href="#">Login</a></li>
+                            <li class="nav-item">
+                                <a class="button button-header" th:href="@{/login}">Login</a>
+                            </li>
                             <li class="nav-item">
                                 <form th:action="@{/logout}" method="post">
                                     <button type="submit" class="button button-header">Logout</button>
