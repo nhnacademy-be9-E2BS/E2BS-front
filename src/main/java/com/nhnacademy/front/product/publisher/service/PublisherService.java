@@ -49,17 +49,12 @@ public class PublisherService {
 	 * Publisher 리스트를 back에서 조회
 	 */
 	public PageResponse<ResponsePublisherDTO> getPublishers(Pageable pageable) throws FeignException {
-		try {
-			ResponseEntity<PageResponse<ResponsePublisherDTO>> response = publisherAdaptor.getPublishers(pageable);
+		ResponseEntity<PageResponse<ResponsePublisherDTO>> response = publisherAdaptor.getPublishers(pageable);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new PublisherGetProcessException("출판사 리스트 조회 실패");
-			}
-			return response.getBody();
-
-		} catch (PublisherGetProcessException e) {
-			throw new RuntimeException(e);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new PublisherGetProcessException("출판사 리스트 조회 실패");
 		}
+		return response.getBody();
 	}
 
 	/**

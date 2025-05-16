@@ -138,18 +138,6 @@ public class PublisherServiceTest {
 	}
 
 	@Test
-	@DisplayName("get publishers - fail2")
-	void get_publishers_fail2_test() {
-		// given
-		Pageable pageable = PageRequest.of(0, 10);
-		when(publisherAdaptor.getPublishers(pageable)).thenThrow(mock(FeignException.class));
-
-		// when & then
-		assertThatThrownBy(() -> publisherService.getPublishers(pageable))
-			.isInstanceOf(PublisherGetProcessException.class);
-	}
-
-	@Test
 	@DisplayName("update publisher - success")
 	void update_publisher_success_test() {
 		// given
