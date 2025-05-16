@@ -47,8 +47,7 @@ public class ContributorController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		List<ResponsePositionDTO> positions = positionService.getPositionList();
-		// 어떤 코드인지 모르겠어서 일단 주석 처리 (소나큐브 이슈 발생)
-		// ResponseContributorDTO result = contributorService.createContributor(requestContributorDTO);
+		contributorService.createContributor(requestContributorDTO);
 
 		redirectAttributes.addFlashAttribute("positions", positions);
 		return "redirect:/admin/mypage/contributors";
@@ -74,7 +73,7 @@ public class ContributorController {
 	 */
 	@GetMapping("/{contributorId}")
 	public String getContributor(@PathVariable Long contributorId, Model model) {
-		ResponseContributorDTO responseContributorDTO = contributorService.getContributor(contributorId);
+		contributorService.getContributor(contributorId);
 		return "/admin/product/contributors";
 	}
 	/**기여자 전체 조회

@@ -40,8 +40,6 @@ public class PositionController {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
-		// 어떤 코드인지 모르겠어서 일단 주석 처리 (소나큐브 이슈 발생)
-		// ResponsePositionDTO result = positionService.createPosition(requestPositionDTO);
 		return "redirect:/admin/mypage/positions";
 	}
 
