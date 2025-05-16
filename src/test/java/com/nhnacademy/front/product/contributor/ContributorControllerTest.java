@@ -1,21 +1,5 @@
 package com.nhnacademy.front.product.contributor;
 
-import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.product.contributor.controller.ContributorController;
-
-import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
-import com.nhnacademy.front.product.contributor.position.service.PositionService;
-import com.nhnacademy.front.product.contributor.service.ContributorService;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
@@ -24,13 +8,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.contributor.controller.ContributorController;
+import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
+import com.nhnacademy.front.product.contributor.position.service.PositionService;
+import com.nhnacademy.front.product.contributor.service.ContributorService;
+
 @WebMvcTest(controllers = ContributorController.class)
 @WithMockUser(roles = "ADMIN")
 @ActiveProfiles("dev")
 @TestPropertySource(properties = {
 	"auth.jwt.create.url=http://localhost:8080/mock-auth"
 })
-public class ContributorControllerTest {
+class ContributorControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;

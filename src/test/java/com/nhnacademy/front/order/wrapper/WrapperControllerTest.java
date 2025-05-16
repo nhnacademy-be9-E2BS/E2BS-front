@@ -30,7 +30,7 @@ import com.nhnacademy.front.order.wrapper.service.WrapperService;
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = WrapperController.class)
 @ActiveProfiles("dev")
-public class WrapperControllerTest {
+class WrapperControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;

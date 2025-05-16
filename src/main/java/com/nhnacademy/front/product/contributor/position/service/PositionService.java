@@ -26,12 +26,14 @@ import lombok.extern.slf4j.Slf4j;
 public class PositionService {
 	private final PositionAdaptor positionAdaptor;
 
+	private static final String REQUEST_VALUE_MISSING_MESSAGE = "요청 값을 받지 못했습니다.";
+
 	/**
 	 * position 생성
 	 */
 	public ResponsePositionDTO createPosition(RequestPositionDTO requestPositionDTO) {
 		if (Objects.isNull(requestPositionDTO) || Objects.isNull(requestPositionDTO.getPositionName())) {
-			throw new EmptyRequestException("요청 값을 받지 못했습니다.");
+			throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 		}
 
 		try {
@@ -51,7 +53,7 @@ public class PositionService {
 	 */
 	public void updatePosition(Long positionId,RequestPositionDTO requestPositionDTO) {
 		if (Objects.isNull(requestPositionDTO) || Objects.isNull(positionId) ) {
-			throw new EmptyRequestException("요청 값을 받지 못했습니다.");
+			throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 		}
 
 		try {
@@ -70,7 +72,7 @@ public class PositionService {
 
 	public ResponsePositionDTO getPositionById(Long positionId) {
 		if (positionId == null) {
-			throw new EmptyRequestException("요청 값을 받지 못했습니다");
+			throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 		}
 		try {
 			return positionAdaptor.getPosition(positionId);
@@ -87,7 +89,7 @@ public class PositionService {
 			ResponseEntity<PageResponse<ResponsePositionDTO>> response = positionAdaptor.getPositions(pageable);
 
 			if (Objects.isNull(response.getBody())) {
-				throw new EmptyRequestException("요청 값을 받지 못했습니다.");
+				throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 			}
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
