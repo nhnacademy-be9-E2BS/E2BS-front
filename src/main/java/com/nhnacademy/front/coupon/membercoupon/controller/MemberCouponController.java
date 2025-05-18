@@ -29,6 +29,10 @@ public class MemberCouponController {
 	private final CouponService couponService;
 	private final MemberCouponService memberCouponService;
 
+	/**
+	 * 관리자 페이지 : 쿠폰 발급 뷰
+	 * 쿠폰 리스트를 보고 쿠폰을 선택하여 쿠폰만료일 지정
+	 */
 	@GetMapping("/issue")
 	public String getMemberCouponsForm(@PageableDefault(size = 5) Pageable pageable, Model model) {
 		PageResponse<ResponseCouponDTO> response = couponService.getCouponsIsActive(pageable);
@@ -38,6 +42,9 @@ public class MemberCouponController {
 		return "admin/coupon/coupon-issue";
 	}
 
+	/**
+	 * 관리자 페이지 : 활성 상태인 회원들에게 쿠폰 발급
+	 */
 	@PostMapping("/issue")
 	public String postMemberCoupons(@Validated RequestAllMemberCouponDTO request, BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
