@@ -44,7 +44,7 @@ public class PublisherController {
 		Page<ResponsePublisherDTO> publishers = PageResponseConverter.toPage(response);
 
 		model.addAttribute("publishers", publishers);
-		return "admin/publishers";
+		return "admin/product/publishers";
 	}
 
 	/**

@@ -34,7 +34,7 @@ public class AdminCategoryService {
 			}
 			return response.getBody();
 		} catch (FeignException ex) {
-			throw new CategoryGetProcessException("전체 카테고리 리스트 조회 실패");
+			throw new CategoryGetProcessException("전체 카테고리 리스트 조회 실패"+ ex.getMessage());
 		}
 	}
 

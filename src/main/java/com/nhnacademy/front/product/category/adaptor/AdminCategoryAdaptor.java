@@ -27,10 +27,10 @@ public interface AdminCategoryAdaptor {
 	ResponseEntity<Void> postCreateChildCategory(@PathVariable("categoryId") Long categoryId,
 		@RequestBody RequestCategoryDTO request);
 
-	@PutMapping("{/categoryId}")
+	@PutMapping("/{categoryId}")
 	ResponseEntity<Void> putUpdateCategory(@PathVariable("categoryId") Long categoryId,
 		@RequestBody RequestCategoryDTO request);
 
-	@DeleteMapping("{/categoryId}")
+	@DeleteMapping("/{categoryId}")
 	ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") Long categoryId);
 }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="categoryFragment(category)">
+    <li th:each="child : ${category.children}">
+        <span class="toggle" onclick="toggleClick(this)">📁</span>
+        <span th:text="${child.categoryName}"></span>
+
+        <!-- 버튼 영역 -->
+        <span class="ms-2">
+            <button class="btn btn-sm btn-outline-success"
+                    th:onclick="'showInput(this, \'POST\', ' + ${child.categoryId} + ')'">추가</button>
+            <button class="btn btn-sm btn-outline-primary"
+                    th:onclick="'showInput(this, \'PUT\', ' + ${child.categoryId} + ')'">수정</button>
+            <button class="btn btn-sm btn-outline-danger"
+                    th:onclick="'deleteCategory(this, ' + ${child.categoryId} + ')'"
+                    th:if="${#lists.isEmpty(child.children)}">삭제</button>
+        </span>
+
+        <!-- 입력창 (동적으로 보임) -->
+        <div class="category-input mt-2" style="display: none;">
+            <input type="text" class="form-control form-control-sm d-inline-block w-auto me-2" placeholder="카테고리명 입력">
+            <button class="btn btn-sm btn-success" onclick="submitCategory(this)">저장</button>
+            <button class="btn btn-sm btn-secondary" onclick="cancelInput(this)">취소</button>
+        </div>
+
+        <ul th:if="${#lists.size(child.children) > 0}">
+            <th:block th:replace="admin/product/categoryFragment :: categoryFragment(category=${child})" />
+        </ul>
+    </li>
+</th:block>
+</html>
