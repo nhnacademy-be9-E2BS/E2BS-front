@@ -38,6 +38,12 @@ product:
       url: https://e2bs.shop/api/admin/positions
     url: https://e2bs.shop/api/admin/contributors
 
+  category:
+    user:
+      url: https://e2bs.shop/api/categories
+    admin:
+      url: https://e2bs.shop/api/admin/categories
+
 
 
 order:
