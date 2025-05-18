@@ -35,8 +35,6 @@ class CouponPolicyControllerTest {
 	@MockitoBean
 	private CouponPolicyService couponPolicyService;
 
-	private final ObjectMapper objectMapper = new ObjectMapper();
-
 	@Test
 	@DisplayName("쿠폰 정책 전체 조회")
 	void testGetCouponPolicies() throws Exception {

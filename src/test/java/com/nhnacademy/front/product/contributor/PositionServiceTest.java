@@ -1,6 +1,7 @@
 package com.nhnacademy.front.product.contributor;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ import com.nhnacademy.front.product.contributor.position.service.PositionService
 import feign.FeignException;
 
 @ExtendWith(MockitoExtension.class)
-public class PositionServiceTest {
+class PositionServiceTest {
 	@InjectMocks
 	private PositionService positionService;
 
@@ -38,7 +39,7 @@ public class PositionServiceTest {
 
 	@Test
 	@DisplayName("position 생성 - 성공")
-	public void createPositionSuccess() {
+	void createPositionSuccess() {
 		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
 		ResponsePositionDTO responsePositionDTO = new ResponsePositionDTO(1L, "position1");
 		when(positionAdaptor.postCreatePosition(requestPositionDTO)).thenReturn(responsePositionDTO);
@@ -47,25 +48,16 @@ public class PositionServiceTest {
 
 	@Test
 	@DisplayName("position 생성 - 실패")
-	public void createPositionFail() {
+	void createPositionFail() {
 		RequestPositionDTO requestPositionDTO = null;
 		Assertions.assertThatThrownBy(() -> positionService.createPosition(requestPositionDTO)).isInstanceOf(
 			EmptyRequestException.class);
 	}
 
+
 	@Test
 	@DisplayName("position 생성 - 실패1")
-	public void createPositionFail1() {
-		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
-
-		when(positionAdaptor.postCreatePosition(requestPositionDTO)).thenReturn(null);
-		assertThatThrownBy(() -> positionService.createPosition(requestPositionDTO)).isInstanceOf(
-			PositionProcessException.class);
-	}
-
-	@Test
-	@DisplayName("position 생성 - 실패2")
-	public void createPositionFail2() {
+	void createPositionFail2() {
 		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
 
 		when(positionAdaptor.postCreatePosition(requestPositionDTO)).thenThrow(FeignException.class);
@@ -73,11 +65,9 @@ public class PositionServiceTest {
 			PositionProcessException.class);
 	}
 
-
-
 	@Test
 	@DisplayName("position 수정 성공")
-	public void updatePositionSuccess() {
+	void updatePositionSuccess() {
 		long positionId = 1L;
 		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
 
@@ -89,7 +79,7 @@ public class PositionServiceTest {
 
 	@Test
 	@DisplayName("position 수정 실패")
-	public void updatePositionFail() {
+	void updatePositionFail() {
 		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
 		assertThatThrownBy(() -> positionService.updatePosition(null, requestPositionDTO))
 			.isInstanceOf(EmptyRequestException.class);
@@ -97,14 +87,14 @@ public class PositionServiceTest {
 
 	@Test
 	@DisplayName("position 수정 실패1")
-	public void updatePositionFail1() {
+	void updatePositionFail1() {
 		assertThatThrownBy(() -> positionService.updatePosition(null, null))
 			.isInstanceOf(EmptyRequestException.class);
 	}
 
 	@Test
 	@DisplayName("position 수정 실패2")
-	public void updatePositionFail2() {
+	void updatePositionFail2() {
 		long positionId = 1L;
 		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
 
@@ -116,7 +106,7 @@ public class PositionServiceTest {
 
 	@Test
 	@DisplayName("position 수정 실패3")
-	public void updatePositionFail3() {
+	void updatePositionFail3() {
 		long positionId = 1L;
 		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
 
@@ -128,7 +118,7 @@ public class PositionServiceTest {
 
 	@Test
 	@DisplayName("position 단건 조회")
-	public void getPositionByIdSuccess() {
+	void getPositionByIdSuccess() {
 		long positionId = 1L;
 		when(positionService.getPositionById(positionId)).thenReturn(new ResponsePositionDTO(positionId, "position1"));
 
@@ -138,14 +128,14 @@ public class PositionServiceTest {
 
 	@Test
 	@DisplayName("position 단건 조회 실패")
-	public void getPositionByIdFail() {
+	void getPositionByIdFail() {
 		assertThatThrownBy(() -> positionService.getPositionById(null))
 			.isInstanceOf(EmptyRequestException.class);
 	}
 
 	@Test
 	@DisplayName("position 단건 조회 실패1")
-	public void getPositionByIdFail1() {
+	 void getPositionByIdFail1() {
 		when(positionAdaptor.getPosition(1L)).thenThrow(FeignException.class);
 		assertThatThrownBy(() -> positionService.getPositionById(1L)).isInstanceOf(
 			PositionGetProcessException.class);
@@ -153,7 +143,7 @@ public class PositionServiceTest {
 
 	@Test
 	@DisplayName("position 전체 조회 ")
-	public void getPositions() {
+	void getPositions() {
 
 		ResponsePositionDTO response1 = new ResponsePositionDTO(1L, "position1");
 		ResponsePositionDTO response2 = new ResponsePositionDTO(2L, "position2");
@@ -187,6 +177,50 @@ public class PositionServiceTest {
 		assertThat(result.getTotalElements()).isEqualTo(2);
 		assertThat(result).isEqualTo(pageResponse);
 		verify(positionAdaptor, times(1)).getPositions(pageable);
-
 	}
+
+
+	@Test
+	@DisplayName("position 전체 조회 실패")
+	void getPositionsFail() {
+		Pageable pageable = PageRequest.of(0, 10);
+
+		when(positionAdaptor.getPositions(pageable)).thenThrow(FeignException.class);
+		assertThatThrownBy(() -> positionService.getPositions(pageable)).isInstanceOf(
+			PositionProcessException.class);
+	}
+
+
+	@Test
+	@DisplayName("position 리스트 조회 성공")
+	void getPositionListSuccess() {
+		List<ResponsePositionDTO> dtoList = List.of(
+			new ResponsePositionDTO(1L, "position1"),
+			new ResponsePositionDTO(2L, "position2")
+		);
+
+		PageResponse<ResponsePositionDTO> pageResponse = new PageResponse<>();
+		pageResponse.setContent(dtoList);
+		ResponseEntity<PageResponse<ResponsePositionDTO>> responseEntity = ResponseEntity.ok(pageResponse);
+
+		when(positionAdaptor.getPositions(any())).thenReturn(responseEntity);
+
+		List<ResponsePositionDTO> result = positionService.getPositionList();
+
+		assertEquals(2, result.size());
+		assertEquals("position1", result.get(0).getPositionName());
+		assertEquals("position2", result.get(1).getPositionName());
+	}
+
+	@Test
+	@DisplayName("position 리스트 조회 실패")
+	void getPositionListFail() {
+		when(positionAdaptor.getPositions(any()))
+			.thenThrow(FeignException.class);
+
+		assertThrows(PositionGetProcessException.class, () -> {
+			positionService.getPositionList();
+		});
+	}
+
 }

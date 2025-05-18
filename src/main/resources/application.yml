@@ -3,9 +3,16 @@ spring:
   application:
     name: FRONT
   mvc:
-    hiddenmethod:
+    hidden method:
       filter:
         enabled: true
+
+  data:
+    redis:
+      host: s4.java21.net
+      port: 6379
+      password: "*N2vya7H@muDTwdNMR!"
+      database: 294
 
 logging:
   level:

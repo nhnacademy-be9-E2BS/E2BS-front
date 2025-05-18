@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
@@ -32,10 +33,11 @@ public class CouponPolicyController {
 	/**
 	 * 관리자 쿠폰 정책 등록
 	 */
+	@JwtTokenCheck
 	@PostMapping
 	public String createCouponPolicy(@Validated @ModelAttribute RequestCouponPolicyDTO requestCouponPolicyDTO,
-	BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+		BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		couponPolicyServiceImpl.createCouponPolicy(requestCouponPolicyDTO);
@@ -45,6 +47,7 @@ public class CouponPolicyController {
 	/**
 	 * 관리자 정책 전체 조회
 	 */
+	@JwtTokenCheck
 	@GetMapping
 	public String getCouponPolicies(@PageableDefault(size = 5) Pageable pageable, Model model) {
 		PageResponse<ResponseCouponPolicyDTO> pageResponse = couponPolicyServiceImpl.getCouponPolicies(pageable);
@@ -58,6 +61,7 @@ public class CouponPolicyController {
 	/**
 	 * 관리자 정책 단건 조회
 	 */
+	@JwtTokenCheck
 	@GetMapping("/{couponPolicyId}")
 	public String getCouponPolicyById(@PathVariable Long couponPolicyId, Model model) {
 		ResponseCouponPolicyDTO responseDTO = couponPolicyServiceImpl.getCouponPolicyById(couponPolicyId);

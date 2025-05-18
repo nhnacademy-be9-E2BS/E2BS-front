@@ -1,6 +1,5 @@
 package com.nhnacademy.front.product.tag.model.dto.response;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
