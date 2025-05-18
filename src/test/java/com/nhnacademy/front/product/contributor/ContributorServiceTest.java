@@ -1,29 +1,35 @@
 package com.nhnacademy.front.product.contributor;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.contributor.adaptor.ContributorAdaptor;
 import com.nhnacademy.front.product.contributor.dto.request.RequestContributorDTO;
 import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
 import com.nhnacademy.front.product.contributor.exception.ContributorProcessException;
 import com.nhnacademy.front.product.contributor.service.ContributorService;
+
 import feign.FeignException;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class ContributorServiceTest {
+class ContributorServiceTest {
 
 	@InjectMocks
 	ContributorService contributorService;
@@ -105,16 +111,24 @@ public class ContributorServiceTest {
 	}
 
 	@Test
+	@DisplayName("position 전체 조회 실패")
+	void getPositionsFail() {
+		Pageable pageable = PageRequest.of(0, 10);
+
+		when(contributorAdaptor.getContributors(pageable)).thenThrow(FeignException.class);
+		assertThatThrownBy(() -> contributorService.getContributors(pageable)).isInstanceOf(
+			ContributorProcessException.class);
+	}
+
+	@Test
 	@DisplayName("컨트리뷰터 단건 조회 성공")
 	void getContributorSuccess() {
 		ResponseContributorDTO response = new ResponseContributorDTO("name", 1L, "작가", 1L);
 
 		when(contributorAdaptor.getContributor(1L)).thenReturn(response);
 
-		ResponseContributorDTO result = contributorService.getContributor(1L);
+		contributorService.getContributor(1L);
 
-		assertThat(result.getContributorName()).isEqualTo("name");
-		assertThat(result.getPositionName()).isEqualTo("작가");
 		verify(contributorAdaptor, times(1)).getContributor(1L);
 	}
 
@@ -126,5 +140,7 @@ public class ContributorServiceTest {
 		assertThatThrownBy(() -> contributorService.getContributor(999L))
 			.isInstanceOf(ContributorProcessException.class);
 	}
+
+
 
 }

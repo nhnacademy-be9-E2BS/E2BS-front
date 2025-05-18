@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.tag.execption.TagCreateProcessException;
 import com.nhnacademy.front.product.tag.execption.TagGetProcessException;
@@ -29,7 +28,7 @@ import com.nhnacademy.front.product.tag.service.TagService;
 import feign.FeignException;
 
 @ExtendWith(MockitoExtension.class)
-public class TagServiceTest {
+class TagServiceTest {
 
 	@InjectMocks
 	private TagService tagService;

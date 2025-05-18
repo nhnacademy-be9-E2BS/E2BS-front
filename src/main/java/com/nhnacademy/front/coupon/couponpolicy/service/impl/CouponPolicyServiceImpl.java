@@ -31,7 +31,7 @@ public class CouponPolicyServiceImpl implements CouponPolicyService {
 
 		try {
 			ResponseEntity<Void> response = couponPolicyAdaptor.postCouponPolicy(requestCouponPolicyDTO);
-			if(!response.getStatusCode().is2xxSuccessful()) {
+			if (!response.getStatusCode().is2xxSuccessful()) {
 				throw new CouponPolicyProcessException("쿠폰 등록 실패: " + response.getStatusCode());
 			}
 		} catch (FeignException ex) {
@@ -40,29 +40,26 @@ public class CouponPolicyServiceImpl implements CouponPolicyService {
 	}
 
 	@Override
-	public PageResponse<ResponseCouponPolicyDTO> getCouponPolicies(Pageable pageable) {
-		try {
-			ResponseEntity<PageResponse<ResponseCouponPolicyDTO>> response = couponPolicyAdaptor.getCouponPolicies(pageable);
+	public PageResponse<ResponseCouponPolicyDTO> getCouponPolicies(Pageable pageable) throws FeignException {
+		ResponseEntity<PageResponse<ResponseCouponPolicyDTO>> response = couponPolicyAdaptor.getCouponPolicies(
+			pageable);
 
-			if(!response.getStatusCode().is2xxSuccessful()) {
-				throw new CouponPolicyProcessException("쿠폰 정책 조회 실패: " + response.getStatusCode());
-			}
-			return response.getBody();
-		} catch (FeignException ex) {
-			throw new CouponPolicyProcessException("쿠폰 정책 조회 실패: " + ex.getMessage());
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new CouponPolicyProcessException("전체 쿠폰 정책 조회 실패: " + response.getStatusCode());
 		}
+		return response.getBody();
 	}
 
 	@Override
 	public ResponseCouponPolicyDTO getCouponPolicyById(Long couponPolicyId) {
 		try {
 			ResponseEntity<ResponseCouponPolicyDTO> response = couponPolicyAdaptor.getCouponPolicy(couponPolicyId);
-			if(!response.getStatusCode().is2xxSuccessful()) {
-				throw new CouponPolicyProcessException("쿠폰 정책 조회 실패: " + response.getStatusCode());
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new CouponPolicyProcessException("단일 쿠폰 정책 조회 실패: " + response.getStatusCode());
 			}
 			return response.getBody();
 		} catch (FeignException ex) {
-			throw new CouponPolicyProcessException("쿠폰 정책 조회 실패: " + ex.getMessage());
+			throw new CouponPolicyProcessException("단일 쿠폰 정책 조회 실패 (Feign): " + ex.getMessage());
 		}
 	}
 

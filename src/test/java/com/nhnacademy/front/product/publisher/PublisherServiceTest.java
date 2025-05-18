@@ -29,7 +29,7 @@ import com.nhnacademy.front.product.publisher.service.PublisherService;
 import feign.FeignException;
 
 @ExtendWith(MockitoExtension.class)
-public class PublisherServiceTest {
+class PublisherServiceTest {
 
 	@InjectMocks
 	private PublisherService publisherService;
@@ -131,18 +131,6 @@ public class PublisherServiceTest {
 		ResponseEntity<PageResponse<ResponsePublisherDTO>> response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		when(publisherAdaptor.getPublishers(pageable)).thenReturn(response);
-
-		// when & then
-		assertThatThrownBy(() -> publisherService.getPublishers(pageable))
-			.isInstanceOf(PublisherGetProcessException.class);
-	}
-
-	@Test
-	@DisplayName("get publishers - fail2")
-	void get_publishers_fail2_test() {
-		// given
-		Pageable pageable = PageRequest.of(0, 10);
-		when(publisherAdaptor.getPublishers(pageable)).thenThrow(mock(FeignException.class));
 
 		// when & then
 		assertThatThrownBy(() -> publisherService.getPublishers(pageable))

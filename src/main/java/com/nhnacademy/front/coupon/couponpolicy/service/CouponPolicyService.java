@@ -1,6 +1,5 @@
 package com.nhnacademy.front.coupon.couponpolicy.service;
 
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 
 import com.nhnacademy.front.common.page.PageResponse;

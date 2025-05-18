@@ -2,6 +2,7 @@ package com.nhnacademy.front.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.nhnacademy.front.account.auth.service.AuthService;
 import com.nhnacademy.front.common.handler.CustomAuthenticationSuccessHandler;
+import com.nhnacademy.front.common.handler.CustomLogoutHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,12 +20,17 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	private final AuthService authService;
+	private final RedisTemplate<String, String> redisTemplate;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
-			authService);
+			authService
+		);
+		CustomLogoutHandler customLogoutHandler = new CustomLogoutHandler(
+			redisTemplate
+		);
 
 		/**
 		 *  CSRF 보호 기능을 비활성화
@@ -46,6 +53,13 @@ public class SecurityConfig {
 				.passwordParameter("customerPassword")
 				.successHandler(customAuthenticationSuccessHandler)
 				.permitAll()
+			)
+			/**
+			 * 로그아웃 기능
+			 */
+			.logout(logout -> logout
+				.addLogoutHandler(customLogoutHandler)
+				.logoutUrl("/logout")
 			);
 
 		return http.build();

@@ -9,6 +9,42 @@
 <div layout:fragment="content">
     <div class="row">
         <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product" data-product-id="1">
+                <div class="card-product__img">
+                    <img class="card-img" src="/img/product/product1.png" alt="">
+                    <ul class="card-product__imgOverlay">
+                        <li><button><i class="ti-search"></i></button></li>
+                        <li><button class="add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
+                        <li><button><i class="ti-heart"></i></button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product" data-product-id="2">
+                <div class="card-product__img">
+                    <img class="card-img" src="/img/product/product1.png" alt="">
+                    <ul class="card-product__imgOverlay">
+                        <li><button><i class="ti-search"></i></button></li>
+                        <li><button class="add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
+                        <li><button><i class="ti-heart"></i></button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card text-center card-product" data-product-id="3">
+                <div class="card-product__img">
+                    <img class="card-img" src="/img/product/product1.png" alt="">
+                    <ul class="card-product__imgOverlay">
+                        <li><button><i class="ti-search"></i></button></li>
+                        <li><button class="add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
+                        <li><button><i class="ti-heart"></i></button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-3">
             <div class="card text-center card-product" data-product-id="4">
                 <div class="card-product__img">
                     <img class="card-img" src="/img/product/product1.png" alt="">
@@ -85,15 +121,17 @@
 
                                       <button type="button"
                                               class="increase items-count"
-                                              th:data-id="${cartItem.cartItemId}">+</button>
+                                              th:data-productid="${cartItem.productId}"
+                                              th:data-cartitemsid="${cartItem.cartItemsId}">+</button>
 
                                       <button type="button"
                                               class="reduced items-count"
-                                              th:data-id="${cartItem.cartItemId}">-</button>
+                                              th:data-productid="${cartItem.productId}"
+                                              th:data-cartitemsid="${cartItem.cartItemsId}">-</button>
                                   </div>
                                   <button type="button"
                                           class="delete-item-btn"
-                                          th:data-id="${cartItem.cartItemId}"
+                                          th:data-cartitemsid="${cartItem.cartItemsId}"
                                           style="background: none; border: none;">
                                       <i class="ti-trash" style="color: #dc3545;"></i>
                                   </button>
@@ -136,7 +174,7 @@
     <!--================End Cart Area =================-->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/cart/cart-add.js}"></script> <!--Thymeleaf 사용 시 더 안전한 방법: 이 방식은 애플리케이션이 /myapp 같은 서브 컨텍스트 경로에 배포돼도 자동 처리된다.-->
+    <script th:src="@{/js/cart/customer/customer-cart-add.js}"></script> <!--Thymeleaf 사용 시 더 안전한 방법: 이 방식은 애플리케이션이 /myapp 같은 서브 컨텍스트 경로에 배포돼도 자동 처리된다.-->
     <script th:src="@{/js/cart/customer/customer-cart-update-quantity.js}"></script>
     <script th:src="@{/js/cart/customer/customer-cart-delete.js}"></script>
     <script th:src="@{/js/cart/customer/customer-cart-order.js}"></script>

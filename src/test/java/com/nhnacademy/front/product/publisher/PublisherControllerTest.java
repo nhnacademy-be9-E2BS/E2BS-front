@@ -30,7 +30,7 @@ import com.nhnacademy.front.product.publisher.service.PublisherService;
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = PublisherController.class)
 @ActiveProfiles("dev")
-public class PublisherControllerTest {
+class PublisherControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
