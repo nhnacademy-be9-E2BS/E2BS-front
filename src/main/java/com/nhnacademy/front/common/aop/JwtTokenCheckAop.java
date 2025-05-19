@@ -43,10 +43,12 @@ public class JwtTokenCheckAop {
 			String refreshToken = "";
 
 			Cookie[] cookies = request.getCookies();
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals(JwtRule.JWT_ISSUE_HEADER.getValue())) {
-					accessToken = cookie.getValue();
-					break;
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if (cookie.getName().equals(JwtRule.JWT_ISSUE_HEADER.getValue())) {
+						accessToken = cookie.getValue();
+						break;
+					}
 				}
 			}
 
