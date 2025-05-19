@@ -1,6 +1,7 @@
 package com.nhnacademy.front.cart.controller;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -10,10 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +26,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForGuestDTO;
 import com.nhnacademy.front.cart.service.GuestCartService;
 
-@AutoConfigureMockMvc(addFilters = false)  // Security 필터를 꺼서 403 에러 발생 제거
+@WithMockUser(username = "admin", roles = "ADMIN")
 @ActiveProfiles("dev")
 @WebMvcTest(GuestCartController.class)
 class GuestCartControllerTest {
@@ -41,11 +42,13 @@ class GuestCartControllerTest {
 
 	private MockHttpSession session;
 
+
 	@BeforeEach
 	void setup() {
 		session = new MockHttpSession();
 		session.setAttribute("JSESSIONID", "test-session-id");
 	}
+
 
 	@Test
 	@DisplayName("POST /guests/carts/items - 게스트 장바구니 항목 추가 테스트")
@@ -62,7 +65,8 @@ class GuestCartControllerTest {
 		mockMvc.perform(post("/guests/carts/items")
 				.session(session)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonRequest))
+				.content(jsonRequest)
+				.with(csrf()))
 			.andExpect(status().isCreated());
 
 		verify(guestCartService).createCartItemForGuest(any(RequestAddCartItemsDTO.class));
@@ -100,7 +104,8 @@ class GuestCartControllerTest {
 		mockMvc.perform(put("/guests/carts/items")
 				.session(session)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonRequest))
+				.content(jsonRequest)
+				.with(csrf()))
 			.andExpect(status().isNoContent());
 
 		verify(guestCartService).updateCartItemForGuest(any(RequestUpdateCartItemsDTO.class));
@@ -120,7 +125,8 @@ class GuestCartControllerTest {
 		mockMvc.perform(delete("/guests/carts/items")
 				.session(session)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonRequest))
+				.content(jsonRequest)
+				.with(csrf()))
 			.andExpect(status().isNoContent());
 
 		verify(guestCartService).deleteCartItemForGuest(any(RequestDeleteCartItemsForGuestDTO.class));
@@ -133,7 +139,8 @@ class GuestCartControllerTest {
 		doNothing().when(guestCartService).deleteCartForGuest(session.getId());
 
 		// when & then
-		mockMvc.perform(delete("/guests/carts").session(session))
+		mockMvc.perform(delete("/guests/carts").session(session)
+				.with(csrf()))
 			.andExpect(status().isNoContent());
 
 		verify(guestCartService).deleteCartForGuest(anyString());
