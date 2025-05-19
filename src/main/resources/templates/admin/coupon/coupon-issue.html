@@ -60,7 +60,7 @@
                                 <ul class="pagination">
                                     <!-- 처음 -->
                                     <li class="page-item" th:classappend="${!couponsIsActive.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link" th:href="@{'/admin/mypage/coupons'(page=0, size=${couponsIsActive.size})}">처음</a>
+                                        <a class="page-link" th:href="@{'/admin/settings/member-coupons/issue'(page=0, size=${couponsIsActive.size})}">처음</a>
                                     </li>
 
                                     <!-- 페이지 번호 -->
@@ -68,14 +68,14 @@
                                         th:each="i : ${#numbers.sequence(0, couponsIsActive.totalPages - 1)}"
                                         th:classappend="${i == couponsIsActive.number} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/coupons'(page=${i}, size=${couponsIsActive.size})}"
+                                           th:href="@{'/admin/settings/member-coupons/issue'(page=${i}, size=${couponsIsActive.size})}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
                                     <!-- 마지막 -->
                                     <li class="page-item" th:classappend="${!couponsIsActive.hasNext()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/coupons'(page=${couponsIsActive.totalPages - 1}, size=${couponsIsActive.size})}">마지막</a>
+                                           th:href="@{'/admin/settings/member-coupons/issue'(page=${couponsIsActive.totalPages - 1}, size=${couponsIsActive.size})}">마지막</a>
                                     </li>
                                 </ul>
                             </nav>
