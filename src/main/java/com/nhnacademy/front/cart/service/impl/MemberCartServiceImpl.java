@@ -50,7 +50,7 @@ public class MemberCartServiceImpl implements MemberCartService {
 	}
 
 	@Override
-	public void deleteCartItemForMember(long cartItemId) throws FeignException{
+	public void deleteCartItemForMember(long cartItemId) throws FeignException {
 		ResponseEntity<Void> result = memberCartAdaptor.deleteCartItemForMember(cartItemId);
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
