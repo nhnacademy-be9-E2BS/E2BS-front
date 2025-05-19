@@ -5,13 +5,17 @@ import java.util.Objects;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nhnacademy.front.account.member.adaptor.MemberInfoAdaptor;
 import com.nhnacademy.front.account.member.adaptor.MemberRegisterAdaptor;
 import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordException;
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.account.member.model.dto.request.RequestRegisterMemberDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseRegisterMemberDTO;
+import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
 import feign.FeignException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +26,7 @@ public class MemberService {
 
 	private final MemberRegisterAdaptor memberRegisterAdaptor;
 	private final PasswordEncoder passwordEncoder;
+	private final MemberInfoAdaptor memberInfoAdaptor;
 
 	/**
 	 * 회원가입 정보를 back 레파지토리 member 테이블에 저장하기 위한 메소드
@@ -49,6 +54,29 @@ public class MemberService {
 			throw new RegisterProcessException("회원가입 실패");
 		}
 
+	}
+
+	/**
+	 * 회원의 이름을 가져오는 메서드
+	 */
+	public String getMemberName(HttpServletRequest request) throws FeignException {
+
+		try {
+			String memberId = JwtGetMemberId.jwtGetMemberId(request);
+
+			if (Objects.nonNull(memberId)) {
+				ResponseMemberInfoDTO memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
+				if (Objects.isNull(memberInfoDTO)) {
+					return null;
+				}
+
+				return memberInfoDTO.getCustomer().getCustomerName();
+			}
+
+			return null;
+		} catch (FeignException.NotFound ex) {
+			return null;
+		}
 	}
 
 }

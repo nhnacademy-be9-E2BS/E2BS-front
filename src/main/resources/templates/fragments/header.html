@@ -128,18 +128,42 @@
                         </ul>
 
                         <ul class="nav-shop">
-                            <li class="nav-item">
+                            <!-- 로그인 안 된 경우 -->
+                            <li class="nav-item" th:if="${memberName == null}">
                                 <a class="button button-header" th:href="@{/login}">Login</a>
                             </li>
-                            <li class="nav-item">
-                                <form th:action="@{/logout}" method="post">
-                                    <button type="submit" class="button button-header">Logout</button>
-                                </form>
+
+                            <!-- 로그인 된 경우 -->
+                            <li class="nav-item" th:if="${memberName != null}">
+                                <!-- 사용자 이름 -->
+                                <span class="nav-link" th:text="${memberName}">회원명</span>
                             </li>
+
+                            <li class="nav-item dropdown mypage-hover" th:if="${memberName != null}">
+                                <!-- 마이페이지 드롭다운 트리거 -->
+                                <a class="nav-link dropdown-toggle" href="#" id="mypageDropdown">마이페이지</a>
+                                <ul class="dropdown-menu mypage-dropdown" aria-labelledby="mypageDropdown">
+                                    <li><a class="dropdown-item" href="#">나의 계정</a></li>
+                                    <li><a class="dropdown-item" href="#">주문/배송조회</a></li>
+                                    <li><a class="dropdown-item" href="#">보관함</a></li>
+                                    <li><a class="dropdown-item" href="#">구매함</a></li>
+                                    <li><a class="dropdown-item" href="#">나의 서재</a></li>
+                                    <li>
+                                        <form th:action="@{/logout}" method="post">
+                                            <button type="submit" class="dropdown-item">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li class="nav-item">
-                                <button><i class="ti-shopping-cart"></i><span class="nav-shop__circle">3</span></button>
+                                <button>
+                                    <i class="ti-shopping-cart"></i>
+                                    <span class="nav-shop__circle">3</span>
+                                </button>
                             </li>
                         </ul>
+
                     </div>
                 </div>
             </nav>
