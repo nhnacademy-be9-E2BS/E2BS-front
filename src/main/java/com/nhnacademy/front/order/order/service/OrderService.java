@@ -10,6 +10,7 @@ import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,7 +22,7 @@ public class OrderService {
 	 * 주문서 정보를 back에 저장 요청하는 서비스
 	 */
 	public ResponseEntity<ResponseOrderResultDTO> createOrder(
-		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO) {
+		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO) throws FeignException {
 		return orderAdaptor.postCreateOrder(requestOrderWrapperDTO);
 	}
 
@@ -29,7 +30,7 @@ public class OrderService {
 	 * 포인트 주문 요청
 	 */
 	public ResponseEntity<ResponseOrderResultDTO> createPointOrder(
-		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO) {
+		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO) throws FeignException {
 		return orderAdaptor.postPointCreateOrder(requestOrderWrapperDTO);
 	}
 
@@ -37,14 +38,14 @@ public class OrderService {
 	 * 결제 완료 후 결제 승인 요청을 back에 요청하는 서비스
 	 */
 	public ResponseEntity<Void> confirmOrder(@RequestParam String orderId, @RequestParam String paymentKey,
-		@RequestParam long amount) {
+		@RequestParam long amount) throws FeignException {
 		return orderAdaptor.confirmOrder(orderId, paymentKey, amount);
 	}
 
 	/**
 	 * 토스 결제 모달 창을 끌 시 저장된 주문서를 삭제하는 서비스
 	 */
-	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
+	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) throws FeignException {
 		return orderAdaptor.cancelOrder(orderId);
 	}
 
@@ -52,7 +53,7 @@ public class OrderService {
 	 * 주문 상세 조회 시 사용하는 메서드
 	 * 관리자 + 일반 회원 둘 다 사용 메서드
 	 */
-	public ResponseEntity<ResponseOrderWrapperDTO> getOrderByOrderCode(String orderCode) {
+	public ResponseEntity<ResponseOrderWrapperDTO> getOrderByOrderCode(String orderCode) throws FeignException {
 		return orderAdaptor.getOrderByOrderCode(orderCode);
 	}
 }
