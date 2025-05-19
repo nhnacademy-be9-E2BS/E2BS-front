@@ -1,4 +1,4 @@
-// 고객 장바구니 항목 삭제
+// 회원 장바구니 항목 삭제
 $(document).ready(function () {
     $('.delete-item-btn').click(function () {
         const confirmed = confirm("이 상품을 장바구니에서 삭제하시겠습니까?");
@@ -12,7 +12,7 @@ $(document).ready(function () {
         const row = $(this).closest('tr');
 
         $.ajax({
-            url: `/customers/carts/items/${cartItemsId}`,
+            url: `/members/carts/items/${cartItemsId}`,
             type: 'DELETE',
             beforeSend: function(xhr) {
                 // CSRF 토큰이 있을 경우 설정 (Spring Security 사용 시)
@@ -56,7 +56,7 @@ function recalculateTotalPrice() {
 }
 
 
-// 고객 장바구니 전체 삭제
+// 회원 장바구니 전체 삭제
 $(document).ready(function () {
     $('#clear-cart-btn').click(function () {
         const confirmed = confirm("장바구니를 비우겠습니까?");
@@ -64,20 +64,11 @@ $(document).ready(function () {
             return;
         }
 
-        const customerId = $(this).data('id');
-        console.log("customerId: ", customerId);
-
         $.ajax({
-            url: `/customers/1/carts`,
+            url: `/members/carts`,
             type: 'DELETE',
             contentType: 'application/json',
             beforeSend: function(xhr) {
-                // CSRF 토큰이 있을 경우 설정 (Spring Security 사용 시)
-                // const token = $('meta[name="_csrf"]').attr('content');
-                // const header = $('meta[name="_csrf_header"]').attr('content');
-                // if (token && header) {
-                //     xhr.setRequestHeader(header, token);
-                // }
             },
             success: function (response) {
                 alert('장바구니를 비웠습니다!');

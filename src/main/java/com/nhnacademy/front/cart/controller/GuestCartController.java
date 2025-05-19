@@ -102,7 +102,7 @@ public class GuestCartController {
 	 * 게스트 장바구니 전체 삭제
 	 */
 	@DeleteMapping("/guests/carts")
-	public ResponseEntity<Void> deleteCartForCustomer(HttpSession httpSession) {
+	public ResponseEntity<Void> deleteCartForGuest(HttpSession httpSession) {
 		String sessionId = httpSession.getId();
 		guestCartService.deleteCartForGuest(sessionId);
 
