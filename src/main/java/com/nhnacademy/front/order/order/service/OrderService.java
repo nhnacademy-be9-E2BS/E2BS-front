@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,5 +46,13 @@ public class OrderService {
 	 */
 	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
 		return orderAdaptor.cancelOrder(orderId);
+	}
+
+	/**
+	 * 주문 상세 조회 시 사용하는 메서드
+	 * 관리자 + 일반 회원 둘 다 사용 메서드
+	 */
+	public ResponseEntity<ResponseOrderWrapperDTO> getOrderByOrderCode(String orderCode) {
+		return orderAdaptor.getOrderByOrderCode(orderCode);
 	}
 }

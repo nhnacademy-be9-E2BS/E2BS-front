@@ -1,4 +1,4 @@
-<!--관리자 페이지 - 포장지-->
+<!--관리자 페이지 - 주문 내역-->
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
@@ -6,7 +6,7 @@
       layout:decorate="~{layouts/admin-layout}">
 <body>
 <div layout:fragment="content">
-    <section class="login_box_area section-margin">
+    <section>
         <div class="container">
             <h2>주문 조회</h2>
 
@@ -14,30 +14,47 @@
             <div class="row mb-5">
                 <div class="col-12">
                     <h4>주문 목록</h4>
+                    <form method="get" action="/admin/settings/orders" style="margin-bottom: 1rem;">
+                        <label for="status">주문 상태:</label>
+                        <select id="status" name="status" class="form-select"
+                                style="display: inline-block; width: 200px;">
+                            <option value="">-- 전체 보기 --</option>
+                            <option value="5" th:selected="${param.status == '5'}">대기</option>
+                            <option value="3" th:selected="${param.status == '3'}">배송중</option>
+                            <option value="2" th:selected="${param.status == '2'}">완료</option>
+                            <option value="4" th:selected="${param.status == '4'}">반품</option>
+                            <option value="1" th:selected="${param.status == '1'}">주문 취소</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm">필터 적용</button>
+                    </form>
                     <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <thead>
                         <tr>
-                            <th style="width: 10%;">주문 일시</th>
-                            <th style="width: 30%;">주문 코드</th>
-                            <th style="width: 20%;">주문 금액</th>
+                            <th style="width: 15%;">주문 일시</th>
+                            <th style="width: 15%;">희망 수령일</th>
+                            <th style="width: 20%;">주문 코드</th>
+                            <th style="width: 10%;">주문 금액</th>
                             <th style="width: 10%;">상태</th>
                             <th style="width: 10%;">결제 여부</th>
-                            <th style="width: 20%;">액션</th>
+                            <th style="width: 10%;">액션</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="wrapper : ${wrappers}">
-                            <td th:text="${wrapper.wrapperName}"></td>
-                            <td th:text="${wrapper.wrapperPrice}"></td>
-                            <td th:text="${wrapper.wrapperImage}"></td>
-                            <td th:id="'saleable-' + ${wrapper.wrapperId}">
-                                <select
-                                        class="form-control saleable-dropdown"
-                                        th:onchange="'updateWrapperSaleable(' + ${wrapper.wrapperId} + ')'">
-                                    <option value="true" th:selected="${wrapper.wrapperSaleable}">판매 중</option>
-                                    <option value="false" th:selected="${!wrapper.wrapperSaleable}">판매 중지</option>
-                                </select>
+                        <tr th:each="order : ${orders}">
+                            <td>
+                                <span th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd')}"></span>
+                                <span th:text="${#temporals.format(order.createdAt, 'HH:mm:ss')}"></span>
                             </td>
+                            <td th:text="${order.receiveDate}"></td>
+                            <td th:text="${order.orderCode}"
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></td>
+                            <td th:text="${order.paymentAmount} + ${order.pointAmount}"></td>
+                            <td th:text="${order.state}"></td>
+                            <td th:text="${order.paid}"></td>
+                            <td>
+                                <a th:href="'/admin/settings/orders/'+${order.orderCode}">상세 보기</a>
+                            </td>
+
                         </tr>
                         </tbody>
                     </table>
@@ -45,26 +62,26 @@
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             <nav>
-                                <ul class="pagination" th:if="${wrappers.totalPages > 0}">
+                                <ul class="pagination" th:if="${orders.totalPages > 0}">
                                     <!-- 처음 버튼 -->
-                                    <li class="page-item" th:classappend="${!wrappers.hasPrevious()} ? 'disabled'">
+                                    <li class="page-item" th:classappend="${!orders.hasPrevious()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/wrappers'(page=0, size=5)}">처음</a>
+                                           th:href="@{'/admin/settings/orders'(page=0, size=5)}">처음</a>
                                     </li>
 
                                     <!-- 전체 페이지 번호 출력 -->
                                     <li class="page-item"
-                                        th:each="i : ${#numbers.sequence(0, wrappers.totalPages - 1)}"
-                                        th:classappend="${i == wrappers.number} ? 'active'">
+                                        th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}"
+                                        th:classappend="${i == orders.number} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/wrappers'(page=${i}, size=5)}"
+                                           th:href="@{'/admin/settings/orders'(page=${i}, size=5)}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
                                     <!-- 마지막 버튼 -->
-                                    <li class="page-item" th:classappend="${!wrappers.hasNext()} ? 'disabled'">
+                                    <li class="page-item" th:classappend="${!orders.hasNext()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/wrappers'(page=${wrappers.totalPages - 1}, size=5)}">마지막</a>
+                                           th:href="@{'/admin/settings/orders'(page=${orders.totalPages - 1}, size=5)}">마지막</a>
                                     </li>
                                 </ul>
                             </nav>
