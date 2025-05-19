@@ -68,7 +68,7 @@ class TagControllerTest {
 		//when & then
 		mockMvc.perform(get("/admin/mypage/tags"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("admin/tags"))
+			.andExpect(view().name("admin/product/tags"))
 			.andExpect(model().attributeExists("tags"));
 	}
 

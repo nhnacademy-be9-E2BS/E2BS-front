@@ -7,20 +7,24 @@
 <body>
 <div layout:fragment="content">
     <style>
+        .category-dash ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
         .category-dash ul li {
-            margin-bottom: 0.5em;
-            padding-left: 0.5em;
             border-left: 1px dashed #ccc;
+            padding-left: 10px;
+        }
+
+        .category-left {
+            display: flex;
+            flex-direction: column;
         }
 
         .toggle {
             cursor: pointer;
             margin-right: 5px;
-        }
-
-        ul ul {
-            display: none;
-            margin-left: 20px;
         }
     </style>
 
@@ -51,26 +55,34 @@
                 <div class="col-12 category-dash">
                     <h4>Category List</h4>
                     <ul id="categoryTree">
-                        <li th:each="category : ${categories}">
-                            <span class="toggle" onclick="toggleClick(this)">📁</span>
-                            <span th:text="${category.categoryName}"></span>
+                        <li th:each="category : ${categories}" class="mb-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <!-- 들여쓰기 + 텍스트 -->
+                                <div class="category-left">
+                                    <div class="d-flex align-items-center">
+                                        <span class="toggle me-2" onclick="toggleClick(this)">📁</span>
+                                        <span th:text="${category.categoryName}"></span>
+                                    </div>
 
-                            <!-- 버튼 영역 -->
-                            <span class="ms-2">
-                                <button class="btn btn-sm btn-outline-success"
-                                        th:onclick="'showInput(this, \'POST\', ' + ${category.categoryId} + ')'">추가</button>
-                                <button class="btn btn-sm btn-outline-primary"
-                                        th:onclick="'showInput(this, \'PUT\', ' + ${category.categoryId} + ')'">수정</button>
-                            </span>
+                                    <!-- 입력창 -->
+                                    <div class="category-input mt-2" style="display: none;">
+                                        <input type="text" class="form-control form-control-sm d-inline-block w-auto me-2" placeholder="카테고리명 입력">
+                                        <button class="btn btn-sm btn-primary" onclick="submitCategory(this)">저장</button>
+                                        <button class="btn btn-sm btn-secondary" onclick="cancelInput(this)">취소</button>
+                                    </div>
+                                </div>
 
-                            <!-- 입력창 (동적으로 보임) -->
-                            <div class="category-input mt-2" style="display: none;">
-                                <input type="text" class="form-control form-control-sm d-inline-block w-auto me-2" placeholder="카테고리명 입력">
-                                <button class="btn btn-sm btn-success" onclick="submitCategory(this)">저장</button>
-                                <button class="btn btn-sm btn-secondary" onclick="cancelInput(this)">취소</button>
+                                <!-- 오른쪽 버튼 -->
+                                <div class="ms-2">
+                                    <button class="btn btn-sm btn-outline-success"
+                                            th:onclick="'showInput(this, \'POST\', ' + ${category.categoryId} + ')'">추가</button>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                            th:onclick="'showInput(this, \'PUT\', ' + ${category.categoryId} + ')'">수정</button>
+                                </div>
                             </div>
 
-                            <ul th:if="${#lists.size(category.children) > 0}">
+                            <!-- 자식 카테고리 -->
+                            <ul th:if="${#lists.size(category.children) > 0}" class="ms-4 mt-2">
                                 <th:block th:replace="admin/product/categoryFragment :: categoryFragment(category=${category})" />
                             </ul>
                         </li>
@@ -85,7 +97,7 @@
                 const toggles = document.querySelectorAll("#categoryTree .toggle");
 
                 toggles.forEach(span => {
-                    const li = span.parentElement;
+                    const li = span.closest("li");
                     const childUl = li.querySelector("ul");
 
                     if (!childUl) {

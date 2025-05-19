@@ -73,7 +73,7 @@ class WrapperControllerTest {
 		// when & then
 		mockMvc.perform(get("/admin/mypage/wrappers"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("admin/wrappers"))
+			.andExpect(view().name("admin/product/wrappers"))
 			.andExpect(model().attributeExists("wrappers"));
 	}
 

@@ -31,6 +31,10 @@ public class AdminCategoryController {
 
 	private final AdminCategoryService adminCategoryService;
 
+	/**
+	 * 관리자 페이지 -> 카테고리 뷰
+	 * 등록 되어 있는 카테고리 리스트가 폴더 형식으로 보여짐
+	 */
 	@GetMapping
 	public String getCategories(Model model) {
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
@@ -38,6 +42,10 @@ public class AdminCategoryController {
 		return "admin/product/categories";
 	}
 
+	/**
+	 * 카테고리 생성
+	 * 최상위 카테고리 + 하위 카테고리
+	 */
 	@PostMapping
 	public String createCategoryTree(@Validated @ModelAttribute RequestCategoryList requests,
 		BindingResult bindingResult) {
@@ -49,6 +57,10 @@ public class AdminCategoryController {
 		return "redirect:/admin/settings/categories";
 	}
 
+	/**
+	 * 카테고리 생성
+	 * 존재하는 카테고리의 하위 카테고리
+	 */
 	@PostMapping("/{categoryId}")
 	public ResponseEntity<Void> createChildCategory(@Validated @RequestBody RequestCategoryDTO request,
 		BindingResult bindingResult, @PathVariable Long categoryId) {
@@ -60,6 +72,9 @@ public class AdminCategoryController {
 		return ResponseEntity.ok().build();
 	}
 
+	/**
+	 * 카테고리 수정 (카테고리명)
+	 */
 	@PutMapping("/{categoryId}")
 	public ResponseEntity<Void> updateCategory(@Validated @RequestBody RequestCategoryDTO request,
 		BindingResult bindingResult, @PathVariable Long categoryId) {
@@ -71,6 +86,9 @@ public class AdminCategoryController {
 		return ResponseEntity.ok().build();
 	}
 
+	/**
+	 * 카테고리 삭제 (자식 카테고리가 없는 경우 가능)
+	 */
 	@DeleteMapping("/{categoryId}")
 	public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
 		adminCategoryService.deleteCategory(categoryId);

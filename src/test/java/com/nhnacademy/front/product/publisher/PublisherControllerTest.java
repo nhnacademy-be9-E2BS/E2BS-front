@@ -71,7 +71,7 @@ class PublisherControllerTest {
 		// when & then
 		mockMvc.perform(get("/admin/mypage/publishers"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("admin/publishers"))
+			.andExpect(view().name("admin/product/publishers"))
 			.andExpect(model().attributeExists("publishers"));
 	}
 
