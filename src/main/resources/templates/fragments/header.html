@@ -148,12 +148,13 @@
                                     <li><a class="dropdown-item" href="#">보관함</a></li>
                                     <li><a class="dropdown-item" href="#">구매함</a></li>
                                     <li><a class="dropdown-item" href="#">나의 서재</a></li>
-                                    <li>
-                                        <form th:action="@{/logout}" method="post">
-                                            <button type="submit" class="dropdown-item">Logout</button>
-                                        </form>
-                                    </li>
                                 </ul>
+                            </li>
+
+                            <li class="nav-item" th:if="${memberName != null}">
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="dropdown-item">Logout</button>
+                                </form>
                             </li>
 
                             <li class="nav-item">
