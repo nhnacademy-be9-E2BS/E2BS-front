@@ -22,7 +22,22 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		HttpServletResponse response,
 		Authentication authentication) throws IOException {
 
+		String url = request.getRequestURI();
 		String memberId = authentication.getName();
+
+		boolean isAdmin = authentication.getAuthorities().stream()
+			.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+
+		boolean isMember = authentication.getAuthorities().stream()
+			.anyMatch(authority -> authority.getAuthority().equals("ROLE_MEMBER"));
+
+		if (isAdmin) {
+
+		}
+
+		if (isMember) {
+
+		}
 
 		RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(memberId);
 		authService.postAuthCreateJwtToken(requestJwtTokenDTO, response, request);

@@ -10,7 +10,6 @@ import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordEx
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.account.member.model.dto.request.RequestRegisterMemberDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseRegisterMemberDTO;
-import com.nhnacademy.front.common.exception.EmptyRequestException;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +27,8 @@ public class MemberService {
 	 * 회원가입 정보를 back 레파지토리 member 테이블에 저장하기 위한 메소드
 	 */
 	public void createMember(RequestRegisterMemberDTO requestRegisterMemberDTO) {
-		if (Objects.isNull(requestRegisterMemberDTO)) {
-			throw new EmptyRequestException("요청 값을 받지 못했습니다.");
-		}
-
 		if (!requestRegisterMemberDTO.getCustomerPassword()
-			.equals(requestRegisterMemberDTO.getCustomerPasswordCheck()
-			)) {
-			log.info("password:{}", requestRegisterMemberDTO.getCustomerPassword());
-			log.info("passwordCheck:{}", requestRegisterMemberDTO.getCustomerPasswordCheck());
+			.equals(requestRegisterMemberDTO.getCustomerPasswordCheck())) {
 			throw new RegisterNotEqualsPasswordException("입력하신 비밀번호가 서로 같지 않습니다.");
 		}
 
