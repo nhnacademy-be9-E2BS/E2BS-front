@@ -85,7 +85,7 @@
                           </tr>
                       </thead>
                       <tbody>
-                          <tr th:each="cartItem : ${cartItemsByCustomer}">
+                          <tr th:each="cartItem : ${cartItemsByMember}">
                               <!-- 카테고리 id 를 공백으로 구분하여 하나의 문자열로 결합하고, hidden 속성에 넣음 -->
                               <span id="categoryIds"
                                     th:attr="hidden=${true}"
@@ -141,19 +141,19 @@
                               </td>
                           </tr>
 
-                          <tr th:if="${#lists.isEmpty(cartItemsByCustomer)}">
+                          <tr th:if="${#lists.isEmpty(cartItemsByMember)}">
                               <td colspan="5" style="text-align:center;">
                                   장바구니가 비어 있습니다.
                               </td>
                           </tr>
-                          <tr th:if="${not #lists.isEmpty(cartItemsByCustomer)}">
+                          <tr th:if="${not #lists.isEmpty(cartItemsByMember)}">
                               <td></td>
                               <td></td>
                               <td></td>
                               <td><h5>최종 결제 금액</h5></td>
                               <td><h5 class="total-payment-price" id="totalPaymentAmount" th:text="${totalPaymentAmount} + '원'">30000원</h5></td>
                           </tr>
-                          <tr th:if="${not #lists.isEmpty(cartItemsByCustomer)}" class="out_button_area">
+                          <tr th:if="${not #lists.isEmpty(cartItemsByMember)}" class="out_button_area">
                               <td class="d-none-l"></td>
                               <td class=""></td>
                               <td></td>
@@ -174,10 +174,10 @@
     <!--================End Cart Area =================-->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/cart/customer/customer-cart-add.js}"></script> <!--Thymeleaf 사용 시 더 안전한 방법: 이 방식은 애플리케이션이 /myapp 같은 서브 컨텍스트 경로에 배포돼도 자동 처리된다.-->
-    <script th:src="@{/js/cart/customer/customer-cart-update-quantity.js}"></script>
-    <script th:src="@{/js/cart/customer/customer-cart-delete.js}"></script>
-    <script th:src="@{/js/cart/customer/customer-cart-order.js}"></script>
+    <script th:src="@{/js/cart/member/member-cart-add.js}"></script> <!--Thymeleaf 사용 시 더 안전한 방법: 이 방식은 애플리케이션이 /myapp 같은 서브 컨텍스트 경로에 배포돼도 자동 처리된다.-->
+    <script th:src="@{/js/cart/member/member-cart-update-quantity.js}"></script>
+    <script th:src="@{/js/cart/member/member-cart-delete.js}"></script>
+    <script th:src="@{/js/cart/member/member-cart-order.js}"></script>
 </div>
 </body>
 </html>
