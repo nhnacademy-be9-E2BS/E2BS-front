@@ -29,7 +29,7 @@ function updateTotalPayment() {
 }
 
 
-// 고객 상품 장바구니에 추가
+// 회원 상품 장바구니에 추가
 $(document).ready(function () {
     $('.add-cart-btn').click(function () {
         const card = $(this).closest('.card-product');
@@ -40,7 +40,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: '/customers/carts/items',
+            url: '/members/carts/items',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(

@@ -14,6 +14,7 @@ eureka:
 
 
 member:
+  url: http://localhost:10232/api/members
   login:
     url: http://localhost:10232/api/login
 
@@ -34,6 +35,7 @@ coupon:
 
 # 상품 - 출판사, 기여자 역할
 product:
+  url: http://localhost:10232/api/product
   publisher:
     url: http://localhost:10232/api/admin/publishers
 
@@ -51,15 +53,18 @@ order:
   wrapper:
     url: http://localhost:10232/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
   order:
-    url: http://localhost:10236/api/order
+    url: http://localhost:10232/api/order
 
   toss:
     client-key: test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO
     success-url: http://localhost:10238/order/success
     fail-url: http://localhost:10238/order/fail
-
+  admin: http://localhost:10232/api/admin/orders
 
 customer:
-    url: http://localhost:10236/api/customers
+  url: http://localhost:10232/api/customers
 guest:
-  url: http://localhost:10236/api/guests
+  url: http://localhost:10232/api/guests
+
+review:
+  url: http://localhost:10232/api/reviews

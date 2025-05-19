@@ -63,7 +63,6 @@ class OrderControllerTest {
 	private RequestOrderDetailDTO getTestOrderDetailDTO() {
 		RequestOrderDetailDTO orderDetailDTO = new RequestOrderDetailDTO();
 		orderDetailDTO.setProductId(10L);
-		orderDetailDTO.setOrderStateId(1L);
 		orderDetailDTO.setOrderCode("TEST-ORDER-CODE");
 		orderDetailDTO.setWrapperId(123L);
 		orderDetailDTO.setOrderQuantity(3);
@@ -101,7 +100,7 @@ class OrderControllerTest {
 	@DisplayName("토스 결제 주문 시 주문서 저장 - 잘못된 요청")
 	void testPostCheckOutFail() throws Exception {
 		RequestOrderWrapperDTO request = new RequestOrderWrapperDTO();
-		
+
 		mockMvc.perform(post("/order/tossPay")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))
