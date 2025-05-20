@@ -1,6 +1,6 @@
 package com.nhnacademy.front.account.member.model.dto.response;
 
-import com.nhnacademy.front.account.member.model.domain.MemberRoleName;
+import com.nhnacademy.front.account.memberrole.model.domain.MemberRoleName;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
