@@ -55,6 +55,9 @@
 
                                 <!-- 취소 버튼 (초기에는 숨김) -->
                                 <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
+
+                                <!-- 삭제 버튼 -->
+                                <button type="button" class="btn btn-sm btn-danger delete-btn" th:onclick="'deleteTag('+${tag.tagId}+')'">삭제</button>
                             </td>
                         </tr>
                         </tbody>
@@ -144,6 +147,42 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        function deleteTag(tagId) {
+            if (!confirm("정말로 이 태그를 삭제하시겠습니까?")) {
+                return;
+            }
+
+
+            $.ajax({
+                url: '/admin/mypage/tags/' + tagId,
+                type: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify({ tagName: '' }), // RequestTagDTO 호환성 유지
+                success: function() {
+                    alert("태그가 성공적으로 삭제되었습니다.");
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = "태그 삭제에 실패했습니다.";
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        errorMessage += ": " + (response.message || response.error || xhr.statusText);
+                    } catch (e) {
+                        errorMessage += ": " + xhr.status + " " + xhr.statusText;
+                    }
+                    alert(errorMessage);
+                    console.error("Delete failed:", {
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        response: xhr.responseText,
+                        error: error
+                    });
+                }
+            });
+        }
     </script>
 </div>
 </body>

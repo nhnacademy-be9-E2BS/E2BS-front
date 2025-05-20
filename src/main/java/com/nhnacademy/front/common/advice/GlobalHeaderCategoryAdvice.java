@@ -22,6 +22,7 @@ public class GlobalHeaderCategoryAdvice {
 	@ModelAttribute("headerCategories")
 	public List<ResponseCategoryDTO> getHeaderCategories() {
 		try {
+			log.info("헤더 카테고리 조회 완료");
 			return userCategoryService.getCategoriesToDepth3();
 		} catch (Exception e) {
 			log.error("헤더 카테고리 조회 중 오류 발생", e);
