@@ -48,30 +48,60 @@
 
 
 <div class="col-xl-3 col-lg-4 col-md-5" th:fragment="member-sidebar">
-
-      <div class="sidebar-filter">
-        <div class="top-filter-head">Member</div>
-        <div class="common-filter">
-          <div class="head">주문 내역</div>
-            <ul>
-              <li class="filter-list"><a href="/member/orders">주문 내역 조회</a></li>
-              <li class="filter-list"><a href="/member/return">반품 내역</a></li>
-              <li class="filter-list"><a href="/member/cancel">취소 내역</a></li>
-              <li class="filter-list"><a href="/member/reviews">리뷰 내역 조회</a></li>
-            </ul>
-        </div>
-
-        <div class="common-filter">
-          <div class="head">회원 정보 관리</div>
-            <ul>
-              <li class="filter-list"><a href="/member/my-page-update">개인정보 수정</a></li>
-              <li class="filter-list"><a href="/member/rank">등급</a></li>
-              <li class="filter-list"><a href="/member/coupons">할인쿠폰</a></li>
-              <li class="filter-list"><a href="/member/deliveries">배송지 관리</a></li>
-            </ul>
-        </div>
-      </div>
+  <div class="sidebar-filter">
+    <div class="top-filter-head">Member</div>
+    <div class="common-filter">
+      <div class="head">주문 내역</div>
+      <ul>
+        <li class="filter-list"><a href="/member/orders">주문 내역 조회</a></li>
+        <li class="filter-list"><a href="/member/return">반품 내역</a></li>
+        <li class="filter-list"><a href="/member/cancel">취소 내역</a></li>
+        <li class="filter-list"><a href="/member/reviews">리뷰 내역 조회</a></li>
+      </ul>
     </div>
+
+    <div class="common-filter">
+      <div class="head">회원 정보 관리</div>
+      <ul>
+        <li class="filter-list"><a href="/member/my-page-update">개인정보 수정</a></li>
+        <li class="filter-list"><a href="/member/rank">등급</a></li>
+        <li class="filter-list"><a href="/member/coupons">할인쿠폰</a></li>
+        <li class="filter-list"><a href="/member/deliveries">배송지 관리</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="col-xl-3 col-lg-4 col-md-5" th:fragment="mypage-sidebar">
+
+  <div class="profile-box" style="text-align: center; margin-bottom: 20px;">
+    <div style="margin-top: 10px; font-weight: bold;" th:text="${memberName}"> 님</div>
+  </div>
+
+  <div class="sidebar-filter">
+    <div class="top-filter-head">Member</div>
+    <div class="common-filter">
+      <div class="head">주문 내역</div>
+      <ul>
+        <li class="filter-list"><a href="/member/orders">주문 내역 조회</a></li>
+        <li class="filter-list"><a href="/member/return">반품 내역</a></li>
+        <li class="filter-list"><a href="/member/cancel">취소 내역</a></li>
+        <li class="filter-list"><a href="/member/reviews">리뷰 내역 조회</a></li>
+      </ul>
+    </div>
+
+    <div class="common-filter">
+      <div class="head">회원 정보 관리</div>
+      <ul>
+        <li class="filter-list"><a href="/member/my-page-update">개인정보 수정</a></li>
+        <li class="filter-list"><a href="/member/rank">등급</a></li>
+        <li class="filter-list"><a href="/member/coupons">할인쿠폰</a></li>
+        <li class="filter-list"><a href="/member/deliveries">배송지 관리</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 <div class="col-xl-3 col-lg-4 col-md-5" th:fragment="category-sidebar">

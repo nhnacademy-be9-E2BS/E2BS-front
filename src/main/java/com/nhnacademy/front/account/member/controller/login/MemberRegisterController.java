@@ -1,4 +1,4 @@
-package com.nhnacademy.front.account.member.controller;
+package com.nhnacademy.front.account.member.controller.login;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,7 +28,7 @@ public class MemberRegisterController {
 	 */
 	@GetMapping
 	public String getRegister() {
-		return "member/register";
+		return "member/login/register";
 	}
 
 	/**
