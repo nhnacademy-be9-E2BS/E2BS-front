@@ -17,10 +17,10 @@ import com.nhnacademy.front.common.handler.CustomLogoutHandler;
 
 import lombok.RequiredArgsConstructor;
 
-@Profile("!dev")
+@Profile("dev")
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class DevSecurityConfig {
 
 	private final AuthService authService;
 	private final RedisTemplate<String, String> redisTemplate;
@@ -44,10 +44,7 @@ public class SecurityConfig {
 			 *  권한있는 회원만 접근 가능한 URL 설정
 			 */
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/", "/index", "/login", "/register", "/admin/login").permitAll()
-				.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/scss/**", "/vendors/**",
-					"/Aroma Shop-doc/**").permitAll()
-				.anyRequest().authenticated()
+				.anyRequest().permitAll()
 			)
 
 			/**
