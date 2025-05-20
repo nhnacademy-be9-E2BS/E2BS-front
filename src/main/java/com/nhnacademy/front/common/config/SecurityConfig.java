@@ -44,10 +44,10 @@ public class SecurityConfig {
 			 *  권한있는 회원만 접근 가능한 URL 설정
 			 */
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/", "/index", "/login", "/register", "/admin/login").permitAll()
+				.requestMatchers("/", "/index", "/login", "/register", "/admin/login", "/actuator/health").permitAll()
 				.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/scss/**", "/vendors/**",
 					"/Aroma Shop-doc/**").permitAll()
-				.anyRequest().permitAll()
+				.anyRequest().authenticated()
 			)
 
 			/**
