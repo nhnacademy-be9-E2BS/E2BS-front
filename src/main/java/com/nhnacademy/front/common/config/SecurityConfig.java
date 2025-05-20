@@ -2,6 +2,7 @@ package com.nhnacademy.front.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -10,11 +11,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.nhnacademy.front.account.auth.service.AuthService;
+import com.nhnacademy.front.common.handler.CustomAuthenticationFailureHandler;
 import com.nhnacademy.front.common.handler.CustomAuthenticationSuccessHandler;
 import com.nhnacademy.front.common.handler.CustomLogoutHandler;
 
 import lombok.RequiredArgsConstructor;
 
+@Profile("!dev")
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -31,6 +34,7 @@ public class SecurityConfig {
 		CustomLogoutHandler customLogoutHandler = new CustomLogoutHandler(
 			redisTemplate
 		);
+		CustomAuthenticationFailureHandler customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
 
 		/**
 		 *  CSRF 보호 기능을 비활성화
@@ -40,7 +44,10 @@ public class SecurityConfig {
 			 *  권한있는 회원만 접근 가능한 URL 설정
 			 */
 			.authorizeHttpRequests(auth -> auth
-				.anyRequest().permitAll()
+				.requestMatchers("/", "/index", "/login", "/register", "/admin/login").permitAll()
+				.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/scss/**", "/vendors/**",
+					"/Aroma Shop-doc/**").permitAll()
+				.anyRequest().authenticated()
 			)
 
 			/**
@@ -52,6 +59,7 @@ public class SecurityConfig {
 				.usernameParameter("memberId")
 				.passwordParameter("customerPassword")
 				.successHandler(customAuthenticationSuccessHandler)
+				.failureHandler(customAuthenticationFailureHandler)
 				.permitAll()
 			)
 			/**

@@ -38,13 +38,6 @@ public class MemberRegisterController {
 	public String createRegister(@Validated @ModelAttribute RequestRegisterMemberDTO requestRegisterMemberDTO,
 		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			log.info("memberId:{}", requestRegisterMemberDTO.getMemberId());
-			log.info("customerName:{}", requestRegisterMemberDTO.getCustomerName());
-			log.info("customerPassword:{}", requestRegisterMemberDTO.getCustomerPassword());
-			log.info("customerPasswordCheck:{}", requestRegisterMemberDTO.getCustomerPasswordCheck());
-			log.info("customerEmail:{}", requestRegisterMemberDTO.getCustomerEmail());
-			log.info("memberBirth:{}", requestRegisterMemberDTO.getMemberBirth());
-			log.info("memberPhone:{}", requestRegisterMemberDTO.getMemberPhone());
 			throw new ValidationFailedException(bindingResult);
 		}
 
