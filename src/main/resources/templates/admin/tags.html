@@ -154,16 +154,11 @@
                 return;
             }
 
-            // JWT 토큰 가져오기 (프로젝트에 맞게 수정 필요)
-            const token = localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken') || '';
 
             $.ajax({
                 url: '/admin/mypage/tags/' + tagId,
                 type: 'DELETE',
                 contentType: 'application/json',
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
                 data: JSON.stringify({ tagName: '' }), // RequestTagDTO 호환성 유지
                 success: function() {
                     alert("태그가 성공적으로 삭제되었습니다.");
