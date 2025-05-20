@@ -41,8 +41,8 @@
                                 <a th:href="@{/admin/mypage/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
                                    th:text="${coupon.couponPolicyName}">1</a>
                             </td>
-                            <td th:text="${coupon.categoryId != null ? coupon.categoryId : '-'}">-</td>
-                            <td th:text="${coupon.productId != null ? coupon.productId : '-'}">-</td>
+                            <td th:text="${coupon.categoryId != null ? coupon.categoryName : '-'}">-</td>
+                            <td th:text="${coupon.productId != null ? coupon.productTitle : '-'}">-</td>
                             <td>
                                 <button class="btn btn-sm"
                                         th:attr="data-id=${coupon.couponId}"
