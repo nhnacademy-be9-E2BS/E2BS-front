@@ -23,7 +23,7 @@ auth:
 
 # 쿠폰
 coupon:
-  url: https://e2bs.shop/api/admin/coupon
+  url: https://e2bs.shop/api/admin/coupons
   policy:
     url: https://e2bs.shop/api/admin/couponPolicies
   member:
