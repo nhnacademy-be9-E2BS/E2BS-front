@@ -33,4 +33,7 @@ public interface AdminCategoryAdaptor {
 
 	@DeleteMapping("/{categoryId}")
 	ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") Long categoryId);
+
+	@DeleteMapping("/headerCaching")
+	ResponseEntity<Void> headerCachingClear();
 }

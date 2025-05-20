@@ -99,4 +99,19 @@ public class AdminCategoryService {
 			throw new CategoryDeleteProcessException("카테고리 삭제 실패");
 		}
 	}
+
+	/**
+	 * 카테고리 등록, 수정, 삭제 후 헤더에 표시할 카테고리를 새롭게 캐싱하기 위하여 원래의 캐싱 데이터 삭제
+	 */
+	public void headerCaChingClear() {
+		try {
+			ResponseEntity<Void> response = adminCategoryAdaptor.headerCachingClear();
+
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new RuntimeException("헤더 캐싱 clear 실패");
+			}
+		} catch (FeignException ex) {
+			throw new RuntimeException("헤더 캐싱 clear 실패");
+		}
+	}
 }

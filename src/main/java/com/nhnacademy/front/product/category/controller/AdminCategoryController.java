@@ -94,4 +94,13 @@ public class AdminCategoryController {
 		adminCategoryService.deleteCategory(categoryId);
 		return ResponseEntity.ok().build();
 	}
+
+	/**
+	 * 헤더 카테고리 캐싱 데이터 삭제
+	 */
+	@DeleteMapping("/headerCaching")
+	public String headerCachingClear() {
+		adminCategoryService.headerCaChingClear();
+		return "redirect:/admin/settings/categories";
+	}
 }
