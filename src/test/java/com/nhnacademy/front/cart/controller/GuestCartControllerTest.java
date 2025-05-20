@@ -25,6 +25,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartItemsForGues
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForGuestDTO;
 import com.nhnacademy.front.cart.service.GuestCartService;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @ActiveProfiles("dev")
@@ -36,6 +37,9 @@ class GuestCartControllerTest {
 
 	@MockitoBean
 	private GuestCartService guestCartService;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@Autowired
 	private ObjectMapper objectMapper;

@@ -48,9 +48,14 @@ product:
       url: http://localhost:10232/api/admin/positions
     url: http://localhost:10232/api/admin/contributors
 
-
   tag:
     url: http://localhost:10232/api/admin/tags
+
+  category:
+    user:
+      url: http://localhost:10232/api/categories
+    admin:
+      url: http://localhost:10232/api/admin/categories
 
 
 order:

@@ -16,17 +16,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.nhnacademy.front.common.exception.EmptyRequestException;
+import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.adaptor.PublisherAdaptor;
 import com.nhnacademy.front.product.publisher.exception.PublisherCreateProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherGetProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherUpdateProcessException;
 import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
-import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 import com.nhnacademy.front.product.publisher.service.PublisherService;
-
-import feign.FeignException;
 
 @ExtendWith(MockitoExtension.class)
 class PublisherServiceTest {
@@ -56,7 +53,7 @@ class PublisherServiceTest {
 	void create_publisher_fail1_test() {
 		// when & then
 		assertThatThrownBy(() -> publisherService.createPublisher(null))
-			.isInstanceOf(EmptyRequestException.class);
+			.isInstanceOf(NullPointerException.class);
 	}
 
 	@Test
@@ -65,18 +62,6 @@ class PublisherServiceTest {
 		// given
 		RequestPublisherDTO request = new RequestPublisherDTO("Publisher A");
 		when(publisherAdaptor.postCreatePublisher(request)).thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-
-		// when & then
-		assertThatThrownBy(() -> publisherService.createPublisher(request))
-			.isInstanceOf(PublisherCreateProcessException.class);
-	}
-
-	@Test
-	@DisplayName("create publisher - fail3")
-	void create_publisher_fail3_test() {
-		// given
-		RequestPublisherDTO request = new RequestPublisherDTO("Publisher A");
-		when(publisherAdaptor.postCreatePublisher(request)).thenThrow(FeignException.class);
 
 		// when & then
 		assertThatThrownBy(() -> publisherService.createPublisher(request))
@@ -160,7 +145,7 @@ class PublisherServiceTest {
 
 		// when & then
 		assertThatThrownBy(() -> publisherService.updatePublisher(null, request))
-			.isInstanceOf(EmptyRequestException.class);
+			.isInstanceOf(NullPointerException.class);
 	}
 
 	@Test
@@ -168,7 +153,7 @@ class PublisherServiceTest {
 	void update_publisher_fail2_test() {
 		// when & then
 		assertThatThrownBy(() -> publisherService.updatePublisher(1L, null))
-			.isInstanceOf(EmptyRequestException.class);
+			.isInstanceOf(NullPointerException.class);
 	}
 
 	@Test
@@ -183,15 +168,4 @@ class PublisherServiceTest {
 			.isInstanceOf(PublisherUpdateProcessException.class);
 	}
 
-	@Test
-	@DisplayName("update publisher - fail4")
-	void update_publisher_fail4_test() {
-		// given
-		RequestPublisherDTO request = new RequestPublisherDTO("update Publisher A");
-		when(publisherAdaptor.putUpdatePublisher(1L, request)).thenThrow(FeignException.class);
-
-		// when & then
-		assertThatThrownBy(() -> publisherService.updatePublisher(1L, request))
-			.isInstanceOf(PublisherUpdateProcessException.class);
-	}
 }

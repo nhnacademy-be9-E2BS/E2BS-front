@@ -26,6 +26,7 @@ import com.nhnacademy.front.order.wrapper.controller.WrapperController;
 import com.nhnacademy.front.order.wrapper.model.dto.request.RequestModifyWrapperDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = WrapperController.class)
@@ -37,6 +38,9 @@ class WrapperControllerTest {
 
 	@MockitoBean
 	private WrapperService wrapperService;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -71,9 +75,9 @@ class WrapperControllerTest {
 		Mockito.when(wrapperService.getWrappers(any())).thenReturn(pageResponse);
 
 		// when & then
-		mockMvc.perform(get("/admin/mypage/wrappers"))
+		mockMvc.perform(get("/admin/settings/wrappers"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("admin/wrappers"))
+			.andExpect(view().name("admin/product/wrappers"))
 			.andExpect(model().attributeExists("wrappers"));
 	}
 
@@ -81,14 +85,14 @@ class WrapperControllerTest {
 	@DisplayName("포장지 생성 - success")
 	void create_wrapper_success_test() throws Exception {
 		// given & when & then
-		mockMvc.perform(post("/admin/mypage/wrappers")
+		mockMvc.perform(post("/admin/settings/wrappers")
 				.param("wrapperPrice", String.valueOf(1000L))
 				.param("wrapperName", "Wrapper A")
 				.param("wrapperImage", "a.jpg")
 				.param("wrapperSaleable", String.valueOf(true))
 				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/admin/mypage/wrappers"));
+			.andExpect(redirectedUrl("/admin/settings/wrappers"));
 	}
 
 	@Test
@@ -98,7 +102,7 @@ class WrapperControllerTest {
 		String wrapperName = null;
 
 		// when & then
-		mockMvc.perform(post("/admin/mypage/wrappers")
+		mockMvc.perform(post("/admin/settings/wrappers")
 				.param("wrapperPrice", String.valueOf(1000L))
 				.param("wrapperName", wrapperName)
 				.param("wrapperImage", "a.jpg")
@@ -117,7 +121,7 @@ class WrapperControllerTest {
 		dto.setWrapperSaleable(true);
 
 		// when & then
-		mockMvc.perform(put("/admin/mypage/wrappers/1")
+		mockMvc.perform(put("/admin/settings/wrappers/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))
@@ -132,7 +136,7 @@ class WrapperControllerTest {
 		dto.setWrapperSaleable(null);
 
 		// when & then
-		mockMvc.perform(put("/admin/mypage/wrappers/1")
+		mockMvc.perform(put("/admin/settings/wrappers/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))

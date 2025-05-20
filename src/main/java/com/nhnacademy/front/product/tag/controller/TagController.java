@@ -43,7 +43,7 @@ public class TagController {
 		Page<ResponseTagDTO> tags = PageResponseConverter.toPage(response);
 
 		model.addAttribute("tags", tags);
-		return "admin/tags";
+		return "admin/product/tags";
 	}
 
 	/**
