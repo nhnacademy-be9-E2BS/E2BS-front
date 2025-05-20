@@ -1,0 +1,204 @@
+<!--관리자 페이지 - 카테고리-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <style>
+        .category-dash ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .category-dash ul li {
+            border-left: 1px dashed #ccc;
+            padding-left: 10px;
+        }
+
+        .category-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toggle {
+            cursor: pointer;
+            margin-right: 5px;
+        }
+    </style>
+
+    <section>
+        <div class="container">
+            <h2>Category Management</h2>
+
+            <!-- 등록 폼 -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>Register New Category</h4>
+                    <form class="row login_form" action="/admin/settings/categories" method="post">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="categories[0].categoryName" placeholder="최상위 카테고리명" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" name="categories[1].categoryName" placeholder="하위 카테고리명" required>
+                        </div>
+                        <div class="col-12 form-group mt-3">
+                            <button type="submit" class="button button-register w-100">Register Category</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 조회 영역 -->
+            <div class="row mb-5">
+                <div class="col-12 category-dash">
+                    <h4>Category List</h4>
+                    <ul id="categoryTree">
+                        <li th:each="category : ${categories}" class="mb-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <!-- 들여쓰기 + 텍스트 -->
+                                <div class="category-left">
+                                    <div class="d-flex align-items-center">
+                                        <span class="toggle me-2" onclick="toggleClick(this)">📁</span>
+                                        <span th:text="${category.categoryName}"></span>
+                                    </div>
+
+                                    <!-- 입력창 -->
+                                    <div class="category-input mt-2" style="display: none;">
+                                        <input type="text" class="form-control form-control-sm d-inline-block w-auto me-2" placeholder="카테고리명 입력">
+                                        <button class="btn btn-sm btn-primary" onclick="submitCategory(this)">저장</button>
+                                        <button class="btn btn-sm btn-secondary" onclick="cancelInput(this)">취소</button>
+                                    </div>
+                                </div>
+
+                                <!-- 오른쪽 버튼 -->
+                                <div class="ms-2">
+                                    <button class="btn btn-sm btn-outline-success"
+                                            th:onclick="'showInput(this, \'POST\', ' + ${category.categoryId} + ')'">추가</button>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                            th:onclick="'showInput(this, \'PUT\', ' + ${category.categoryId} + ')'">수정</button>
+                                </div>
+                            </div>
+
+                            <!-- 자식 카테고리 -->
+                            <ul th:if="${#lists.size(category.children) > 0}" class="ms-4 mt-2">
+                                <th:block th:replace="admin/product/categoryFragment :: categoryFragment(category=${category})" />
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const toggles = document.querySelectorAll("#categoryTree .toggle");
+
+                toggles.forEach(span => {
+                    const li = span.closest("li");
+                    const childUl = li.querySelector("ul");
+
+                    if (!childUl) {
+                        span.textContent = "🔹"; // 자식이 없는 경우
+                    } else {
+                        span.textContent = "📁"; // 자식 있는 경우 기본은 닫힌 폴더
+                        childUl.style.display = "none"; // 기본은 닫힌 상태
+                    }
+                });
+            });
+
+            function toggleClick(element) {
+                const parentLi = element.closest("li");
+                const childUl = parentLi.querySelector("ul");
+
+                if (childUl) {
+                    const isVisible = childUl.style.display !== "none";
+                    childUl.style.display = isVisible ? "none" : "block";
+                    element.textContent = isVisible ? "📁" : "📂"; // 닫힘이면 📁, 열림이면 📂
+                }
+            }
+
+            function showInput(button, method, categoryId) {
+                const li = button.closest("li");
+                const inputDiv = li.querySelector(".category-input");
+                inputDiv.style.display = "block";
+                inputDiv.dataset.method = method;
+                inputDiv.dataset.categoryId = categoryId;
+            }
+
+            function cancelInput(button) {
+                const inputDiv = button.closest(".category-input");
+                inputDiv.style.display = "none";
+                inputDiv.querySelector("input").value = "";
+            }
+
+            function submitCategory(button) {
+                const inputDiv = button.closest(".category-input");
+                const method = inputDiv.dataset.method;
+                const categoryId = inputDiv.dataset.categoryId;
+                const name = inputDiv.querySelector("input").value.trim();
+
+                console.log(method);
+                console.log(categoryId);
+                console.log(name);
+
+                if (!name) {
+                    alert("카테고리명을 입력하세요.");
+                    return;
+                }
+
+                fetch("/admin/settings/categories/" + categoryId, {
+                    method: method,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({categoryName: name})
+                }).then(res => {
+                    if (res.ok) {
+                        window.location.reload();
+                    } else {
+                        alert("오류 발생");
+                    }
+                });
+            }
+
+            function deleteCategory(button, categoryId) {
+                if (!confirm("정말 삭제하시겠습니까?")) return;
+
+                fetch("/admin/settings/categories/" + categoryId, {
+                    method: "DELETE"
+                }).then(res => {
+                    if (res.ok) {
+                        window.location.reload();
+                    } else {
+                        alert("삭제 실패");
+                    }
+                });
+            }
+
+            // function updateCategoryName(categoryId) {
+            //     const selectedValue = document.querySelector(`#saleable-${categoryId} > div > span`).innerHTML;
+            //     const wrapperSaleable = selectedValue === "판매 중";
+            //
+            //     console.log("Selected saleable value:", selectedValue);
+            //     console.log("Converted boolean:", wrapperSaleable);
+            //
+            //     fetch("/admin/settings/categoryId/" + categoryId, {
+            //         method: "PUT",
+            //         headers: {
+            //             "Content-Type": "application/json",
+            //         },
+            //         body: JSON.stringify({wrapperSaleable: wrapperSaleable})
+            //     }).then(res => {
+            //         if (!res.ok) {
+            //             alert("수정 실패");
+            //         }
+            //     });
+            // }
+        </script>
+    </section>
+</div>
+</body>
+</html>

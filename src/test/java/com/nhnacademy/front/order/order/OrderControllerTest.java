@@ -30,6 +30,7 @@ import com.nhnacademy.front.order.order.model.dto.request.RequestOrderDetailDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 
 @WithMockUser(username = "admin", roles = {"ADMIN", "MEMBER", "USER"})
 @WebMvcTest(controllers = OrderController.class)
@@ -41,6 +42,9 @@ class OrderControllerTest {
 
 	@MockitoBean
 	private OrderService orderService;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@Autowired
 	private ObjectMapper objectMapper;

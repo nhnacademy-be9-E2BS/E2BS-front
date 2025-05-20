@@ -19,6 +19,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.contributor.controller.ContributorController;
 import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
 import com.nhnacademy.front.product.contributor.position.service.PositionService;
@@ -40,6 +41,9 @@ class ContributorControllerTest {
 
 	@MockitoBean
 	PositionService positionService;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@Test
 	@DisplayName("컨트리뷰터 생성 성공")

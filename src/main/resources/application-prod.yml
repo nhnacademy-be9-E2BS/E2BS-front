@@ -28,7 +28,7 @@ auth:
 
 # 쿠폰
 coupon:
-  url: https://e2bs.shop/api/admin/coupon
+  url: https://e2bs.shop/api/admin/coupons
   policy:
     url: https://e2bs.shop/api/admin/couponPolicies
   member:
@@ -47,6 +47,12 @@ product:
     position:
       url: https://e2bs.shop/api/admin/positions
     url: https://e2bs.shop/api/admin/contributors
+
+  category:
+    user:
+      url: https://e2bs.shop/api/categories
+    admin:
+      url: https://e2bs.shop/api/admin/categories
 
 
 
