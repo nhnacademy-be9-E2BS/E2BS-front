@@ -26,6 +26,10 @@ coupon:
   url: https://e2bs.shop/api/admin/coupon
   policy:
     url: https://e2bs.shop/api/admin/couponPolicies
+  member:
+    url: https://e2bs.shop/api/admin/member-coupons
+  box:
+    url: https://e2bs.shop/api/member-coupons
 
 product:
   publisher:

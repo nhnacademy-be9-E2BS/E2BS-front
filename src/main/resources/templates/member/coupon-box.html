@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/user-layout}">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <h2>쿠폰함</h2>
+
+            <style>
+                th {
+                    white-space: nowrap;
+                }
+            </style>
+
+            <!-- 쿠폰 목록 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>Coupon List</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>쿠폰명</th>
+                            <th>쿠폰정책</th>
+                            <th>할인 카테고리</th>
+                            <th>할인 도서</th>
+                            <th>발급일</th>
+                            <th>만료일</th>
+                            <th>사용여부</th>
+                        </tr>
+                        </thead>
+                       <tbody>
+                       <tr th:each="coupon : ${memberCoupons.content}">
+                           <td th:text="${coupon.couponName}">쿠폰명</td>
+                           <td th:text="${coupon.couponPolicyName}">정책명</td>
+
+                           <!-- 링크 수정 필요 : 카테고리에 해당하는 도서 목록 페이지로 -->
+                           <td>
+                               <a th:if="${coupon.categoryName != null}"
+                                  th:href="@{/category/{id}(id=${coupon.categoryId})}"
+                                  th:text="${coupon.categoryName}">카테고리명</a>
+                               <span th:unless="${coupon.categoryName != null}">-</span>
+                           </td>
+
+                           <!-- 링크 수정 필요 : 상품 구매 페이지로 -->
+                           <td>
+                               <a th:if="${coupon.productTitle != null}"
+                                  th:href="@{/productDetail/{id}(id=${coupon.productId})}"
+                                  th:text="${coupon.productTitle}">도서명</a>
+                               <span th:unless="${coupon.productTitle != null}">-</span>
+                           </td>
+
+                           <td th:text="${#temporals.format(coupon.memberCouponCreatedAt, 'yyyy-MM-dd HH:mm')}">발급일</td>
+                           <td th:text="${#temporals.format(coupon.memberCouponPeriod, 'yyyy-MM-dd HH:mm')}">만료일</td>
+                           <td th:text="${coupon.memberCouponUsed ? '사용완료' : '미사용'}">사용여부</td>
+                       </tr>
+
+                       </tbody>
+                    </table>
+
+                    <!-- 페이징 -->
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item" th:classappend="${!memberCoupons.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/couponBox'(page=0, size=${memberCoupons.size})}">처음</a>
+                                    </li>
+
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, memberCoupons.totalPages - 1)}"
+                                        th:classappend="${i == memberCoupons.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/couponBox'(page=${i}, size=${memberCoupons.size})}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <li class="page-item" th:classappend="${!memberCoupons.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/couponBox'(page=${memberCoupons.totalPages - 1}, size=${memberCoupons.size})}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

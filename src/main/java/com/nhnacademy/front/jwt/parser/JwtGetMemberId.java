@@ -14,9 +14,11 @@ public class JwtGetMemberId {
 		String accessToken = "";
 
 		Cookie[] cookies = request.getCookies();
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals(JwtRule.JWT_ISSUE_HEADER.getValue())) {
-				accessToken = cookie.getValue();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(JwtRule.JWT_ISSUE_HEADER.getValue())) {
+					accessToken = cookie.getValue();
+				}
 			}
 		}
 
