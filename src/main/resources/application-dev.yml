@@ -48,9 +48,6 @@ product:
   tag:
     url: http://localhost:10232/api/admin/tags
 
-  tag:
-    url: http://localhost:10232/api/admin/tags
-
 
 order:
   wrapper:

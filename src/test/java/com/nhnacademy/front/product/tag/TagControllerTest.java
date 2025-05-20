@@ -25,7 +25,7 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.tag.controller.TagController;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
-import com.nhnacademy.front.product.tag.service.TagService;
+import com.nhnacademy.front.product.tag.service.Impl.TagServiceImpl;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = TagController.class)
@@ -35,7 +35,7 @@ class TagControllerTest {
 	private MockMvc mockMvc;
 
 	@MockitoBean
-	private TagService tagService;
+	private TagServiceImpl tagService;
 
 	@Test
 	@DisplayName("태그 리스트 조회")
