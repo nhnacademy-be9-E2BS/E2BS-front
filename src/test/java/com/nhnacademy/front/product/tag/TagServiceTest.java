@@ -23,7 +23,7 @@ import com.nhnacademy.front.product.tag.execption.TagUpdateProcessException;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
 import com.nhnacademy.front.product.tag.adaptor.TagAdaptor;
-import com.nhnacademy.front.product.tag.service.TagService;
+import com.nhnacademy.front.product.tag.service.Impl.TagServiceImpl;
 
 import feign.FeignException;
 
@@ -31,7 +31,7 @@ import feign.FeignException;
 class TagServiceTest {
 
 	@InjectMocks
-	private TagService tagService;
+	private TagServiceImpl tagService;
 
 	@Mock
 	private TagAdaptor tagAdaptor;
