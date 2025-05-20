@@ -1,4 +1,4 @@
-package com.nhnacademy.front.coupon.couponpolicy.model.dto;
+package com.nhnacademy.front.coupon.couponpolicy.model.dto.response;
 
 import java.time.LocalDateTime;
 
