@@ -20,9 +20,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.coupon.couponpolicy.controller.CouponPolicyController;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.request.RequestCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.response.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(CouponPolicyController.class)
@@ -34,6 +35,9 @@ class CouponPolicyControllerTest {
 
 	@MockitoBean
 	private CouponPolicyService couponPolicyService;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@Test
 	@DisplayName("쿠폰 정책 전체 조회")

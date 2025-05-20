@@ -29,9 +29,13 @@ auth:
 
 # 쿠폰
 coupon:
-  url: http://localhost:10236/api/admin/coupons
+  url: http://localhost:10232/api/admin/coupons
   policy:
-    url: http://localhost:10236/api/admin/couponPolicies
+    url: http://localhost:10232/api/admin/couponPolicies
+  member:
+    url: http://localhost:10232/api/admin/member-coupons
+  box:
+    url: http://localhost:10232/api/member-coupons
 
 # 상품 - 출판사, 기여자 역할
 product:
@@ -44,9 +48,14 @@ product:
       url: http://localhost:10232/api/admin/positions
     url: http://localhost:10232/api/admin/contributors
 
-
   tag:
     url: http://localhost:10232/api/admin/tags
+
+  category:
+    user:
+      url: http://localhost:10232/api/categories
+    admin:
+      url: http://localhost:10232/api/admin/categories
 
 
 order:
