@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.request.RequestCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.response.ResponseCouponPolicyDTO;
 
 @FeignClient(name = "coupon-policy-service", url = "${coupon.policy.url}")
 public interface CouponPolicyAdaptor {

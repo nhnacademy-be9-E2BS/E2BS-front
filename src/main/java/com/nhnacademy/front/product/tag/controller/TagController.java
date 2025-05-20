@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,6 +72,16 @@ public class TagController {
 		}
 
 		tagService.updateTag(tagId, requestTagDTO);
+
+		return ResponseEntity.ok().build();
+	}
+
+	/**
+	 * 태그 삭제
+	 */
+	@DeleteMapping("/{tagId}")
+	public ResponseEntity<Void> deleteTag(@PathVariable Long tagId, @Validated @RequestBody RequestTagDTO requestTagDTO) {
+		tagService.deleteTag(tagId, requestTagDTO);
 
 		return ResponseEntity.ok().build();
 	}

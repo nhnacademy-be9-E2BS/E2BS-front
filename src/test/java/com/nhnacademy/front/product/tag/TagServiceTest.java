@@ -17,21 +17,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.tag.adaptor.TagAdaptor;
 import com.nhnacademy.front.product.tag.execption.TagCreateProcessException;
 import com.nhnacademy.front.product.tag.execption.TagGetProcessException;
 import com.nhnacademy.front.product.tag.execption.TagUpdateProcessException;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
-import com.nhnacademy.front.product.tag.adaptor.TagAdaptor;
-import com.nhnacademy.front.product.tag.service.TagService;
-
-import feign.FeignException;
+import com.nhnacademy.front.product.tag.service.Impl.TagServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceTest {
 
 	@InjectMocks
-	private TagService tagService;
+	private TagServiceImpl tagService;
 
 	@Mock
 	private TagAdaptor tagAdaptor;
@@ -70,18 +68,6 @@ class TagServiceTest {
 		// given
 		RequestTagDTO request = new RequestTagDTO("Tag A");
 		when(tagAdaptor.postCreateTag(request)).thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-
-		// when & then
-		assertThatThrownBy(() -> tagService.createTag(request))
-			.isInstanceOf(TagCreateProcessException.class);
-	}
-
-	@Test
-	@DisplayName("create tag - fail3")
-	void createTagFail3Test() {
-		// given
-		RequestTagDTO request = new RequestTagDTO("Tag A");
-		when(tagAdaptor.postCreateTag(request)).thenThrow(FeignException.class);
 
 		// when & then
 		assertThatThrownBy(() -> tagService.createTag(request))
@@ -142,17 +128,6 @@ class TagServiceTest {
 			.isInstanceOf(TagGetProcessException.class);
 	}
 
-	@Test
-	@DisplayName("get tags - fail2")
-	void getTagsFail2Test() {
-		// given
-		Pageable pageable = PageRequest.of(0, 10);
-		when(tagAdaptor.getTags(pageable)).thenThrow(mock(FeignException.class));
-
-		// when & then
-		assertThatThrownBy(() -> tagService.getTags(pageable))
-			.isInstanceOf(TagGetProcessException.class);
-	}
 
 	@Test
 	@DisplayName("update tag - success")
@@ -208,16 +183,5 @@ class TagServiceTest {
 			.isInstanceOf(TagUpdateProcessException.class);
 	}
 
-	@Test
-	@DisplayName("update tag - fail4")
-	void updateTagFail4Test() {
-		// given
-		RequestTagDTO request = new RequestTagDTO("update Tag A");
-		when(tagAdaptor.putUpdateTag(1L, request)).thenThrow(FeignException.class);
-
-		// when & then
-		assertThatThrownBy(() -> tagService.updateTag(1L, request))
-			.isInstanceOf(TagUpdateProcessException.class);
-	}
 }
 

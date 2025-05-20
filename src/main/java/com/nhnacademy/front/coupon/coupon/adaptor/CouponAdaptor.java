@@ -28,4 +28,7 @@ public interface CouponAdaptor {
 
 	@PutMapping("/{couponId}")
 	ResponseEntity<Void> updateCoupon(@PathVariable Long couponId);
+
+	@GetMapping("/isActive")
+	ResponseEntity<PageResponse<ResponseCouponDTO>> getCouponsIsActive(@SpringQueryMap Pageable pageable);
 }

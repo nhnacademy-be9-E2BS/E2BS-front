@@ -17,8 +17,8 @@ import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.RequestCouponPolicyDTO;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.request.RequestCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.response.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
 
 import lombok.RequiredArgsConstructor;
