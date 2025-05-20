@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <h2>Coupon Management</h2>
+
+            <a th:href="@{/admin/mypage/coupons/register}">쿠폰 등록</a>
+
+            <!-- 스타일 추가 -->
+            <style>
+                th {
+                    white-space: nowrap;
+                }
+            </style>
+
+            <!-- 쿠폰 목록 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>Coupon List</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>쿠폰명</th>
+                            <th>쿠폰정책</th>
+                            <th>할인 카테고리</th>
+                            <th>할인 도서</th>
+                            <th>활성여부</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="coupon : ${coupons}">
+                            <td>
+                                <a th:href="@{/admin/mypage/coupons/{id}(id=${coupon.couponId})}"
+                                   th:text="${coupon.couponName}">쿠폰상세보기</a>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/mypage/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
+                                   th:text="${coupon.couponPolicyName}">1</a>
+                            </td>
+                            <td th:text="${coupon.categoryId != null ? coupon.categoryId : '-'}">-</td>
+                            <td th:text="${coupon.productId != null ? coupon.productId : '-'}">-</td>
+                            <td>
+                                <button class="btn btn-sm"
+                                        th:attr="data-id=${coupon.couponId}"
+                                        th:text="${coupon.couponIsActive ? '활성' : '비활성'}"
+                                        th:classappend="${coupon.couponIsActive ? 'btn-success' : 'btn-danger'}"
+                                        onclick="toggleCouponStatus(this)">
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 페이징 -->
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination">
+                                    <!-- 처음 -->
+                                    <li class="page-item" th:classappend="${!coupons.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link" th:href="@{'/admin/mypage/coupons'(page=0, size=${coupons.size})}">처음</a>
+                                    </li>
+
+                                    <!-- 페이지 번호 -->
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, coupons.totalPages - 1)}"
+                                        th:classappend="${i == coupons.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/coupons'(page=${i}, size=${coupons.size})}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <!-- 마지막 -->
+                                    <li class="page-item" th:classappend="${!coupons.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/mypage/coupons'(page=${coupons.totalPages - 1}, size=${coupons.size})}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function toggleCouponStatus(button) {
+                const couponId = button.getAttribute('data-id');
+
+                fetch("/admin/mypage/coupons/" + couponId, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('상태 변경 실패');
+                        }else{
+                            window.location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        alert("에러 발생: " + error.message);
+                    });
+            }
+        </script>
+    </section>
+</div>
+</body>
+</html>

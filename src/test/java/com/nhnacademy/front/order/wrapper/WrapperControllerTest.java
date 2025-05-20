@@ -13,27 +13,33 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.wrapper.controller.WrapperController;
+import com.nhnacademy.front.order.wrapper.model.dto.request.RequestModifyWrapperDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = WrapperController.class)
 @ActiveProfiles("dev")
-public class WrapperControllerTest {
+class WrapperControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockitoBean
 	private WrapperService wrapperService;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Test
 	@DisplayName("모든 포장지 리스트 조회")
@@ -106,23 +112,29 @@ public class WrapperControllerTest {
 	@Test
 	@DisplayName("포장지 수정 - success")
 	void update_wrapper_success_test() throws Exception {
-		// given & when & then
+		// given
+		RequestModifyWrapperDTO dto = new RequestModifyWrapperDTO();
+		dto.setWrapperSaleable(true);
+
+		// when & then
 		mockMvc.perform(put("/admin/mypage/wrappers/1")
-				.param("wrapperSaleable", String.valueOf(false))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))
-			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/admin/mypage/wrappers"));
+			.andExpect(status().isOk());
 	}
 
 	@Test
 	@DisplayName("포장지 수정 - fail")
 	void update_wrapper_fail_test() throws Exception {
 		// given
-		String wrapperSaleable = null;
+		RequestModifyWrapperDTO dto = new RequestModifyWrapperDTO();
+		dto.setWrapperSaleable(null);
 
 		// when & then
 		mockMvc.perform(put("/admin/mypage/wrappers/1")
-				.param("wrapperSaleable", wrapperSaleable)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(result -> assertThat(result.getResolvedException())

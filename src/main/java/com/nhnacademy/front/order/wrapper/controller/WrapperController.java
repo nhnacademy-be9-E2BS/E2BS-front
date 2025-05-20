@@ -3,6 +3,7 @@ package com.nhnacademy.front.order.wrapper.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
@@ -35,8 +38,9 @@ public class WrapperController {
 	 * 관리자 페이지 -> 포장지 뷰
 	 * 등록 되어 있는 모든 포장지 리스트가 보여짐 (판매 여부 상관 없음)
 	 */
+	@JwtTokenCheck
 	@GetMapping
-	public String getWrappers(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
+	public String getWrappers(@PageableDefault(page = 0, size = 5) Pageable pageable, Model model) {
 		PageResponse<ResponseWrapperDTO> response = wrapperService.getWrappers(pageable);
 		Page<ResponseWrapperDTO> wrappers = PageResponseConverter.toPage(response);
 
@@ -47,10 +51,11 @@ public class WrapperController {
 	/**
 	 * 포장지 생성
 	 */
+	@JwtTokenCheck
 	@PostMapping
 	public String createWrapper(@Validated @ModelAttribute RequestRegisterWrapperDTO requestRegisterWrapperDTO,
 		BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
@@ -62,15 +67,16 @@ public class WrapperController {
 	/**
 	 * 포장지 수정 (판매 여부만 수정 가능)
 	 */
-	@PutMapping("{wrapperId}")
-	public String updateWrapper(@Validated @ModelAttribute RequestModifyWrapperDTO requestModifyWrapperDTO,
+	@JwtTokenCheck
+	@PutMapping("/{wrapperId}")
+	public ResponseEntity<Void> updateWrapper(@Validated @RequestBody RequestModifyWrapperDTO requestModifyWrapperDTO,
 		BindingResult bindingResult, @PathVariable Long wrapperId) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		wrapperService.updateWrapper(wrapperId, requestModifyWrapperDTO);
 
-		return "redirect:/admin/mypage/wrappers";
+		return ResponseEntity.ok().build();
 	}
 }

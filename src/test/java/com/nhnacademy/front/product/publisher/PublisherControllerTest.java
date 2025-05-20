@@ -13,26 +13,32 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.controller.PublisherController;
+import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 import com.nhnacademy.front.product.publisher.service.PublisherService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = PublisherController.class)
 @ActiveProfiles("dev")
-public class PublisherControllerTest {
+class PublisherControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockitoBean
 	private PublisherService publisherService;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Test
 	@DisplayName("출판사 리스트 조회")
@@ -98,23 +104,29 @@ public class PublisherControllerTest {
 	@Test
 	@DisplayName("출판사 수정 - success")
 	void update_publisher_success_test() throws Exception {
-		// given & when & then
+		// given
+		RequestPublisherDTO dto = new RequestPublisherDTO();
+		dto.setPublisherName("Publisher A");
+
+		// when & then
 		mockMvc.perform(put("/admin/mypage/publishers/1")
-				.param("publisherName", "Publisher A")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))
-			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/admin/mypage/publishers"));
+			.andExpect(status().isOk());
 	}
 
 	@Test
 	@DisplayName("출판사 수정 - fail")
 	void update_publisher_fail_test() throws Exception {
 		// given
-		String publisherName = null;
+		RequestPublisherDTO dto = new RequestPublisherDTO();
+		dto.setPublisherName(null);
 
 		// when & then
 		mockMvc.perform(put("/admin/mypage/publishers/1")
-				.param("publisherName", publisherName)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(result -> assertThat(result.getResolvedException())

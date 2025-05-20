@@ -9,6 +9,7 @@ eureka:
     prefer-ip-address: true # 서비스 등록 시 도메인 대신 IP 주소로 등록
 
 member:
+  url: https://e2bs.shop/api/members
   login:
     url: https://e2bs.shop/api/login
 
@@ -20,8 +21,9 @@ auth:
     create:
       url: https://e2bs.shop/api/auth
 
-# 쿠폰 정책
+# 쿠폰
 coupon:
+  url: https://e2bs.shop/api/admin/coupon
   policy:
     url: https://e2bs.shop/api/admin/couponPolicies
 
@@ -32,7 +34,26 @@ product:
   tag:
     url: https://e2bs.shop/api/admin/tags
 
+  contributor:
+    position:
+      url: https://e2bs.shop/api/admin/positions
+    url: https://e2bs.shop/api/admin/contributors
+
+
 
 order:
   wrapper:
     url: https://e2bs.shop/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
+  order:
+    url: https://e2bs.shop/api/order
+
+  toss:
+    client-key: test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO
+    success-url: https://e2bs.shop/order/success
+    fail-url: https://e2bs.shop/order/fail
+  admin: https://e2bs.shop/api/admin/orders
+
+customer:
+  url: https://e2bs.shop/api/customers
+guest:
+  url: https://e2bs.shop/api/guests

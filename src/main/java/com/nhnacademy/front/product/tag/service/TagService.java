@@ -1,12 +1,9 @@
 package com.nhnacademy.front.product.tag.service;
 
-import java.util.Objects;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.tag.adaptor.TagAdaptor;
 import com.nhnacademy.front.product.tag.execption.TagCreateProcessException;
@@ -60,9 +57,9 @@ public class TagService {
 	/**
 	 * Tag를 back - Tag table에서 수정
 	 */
-	public void updateTag(Long TagId, RequestTagDTO request) {
+	public void updateTag(Long tagId, RequestTagDTO request) {
 		try {
-			ResponseEntity<Void> response = tagAdaptor.putUpdateTag(TagId, request);
+			ResponseEntity<Void> response = tagAdaptor.putUpdateTag(tagId, request);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
 				throw new TagUpdateProcessException("태그 정보 수정 실패");

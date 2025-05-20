@@ -7,12 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.exception.EmptyRequestException;
+import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.adaptor.PublisherAdaptor;
 import com.nhnacademy.front.product.publisher.exception.PublisherCreateProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherGetProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherUpdateProcessException;
 import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
-import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 
 import feign.FeignException;
@@ -25,13 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 public class PublisherService {
 
 	private final PublisherAdaptor publisherAdaptor;
+	private static final String REQUEST_VALUE_MISSING_MESSAGE = "요청 값을 받지 못했습니다.";
 
 	/**
 	 * Publisher를 back - publisher table에 저장
 	 */
 	public void createPublisher(RequestPublisherDTO request) {
 		if (Objects.isNull(request)) {
-			throw new EmptyRequestException("요청 값을 받지 못했습니다.");
+			throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 		}
 
 		try {
@@ -48,19 +49,13 @@ public class PublisherService {
 	/**
 	 * Publisher 리스트를 back에서 조회
 	 */
-	public PageResponse<ResponsePublisherDTO> getPublishers(Pageable pageable) {
-		try {
-			ResponseEntity<PageResponse<ResponsePublisherDTO>> response = publisherAdaptor.getPublishers(pageable);
+	public PageResponse<ResponsePublisherDTO> getPublishers(Pageable pageable) throws FeignException {
+		ResponseEntity<PageResponse<ResponsePublisherDTO>> response = publisherAdaptor.getPublishers(pageable);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new PublisherGetProcessException("출판사 리스트 조회 실패");
-			}
-			return response.getBody();
-
-		} catch (FeignException ex) {
-			log.error("출판사 리스트 조회 실패. 원인: {}", ex.getMessage(), ex);
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new PublisherGetProcessException("출판사 리스트 조회 실패");
 		}
+		return response.getBody();
 	}
 
 	/**
@@ -68,7 +63,7 @@ public class PublisherService {
 	 */
 	public void updatePublisher(Long publisherId, RequestPublisherDTO request) {
 		if (Objects.isNull(request) || Objects.isNull(publisherId)) {
-			throw new EmptyRequestException("요청 값을 받지 못했습니다.");
+			throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 		}
 
 		try {
