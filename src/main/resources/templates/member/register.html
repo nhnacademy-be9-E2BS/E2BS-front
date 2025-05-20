@@ -2,8 +2,8 @@
 
 <!DOCTYPE html>
 <html
-		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-		layout:decorate="~{layouts/user-layout}">
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/user-layout}">
 <body>
 <div layout:fragment="content">
     <!--================Login Box Area =================-->
@@ -13,61 +13,61 @@
                 <div class="col-lg-6">
                     <div class="login_box_img">
                         <div class="hover">
-                            <h4>Already have an account?</h4>
-                            <p>There are advances being made in science and technology everyday, and a good example of
-                                this is the</p>
-                            <a class="button button-account" href="login.html">Login Now</a>
+                            <h4>계정이 이미 있나요?</h4>
+                            <a class="button button-account" href="login.html">로그인 돌아가기</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-sm-6">
                     <div class="login_form_inner register_form_inner">
-                        <h3>Create an account</h3>
+                        <h3>E2BS</h3>
                         <form class="row login_form" action="/register" method="post" id="register_form">
                             <!--아이디-->
                             <div class="col-md-12 form-group">
-                                <input type="text" class="form-control" id="memberId" name="memberId" placeholder="ID"
-                                       onfocus="this.placeholder = ''" onblur="this.placeholder = 'ID'" required>
+                                <input type="text" class="form-control" id="memberId" name="memberId"
+                                       placeholder="아이디를 입력하세요"
+                                       onfocus="this.placeholder = ''" onblur="this.placeholder = '아이디를 입력하세요'"
+                                       required>
                             </div>
                             <!--이름-->
                             <div class="col-md-12 form-group">
                                 <input type="text" class="form-control" id="customerName" name="customerName"
-                                       placeholder="Username" onfocus="this.placeholder = ''"
-                                       onblur="this.placeholder = 'Username'" required>
+                                       placeholder="이름을 입력하세요" onfocus="this.placeholder = ''"
+                                       onblur="this.placeholder = '이름을 입력하세요'" required>
                             </div>
                             <!--비밀번호-->
                             <div class="col-md-12 form-group">
                                 <input type="password" class="form-control" id="customerPassword"
-                                       name="customerPassword" placeholder="Password" onfocus="this.placeholder = ''"
-                                       onblur="this.placeholder = 'Password'" required>
+                                       name="customerPassword" placeholder="비밀번호를 입력하세요" onfocus="this.placeholder = ''"
+                                       onblur="this.placeholder = '비밀번호를 입력하세요'" required>
                             </div>
                             <!--비밀번호 확인-->
                             <div class="col-md-12 form-group">
                                 <input type="password" class="form-control" id="customerPasswordCheck"
-                                       name="customerPasswordCheck" placeholder="PasswordCheck"
-                                       onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" required>
+                                       name="customerPasswordCheck" placeholder="비밀번호를 한 번 더 입력하세요"
+                                       onfocus="this.placeholder = ''"
+                                       onblur="this.placeholder = '비밀번호를 한 번 더 입력하세요'" required>
                             </div>
                             <!--이메일-->
                             <div class="col-md-12 form-group">
                                 <input type="email" class="form-control" id="customerEmail" name="customerEmail"
-                                       placeholder="Email Address" onfocus="this.placeholder = ''"
-                                       onblur="this.placeholder = 'Email Address'" required>
+                                       placeholder="이메일 주소를 입력하세요" onfocus="this.placeholder = ''"
+                                       onblur="this.placeholder = '이메일 주소를 입력하세요'" required>
                             </div>
                             <!--생일-->
                             <div class="col-md-12 form-group">
                                 <input type="date" class="form-control" id="memberBirth" name="memberBirth"
-                                       placeholder="Birth" required>
+                                       placeholder="생일을 입력하세요" required>
                             </div>
                             <!--휴대전화-->
                             <div class="col-md-12 form-group">
                                 <input type="text" class="form-control" id="memberPhone" name="memberPhone"
-                                       placeholder="Phone Number" onfocus="this.placeholder = ''"
-                                       onblur="this.placeholder = 'Phone Number'" required>
+                                       placeholder="전화번호를 입력하세요" onfocus="this.placeholder = ''"
+                                       onblur="this.placeholder = '전화번호를 입력하세요'" required>
                             </div>
 
-
                             <div class="col-md-12 form-group">
-                                <button type="submit" value="submit" class="button button-register w-100">Register
+                                <button type="submit" value="submit" class="button button-register w-100">회원가입
                                 </button>
                             </div>
                         </form>

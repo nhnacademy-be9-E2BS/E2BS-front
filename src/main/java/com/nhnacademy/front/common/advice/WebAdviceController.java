@@ -10,6 +10,7 @@ import com.nhnacademy.front.account.member.exception.LoginProcessException;
 import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordException;
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.common.exception.EmptyRequestException;
+import com.nhnacademy.front.common.exception.EmptyResponseException;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 
 @ControllerAdvice
@@ -42,6 +43,11 @@ public class WebAdviceController {
 
 	@ExceptionHandler(SaveJwtTokenProcessException.class)
 	public ResponseEntity<String> saveJwtTokenProcessException(Exception ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+
+	@ExceptionHandler(EmptyResponseException.class)
+	public ResponseEntity<String> emptyResponseException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 

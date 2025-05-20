@@ -66,7 +66,7 @@ function updateTotalPaymentAmount() {
 // 수량 변경 ajax 요청 메소드
 function sendCartUpdate(productId, cartItemsId, quantity) {
     $.ajax({
-        url: `/customers/carts/items/${cartItemsId}`,
+        url: `/members/carts/items/${cartItemsId}`,
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({

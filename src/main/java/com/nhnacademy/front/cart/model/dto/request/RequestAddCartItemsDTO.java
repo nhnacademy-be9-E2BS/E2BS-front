@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RequestAddCartItemsDTO {
 
-	private Long customerId;
+	private String memberId;
 
 	private String sessionId;
 

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
 
 @ExtendWith(MockitoExtension.class)
@@ -97,4 +98,21 @@ class OrderServiceTest {
 		verify(orderAdaptor).cancelOrder(orderId);
 	}
 
+	@Test
+	@DisplayName("getOrderByOrderCode - 주문 상세 조회")
+	void testGetOrderByOrderCode() {
+		// given
+		String orderCode = "TEST-ORDER-CODE";
+		ResponseEntity<ResponseOrderWrapperDTO> expectedResponse = ResponseEntity.ok(new ResponseOrderWrapperDTO());
+
+		when(orderAdaptor.getOrderByOrderCode(orderCode)).thenReturn(expectedResponse);
+
+		// when
+		ResponseEntity<ResponseOrderWrapperDTO> actualResponse = orderService.getOrderByOrderCode(orderCode);
+
+		// then
+		assertEquals(expectedResponse, actualResponse);
+		verify(orderAdaptor).getOrderByOrderCode(orderCode);
+
+	}
 }
