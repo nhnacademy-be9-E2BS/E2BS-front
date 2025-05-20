@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseMemberCouponDTO {
+public class ResponseMypageMemberCouponDTO {
 
 	private String memberId;
 	private int couponCnt;
