@@ -1,6 +1,7 @@
 package com.nhnacademy.front.product.category;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,6 +25,7 @@ import com.nhnacademy.front.product.category.controller.AdminCategoryController;
 import com.nhnacademy.front.product.category.model.dto.request.RequestCategoryDTO;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.AdminCategoryService;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = AdminCategoryController.class)
@@ -34,6 +36,9 @@ class AdminCategoryControllerTest {
 
 	@MockitoBean
 	private AdminCategoryService adminCategoryService;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -151,5 +156,21 @@ class AdminCategoryControllerTest {
 		mockMvc.perform(delete("/admin/settings/categories/1")
 				.with(csrf()))
 			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("헤더 카테고리명 조회")
+	void get_header_categories_test() throws Exception {
+		// Given
+		List<ResponseCategoryDTO> headerCategories = List.of(
+			new ResponseCategoryDTO(1L, "Category A", null),
+			new ResponseCategoryDTO(2L, "Category B", null)
+		);
+		given(userCategoryService.getCategoriesToDepth3()).willReturn(headerCategories);
+
+		// When & Then
+		mockMvc.perform(get("/admin/settings/categories"))
+			.andExpect(status().isOk())
+			.andExpect(model().attribute("headerCategories", headerCategories));
 	}
 }

@@ -22,32 +22,24 @@ public class UserCategoryService {
 	/**
 	 * html 헤더에 표시할 카테고리 리스트를 back에서 조회
 	 */
-	public List<ResponseCategoryDTO> getCategoriesToDepth3() {
-		try {
-			ResponseEntity<List<ResponseCategoryDTO>> response = userCategoryAdaptor.getCategoriesToDepth3();
+	public List<ResponseCategoryDTO> getCategoriesToDepth3() throws FeignException {
+		ResponseEntity<List<ResponseCategoryDTO>> response = userCategoryAdaptor.getCategoriesToDepth3();
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new CategoryGetProcessException("카테고리 헤더 조회 실패");
-			}
-			return response.getBody();
-		} catch (FeignException ex) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new CategoryGetProcessException("카테고리 헤더 조회 실패");
 		}
+		return response.getBody();
 	}
 
 	/**
 	 * 도서 리스트 조회 시 사이드 바에 표시할 카테고리 리스트를 back에서 조회
 	 */
-	public List<ResponseCategoryDTO> getCategoriesById(@PathVariable Long categoryId) {
-		try {
-			ResponseEntity<List<ResponseCategoryDTO>> response = userCategoryAdaptor.getCategoriesById(categoryId);
+	public List<ResponseCategoryDTO> getCategoriesById(@PathVariable Long categoryId) throws FeignException {
+		ResponseEntity<List<ResponseCategoryDTO>> response = userCategoryAdaptor.getCategoriesById(categoryId);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new CategoryGetProcessException("카테고리 사이드 바 조회 실패");
-			}
-			return response.getBody();
-		} catch (FeignException ex) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new CategoryGetProcessException("카테고리 사이드 바 조회 실패");
 		}
+		return response.getBody();
 	}
 }

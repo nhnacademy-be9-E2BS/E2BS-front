@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.publisher.controller.PublisherController;
 import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
@@ -36,6 +37,9 @@ class PublisherControllerTest {
 
 	@MockitoBean
 	private PublisherService publisherService;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -69,7 +73,7 @@ class PublisherControllerTest {
 		Mockito.when(publisherService.getPublishers(any())).thenReturn(pageResponse);
 
 		// when & then
-		mockMvc.perform(get("/admin/mypage/publishers"))
+		mockMvc.perform(get("/admin/settings/publishers"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("admin/product/publishers"))
 			.andExpect(model().attributeExists("publishers"));
@@ -79,11 +83,11 @@ class PublisherControllerTest {
 	@DisplayName("출판사 생성 - success")
 	void create_publisher_success_test() throws Exception {
 		// given & when & then
-		mockMvc.perform(post("/admin/mypage/publishers")
+		mockMvc.perform(post("/admin/settings/publishers")
 				.param("publisherName", "Publisher A")
 				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/admin/mypage/publishers"));
+			.andExpect(redirectedUrl("/admin/settings/publishers"));
 	}
 
 	@Test
@@ -93,7 +97,7 @@ class PublisherControllerTest {
 		String publisherName = null;
 
 		// when & then
-		mockMvc.perform(post("/admin/mypage/publishers")
+		mockMvc.perform(post("/admin/settings/publishers")
 				.param("publisherName", publisherName)
 				.with(csrf()))
 			.andExpect(status().isBadRequest())
@@ -109,7 +113,7 @@ class PublisherControllerTest {
 		dto.setPublisherName("Publisher A");
 
 		// when & then
-		mockMvc.perform(put("/admin/mypage/publishers/1")
+		mockMvc.perform(put("/admin/settings/publishers/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))
@@ -124,7 +128,7 @@ class PublisherControllerTest {
 		dto.setPublisherName(null);
 
 		// when & then
-		mockMvc.perform(put("/admin/mypage/publishers/1")
+		mockMvc.perform(put("/admin/settings/publishers/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))

@@ -25,31 +25,23 @@ public class AdminCategoryService {
 	/**
 	 * 관리자 페이지에서 전체 카테고리 리스트를 back에서 조회
 	 */
-	public List<ResponseCategoryDTO> getCategories() {
-		try {
-			ResponseEntity<List<ResponseCategoryDTO>> response = adminCategoryAdaptor.getCategories();
+	public List<ResponseCategoryDTO> getCategories() throws FeignException {
+		ResponseEntity<List<ResponseCategoryDTO>> response = adminCategoryAdaptor.getCategories();
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new CategoryGetProcessException("전체 카테고리 리스트 조회 실패");
-			}
-			return response.getBody();
-		} catch (FeignException ex) {
-			throw new CategoryGetProcessException("전체 카테고리 리스트 조회 실패"+ ex.getMessage());
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new CategoryGetProcessException("전체 카테고리 리스트 조회 실패");
 		}
+		return response.getBody();
 	}
 
 	/**
 	 * Category를 back - category table에 저장
 	 * 최상위 + 하위 카테고리를 동시에 저장
 	 */
-	public void createCategoryTree(List<RequestCategoryDTO> request) {
-		try {
-			ResponseEntity<Void> response = adminCategoryAdaptor.postCreateCategoryTree(request);
+	public void createCategoryTree(List<RequestCategoryDTO> request) throws FeignException {
+		ResponseEntity<Void> response = adminCategoryAdaptor.postCreateCategoryTree(request);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new CategoryCreateProcessException("카테고리 등록 실패");
-			}
-		} catch (FeignException ex) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new CategoryCreateProcessException("카테고리 등록 실패");
 		}
 	}
@@ -58,14 +50,10 @@ public class AdminCategoryService {
 	 * Category를 back - category table에 저장
 	 * 이미 존재하는 카테고리 하위에 저장
 	 */
-	public void createChildCategory(Long categoryId, RequestCategoryDTO request) {
-		try {
-			ResponseEntity<Void> response = adminCategoryAdaptor.postCreateChildCategory(categoryId, request);
+	public void createChildCategory(Long categoryId, RequestCategoryDTO request) throws FeignException {
+		ResponseEntity<Void> response = adminCategoryAdaptor.postCreateChildCategory(categoryId, request);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new CategoryCreateProcessException("카테고리 등록 실패");
-			}
-		} catch (FeignException ex) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new CategoryCreateProcessException("카테고리 등록 실패");
 		}
 	}
@@ -73,14 +61,10 @@ public class AdminCategoryService {
 	/**
 	 * Category를 back - category table에서 수정
 	 */
-	public void updateCategory(Long categoryId, RequestCategoryDTO request) {
-		try {
-			ResponseEntity<Void> response = adminCategoryAdaptor.putUpdateCategory(categoryId, request);
+	public void updateCategory(Long categoryId, RequestCategoryDTO request) throws FeignException {
+		ResponseEntity<Void> response = adminCategoryAdaptor.putUpdateCategory(categoryId, request);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new CategoryUpdateProcessException("카테고리 명 수정 실패");
-			}
-		} catch (FeignException ex) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new CategoryUpdateProcessException("카테고리 명 수정 실패");
 		}
 	}
@@ -88,30 +72,12 @@ public class AdminCategoryService {
 	/**
 	 * Category를 back - category table에서 삭제
 	 */
-	public void deleteCategory(Long categoryId) {
-		try {
-			ResponseEntity<Void> response = adminCategoryAdaptor.deleteCategory(categoryId);
+	public void deleteCategory(Long categoryId) throws FeignException {
+		ResponseEntity<Void> response = adminCategoryAdaptor.deleteCategory(categoryId);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new CategoryDeleteProcessException("카테고리 삭제 실패");
-			}
-		} catch (FeignException ex) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new CategoryDeleteProcessException("카테고리 삭제 실패");
 		}
 	}
 
-	/**
-	 * 카테고리 등록, 수정, 삭제 후 헤더에 표시할 카테고리를 새롭게 캐싱하기 위하여 원래의 캐싱 데이터 삭제
-	 */
-	public void headerCaChingClear() {
-		try {
-			ResponseEntity<Void> response = adminCategoryAdaptor.headerCachingClear();
-
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new RuntimeException("헤더 캐싱 clear 실패");
-			}
-		} catch (FeignException ex) {
-			throw new RuntimeException("헤더 캐싱 clear 실패");
-		}
-	}
 }

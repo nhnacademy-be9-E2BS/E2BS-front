@@ -49,9 +49,9 @@ product:
 
   category:
     user:
-      url: http://localhost:10236/api/categories
+      url: http://localhost:10232/api/categories
     admin:
-      url: http://localhost:10236/api/admin/categories
+      url: http://localhost:10232/api/admin/categories
 
 
 order:

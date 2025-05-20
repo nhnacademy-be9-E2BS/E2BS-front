@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/mypage/wrappers")
+@RequestMapping("/admin/settings/wrappers")
 public class WrapperController {
 
 	private final WrapperService wrapperService;
@@ -61,7 +61,7 @@ public class WrapperController {
 
 		wrapperService.createWrapper(requestRegisterWrapperDTO);
 
-		return "redirect:/admin/mypage/wrappers";
+		return "redirect:/admin/settings/wrappers";
 	}
 
 	/**

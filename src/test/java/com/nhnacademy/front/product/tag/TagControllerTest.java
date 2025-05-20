@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.tag.controller.TagController;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
@@ -36,6 +37,9 @@ class TagControllerTest {
 
 	@MockitoBean
 	private TagService tagService;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@Test
 	@DisplayName("태그 리스트 조회")
