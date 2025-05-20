@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.coupon.coupon.model.dto.request.RequestCouponDTO;
 import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 import com.nhnacademy.front.coupon.coupon.service.CouponService;
-import com.nhnacademy.front.coupon.couponpolicy.model.dto.ResponseCouponPolicyDTO;
+import com.nhnacademy.front.coupon.couponpolicy.model.dto.response.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
 
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class CouponController {
 	/**
 	 * 관리자 쿠폰 생성 뷰
 	 */
+	@JwtTokenCheck
 	@GetMapping("/register")
 	public String createCouponForm(Model model) {
 		Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
@@ -54,6 +56,7 @@ public class CouponController {
 	/**
 	 * 관리자 쿠폰 생성 post
 	 */
+	@JwtTokenCheck
 	@PostMapping("/register")
 	public String createCoupon(@Validated @ModelAttribute RequestCouponDTO request, BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
@@ -66,6 +69,7 @@ public class CouponController {
 	/**
 	 * 관리자 쿠폰 전체 조회
 	 */
+	@JwtTokenCheck
 	@GetMapping
 	public String getCoupons(@PageableDefault() Pageable pageable, Model model) {
 		PageResponse<ResponseCouponDTO> response = couponServiceImpl.getCoupons(pageable);
@@ -78,6 +82,7 @@ public class CouponController {
 	/**
 	 * 관리자 쿠폰 ID로 단건 조회
 	 */
+	@JwtTokenCheck
 	@GetMapping("/{couponId}")
 	public String getCoupon(@PathVariable Long couponId, Model model) {
 		ResponseCouponDTO response = couponServiceImpl.getCoupon(couponId);
@@ -90,6 +95,7 @@ public class CouponController {
 	 * 쿠폰 활성 여부 변경
 	 * 활성 <-> 비활성 상태 변경
 	 */
+	@JwtTokenCheck
 	@PutMapping("/{couponId}")
 	public ResponseEntity<Void> updateCoupon(@PathVariable Long couponId) {
 		couponServiceImpl.updateCoupon(couponId);
