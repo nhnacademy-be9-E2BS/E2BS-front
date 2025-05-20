@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/mypage-layout}">
+<body>
+<div layout:fragment="content">
+    <h2>마이페이지</h2>
+    <section>
+        <div class="container" style="padding: 20px;">
+            <style>
+                .info-box-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 20px;
+                    margin-top: 20px;
+                }
+
+                .info-box {
+                    flex: 1 1 200px;
+                    background-color: #f8f9fa;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    padding: 20px;
+                    text-align: center;
+                }
+
+                .info-box h3 {
+                    margin: 0;
+                    font-size: 1.2rem;
+                    color: #333;
+                }
+
+                .info-box p {
+                    margin-top: 10px;
+                    font-size: 1.6rem;
+                    font-weight: bold;
+                    color: #007bff;
+                }
+            </style>
+
+            <div class="info-box-container">
+                <div class="info-box">
+                    <h3>잔여 포인트</h3>
+                    <p th:text="${pointAmount} + ' P'"></p>
+                </div>
+                <div class="info-box">
+                    <h3>보유 쿠폰</h3>
+                    <p th:text="${couponCnt} + ' 장'"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

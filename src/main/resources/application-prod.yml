@@ -16,6 +16,11 @@ member:
   register:
     url: https://e2bs.shop/api/register
 
+  mypage:
+    url: https://e2bs.shop/api/mypage
+    member:
+      url: https://e2bs.shop/api/mypage/members
+
 auth:
   jwt:
     create:
