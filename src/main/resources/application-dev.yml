@@ -21,6 +21,11 @@ member:
   register:
     url: http://localhost:10232/api/register
 
+  mypage:
+    url: http://localhost:10232/api/mypage
+    member:
+      url: http://localhost:10232/api/mypage/members
+
 auth:
   jwt:
     create:
