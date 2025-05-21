@@ -1,5 +1,6 @@
 package com.nhnacademy.front.jwt.parser;
 
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Map;
 
@@ -41,6 +42,19 @@ public class JwtExpParser {
 			return null;
 		}
 
+	}
+
+	/**
+	 * 현재 시각과 exp 값을 비교하여 토큰이 아직 유효한지 확인
+	 */
+	public static boolean isTokenValid(String token) {
+		Long exp = getExp(token);
+		if (exp == null) {
+			return false;
+		}
+
+		long now = Instant.now().getEpochSecond(); // 현재 시각 (초 단위)
+		return exp > now;
 	}
 
 }
