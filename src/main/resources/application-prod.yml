@@ -73,3 +73,6 @@ customer:
   url: https://e2bs.shop/api/customers
 guest:
   url: https://e2bs.shop/api/guests
+
+review:
+  url: https://e2bs.shop/api/reviews
