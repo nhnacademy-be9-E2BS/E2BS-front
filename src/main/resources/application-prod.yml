@@ -37,6 +37,7 @@ coupon:
     url: https://e2bs.shop/api/member-coupons
 
 product:
+  url: https://e2bs.shop/api/products
   publisher:
     url: https://e2bs.shop/api/admin/publishers
 
