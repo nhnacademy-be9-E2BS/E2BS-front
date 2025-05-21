@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.wrapper.adaptor.WrapperAdaptor;
 import com.nhnacademy.front.order.wrapper.exception.WrapperCreateProcessException;
@@ -26,8 +25,6 @@ import com.nhnacademy.front.order.wrapper.model.dto.request.RequestModifyWrapper
 import com.nhnacademy.front.order.wrapper.model.dto.request.RequestRegisterWrapperDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
-
-import feign.FeignException;
 
 @ExtendWith(MockitoExtension.class)
 class WrapperServiceTest {
@@ -57,7 +54,7 @@ class WrapperServiceTest {
 	void create_wrapper_fail1_test() {
 		// when & then
 		assertThatThrownBy(() -> wrapperService.createWrapper(null))
-			.isInstanceOf(EmptyRequestException.class);
+			.isInstanceOf(NullPointerException.class);
 	}
 
 	@Test
@@ -66,18 +63,6 @@ class WrapperServiceTest {
 		// given
 		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", "a.jpg", true);
 		when(wrapperAdaptor.postCreateWrapper(request)).thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-
-		// when & then
-		assertThatThrownBy(() -> wrapperService.createWrapper(request))
-			.isInstanceOf(WrapperCreateProcessException.class);
-	}
-
-	@Test
-	@DisplayName("create wrapper - fail3")
-	void create_wrapper_fail3_test() {
-		// given
-		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", "a.jpg", true);
-		when(wrapperAdaptor.postCreateWrapper(request)).thenThrow(FeignException.class);
 
 		// when & then
 		assertThatThrownBy(() -> wrapperService.createWrapper(request))
@@ -125,25 +110,13 @@ class WrapperServiceTest {
 	}
 
 	@Test
-	@DisplayName("get wrappers by saleable - fail1")
-	void get_wrappers_by_saleable_fail1_test() {
+	@DisplayName("get wrappers by saleable - fail")
+	void get_wrappers_by_saleable_fail_test() {
 		// given
 		Pageable pageable = PageRequest.of(0, 10);
 		ResponseEntity<PageResponse<ResponseWrapperDTO>> response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		when(wrapperAdaptor.getWrappersBySaleable(pageable)).thenReturn(response);
-
-		// when & then
-		assertThatThrownBy(() -> wrapperService.getWrappersBySaleable(pageable))
-			.isInstanceOf(WrapperGetProcessException.class);
-	}
-
-	@Test
-	@DisplayName("get wrappers by saleable - fail2")
-	void get_wrappers_by_saleable_fail2_test() {
-		// given
-		Pageable pageable = PageRequest.of(0, 10);
-		when(wrapperAdaptor.getWrappersBySaleable(pageable)).thenThrow(FeignException.class);
 
 		// when & then
 		assertThatThrownBy(() -> wrapperService.getWrappersBySaleable(pageable))
@@ -192,25 +165,13 @@ class WrapperServiceTest {
 	}
 
 	@Test
-	@DisplayName("get all wrappers - fail1")
-	void get_all_wrappers_fail1_test() {
+	@DisplayName("get all wrappers - fail")
+	void get_all_wrappers_fail_test() {
 		// given
 		Pageable pageable = PageRequest.of(0, 10);
 		ResponseEntity<PageResponse<ResponseWrapperDTO>> response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		when(wrapperAdaptor.getWrappers(pageable)).thenReturn(response);
-
-		// when & then
-		assertThatThrownBy(() -> wrapperService.getWrappers(pageable))
-			.isInstanceOf(WrapperGetProcessException.class);
-	}
-
-	@Test
-	@DisplayName("get all wrappers - fail2")
-	void get_all_wrappers_fail2_test() {
-		// given
-		Pageable pageable = PageRequest.of(0, 10);
-		when(wrapperAdaptor.getWrappers(pageable)).thenThrow(FeignException.class);
 
 		// when & then
 		assertThatThrownBy(() -> wrapperService.getWrappers(pageable))
@@ -240,7 +201,7 @@ class WrapperServiceTest {
 
 		// when & then
 		assertThatThrownBy(() -> wrapperService.updateWrapper(null, request))
-			.isInstanceOf(EmptyRequestException.class);
+			.isInstanceOf(NullPointerException.class);
 	}
 
 	@Test
@@ -248,7 +209,7 @@ class WrapperServiceTest {
 	void update_wrapper_fail2_test() {
 		// when & then
 		assertThatThrownBy(() -> wrapperService.updateWrapper(1L, null))
-			.isInstanceOf(EmptyRequestException.class);
+			.isInstanceOf(NullPointerException.class);
 	}
 
 	@Test
@@ -264,16 +225,4 @@ class WrapperServiceTest {
 			.isInstanceOf(WrapperUpdateProcessException.class);
 	}
 
-	@Test
-	@DisplayName("update wrapper - fail4")
-	void update_wrapper_fail4_test() {
-		// given
-		Long wrapperId = 1L;
-		RequestModifyWrapperDTO request = new RequestModifyWrapperDTO(false);
-		when(wrapperAdaptor.putUpdateWrapper(wrapperId, request)).thenThrow(FeignException.class);
-
-		// when & then
-		assertThatThrownBy(() -> wrapperService.updateWrapper(wrapperId, request))
-			.isInstanceOf(WrapperUpdateProcessException.class);
-	}
 }

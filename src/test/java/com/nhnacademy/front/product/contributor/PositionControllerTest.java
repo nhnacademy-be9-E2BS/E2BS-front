@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.contributor.position.adaptor.PositionAdaptor;
 import com.nhnacademy.front.product.contributor.position.controller.PositionController;
 import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePositionDTO;
@@ -42,6 +43,9 @@ class PositionControllerTest {
 
 	@MockitoBean
 	private PositionAdaptor positionAdaptor;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@Test
 	@DisplayName("position 등록")

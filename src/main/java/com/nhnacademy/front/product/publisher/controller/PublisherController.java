@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/mypage/publishers")
+@RequestMapping("/admin/settings/publishers")
 public class PublisherController {
 
 	private final PublisherService publisherService;
@@ -44,7 +44,7 @@ public class PublisherController {
 		Page<ResponsePublisherDTO> publishers = PageResponseConverter.toPage(response);
 
 		model.addAttribute("publishers", publishers);
-		return "admin/publishers";
+		return "admin/product/publishers";
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class PublisherController {
 
 		publisherService.createPublisher(requestPublisherDTO);
 
-		return "redirect:/admin/mypage/publishers";
+		return "redirect:/admin/settings/publishers";
 	}
 
 	/**

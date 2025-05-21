@@ -21,6 +21,11 @@ member:
   register:
     url: http://localhost:10232/api/register
 
+  mypage:
+    url: http://localhost:10232/api/mypage
+    member:
+      url: http://localhost:10232/api/mypage/members
+
 auth:
   jwt:
     create:
@@ -39,7 +44,7 @@ coupon:
 
 # 상품 - 출판사, 기여자 역할
 product:
-  url: http://localhost:10232/api/product
+  url: http://localhost:10232/api/products
   publisher:
     url: http://localhost:10232/api/admin/publishers
 
@@ -48,8 +53,15 @@ product:
       url: http://localhost:10232/api/admin/positions
     url: http://localhost:10232/api/admin/contributors
 
+
   tag:
     url: http://localhost:10232/api/admin/tags
+
+  category:
+    user:
+      url: http://localhost:10232/api/categories
+    admin:
+      url: http://localhost:10232/api/admin/categories
 
   book:
     member:
