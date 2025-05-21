@@ -1,6 +1,9 @@
 package com.nhnacademy.front.order.order.controller;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -121,5 +129,19 @@ public class OrderController {
 	@PostMapping("/order/cancel")
 	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
 		return orderService.cancelOrder(orderId);
+	}
+
+	@JwtTokenCheck
+	@GetMapping("/mypage/orders")
+	public String getMemberOrders(Model model, HttpServletRequest request,
+		@PageableDefault(page = 0, size = 10) Pageable pageable) {
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+
+		ResponseEntity<PageResponse<ResponseOrderDTO>> response = null;
+		response = orderService.getOrdersByMemberId(pageable, memberId);
+		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
+		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
+		model.addAttribute("orders", orders);
+		return "member/mypage/orders";
 	}
 }
