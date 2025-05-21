@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.nhnacademy.front.common.exception.LoginRedirectException;
 import com.nhnacademy.front.jwt.rule.JwtRule;
 
 import feign.RequestInterceptor;
@@ -39,7 +40,7 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 
 			Cookie[] cookies = request.getCookies();
 			if (cookies == null || cookies.length == 0) {
-				return;
+				throw new LoginRedirectException("로그인을 다시 해주세요");
 			}
 
 			for (Cookie cookie : cookies) {

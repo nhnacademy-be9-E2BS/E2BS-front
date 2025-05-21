@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.nhnacademy.front.account.auth.exception.SaveJwtTokenProcessException;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
@@ -11,10 +12,18 @@ import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordEx
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.exception.EmptyResponseException;
+import com.nhnacademy.front.common.exception.LoginRedirectException;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 
 @ControllerAdvice
 public class WebAdviceController {
+
+	@ExceptionHandler(LoginRedirectException.class)
+	public ModelAndView handleLoginRedirect(LoginRedirectException ex) {
+		ModelAndView modelAndView = new ModelAndView("redirect:/login");
+		modelAndView.addObject("error", ex.getMessage());
+		return modelAndView;
+	}
 
 	@ExceptionHandler(LoginProcessException.class)
 	public ResponseEntity<String> loginProcessException(Exception ex) {
