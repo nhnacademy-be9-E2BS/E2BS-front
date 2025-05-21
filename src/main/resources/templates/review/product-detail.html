@@ -1,0 +1,433 @@
+<!--상품 상세페이지-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layouts/user-layout}">
+<head>
+	<style>
+		/* 빈 별의 색상은 연한 회색으로 설정 */
+		.fa-star {
+			color: #ccc;
+			transition: color 0.2s ease;
+		}
+
+		/* 채운 별의 색상은 노란색으로 설정 */
+		.fa-star.filled {
+			color: gold;
+			transition: color 0.2s ease;
+		}
+	</style>
+</head>
+<body>
+<div layout:fragment="content">
+  <!--================Single Product Area =================-->
+	<div class="product_image_area">
+		<div class="container">
+			<div class="row s_product_inner">
+				<div class="col-lg-6">
+					<div class="owl-carousel owl-theme s_Product_carousel">
+						<div class="single-prd-item">
+							<img class="img-fluid" src="../../static/img/category/s-p1.jpg" alt="">
+						</div>
+						<!-- <div class="single-prd-item">
+							<img class="img-fluid" src="img/category/s-p1.jpg" alt="">
+						</div>
+						<div class="single-prd-item">
+							<img class="img-fluid" src="img/category/s-p1.jpg" alt="">
+						</div> -->
+					</div>
+				</div>
+				<div class="col-lg-5 offset-lg-1">
+					<div class="s_product_text">
+						<h3>Faded SkyBlu Denim Jeans</h3>
+						<h2>$149.99</h2>
+						<ul class="list">
+							<li><a class="active" href="#"><span>Category</span> : Household</a></li>
+							<li><a href="#"><span>Availibility</span> : In Stock</a></li>
+						</ul>
+						<p>Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for
+							something that can make your interior look awesome, and at the same time give you the pleasant warm feeling
+							during the winter.</p>
+						<div class="product_count">
+              <label for="qty">Quantity:</label>
+              <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+							 class="increase items-count" type="button"><i class="ti-angle-left"></i></button>
+							<input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+							<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
+               class="reduced items-count" type="button"><i class="ti-angle-right"></i></button>
+							<a class="button primary-btn" href="#">Add to Cart</a>               
+						</div>
+						<div class="card_area d-flex align-items-center">
+							<a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
+							<a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--================End Single Product Area =================-->
+
+	<!--================Product Description Area =================-->
+	<section class="product_description_area">
+		<div class="container">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+					 aria-selected="false">Specification</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
+					 aria-selected="false">리뷰</a>
+				</li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+					<p>Beryl Cook is one of Britain’s most talented and amusing artists .Beryl’s pictures feature women of all shapes
+						and sizes enjoying themselves .Born between the two world wars, Beryl Cook eventually left Kendrick School in
+						Reading at the age of 15, where she went to secretarial school and then into an insurance office. After moving to
+						London and then Hampton, she eventually married her next door neighbour from Reading, John Cook. He was an
+						officer in the Merchant Navy and after he left the sea in 1956, they bought a pub for a year before John took a
+						job in Southern Rhodesia with a motor company. Beryl bought their young son a box of watercolours, and when
+						showing him how to use it, she decided that she herself quite enjoyed painting. John subsequently bought her a
+						child’s painting set for her birthday and it was with this that she produced her first significant work, a
+						half-length portrait of a dark-skinned lady with a vacant expression and large drooping breasts. It was aptly
+						named ‘Hangover’ by Beryl’s husband and</p>
+					<p>It is often frustrating to attempt to plan meals that are designed for one. Despite this fact, we are seeing
+						more and more recipe books and Internet websites that are dedicated to the act of cooking for one. Divorce and
+						the death of spouses or grown children leaving for college are all reasons that someone accustomed to cooking for
+						more than one would suddenly need to learn how to adjust all the cooking practices utilized before into a
+						streamlined plan of cooking that is more efficient for one person creating less</p>
+				</div>
+				<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+					<div class="table-responsive">
+						<table class="table">
+							<tbody>
+								<tr>
+									<td>
+										<h5>Width</h5>
+									</td>
+									<td>
+										<h5>128mm</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Height</h5>
+									</td>
+									<td>
+										<h5>508mm</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Depth</h5>
+									</td>
+									<td>
+										<h5>85mm</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Weight</h5>
+									</td>
+									<td>
+										<h5>52gm</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Quality checking</h5>
+									</td>
+									<td>
+										<h5>yes</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Freshness Duration</h5>
+									</td>
+									<td>
+										<h5>03days</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>When packeting</h5>
+									</td>
+									<td>
+										<h5>Without touch of hand</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Each Box contains</h5>
+									</td>
+									<td>
+										<h5>60pcs</h5>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="row total_rate">
+								<div class="col-6">
+									<div class="box_total">
+										<h5>전체 평점</h5>
+										<h4 th:text="${totalGradeAvg}">4.0</h4>
+										<h5 th:text="|(${totalCount})|">(3)</h5>
+									</div>
+								</div>
+
+								<div class="col-4">
+									<div class="rating_list">
+										<ul class="list p-0 m-0" th:with="stars=${#numbers.sequence(5,1)}">
+											<li th:each="star, iterStat : ${stars}"
+												class="d-flex justify-content-between align-items-center">
+
+												<!-- 별 아이콘 -->
+												<span>
+													<i class="fa fa-star filled"
+													   th:each="i : ${#numbers.sequence(1, star)}"></i>
+												</span>
+
+												<!-- 리뷰 수 -->
+												<span class="count" th:text="|(${starCounts[star - 1]})|">(1)</span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+
+							<br>
+
+							<div class="review_list">
+								<div class="review_item" th:each="review : ${reviewsByProduct.content}">
+									<div class="media">
+										<div class="media-body">
+											<div class="d-flex justify-content-between align-items-center">
+												<h4 class="mb-0" th:text="${review.customerName}">이름</h4>
+												<p class="mb-0 text-muted" th:text="${#temporals.format(review.reviewCreatedAt, 'yy-MM-dd')}">날짜</p>
+											</div>
+
+											<div>
+												<i class="fa fa-star filled"
+												   th:each="i : ${#numbers.sequence(1, review.reviewGrade)}"></i>
+											</div>
+										</div>
+									</div>
+
+									<div class="d-flex">
+										<!--th:src="@{${review.reviewImage}}"-->
+										<img src="/img/product/product1.png" alt="리뷰 이미지" style="max-width: 150px;">
+									</div>
+
+									<p th:text="${review.reviewContent}">리뷰내용</p>
+								</div>
+
+								<!-- 페이징 -->
+								<div class="row">
+									<div class="col-12 d-flex justify-content-center">
+										<nav>
+											<ul class="pagination">
+												<!-- 처음 -->
+												<li class="page-item" th:classappend="${!reviewsByProduct.hasPrevious()} ? 'disabled'">
+													<a class="page-link" th:href="@{/products/{productId}/reviews(productId=${productId})(page=0, size=${reviewsByProduct.size})}">처음</a>
+												</li>
+
+												<!-- 페이지 번호 -->
+												<li class="page-item"
+													th:each="i : ${#numbers.sequence(0, reviewsByProduct.totalPages - 1)}"
+													th:classappend="${i == reviewsByProduct.number} ? 'active'">
+													<a class="page-link"
+													   th:href="@{/products/{productId}/reviews(productId=${productId})(page=${i}, size=${reviewsByProduct.size})}"
+													   th:text="${i + 1}">1</a>
+												</li>
+
+												<!-- 끝 -->
+												<li class="page-item" th:classappend="${!reviewsByProduct.hasNext()} ? 'disabled'">
+													<a class="page-link"
+													   th:href="@{/products/{productId}/reviews(productId=${productId})(page=${reviewsByProduct.totalPages - 1}, size=${reviewsByProduct.size})}">끝</a>
+												</li>
+											</ul>
+										</nav>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-6">
+							<div class="review_box">
+								<h4>리뷰 작성</h4>
+
+								<form th:action="@{/reviews}" method="POST" enctype="multipart/form-data" class="form-contact form-review mt-3">
+									<input type="hidden" name="productId" value="1" />
+
+									<div class="form-group">
+										<p>평점:</p>
+										<ul class="list">
+											<li><a href="#" class="star" data-star-value="1"><i class="fa fa-star"></i></a></li>
+											<li><a href="#" class="star" data-star-value="2"><i class="fa fa-star"></i></a></li>
+											<li><a href="#" class="star" data-star-value="3"><i class="fa fa-star"></i></a></li>
+											<li><a href="#" class="star" data-star-value="4"><i class="fa fa-star"></i></a></li>
+											<li><a href="#" class="star" data-star-value="5"><i class="fa fa-star"></i></a></li>
+										</ul>
+
+										<p id="selectedRating"></p>
+										<input type="hidden" name="reviewGrade" id="ratingInput" value="0" />
+									</div>
+
+									<div class="form-group">
+<!--										<div class="custom-file">-->
+<!--											<input type="file" class="custom-file-input" id="image-file" name="reviewImage">-->
+<!--											<label class="custom-file-label" for="image-file">파일을 선택하세요</label>-->
+<!--										</div>-->
+										<input type="hidden" name="reviewImage" />
+
+										<label for="textarea"></label><textarea class="form-control different-control w-100" name="reviewContent" id="textarea" cols="30" rows="5" placeholder="리뷰 내용"></textarea>
+									</div>
+
+									<div class="form-group text-center text-md-right mt-3">
+										<button type="submit" class="button button--active button-review">제출하기</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--================End Product Description Area =================-->
+
+	<!--================ Start related Product area =================-->  
+	<section class="related-product-area section-margin--small mt-0">
+		<div class="container">
+			<div class="section-intro pb-60px">
+        <p>Popular Item in the market</p>
+        <h2>Top <span class="section-intro__style">Product</span></h2>
+      </div>
+			<div class="row mt-30">
+        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
+          <div class="single-search-product-wrapper">
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-1.png" alt=""></a>
+              <div class="desc">
+                  <a href="#" class="title">Gray Coffee Cup</a>
+                  <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-2.png" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-3.png" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
+          <div class="single-search-product-wrapper">
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-4.png" alt=""></a>
+              <div class="desc">
+                  <a href="#" class="title">Gray Coffee Cup</a>
+                  <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-5.png" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-6.png" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
+          <div class="single-search-product-wrapper">
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-7.png" alt=""></a>
+              <div class="desc">
+                  <a href="#" class="title">Gray Coffee Cup</a>
+                  <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-8.png" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-9.png" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
+          <div class="single-search-product-wrapper">
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-1.png" alt=""></a>
+              <div class="desc">
+                  <a href="#" class="title">Gray Coffee Cup</a>
+                  <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-2.png" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="../../static/img/product/product-sm-3.png" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+		</div>
+	</section>
+	<!--================ end related Product area =================-->
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{/js/review/review-create.js}"></script>
+	<script th:src="@{/js/review/star-count.js}"></script>
+</div>
+</body>
+</html>
