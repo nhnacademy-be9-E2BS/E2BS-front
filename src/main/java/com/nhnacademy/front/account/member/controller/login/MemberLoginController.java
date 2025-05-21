@@ -1,4 +1,4 @@
-package com.nhnacademy.front.account.member.controller;
+package com.nhnacademy.front.account.member.controller.login;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +13,7 @@ public class MemberLoginController {
 	 */
 	@GetMapping
 	public String getLogin() {
-		return "member/login";
+		return "member/login/login";
 	}
 
 }

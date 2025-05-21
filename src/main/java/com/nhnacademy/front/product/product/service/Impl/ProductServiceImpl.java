@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	/**
-	 * Product 재고 수정
+	 * Product 재고 수정 (필요 없으려나?)
 	 * Admin
 	 */
 	@Override
@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	/**
-	 * Product 판매가 수정
+	 * Product 판매가 수정 (필요 없으려나?)
 	 * Admin
 	 */
 	@Override
