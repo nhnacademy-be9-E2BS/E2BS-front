@@ -1,7 +1,5 @@
 package com.nhnacademy.front.common.aop;
 
-import javax.security.sasl.AuthenticationException;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.nhnacademy.front.account.auth.model.dto.request.RequestJwtTokenDTO;
 import com.nhnacademy.front.account.auth.service.AuthService;
+import com.nhnacademy.front.common.exception.LoginRedirectException;
 import com.nhnacademy.front.jwt.parser.JwtExpParser;
 import com.nhnacademy.front.jwt.parser.JwtMemberIdParser;
 import com.nhnacademy.front.jwt.rule.JwtRule;
@@ -54,23 +53,23 @@ public class JwtTokenCheckAop {
 
 			Long exp = JwtExpParser.getExp(accessToken);
 			if (exp == null) {
-				throw new AuthenticationException(UNAUTHORIZED_MESSAGE);
+				throw new LoginRedirectException(UNAUTHORIZED_MESSAGE);
 			}
 
 			String memberId = JwtMemberIdParser.getMemberId(accessToken);
 			if (memberId == null) {
-				throw new AuthenticationException(UNAUTHORIZED_MESSAGE);
+				throw new LoginRedirectException(UNAUTHORIZED_MESSAGE);
 			}
 
 			String refreshKey = JwtRule.REFRESH_PREFIX.getValue() + ":" + memberId;
 			refreshToken = redisTemplate.opsForValue().get(refreshKey);
 			if (refreshToken == null) {
-				throw new AuthenticationException(UNAUTHORIZED_MESSAGE);
+				throw new LoginRedirectException(UNAUTHORIZED_MESSAGE);
 			}
 
 			Long refreshExp = JwtExpParser.getExp(refreshToken);
-			if (refreshExp == null || refreshExp <= 0) {
-				throw new AuthenticationException(UNAUTHORIZED_MESSAGE);
+			if (refreshExp == null || !JwtExpParser.isTokenValid(refreshToken)) {
+				throw new LoginRedirectException(UNAUTHORIZED_MESSAGE);
 			}
 
 			RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(memberId);
