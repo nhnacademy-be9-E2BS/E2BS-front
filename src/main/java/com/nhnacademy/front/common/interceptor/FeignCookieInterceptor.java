@@ -34,13 +34,14 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 
 		if (newCookie.isEmpty()) {
 			String path = request.getRequestURI();
-			if (path.equals("/") || path.startsWith("/login") || path.startsWith("/register")) {
+			if (path.equals("/") || path.startsWith("/login") || path.startsWith("/register") ||
+				path.startsWith("/admin/login")) {
 				return;
 			}
 
 			Cookie[] cookies = request.getCookies();
 			if (cookies == null || cookies.length == 0) {
-				throw new LoginRedirectException("로그인을 다시 해주세요");
+				return;
 			}
 
 			for (Cookie cookie : cookies) {
@@ -49,6 +50,11 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 					break;
 				}
 			}
+
+			if (cookieHeaders.toString().isEmpty()) {
+				throw new LoginRedirectException("로그인을 다시 해주세요");
+			}
+
 			log.info("FeignCookieInterceptor:{}", cookieHeaders.toString());
 
 			requestTemplate.header(JwtRule.JWT_ISSUE_HEADER.getValue(), cookieHeaders.toString());
