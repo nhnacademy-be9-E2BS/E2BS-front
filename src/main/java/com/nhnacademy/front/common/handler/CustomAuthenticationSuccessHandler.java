@@ -45,7 +45,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(memberId);
 			authService.postAuthCreateJwtToken(requestJwtTokenDTO, response, request);
 
-			response.sendRedirect("/index");
+			response.sendRedirect("/");
 		}
 	}
 
