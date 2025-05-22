@@ -96,7 +96,7 @@ class ContributorControllerTest {
 		mockMvc.perform(get("/admin/mypage/contributors"))
 			.andExpect(status().isOk())
 			.andExpect(model().attributeExists("contributors"))
-			.andExpect(view().name("/admin/product/contributors"));
+			.andExpect(view().name("admin/product/contributors"));
 	}
 
 }

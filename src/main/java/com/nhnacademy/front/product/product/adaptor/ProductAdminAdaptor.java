@@ -27,7 +27,7 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsA
 
 @FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
 public interface ProductAdminAdaptor {
-	@PostMapping("/self")
+	@PostMapping("/register")
 	ResponseEntity<Void> postCreateProduct(@RequestBody RequestProductCreateDTO request);
 
 	@PutMapping("/{bookId}")

@@ -34,20 +34,22 @@ public class ProductAdminController {
 
 	private final ProductService productService;
 
+	
+
 	/**
-	 * 관리자가 admin settings 페이지에서 도서 관리
+	 * 관리자가 admin settings 페이지에서 도서 등록
 	 * 관리자 -> 도서 등록
 	 */
-	@GetMapping
+	@GetMapping("/register")
 	public String getProducts() {
-		return "admin/product/books";
+		return "admin/product/books/register";
 	}
 
 
 	/**
 	 * 관리자가 도서를 생성
 	 */
-	@PostMapping
+	@PostMapping("/register")
 	public String createProduct(@Validated @ModelAttribute("book") RequestProductCreateDTO request,
 		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
@@ -56,7 +58,7 @@ public class ProductAdminController {
 
 		productService.createProduct(request);
 
-		return "redirect:/admin/settings/books";
+		return "redirect:/admin/settings/books/register";
 	}
 
 	/**
