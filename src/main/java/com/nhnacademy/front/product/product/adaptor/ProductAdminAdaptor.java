@@ -13,10 +13,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 
-@FeignClient(name = "product-service", url = "${product.book.admin.url}")
+@FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
 public interface ProductAdminAdaptor {
 	@PostMapping("/self")
 	ResponseEntity<Void> postCreateProduct(@RequestBody RequestProductCreateDTO request);

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,7 +40,7 @@ public class ProductAdminController {
 	 * 관리자가 도서를 생성
 	 */
 	@PostMapping
-	public String createProduct(@Validated @ModelAttribute("book")RequestProductCreateDTO request,
+	public String createProduct(@Validated @ModelAttribute("book") RequestProductCreateDTO request,
 		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
