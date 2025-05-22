@@ -4,12 +4,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.review.adaptor.CustomerReviewAdaptor;
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.review.adaptor.CustomerReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ProductReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ReviewAdaptor;
 import com.nhnacademy.front.review.exception.ReviewProcessException;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
+import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewMetaDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
@@ -29,7 +30,8 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public void createReview(RequestCreateReviewDTO request) throws FeignException {
-		ResponseEntity<Void> result = reviewAdaptor.createReview(request);
+		RequestCreateReviewMetaDTO requestMeta = new RequestCreateReviewMetaDTO(request.getProductId(), request.getCustomerId(), request.getMemberId(), request.getReviewContent(), request.getReviewGrade());
+		ResponseEntity<Void> result = reviewAdaptor.createReview(requestMeta, request.getReviewImage());
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
 			throw new ReviewProcessException("리뷰 생성 실패: " + result.getStatusCode());
@@ -37,7 +39,7 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public void updateReview(long reviewId, RequestUpdateReviewDTO request) throws FeignException{
+	public void updateReview(long reviewId, RequestUpdateReviewDTO request) throws FeignException {
 		ResponseEntity<Void> result = reviewAdaptor.updateReview(reviewId, request);
 
 		if (!result.getStatusCode().is2xxSuccessful()) {

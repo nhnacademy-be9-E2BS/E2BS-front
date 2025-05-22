@@ -1,23 +1,28 @@
 package com.nhnacademy.front.review.adaptor;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
+import com.nhnacademy.front.common.config.FeignFormDataSupportConfig;
+import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewMetaDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 
-@FeignClient(name = "review-adaptor", url = "${review.url}")
+@FeignClient(name = "review-adaptor", url = "${review.url}", configuration = FeignFormDataSupportConfig.class)
 public interface ReviewAdaptor {
 
 	/**
 	 * 리뷰 생성
 	 */
-	@PostMapping
-	ResponseEntity<Void> createReview(@RequestBody RequestCreateReviewDTO request);
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	ResponseEntity<Void> createReview(@RequestPart("requestMeta") RequestCreateReviewMetaDTO reviewMeta,
+		                              @RequestPart("reviewImage") MultipartFile reviewImage);
 
 	/**
 	 * 리뷰 수정
