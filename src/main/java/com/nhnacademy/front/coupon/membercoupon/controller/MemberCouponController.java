@@ -1,5 +1,7 @@
 package com.nhnacademy.front.coupon.membercoupon.controller;
 
+import java.util.Objects;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,7 +21,10 @@ import com.nhnacademy.front.coupon.coupon.service.CouponService;
 import com.nhnacademy.front.coupon.membercoupon.model.dto.request.RequestAllMemberCouponDTO;
 import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseMemberCouponDTO;
 import com.nhnacademy.front.coupon.membercoupon.service.MemberCouponService;
+import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -61,8 +66,12 @@ public class MemberCouponController {
 	 */
 	@JwtTokenCheck
 	@GetMapping("/mypage/couponBox")
-	public String getMemberCouponBox(@PageableDefault() Pageable pageable, Model model) {
-		Long memberId = 1L; // 상준; 테스트용, 실제는 세션? 에서 사용자의 ID를 추출해야함
+	public String getMemberCouponBox(HttpServletRequest request, @PageableDefault() Pageable pageable, Model model) {
+		// JWT 토큰에서 Long ld 추출
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+		if (Objects.isNull(memberId)) {
+			throw new JwtException("JWT token is null");
+		}
 
 		PageResponse<ResponseMemberCouponDTO> response = memberCouponService.getMemberCouponsByMemberId(memberId, pageable);
 		Page<ResponseMemberCouponDTO> memberCoupons = PageResponseConverter.toPage(response);
