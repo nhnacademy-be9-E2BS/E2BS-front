@@ -34,8 +34,8 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 
 		if (newCookie.isEmpty()) {
 			String path = request.getRequestURI();
-			if (path.equals("/") || path.startsWith("/login") ||
-				path.startsWith("/register") || path.startsWith("/admin/login")) {
+			if (path.equals("/") || path.startsWith("/login") || path.startsWith("/register") ||
+				path.startsWith("/admin/login")) {
 				return;
 			}
 
