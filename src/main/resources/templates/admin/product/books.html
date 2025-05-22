@@ -29,11 +29,22 @@
                             <input type="hidden" name="productDescription" id="productDescription">
                         </div>
 
-                        <!-- 출판사 -->
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" name="publisherName" placeholder="출판사" required>
+                            <input type="text" class="form-control" name="contributor" placeholder="기여자" required>
                         </div>
 
+                        <!-- 출판사 -->
+                        <div class="col-md-12 form-group">
+                            <label>출판사</label>
+                            <select name="publisherId" required>
+                                <option value="">출판사 선택</option>
+                                <option th:each="publisher : ${publishers}"
+                                        th:value="${publisher.id}"
+                                        th:text="${publisher.name}">
+                                </option>
+                            </select>
+                            <button type="button" onclick="openPopup('publisher')">출판사 추가</button>
+                        </div>
                         <!-- ISBN -->
                         <div class="col-md-12 form-group">
                             <input type="text" class="form-control" name="productIsbn" placeholder="ISBN" required>
@@ -51,7 +62,14 @@
 
                         <!-- 카테고리 -->
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" name="category" placeholder="카테고리" required>
+                            <label>상품 카테고리 (최소 1개, 최대 10개)</label>
+                            <select name="categoryId">
+                                <option value="">카테고리 선택</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}">
+                                </option>
+                            </select>
                         </div>
 
                         <!-- 재고 -->
@@ -73,20 +91,23 @@
                         </div>
 
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" name="tags" placeholder="태그" required>
+                            <label>도서 태그 </label>
+                            <select name="tagId">
+                                <option value="">태그 선택</option>
+                                <option th:each="tag : ${tags}"
+                                        th:value="${tag.id}"
+                                        th:text="${tag.name}">
+                                </option>
+                            </select>
                         </div>
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" name="contributor" placeholder="기여자" required>
-                        </div>
+
                         <div class="col-md-12 form-group">
                             <label>포장 가능 여부</label>
                             <div>
-                                <label>
-                                    <select name="packageable">
-                                        <option value="true">가능</option>
-                                        <option value="false">불가능</option>
-                                    </select>
-                                </label>
+                                <select name="packageable">
+                                    <option value="true">가능</option>
+                                    <option value="false">불가능</option>
+                                </select>
                             </div>
                         </div>
 
