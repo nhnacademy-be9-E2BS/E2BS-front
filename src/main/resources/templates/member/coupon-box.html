@@ -63,7 +63,7 @@
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             <nav>
-                                <ul class="pagination">
+                                <ul class="pagination" th:if="${memberCoupons.totalPages > 0}">
                                     <li class="page-item" th:classappend="${!memberCoupons.hasPrevious()} ? 'disabled'">
                                         <a class="page-link"
                                            th:href="@{'/mypage/couponBox'(page=0, size=${memberCoupons.size})}">처음</a>
