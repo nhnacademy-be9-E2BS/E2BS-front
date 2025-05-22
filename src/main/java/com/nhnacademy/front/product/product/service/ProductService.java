@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductGetDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
@@ -12,6 +14,7 @@ import com.nhnacademy.front.product.product.model.dto.request.RequestProductStoc
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 
 public interface ProductService {
 	//관리자 - 도서 DB에 저장
@@ -30,4 +33,6 @@ public interface ProductService {
 	void updateProductSalePrice(long productId, RequestProductSalePriceUpdateDTO request);
 	//Coupon전용 - Sale중인 전체 도서 페이지로 조회
 	Page<ResponseProductCouponDTO> getProductsToCoupon(Pageable pageable);
+
+	PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable);
 }

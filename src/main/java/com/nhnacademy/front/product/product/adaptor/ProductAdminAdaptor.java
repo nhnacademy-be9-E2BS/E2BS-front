@@ -3,6 +3,7 @@ package com.nhnacademy.front.product.product.adaptor;
 import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 
 @FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
 public interface ProductAdminAdaptor {
@@ -40,5 +45,12 @@ public interface ProductAdminAdaptor {
 
 	@GetMapping("/state-sale")
 	ResponseEntity<Page<ResponseProductCouponDTO>> getProductsToCoupon(Pageable pageable);
+
+	@GetMapping("/aladdin/search")
+
+	ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> searchProducts(@SpringQueryMap RequestProductApiSearchDTO request, Pageable pageable);
+
+	@PostMapping("/aladdin/register")
+	ResponseEntity<Void> createProductByApi(@RequestBody RequestProductApiCreateDTO request);
 
 }
