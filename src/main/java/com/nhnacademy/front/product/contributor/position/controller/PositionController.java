@@ -68,7 +68,7 @@ public class PositionController {
 
 		model.addAttribute("position", responsePositionDTO);
 		model.addAttribute("positions", Page.empty());
-		return "/admin/product/positions";
+		return "admin/product/positions";
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class PositionController {
 		Page<ResponsePositionDTO> positions = PageResponseConverter.toPage(response);
 
 		model.addAttribute("positions", positions);
-		return "/admin/product/positions";
+		return "admin/product/positions";
 	}
 
 }
