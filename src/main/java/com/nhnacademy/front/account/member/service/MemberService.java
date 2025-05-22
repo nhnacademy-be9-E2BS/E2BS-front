@@ -61,22 +61,17 @@ public class MemberService {
 	 */
 	public String getMemberName(HttpServletRequest request) throws FeignException {
 
-		try {
-			String memberId = JwtGetMemberId.jwtGetMemberId(request);
-
-			if (Objects.nonNull(memberId)) {
-				ResponseMemberInfoDTO memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
-				if (Objects.isNull(memberInfoDTO)) {
-					return null;
-				}
-
-				return memberInfoDTO.getCustomer().getCustomerName();
-			}
-
-			return null;
-		} catch (FeignException.NotFound ex) {
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+		if (Objects.isNull(memberId)) {
 			return null;
 		}
+
+		ResponseMemberInfoDTO memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
+		if (Objects.isNull(memberInfoDTO)) {
+			return null;
+		}
+
+		return memberInfoDTO.getCustomer().getCustomerName();
 	}
 
 }
