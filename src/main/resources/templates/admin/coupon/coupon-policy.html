@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <h4>Register New Coupon Policy</h4>
-                    <form class="row login_form" action="/admin/mypage/couponPolicies" method="post">
+                    <form class="row login_form" action="/admin/settings/couponPolicies" method="post">
                         <div class="col-md-6 form-group">
                             <input type="text" class="form-control" name="couponPolicyName" placeholder="쿠폰정책명" required>
                         </div>
@@ -55,7 +55,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="policy : ${couponPolicies}">
-                            <td><a th:href="@{/admin/mypage/couponPolicies/{id}(id=${policy.getCouponPolicyId()})}"
+                            <td><a th:href="@{/admin/settings/couponPolicies/{id}(id=${policy.getCouponPolicyId()})}"
                                    th:text="${policy.couponPolicyName}">Policy Name</a></td>
                             <td th:text="${policy.couponPolicyMinimum}">0</td>
                             <td th:text="${policy.couponPolicyDiscountRate}">10</td>
@@ -73,7 +73,7 @@
                                 <ul class="pagination" th:if="${couponPolicies.totalPages > 0}">
                                     <!-- 처음 버튼 -->
                                     <li class="page-item" th:classappend="${!couponPolicies.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link" th:href="@{'/admin/mypage/couponPolicies'(page=0, size=${couponPolicies.size})}">처음</a>
+                                        <a class="page-link" th:href="@{'/admin/settings/couponPolicies'(page=0, size=${couponPolicies.size})}">처음</a>
                                     </li>
 
                                     <!-- 전체 페이지 번호 출력 -->
@@ -81,14 +81,14 @@
                                         th:each="i : ${#numbers.sequence(0, couponPolicies.totalPages - 1)}"
                                         th:classappend="${i == couponPolicies.number} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/couponPolicies'(page=${i}, size=${couponPolicies.size})}"
+                                           th:href="@{'/admin/settings/couponPolicies'(page=${i}, size=${couponPolicies.size})}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
                                     <!-- 마지막 버튼 -->
                                     <li class="page-item" th:classappend="${!couponPolicies.hasNext()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/couponPolicies'(page=${couponPolicies.totalPages - 1}, size=${couponPolicies.size})}">마지막</a>
+                                           th:href="@{'/admin/settings/couponPolicies'(page=${couponPolicies.totalPages - 1}, size=${couponPolicies.size})}">마지막</a>
                                     </li>
                                 </ul>
                             </nav>

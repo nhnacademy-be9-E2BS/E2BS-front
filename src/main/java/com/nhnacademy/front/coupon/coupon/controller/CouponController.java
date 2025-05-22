@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/mypage/coupons")
+@RequestMapping("/admin/settings/coupons")
 public class CouponController {
 
 	private final CouponService couponServiceImpl;
@@ -70,7 +70,7 @@ public class CouponController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		couponServiceImpl.createCoupon(request);
-		return "redirect:/admin/mypage/coupons";
+		return "redirect:/admin/settings/coupons";
 	}
 
 	/**

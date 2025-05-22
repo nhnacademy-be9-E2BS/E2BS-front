@@ -30,11 +30,11 @@
                         <tbody>
                         <tr th:each="coupon : ${couponsIsActive}">
                             <td>
-                                <a th:href="@{/admin/mypage/coupons/{id}(id=${coupon.couponId})}"
+                                <a th:href="@{/admin/settings/coupons/{id}(id=${coupon.couponId})}"
                                    th:text="${coupon.couponName}">쿠폰명</a>
                             </td>
                             <td>
-                                <a th:href="@{/admin/mypage/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
+                                <a th:href="@{/admin/settings/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
                                    th:text="${coupon.couponPolicyName}">정책명</a>
                             </td>
                             <td th:text="${coupon.categoryId != null ? coupon.categoryName : '-'}">-</td>
