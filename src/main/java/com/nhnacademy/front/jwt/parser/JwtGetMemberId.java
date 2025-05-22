@@ -25,6 +25,10 @@ public class JwtGetMemberId {
 			}
 		}
 
+		if (accessToken.isEmpty()) {
+			return null;
+		}
+
 		String memberId = JwtMemberIdParser.getMemberId(accessToken);
 		if (Objects.isNull(memberId)) {
 			throw new NotFoundMemberIdException("아이디에 해당하는 아이디를 찾지 못했습니다.");
