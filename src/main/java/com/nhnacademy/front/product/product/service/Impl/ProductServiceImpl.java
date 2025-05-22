@@ -12,6 +12,7 @@ import com.nhnacademy.front.product.product.adaptor.ProductAdminAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
 import com.nhnacademy.front.product.product.exception.ProductUpdateProcessException;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductGetDTO;
@@ -148,4 +149,14 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return response.getBody();
 	}
+
+	@Override
+	public void createProductApi(RequestProductApiCreateDTO request) {
+		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductByApi(request);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new ProductCreateProcessException("도서 등록 실패");
+		}
+
+	}
+
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+
+<body>
+<div layout:fragment="content">
+    <section class="container mt-4">
+        <h2>도서 정보 확인 및 등록</h2>
+
+        <form th:action="@{/admin/settings/books/aladdin/register/submit}" method="post" class="mt-4">
+            <div class="mb-3">
+                <label for="productTitle" class="form-label">도서 제목</label>
+                <input type="text" class="form-control" id="productTitle" name="productTitle"
+                       th:value="${book.productTitle}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="publisherName" class="form-label">출판사</label>
+                <input type="text" class="form-control" id="publisherName" name="publisherName"
+                       th:value="${book.publisherName}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="contributors" class="form-label">기여자 정보</label>
+                <input type="text" class="form-control" id="contributors" name="contributors"
+                       th:value="${book.contributors}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="productIsbn" class="form-label">ISBN</label>
+                <input type="text" class="form-control" id="productIsbn" name="productIsbn"
+                       th:value="${book.productIsbn}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="productImage" class="form-label">이미지 URL</label>
+                <input type="text" class="form-control" id="productImage" name="productImage"
+                       th:value="${book.productImage}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="productDescription" class="form-label">도서 설명</label>
+                <textarea class="form-control" id="productDescription" name="productDescription"
+                          rows="3" th:text="${book.productDescription}" readonly> </textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="productContent" class="form-label">목차</label>
+                <input type="text" class="form-control" id="productContent" name="productContent"
+                       th:value="${book.productContent}" >
+            </div>
+
+            <div class="mb-3">
+                <label for="productRegularPrice" class="form-label">정가</label>
+                <input type="number" class="form-control" id="productRegularPrice" name="productRegularPrice"
+                       th:value="${book.productRegularPrice}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="productSalePrice" class="form-label">판매가</label>
+                <input type="number" class="form-control" id="productSalePrice" name="productSalePrice"
+                       th:value="${book.productSalePrice}" required readonly>
+            </div>
+
+
+            <div class="mb-3">
+                <label for="productStock" class="form-label">재고</label>
+                <input type="number" class="form-control" id="productStock" name="productStock"
+                       th:value="${book.productStock}" >
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label d-block">포장 여부</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="packageableYes" name="productPackageable" value="true"
+                           th:checked="${book.productPackageable}">
+                    <label class="form-check-label" for="packageableYes">예</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="packageableNo" name="productPackageable" value="false"
+                           th:checked="${!book.productPackageable}">
+                    <label class="form-check-label" for="packageableNo">아니오</label>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">등록</button>
+            <a th:href="@{/admin/settings/books/search}" class="btn btn-secondary">취소</a>
+        </form>
+    </section>
+</div>
+</body>
+</html>

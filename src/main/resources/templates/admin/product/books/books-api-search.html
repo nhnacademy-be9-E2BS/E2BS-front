@@ -13,11 +13,14 @@
             <div class="d-flex flex-column gap-3">
                 <div class="card shadow-sm" th:each="product : ${products.content}">
                     <div class="row g-0 align-items-center">
+                        <!-- 이미지 -->
                         <div class="col-auto">
                             <img th:src="${product.productImage}" alt="도서 이미지"
                                  class="img-fluid rounded-start"
                                  style="width: 80px; height: 100px; object-fit: cover; margin: 10px;">
                         </div>
+
+                        <!-- 도서 정보 -->
                         <div class="col">
                             <div class="card-body py-2">
                                 <h6 class="card-title fw-bold mb-1" th:text="${product.productTitle}">도서 제목</h6>
@@ -31,9 +34,25 @@
                                 </p>
                             </div>
                         </div>
+
+                        <!-- 등록 버튼 -->
+                        <div class="col-auto pe-3">
+                            <form th:action="@{/admin/settings/books/aladdin/register}" method="post">
+                                <input type="hidden" name="publisherName" th:value="${product.publisherName}">
+                                <input type="hidden" name="productTitle" th:value="${product.productTitle}">
+                                <input type="hidden" name="productIsbn" th:value="${product.productIsbn}">
+                                <input type="hidden" name="productImage" th:value="${product.productImage}">
+                                <input type="hidden" name="productDescription" th:value="${product.productDescription}">
+                                <input type="hidden" name="productRegularPrice" th:value="${product.productRegularPrice}">
+                                <input type="hidden" name="productSalePrice" th:value="${product.productSalePrice}">
+                                <input type="hidden" name="contributors" th:value="${product.contributors}">
+                                <button type="submit" class="btn btn-sm btn-primary">등록</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+
 
 
             <!-- 페이지네이션 -->

@@ -10,6 +10,25 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestProductApiCreateDTO {
-	String query;
-	String queryType;
+	private String publisherName;
+
+	private String productTitle;
+
+	private String productIsbn;
+
+	private String productImage;
+
+	private String productDescription;
+
+	private long productRegularPrice;
+
+	private long productSalePrice;
+
+	private String contributors;
+
+	private String productContent;
+
+	private boolean productPackageable;
+
+	private int productStock;
 }

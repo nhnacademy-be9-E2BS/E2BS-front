@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
@@ -85,13 +86,24 @@ public class ProductAdminController {
 		PageResponse<ResponseProductsApiSearchDTO> response = productService.getProductsApi(request, pageable);
 		Page<ResponseProductsApiSearchDTO> products = PageResponseConverter.toPage(response);
 		model.addAttribute("products", products);
-		return "/admin/product/books-api";
+		return "admin/product/books/books-api-search";
 	}
+
 
 	@GetMapping("/search")
 	public String showSearchForm() {
 		return "admin/product/search";
 	}
 
-	
+	@PostMapping("/aladdin/register")
+	public String showRegisterForm(@ModelAttribute RequestProductApiCreateDTO dto, Model model) {
+		model.addAttribute("book", dto);
+		return "/admin/product/books/books-api-register";
+	}
+
+	@PostMapping("/aladdin/register/submit")
+	public String submitBook(@ModelAttribute RequestProductApiCreateDTO dto) {
+		productService.createProductApi(dto);
+		return "redirect:/admin/settings/books/search";
+	}
 }

@@ -47,10 +47,9 @@ public interface ProductAdminAdaptor {
 	ResponseEntity<Page<ResponseProductCouponDTO>> getProductsToCoupon(Pageable pageable);
 
 	@GetMapping("/aladdin/search")
-
 	ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> searchProducts(@SpringQueryMap RequestProductApiSearchDTO request, Pageable pageable);
 
 	@PostMapping("/aladdin/register")
-	ResponseEntity<Void> createProductByApi(@RequestBody RequestProductApiCreateDTO request);
+	ResponseEntity<Void> postCreateProductByApi(@RequestBody RequestProductApiCreateDTO request);
 
 }
