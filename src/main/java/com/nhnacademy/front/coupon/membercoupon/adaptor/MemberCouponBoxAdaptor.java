@@ -14,5 +14,5 @@ import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseMembe
 public interface MemberCouponBoxAdaptor {
 
 	@GetMapping
-	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@RequestParam Long memberId, @SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@RequestParam String memberId, @SpringQueryMap Pageable pageable);
 }
