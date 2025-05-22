@@ -69,16 +69,16 @@ class PositionControllerTest {
 			.andExpect(result -> assertThat(result.getResolvedException())
 				.isInstanceOf(ValidationFailedException.class));
 	}
+
 	@Test
 	@DisplayName("position 수정")
 	void updatePositionSuccess() throws Exception {
 		mockMvc.perform(put("/admin/mypage/positions/1")
-			.param("positionName", "newPos")
-			.with(csrf()))
+				.param("positionName", "newPos")
+				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
 			.andExpect(redirectedUrl("/admin/mypage/positions"));
 	}
-
 
 	@Test
 	@DisplayName("position 단건 조회 성공")
@@ -90,9 +90,8 @@ class PositionControllerTest {
 				.with(csrf()))
 			.andExpect(status().isOk())
 			.andExpect(model().attributeExists("position"))
-			.andExpect(view().name("/admin/product/positions"));
+			.andExpect(view().name("admin/product/positions"));
 	}
-
 
 	@Test
 	@DisplayName("position 전체 조회 성공")
@@ -123,7 +122,7 @@ class PositionControllerTest {
 
 		mockMvc.perform(get("/admin/mypage/positions"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("/admin/product/positions"))
+			.andExpect(view().name("admin/product/positions"))
 			.andExpect(model().attributeExists("positions"));
 	}
 
