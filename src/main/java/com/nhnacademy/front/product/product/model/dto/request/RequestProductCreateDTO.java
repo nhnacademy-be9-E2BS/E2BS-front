@@ -15,6 +15,7 @@ import lombok.Setter;
 public class RequestProductCreateDTO {
 	/**
 	 * 도서를 생성할 때 필요한 정보
+	 *  name말고 long으로 주고 받게 수정해야됨
 	 */
 
 	//출판사
@@ -41,7 +42,14 @@ public class RequestProductCreateDTO {
 	private int productStock;
 	// 이미지
 	private List<String> productImagePaths;
-
+	// 태그
 	private List<String> tagNames;
+	// 카테고리 Id
+	private List<Long> categoryIds;
+	// 기여자 Id
+	private List<String> contributorNames;
+	// 기여자 역할
+	private List<String> positionNames; // 새로 추가
+
 
 }

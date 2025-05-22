@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
 
 import lombok.RequiredArgsConstructor;

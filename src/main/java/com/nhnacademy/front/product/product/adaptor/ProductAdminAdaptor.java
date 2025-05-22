@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 
