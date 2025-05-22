@@ -32,7 +32,7 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 	}
 
 	@Override
-	public PageResponse<ResponseMemberCouponDTO> getMemberCouponsByMemberId(Long memberId, Pageable pageable) throws FeignException {
+	public PageResponse<ResponseMemberCouponDTO> getMemberCouponsByMemberId(String memberId, Pageable pageable) throws FeignException {
 		ResponseEntity<PageResponse<ResponseMemberCouponDTO>> response = memberCouponBoxAdaptor.getMemberCouponsByMemberId(memberId, pageable);
 		if(!response.getStatusCode().is2xxSuccessful()) {
 			throw new CouponBoxGetProcessException("회원 아이디로 쿠폰 조회 실패");

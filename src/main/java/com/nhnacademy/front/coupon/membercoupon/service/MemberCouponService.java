@@ -10,5 +10,5 @@ public interface MemberCouponService {
 
 	void issueCouponToAllMember(RequestAllMemberCouponDTO request);
 
-	PageResponse<ResponseMemberCouponDTO> getMemberCouponsByMemberId(Long memberId, Pageable pageable);
+	PageResponse<ResponseMemberCouponDTO> getMemberCouponsByMemberId(String memberId, Pageable pageable);
 }
