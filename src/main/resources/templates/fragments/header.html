@@ -18,15 +18,18 @@
                             <li class="nav-item active"><a class="nav-link" href="../index">Home</a></li>
 
                             <li th:each="category : ${headerCategories}" class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" th:text="${category.categoryName}"></a>
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+                                   th:text="${category.categoryName}"></a>
                                 <ul class="dropdown-menu">
                                     <!-- 2단계 카테고리 -->
                                     <li th:each="child : ${category.children}" class="dropdown-submenu">
-                                        <a class="dropdown-item dropdown-toggle" href="#" th:text="${child.categoryName}"></a>
+                                        <a class="dropdown-item dropdown-toggle" href="#"
+                                           th:text="${child.categoryName}"></a>
                                         <ul class="dropdown-menu">
                                             <!-- 3단계 카테고리 -->
                                             <li th:each="grandChild : ${child.children}">
-                                                <a class="dropdown-item" href="#" th:text="${grandChild.categoryName}"></a>
+                                                <a class="dropdown-item" href="#"
+                                                   th:text="${grandChild.categoryName}"></a>
                                             </li>
                                         </ul>
                                     </li>
@@ -48,9 +51,9 @@
 
                             <li class="nav-item dropdown mypage-hover" th:if="${memberName != null}">
                                 <!-- 마이페이지 드롭다운 트리거 -->
-                                <a class="nav-link dropdown-toggle" href="#" id="mypageDropdown">마이페이지</a>
+                                <a class="nav-link dropdown-toggle" href="/mypage" id="mypageDropdown">마이페이지</a>
                                 <ul class="dropdown-menu mypage-dropdown" aria-labelledby="mypageDropdown">
-                                    <li><a class="dropdown-item" href="#">나의 계정</a></li>
+                                    <li><a class="dropdown-item" href="/mypage">나의 계정</a></li>
                                     <li><a class="dropdown-item" href="#">주문/배송조회</a></li>
                                     <li><a class="dropdown-item" href="#">보관함</a></li>
                                     <li><a class="dropdown-item" href="#">구매함</a></li>
