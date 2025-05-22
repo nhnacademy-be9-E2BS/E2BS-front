@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.nhnacademy.front.common.exception.LoginRedirectException;
 import com.nhnacademy.front.jwt.rule.JwtRule;
 
 import feign.RequestInterceptor;
@@ -33,7 +34,8 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 
 		if (newCookie.isEmpty()) {
 			String path = request.getRequestURI();
-			if (path.equals("/") || path.startsWith("/login") || path.startsWith("/register")) {
+			if (path.equals("/") || path.startsWith("/login") || path.startsWith("/register") ||
+				path.startsWith("/admin/login")) {
 				return;
 			}
 
@@ -48,6 +50,11 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 					break;
 				}
 			}
+
+			if (cookieHeaders.toString().isEmpty()) {
+				throw new LoginRedirectException("로그인을 다시 해주세요");
+			}
+
 			log.info("FeignCookieInterceptor:{}", cookieHeaders.toString());
 
 			requestTemplate.header(JwtRule.JWT_ISSUE_HEADER.getValue(), cookieHeaders.toString());

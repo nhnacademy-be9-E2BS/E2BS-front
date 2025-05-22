@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.nhnacademy.front.common.interceptor.FeignCookieInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 
-@FeignClient(name = "publisher-service", url = "${product.publisher.url}", configuration = FeignCookieInterceptor.class)
+@FeignClient(name = "publisher-service", url = "${product.publisher.url}")
 public interface PublisherAdaptor {
 
 	@GetMapping

@@ -15,7 +15,7 @@ public class TestIndexController {
 
 	private final MemberService memberService;
 
-	@GetMapping({"/index", "/"})
+	@GetMapping( "/")
 	public String index(HttpServletRequest request, Model model) {
 
 		String memberName = memberService.getMemberName(request);
