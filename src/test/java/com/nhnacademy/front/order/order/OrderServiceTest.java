@@ -9,10 +9,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
+import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
@@ -114,5 +118,19 @@ class OrderServiceTest {
 		assertEquals(expectedResponse, actualResponse);
 		verify(orderAdaptor).getOrderByOrderCode(orderCode);
 
+	}
+
+	@Test
+	@DisplayName("getOrdersByMemberId - 회원 주문 내역 조회")
+	void testGetOrdersByMemberId() {
+		String memberId = "TEST-MEMBER-ID";
+		Pageable pageable = PageRequest.of(0, 10);
+		ResponseEntity<PageResponse<ResponseOrderDTO>> response = ResponseEntity.ok(
+			new PageResponse<ResponseOrderDTO>());
+		when(orderAdaptor.getOrdersByMemberId(pageable, memberId)).thenReturn(response);
+
+		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderService.getOrdersByMemberId(pageable, memberId);
+		assertEquals(response, actual);
+		verify(orderAdaptor, times(1)).getOrdersByMemberId(pageable, memberId);
 	}
 }
