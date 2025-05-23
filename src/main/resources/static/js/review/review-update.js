@@ -30,9 +30,9 @@ $(document).on('change', '.custom-file-input', function (event) {
         // 미리보기용 img ID 선택
         let previewId = '';
         if (input.id === 'createImage') {
-            previewId = '#createPreview';
+            previewId = '#create-imagePreview';
         } else if (input.id === 'updateImage') {
-            previewId = '#updatePreview';
+            previewId = '#update-imagePreview';
         }
 
         const reader = new FileReader();
