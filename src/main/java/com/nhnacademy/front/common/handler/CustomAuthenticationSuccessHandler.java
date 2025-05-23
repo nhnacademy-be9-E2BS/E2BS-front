@@ -18,6 +18,9 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+	private static final String ROOT_URL = "/";
+	private static final String LOGIN_URL = "/login";
+	private static final String ADMIN_LOGIN_URL = "/admin/login";
 
 	private final AuthService authService;
 
@@ -35,17 +38,17 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		boolean isMember = authentication.getAuthorities().stream()
 			.anyMatch(authority -> authority.getAuthority().equals("ROLE_MEMBER"));
 
-		if (isAdmin && !url.contains("/admin/login")) {
+		if (isAdmin && !url.contains(ADMIN_LOGIN_URL)) {
 			SecurityContextHolder.clearContext(); // Security 초기화
-			response.sendRedirect("/login");
-		} else if (isMember && url.contains("/admin/login")) {
+			response.sendRedirect(LOGIN_URL);
+		} else if (isMember && url.contains(ADMIN_LOGIN_URL)) {
 			SecurityContextHolder.clearContext(); // Security 초기화
-			response.sendRedirect("/admin/login");
+			response.sendRedirect(ADMIN_LOGIN_URL);
 		} else {
 			RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(memberId);
 			authService.postAuthCreateJwtToken(requestJwtTokenDTO, response, request);
 
-			response.sendRedirect("/");
+			response.sendRedirect(ROOT_URL);
 		}
 	}
 
