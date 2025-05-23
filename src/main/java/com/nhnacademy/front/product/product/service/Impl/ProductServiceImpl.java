@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.adaptor.ProductAdminAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductServiceImpl implements ProductService {
 
 	private final ProductAdminAdaptor productAdminAdaptor;
+	private final AdminCategoryService adminCategoryService;
 
 	/**
 	 * Product 단건 조회(도서 상세페이지)
@@ -153,6 +155,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void createProductApi(RequestProductApiCreateDTO request) {
 		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductByApi(request);
+
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductCreateProcessException("도서 등록 실패");
 		}

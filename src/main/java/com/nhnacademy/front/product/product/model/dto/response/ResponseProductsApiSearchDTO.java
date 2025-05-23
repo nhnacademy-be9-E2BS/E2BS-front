@@ -1,5 +1,7 @@
 package com.nhnacademy.front.product.product.model.dto.response;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,6 @@ public class ResponseProductsApiSearchDTO {
 	private long productRegularPrice;
 	private long productSalePrice;
 	private String contributors;
-
+	private LocalDate productPublishedAt;
 
 }

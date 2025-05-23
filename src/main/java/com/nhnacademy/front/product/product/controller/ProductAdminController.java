@@ -1,5 +1,7 @@
 package com.nhnacademy.front.product.product.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,12 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
+import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
+import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
+import com.nhnacademy.front.product.tag.service.TagService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +40,8 @@ import lombok.RequiredArgsConstructor;
 public class ProductAdminController {
 
 	private final ProductService productService;
+	private final AdminCategoryService adminCategoryService;
+	private final TagService tagService;
 
 	
 
@@ -98,6 +106,12 @@ public class ProductAdminController {
 	@PostMapping("/aladdin/register")
 	public String showRegisterForm(@ModelAttribute RequestProductApiCreateDTO dto, Model model) {
 		model.addAttribute("book", dto);
+
+		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+		model.addAttribute("categories", categories);
+
+		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
+		model.addAttribute("tags", tags);
 		return "/admin/product/books/books-api-register";
 	}
 
