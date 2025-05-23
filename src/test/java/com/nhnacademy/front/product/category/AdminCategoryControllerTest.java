@@ -165,19 +165,4 @@ class AdminCategoryControllerTest {
 			.andExpect(status().isOk());
 	}
 
-	// @Test
-	// @DisplayName("헤더 카테고리명 조회")
-	// void get_header_categories_test() throws Exception {
-	// 	// Given
-	// 	List<ResponseCategoryDTO> headerCategories = List.of(
-	// 		new ResponseCategoryDTO(1L, "Category A", null),
-	// 		new ResponseCategoryDTO(2L, "Category B", null)
-	// 	);
-	// 	given(userCategoryService.getCategoriesToDepth3()).willReturn(headerCategories);
-	//
-	// 	// When & Then
-	// 	mockMvc.perform(get("/admin/settings/categories"))
-	// 		.andExpect(status().isOk())
-	// 		.andExpect(model().attribute("headerCategories", headerCategories));
-	// }
 }
