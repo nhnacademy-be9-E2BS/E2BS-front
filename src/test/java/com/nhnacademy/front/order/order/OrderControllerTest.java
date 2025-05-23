@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.order.order.controller.OrderController;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderDetailDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
-import com.nhnacademy.front.product.category.service.UserCategoryService;
 
 @WithMockUser(username = "admin", roles = {"ADMIN", "MEMBER", "USER"})
 @WebMvcTest(controllers = OrderController.class)
@@ -44,7 +45,12 @@ class OrderControllerTest {
 	private OrderService orderService;
 
 	@MockitoBean
-	private UserCategoryService userCategoryService;
+	private CategoryInterceptor categoryInterceptor;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+	}
 
 	@Autowired
 	private ObjectMapper objectMapper;

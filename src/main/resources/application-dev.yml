@@ -30,8 +30,6 @@ member:
 
   mypage:
     url: http://localhost:10232/api/mypage
-    member:
-      url: http://localhost:10232/api/mypage/members
 
 auth:
   jwt:
