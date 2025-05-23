@@ -31,7 +31,8 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 
 	@Override
 	public void apply(RequestTemplate requestTemplate) {
-		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		HttpServletRequest request = ((ServletRequestAttributes)Objects
+			.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 		if (isPublicPath(request.getRequestURI())) {
 			return;
 		}
