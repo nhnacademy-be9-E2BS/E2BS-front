@@ -1,5 +1,7 @@
 package com.nhnacademy.front.product.product.model.dto.request;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,4 +33,7 @@ public class RequestProductApiCreateDTO {
 	private boolean productPackageable;
 
 	private int productStock;
+
+	List<Long> categoryIds;
+	List<Long> tagIds;
 }

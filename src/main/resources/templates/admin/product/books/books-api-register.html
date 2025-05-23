@@ -77,11 +77,36 @@
                            th:checked="${book.productPackageable}">
                     <label class="form-check-label" for="packageableYes">예</label>
                 </div>
+
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="packageableNo" name="productPackageable" value="false"
                            th:checked="${!book.productPackageable}">
                     <label class="form-check-label" for="packageableNo">아니오</label>
                 </div>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="categoryIds" class="form-label">카테고리 선택</label>
+                <select id="categoryIds" name="categoryIds" class="form-select" multiple>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.categoryId}"
+                            th:text="${category.categoryName}"
+                            th:selected="${book.categoryIds != null} ? ${book.categoryIds.contains(category.categoryId)} : false">
+                    </option>
+                </select>
+            </div>
+
+            <!-- 태그 선택 -->
+            <div class="mb-3">
+                <label for="tagIds" class="form-label">태그 선택</label>
+                <select id="tagIds" name="tagIds" class="form-select" multiple>
+                    <option th:each="tag : ${tags}"
+                            th:value="${tag.tagId}"
+                            th:text="${tag.tagName}"
+                            th:selected="${book.tagIds != null} ? ${book.tagIds.contains(tag.tagId)} : false">
+                    </option>
+                </select>
             </div>
 
 
