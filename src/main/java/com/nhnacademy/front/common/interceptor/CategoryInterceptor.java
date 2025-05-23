@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,8 +24,8 @@ public class CategoryInterceptor implements HandlerInterceptor {
 	private final ObjectMapper objectMapper;
 
 	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-		ModelAndView modelAndView) throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
+		Exception {
 		if (Boolean.TRUE.equals(redisTemplate.hasKey("Categories::header"))) {
 			Object cached = redisTemplate.opsForValue().get("Categories::header");
 			if (cached instanceof List<?>) {
@@ -35,10 +34,11 @@ public class CategoryInterceptor implements HandlerInterceptor {
 					new TypeReference<List<ResponseCategoryDTO>>() {
 					});
 				request.setAttribute("headerCategories", categoryDTOs);
-				return;
+				return true;
 			}
 		}
 
 		request.setAttribute("headerCategories", userCategoryService.getCategoriesToDepth3());
+		return true;
 	}
 }
