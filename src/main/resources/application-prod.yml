@@ -33,6 +33,8 @@ coupon:
     url: https://e2bs.shop/api/admin/couponPolicies
   member:
     url: https://e2bs.shop/api/admin/member-coupons
+  order:
+    url: https://e2bs.shop/api/order
 
 product:
   url: https://e2bs.shop/api/products
