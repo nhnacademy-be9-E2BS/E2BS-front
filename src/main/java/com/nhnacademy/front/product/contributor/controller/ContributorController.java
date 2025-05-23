@@ -72,7 +72,7 @@ public class ContributorController {
 	@GetMapping("/{contributorId}")
 	public String getContributor(@PathVariable Long contributorId, Model model) {
 		contributorService.getContributor(contributorId);
-		return "/admin/product/contributors";
+		return "admin/product/contributors";
 	}
 	/**기여자 전체 조회
 	 */
@@ -85,7 +85,7 @@ public class ContributorController {
 		Page<ResponseContributorDTO> contributors = PageResponseConverter.toPage(response);
 
 		model.addAttribute("contributors", contributors);
-		return "/admin/product/contributors";
+		return "admin/product/contributors";
 	}
 
 

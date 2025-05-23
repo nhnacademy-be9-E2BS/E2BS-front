@@ -40,7 +40,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			response.sendRedirect("/login");
 		} else if (isMember && url.contains("/admin/login")) {
 			SecurityContextHolder.clearContext(); // Security 초기화
-			response.sendRedirect("/login");
+			response.sendRedirect("/admin/login");
 		} else {
 			RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(memberId);
 			authService.postAuthCreateJwtToken(requestJwtTokenDTO, response, request);

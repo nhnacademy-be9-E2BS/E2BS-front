@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -47,6 +48,9 @@ class PositionControllerTest {
 	@MockitoBean
 	private UserCategoryService userCategoryService;
 
+	@MockitoBean
+	private RedisTemplate<String, Object> redisTemplate;
+
 	@Test
 	@DisplayName("position 등록")
 	void createPositionSuccess() throws Exception {
@@ -69,16 +73,16 @@ class PositionControllerTest {
 			.andExpect(result -> assertThat(result.getResolvedException())
 				.isInstanceOf(ValidationFailedException.class));
 	}
+
 	@Test
 	@DisplayName("position 수정")
 	void updatePositionSuccess() throws Exception {
 		mockMvc.perform(put("/admin/mypage/positions/1")
-			.param("positionName", "newPos")
-			.with(csrf()))
+				.param("positionName", "newPos")
+				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
 			.andExpect(redirectedUrl("/admin/mypage/positions"));
 	}
-
 
 	@Test
 	@DisplayName("position 단건 조회 성공")
@@ -90,9 +94,8 @@ class PositionControllerTest {
 				.with(csrf()))
 			.andExpect(status().isOk())
 			.andExpect(model().attributeExists("position"))
-			.andExpect(view().name("/admin/product/positions"));
+			.andExpect(view().name("admin/product/positions"));
 	}
-
 
 	@Test
 	@DisplayName("position 전체 조회 성공")
@@ -123,7 +126,7 @@ class PositionControllerTest {
 
 		mockMvc.perform(get("/admin/mypage/positions"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("/admin/product/positions"))
+			.andExpect(view().name("admin/product/positions"))
 			.andExpect(model().attributeExists("positions"));
 	}
 
