@@ -34,7 +34,7 @@ public class GuestCartServiceImplTest {
 	@InjectMocks
 	private GuestCartServiceImpl guestCartService;
 
-	private final String SESSION_ID = "test-session";
+	private static final String sessionId = "test-session";
 
 
 	@Test
@@ -42,10 +42,10 @@ public class GuestCartServiceImplTest {
 	void getCartItemsByGuest() {
 		// given
 		List<ResponseCartItemsForGuestDTO> expectedList = List.of(new ResponseCartItemsForGuestDTO());
-		when(guestCartAdaptor.getCartItemsByGuest(SESSION_ID)).thenReturn(ResponseEntity.ok(expectedList));
+		when(guestCartAdaptor.getCartItemsByGuest(sessionId)).thenReturn(ResponseEntity.ok(expectedList));
 
 		// when
-		List<ResponseCartItemsForGuestDTO> result = guestCartService.getCartItemsByGuest(SESSION_ID);
+		List<ResponseCartItemsForGuestDTO> result = guestCartService.getCartItemsByGuest(sessionId);
 
 		// then
 		assertEquals(expectedList, result);
@@ -55,10 +55,10 @@ public class GuestCartServiceImplTest {
 	@DisplayName("게스트 장바구니 목록 조회 테스트 - 실패(FeignException 발생)")
 	void getCartItemsByGuest_Fail_FeignException() {
 		// given
-		when(guestCartAdaptor.getCartItemsByGuest(SESSION_ID)).thenThrow(FeignException.class);
+		when(guestCartAdaptor.getCartItemsByGuest(sessionId)).thenThrow(FeignException.class);
 
 		// when & then
-		assertThatThrownBy(() -> guestCartService.getCartItemsByGuest(SESSION_ID))
+		assertThatThrownBy(() -> guestCartService.getCartItemsByGuest(sessionId))
 			.isInstanceOf(CartProcessException.class);
 	}
 
@@ -140,10 +140,10 @@ public class GuestCartServiceImplTest {
 	@DisplayName("게스트 장바구니 전체 삭제 테스트")
 	void deleteCartForGuest() {
 		// given
-		when(guestCartAdaptor.deleteCartForGuest(SESSION_ID)).thenReturn(ResponseEntity.noContent().build());
+		when(guestCartAdaptor.deleteCartForGuest(sessionId)).thenReturn(ResponseEntity.noContent().build());
 
 		// when & then
-		assertThatCode(() -> guestCartService.deleteCartForGuest(SESSION_ID))
+		assertThatCode(() -> guestCartService.deleteCartForGuest(sessionId))
 			.doesNotThrowAnyException();
 	}
 	
@@ -151,10 +151,10 @@ public class GuestCartServiceImplTest {
 	@DisplayName("게스트 장바구니 전체 삭제 테스트 - 실패(FeignException 발생)")
 	void deleteCartForGuest_Fail_FeignException() {
 		// given
-		when(guestCartAdaptor.deleteCartForGuest(SESSION_ID)).thenThrow(FeignException.class);
+		when(guestCartAdaptor.deleteCartForGuest(sessionId)).thenThrow(FeignException.class);
 
 		// when & then
-		assertThatThrownBy(() -> guestCartService.deleteCartForGuest(SESSION_ID))
+		assertThatThrownBy(() -> guestCartService.deleteCartForGuest(sessionId))
 			.isInstanceOf(CartProcessException.class);
 	}
 
