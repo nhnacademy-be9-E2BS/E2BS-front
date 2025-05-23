@@ -62,11 +62,21 @@ public class ProductAdminController {
 	}
 
 	/**
+	 * 관리자 도서 등록 뷰로 이동
+	 */
+	@JwtTokenCheck
+	@GetMapping("/register")
+	public String getRegisterView() {
+
+		return "admin/product/books/register";
+	}
+
+	/**
 	 * 관리자가 admin settings 페이지에서 도서 등록
 	 * 관리자 -> 도서 등록
 	 */
 	@JwtTokenCheck
-	@PostMapping
+	@PostMapping("/register")
 	public String createProduct(@Validated @ModelAttribute RequestProductDTO request, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
