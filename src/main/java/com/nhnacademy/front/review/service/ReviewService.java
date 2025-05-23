@@ -7,10 +7,11 @@ import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 
 public interface ReviewService {
 	void createReview(RequestCreateReviewDTO request);
-	void updateReview(long reviewId, RequestUpdateReviewDTO request);
+	ResponseUpdateReviewDTO updateReview(long reviewId, RequestUpdateReviewDTO request);
 	PageResponse<ResponseReviewPageDTO> getReviewsByCustomer(long customerId, Pageable pageable);
 	PageResponse<ResponseReviewPageDTO> getReviewsByProduct(long productId, Pageable pageable);
 	ResponseReviewInfoDTO getReviewInfo(long productId);

@@ -14,6 +14,7 @@ import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewMetaDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 import com.nhnacademy.front.review.service.ReviewService;
 
 import feign.FeignException;
@@ -39,12 +40,13 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public void updateReview(long reviewId, RequestUpdateReviewDTO request) throws FeignException {
-		ResponseEntity<Void> result = reviewAdaptor.updateReview(reviewId, request);
+	public ResponseUpdateReviewDTO updateReview(long reviewId, RequestUpdateReviewDTO request) throws FeignException {
+		ResponseEntity<ResponseUpdateReviewDTO> result = reviewAdaptor.updateReview(reviewId, request.getReviewContent(), request.getReviewImage());
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
 			throw new ReviewProcessException("리뷰 수정 실패: " + result.getStatusCode());
 		}
+		return result.getBody();
 	}
 
 	@Override

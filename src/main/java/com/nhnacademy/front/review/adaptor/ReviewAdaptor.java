@@ -6,13 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nhnacademy.front.common.config.FeignFormDataSupportConfig;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewMetaDTO;
-import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 
 @FeignClient(name = "review-adaptor", url = "${review.url}", configuration = FeignFormDataSupportConfig.class)
 public interface ReviewAdaptor {
@@ -27,7 +26,7 @@ public interface ReviewAdaptor {
 	/**
 	 * 리뷰 수정
 	 */
-	@PutMapping("/{reviewId}")
-	ResponseEntity<Void> updateReview(@PathVariable long reviewId, @RequestBody RequestUpdateReviewDTO request);
+	@PutMapping(value = "/{reviewId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	ResponseEntity<ResponseUpdateReviewDTO> updateReview(@PathVariable long reviewId, @RequestPart("reviewContent") String reviewContent, @RequestPart("reviewImage") MultipartFile reviewImage);
 
 }
