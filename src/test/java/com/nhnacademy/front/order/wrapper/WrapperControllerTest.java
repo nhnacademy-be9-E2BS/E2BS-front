@@ -2,18 +2,19 @@ package com.nhnacademy.front.order.wrapper;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,12 +23,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.wrapper.controller.WrapperController;
 import com.nhnacademy.front.order.wrapper.model.dto.request.RequestModifyWrapperDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
-import com.nhnacademy.front.product.category.service.UserCategoryService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = WrapperController.class)
@@ -41,10 +42,12 @@ class WrapperControllerTest {
 	private WrapperService wrapperService;
 
 	@MockitoBean
-	private UserCategoryService userCategoryService;
+	private CategoryInterceptor categoryInterceptor;
 
-	@MockitoBean
-	private RedisTemplate<String, Object> redisTemplate;
+	@BeforeEach
+	void setUp() throws Exception {
+		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+	}
 
 	@Autowired
 	private ObjectMapper objectMapper;
