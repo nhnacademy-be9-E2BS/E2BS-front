@@ -23,7 +23,7 @@ import com.nhnacademy.front.product.tag.execption.TagGetProcessException;
 import com.nhnacademy.front.product.tag.execption.TagUpdateProcessException;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
-import com.nhnacademy.front.product.tag.service.Impl.TagServiceImpl;
+import com.nhnacademy.front.product.tag.service.impl.TagServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceTest {

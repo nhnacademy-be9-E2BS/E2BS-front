@@ -39,11 +39,6 @@ public class ReviewController {
 	private final ReviewService reviewService;
 
 
-	@GetMapping("/products/{productId}/reviews/register")
-	public String createReviewForm() {
-		return "review/review-register";
-	}
-
 	@PostMapping("/reviews")
 	public ResponseEntity<Void> createReview(@Validated @ModelAttribute RequestCreateReviewDTO  requestDto, BindingResult bindingResult,
 								HttpServletRequest request) {
@@ -67,14 +62,6 @@ public class ReviewController {
 
 		reviewService.updateReview(reviewId, requestDto);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-	}
-
-	@GetMapping("/customers/reviews")
-	public String getReviewsByCustomer(@PageableDefault(size = 5) Pageable pageable, Model model) {
-		// PageResponse<ResponseReviewPageDTO> reviewsByCustomer = reviewService.getReviewsByCustomer(customerId, pageable);
-		//
-		// model.addAttribute("reviewsByCustomer", reviewsByCustomer);
-		return "review/customer-review";
 	}
 
 	@GetMapping("/products/{productId}/reviews")
