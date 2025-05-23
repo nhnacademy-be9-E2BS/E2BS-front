@@ -78,10 +78,10 @@
                 <div class="info-box">
                     <h3>회원 등급</h3>
                     <p th:switch="${rankName}">
-                        <span th:case="NORMAL" th:class="'badge-normal'">일반</span>
-                        <span th:case="ROYAL" th:class="'badge-royal'">로얄</span>
-                        <span th:case="GOLD" th:class="'badge-gold'">골드</span>
-                        <span th:case="PLATINUM" th:class="'badge-platinum'">플래티넘</span>
+                        <a th:href="@{/mypage/rank}" th:case="NORMAL" th:class="'badge-normal'">일반</a>
+                        <a th:href="@{/mypage/rank}" th:case="ROYAL" th:class="'badge-royal'">로얄</a>
+                        <a th:href="@{/mypage/rank}" th:case="GOLD" th:class="'badge-gold'">골드</a>
+                        <a th:href="@{/mypage/rank}" th:case="PLATINUM" th:class="'badge-platinum'">플래티넘</a>
                         <span th:case="*">-</span>
                     </p>
                 </div>
