@@ -3,7 +3,6 @@ package com.nhnacademy.front.product.category.controller;
 import java.util.List;
 
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
@@ -12,7 +11,7 @@ import com.nhnacademy.front.product.category.service.UserCategoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
-@ControllerAdvice
+//@ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalHeaderCategoryAdvice {
 
@@ -30,7 +29,7 @@ public class GlobalHeaderCategoryAdvice {
 			Object cached = redisTemplate.opsForValue().get("Categories::header");
 			if (cached instanceof List<?>) {
 				@SuppressWarnings("unchecked")
-				List<ResponseCategoryDTO> categoryDTOs = (List<ResponseCategoryDTO>) cached;
+				List<ResponseCategoryDTO> categoryDTOs = (List<ResponseCategoryDTO>)cached;
 				return categoryDTOs;
 			}
 		}
