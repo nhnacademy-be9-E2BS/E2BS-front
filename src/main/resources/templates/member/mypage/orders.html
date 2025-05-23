@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/mypage-layout}">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <h2>주문 조회</h2>
+
+            <!-- 조회 영역 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>주문 목록</h4>
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                        <thead>
+                        <tr>
+                            <th style="width: 15%;">주문 일시</th>
+                            <th style="width: 15%;">희망 수령일</th>
+                            <th style="width: 20%;">주문 코드</th>
+                            <th style="width: 10%;">주문 금액</th>
+                            <th style="width: 10%;">상태</th>
+                            <th style="width: 10%;">결제 여부</th>
+                            <th style="width: 10%;">액션</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td>
+                                <span th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd')}"></span>
+                                <span th:text="${#temporals.format(order.createdAt, 'HH:mm:ss')}"></span>
+                            </td>
+                            <td th:text="${order.receiveDate}"></td>
+                            <td th:text="${order.orderCode}"
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></td>
+                            <td th:text="${order.paymentAmount} + ${order.pointAmount}"></td>
+                            <td th:text="${order.state}"></td>
+                            <td th:text="${order.paid}"></td>
+                            <td>
+                                <a th:href="'/mypage/orders/'+${order.orderCode}">상세 보기</a>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination" th:if="${orders.totalPages > 0}">
+                                    <!-- 처음 버튼 -->
+                                    <li class="page-item" th:classappend="${!orders.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/orders'(page=0, size=5)}">처음</a>
+                                    </li>
+
+                                    <!-- 전체 페이지 번호 출력 -->
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}"
+                                        th:classappend="${i == orders.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/orders'(page=${i}, size=5)}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <!-- 마지막 버튼 -->
+                                    <li class="page-item" th:classappend="${!orders.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/orders'(page=${orders.totalPages - 1}, size=5)}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+
+        </script>
+    </section>
+</div>
+
+</body>
+</html>

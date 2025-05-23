@@ -1,22 +1,35 @@
 package com.nhnacademy.front.order.order.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -121,5 +134,42 @@ public class OrderController {
 	@PostMapping("/order/cancel")
 	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
 		return orderService.cancelOrder(orderId);
+	}
+
+	@JwtTokenCheck
+	@GetMapping("/mypage/orders")
+	public String getMemberOrders(Model model, HttpServletRequest request,
+		@PageableDefault(page = 0, size = 10) Pageable pageable) {
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+
+		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByMemberId(pageable, memberId);
+		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
+		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
+		model.addAttribute("orders", orders);
+		return "member/mypage/orders";
+	}
+
+	@JwtTokenCheck
+	@GetMapping("/mypage/orders/{orderCode}")
+	public String getMemberOrderDetails(Model model, @PathVariable String orderCode) {
+		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);
+		ResponseOrderWrapperDTO responseOrder = response.getBody();
+		ResponseOrderDTO order = responseOrder.getOrder();
+		List<ResponseOrderDetailDTO> orderDetails = responseOrder.getOrderDetails();
+
+		long productAmount = 0;
+		for (ResponseOrderDetailDTO orderDetail : orderDetails) {
+			productAmount += orderDetail.getOrderDetailPerPrice() * orderDetail.getOrderQuantity();
+			// 포장지가 있다면 포장지 가격도 포함
+			if (orderDetail.getWrapperPrice() != null) {
+				productAmount += orderDetail.getWrapperPrice() * orderDetail.getOrderQuantity();
+			}
+		}
+
+		model.addAttribute("order", order);
+		model.addAttribute("orderDetails", orderDetails);
+		model.addAttribute("productAmount", productAmount);
+
+		return "member/mypage/orderDetails";
 	}
 }
