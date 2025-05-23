@@ -20,8 +20,7 @@ public class TestIndexController {
 	@GetMapping("/")
 	public String index(HttpServletRequest request, Model model) {
 
-		String memberName = memberService.getMemberName(request);
-		model.addAttribute("memberName", memberName);
+		model.addAttribute("memberName", "회원 이름");
 
 		return "home";
 	}
