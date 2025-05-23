@@ -28,7 +28,7 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.tag.controller.TagController;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
-import com.nhnacademy.front.product.tag.service.Impl.TagServiceImpl;
+import com.nhnacademy.front.product.tag.service.impl.TagServiceImpl;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = TagController.class)

@@ -1,4 +1,4 @@
-package com.nhnacademy.front.product.tag.service.Impl;
+package com.nhnacademy.front.product.tag.service.impl;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

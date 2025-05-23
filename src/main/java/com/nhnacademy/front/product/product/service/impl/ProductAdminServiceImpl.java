@@ -1,4 +1,4 @@
-package com.nhnacademy.front.product.product.service.Impl;
+package com.nhnacademy.front.product.product.service.impl;
 
 import java.util.List;
 
