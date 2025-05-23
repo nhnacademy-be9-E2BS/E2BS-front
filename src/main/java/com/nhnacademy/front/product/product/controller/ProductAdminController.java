@@ -2,6 +2,8 @@ package com.nhnacademy.front.product.product.controller;
 
 import java.util.List;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,6 +27,8 @@ import com.nhnacademy.front.product.category.model.dto.response.ResponseCategory
 import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
+import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
+import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
@@ -42,6 +46,7 @@ public class ProductAdminController {
 	private final ProductService productService;
 	private final AdminCategoryService adminCategoryService;
 	private final TagService tagService;
+	private final AdminCategoryService adminCategoryService;
 
 	
 
@@ -50,7 +55,10 @@ public class ProductAdminController {
 	 * 관리자 -> 도서 등록
 	 */
 	@GetMapping("/register")
-	public String getProducts() {
+	public String getProducts(Model model) {
+		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+		model.addAttribute("categories", categories);
+
 		return "admin/product/books/register";
 	}
 
