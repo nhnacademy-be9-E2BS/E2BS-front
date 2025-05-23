@@ -1,12 +1,15 @@
 package com.nhnacademy.front.order.order.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 
@@ -47,6 +50,14 @@ public class OrderService {
 	 */
 	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) throws FeignException {
 		return orderAdaptor.cancelOrder(orderId);
+	}
+
+	/**
+	 * 해당 회원의 주문 목록을 가져오는 메서드
+	 */
+	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, String memberId)
+		throws FeignException {
+		return orderAdaptor.getOrdersByMemberId(pageable, memberId);
 	}
 
 	/**
