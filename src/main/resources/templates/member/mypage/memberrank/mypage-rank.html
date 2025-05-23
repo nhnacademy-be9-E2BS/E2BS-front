@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/mypage-layout}">
+<body>
+<div layout:fragment="content">
+    <h2>마이페이지</h2>
+    <section>
+        <div class="container" style="padding: 20px;">
+            <style>
+                .grade-banner {
+                    background-color: #e8f5e9;
+                    border-left: 6px solid #66bb6a;
+                    padding: 20px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                }
+
+                .grade-banner strong {
+                    color: #2e7d32;
+                }
+
+                .progress-bar {
+                    background-color: #c8e6c9;
+                    height: 8px;
+                    border-radius: 4px;
+                    margin-top: 10px;
+                    position: relative;
+                }
+
+                .progress-fill {
+                    background-color: #66bb6a;
+                    height: 100%;
+                    width: 40%; /* 동적으로 설정 가능 */
+                    border-radius: 4px;
+                }
+
+                .grade-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 30px;
+                }
+
+                .grade-table th, .grade-table td {
+                    border: 1px solid #dee2e6;
+                    padding: 15px;
+                    text-align: center;
+                }
+
+                .grade-table th {
+                    background-color: #f8f9fa;
+                }
+
+                .badge-normal {
+                    color: #388e3c;
+                    font-weight: bold;
+                }
+
+                .badge-royal {
+                    color: #5e35b1;
+                    font-weight: bold;
+                }
+
+                .badge-gold {
+                    color: #f9a825;
+                    font-weight: bold;
+                }
+
+                .badge-platinum {
+                    color: #1e88e5;
+                    font-weight: bold;
+                }
+            </style>
+
+            <!-- 등급 배너 -->
+            <div class="grade-banner">
+                <p>
+                    <strong th:text="${memberName} + ' 님의 이번 달 등급은 '"></strong>
+                    <span th:switch="${rankName}">
+                        <strong th:case="NORMAL" class="'badge-normal'">일반</strong>
+                        <strong th:case="ROYAL" class="'badge-royal'">로얄</strong>
+                        <strong th:case="GOLD" class="'badge-gold'">골드</strong>
+                        <strong th:case="PLATINUM" class="'badge-platinum'">플래티넘</strong>
+                    </span>
+                    입니다.
+                </p>
+                <p>
+                    <!--                    <span th:text="${remainingAmount} + '원만 더 구매하면 실버 달성!'"></span>-->
+                </p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%;"></div> <!-- 구매 누적률에 따라 조정 -->
+                </div>
+            </div>
+
+            <!-- 등급 테이블 -->
+            <table class="grade-table">
+                <thead>
+                <tr>
+                    <th>등급</th>
+                    <th>선정 기준</th>
+                    <th>온라인 혜택</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="rank : ${memberRanks}">
+                    <td th:switch="${rank.rankName.name()}">
+                        <span th:case="NORMAL" class="'badge-normal'">일반<br>(N)</span>
+                        <span th:case="ROYAL" class="'badge-royal'">로얄<br>(R)</span>
+                        <span th:case="GOLD" class="'badge-gold'">골드<br>(G)</span>
+                        <span th:case="PLATINUM" class="'badge-platinum'">플래티넘<br>(P)</span>
+                    </td>
+                    <td th:text="${#numbers.formatInteger(rank.memberRankRequireAmount, 0, 'COMMA')} + '원 이상'"></td>
+                    <td>
+                        <span th:text="'상품별 적립률 + ' + ${rank.memberRankTierBonusRate} + '% 추가 적립'"></span><br>
+                        (5만원 이상 구매 시)
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+</div>
+</body>
+</html>

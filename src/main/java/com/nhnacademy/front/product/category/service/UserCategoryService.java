@@ -31,7 +31,6 @@ public class UserCategoryService {
 			if (!response.getStatusCode().is2xxSuccessful()) {
 				throw new CategoryGetProcessException("카테고리 헤더 조회 실패");
 			}
-			log.info(response.getBody() + "");
 			return response.getBody();
 		} catch (FeignException e) {
 			throw new CategoryGetProcessException("카테고리 헤더 조회 실패");

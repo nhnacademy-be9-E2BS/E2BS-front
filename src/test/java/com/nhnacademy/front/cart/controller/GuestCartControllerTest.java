@@ -12,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -26,7 +25,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartItemsForGues
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForGuestDTO;
 import com.nhnacademy.front.cart.service.GuestCartService;
-import com.nhnacademy.front.product.category.service.UserCategoryService;
+import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @ActiveProfiles("dev")
@@ -40,23 +39,23 @@ class GuestCartControllerTest {
 	private GuestCartService guestCartService;
 
 	@MockitoBean
-	private UserCategoryService userCategoryService;
+	private CategoryInterceptor categoryInterceptor;
 
-	@MockitoBean
-	private RedisTemplate<String, Object> redisTemplate;
+	@BeforeEach
+	void setUp() throws Exception {
+		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+	}
 
 	@Autowired
 	private ObjectMapper objectMapper;
 
 	private MockHttpSession session;
 
-
 	@BeforeEach
 	void setup() {
 		session = new MockHttpSession();
 		session.setAttribute("JSESSIONID", "test-session-id");
 	}
-
 
 	@Test
 	@DisplayName("POST /guests/carts/items - 게스트 장바구니 항목 추가 테스트")

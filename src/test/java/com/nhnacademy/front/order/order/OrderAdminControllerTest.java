@@ -7,13 +7,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,6 +21,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.controller.OrderAdminController;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
@@ -28,7 +29,6 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDT
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderAdminService;
 import com.nhnacademy.front.order.order.service.OrderService;
-import com.nhnacademy.front.product.category.service.UserCategoryService;
 
 @WithMockUser(username = "admin", roles = {"ADMIN", "MEMBER", "USER"})
 @WebMvcTest(controllers = OrderAdminController.class)
@@ -45,10 +45,12 @@ class OrderAdminControllerTest {
 	private OrderService orderService;
 
 	@MockitoBean
-	private UserCategoryService userCategoryService;
+	private CategoryInterceptor categoryInterceptor;
 
-	@MockitoBean
-	private RedisTemplate<String, Object> redisTemplate;
+	@BeforeEach
+	void setUp() throws Exception {
+		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+	}
 
 	@Autowired
 	private ObjectMapper objectMapper;
