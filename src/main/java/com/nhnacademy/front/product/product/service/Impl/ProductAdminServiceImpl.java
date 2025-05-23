@@ -31,14 +31,10 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 * product를 back에서 저장 (관계 테이블들도)
 	 */
 	@Override
-	public void createProduct(RequestProductDTO request) {
-		try {
-			ResponseEntity<Void> response = productAdminAdaptor.postCreateProduct(request);
+	public void createProduct(RequestProductDTO request) throws FeignException {
+		ResponseEntity<Void> response = productAdminAdaptor.postCreateProduct(request);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductCreateProcessException("도서 등록 실패");
-			}
-		} catch (FeignException e) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductCreateProcessException("도서 등록 실패");
 		}
 	}
@@ -47,36 +43,26 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 * 전체 product 리스트 페이징 조회
 	 */
 	@Override
-	public PageResponse<ResponseProductReadDTO> getProducts(Pageable pageable) {
-		try {
-			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productAdminAdaptor.getProducts(pageable);
+	public PageResponse<ResponseProductReadDTO> getProducts(Pageable pageable) throws FeignException {
+		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productAdminAdaptor.getProducts(pageable);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("전체 도서 조회 실패");
-			}
-			return response.getBody();
-		} catch (FeignException e) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("전체 도서 조회 실패");
 		}
-
+		return response.getBody();
 	}
 
 	/**
 	 * order 전용 - 도서 여러권 리스트 조회
 	 */
 	@Override
-	public List<ResponseProductReadDTO> getProducts(List<Long> productIds) {
-		try {
-			ResponseEntity<List<ResponseProductReadDTO>> response = productAdminAdaptor.getProducts(productIds);
+	public List<ResponseProductReadDTO> getProducts(List<Long> productIds) throws FeignException {
+		ResponseEntity<List<ResponseProductReadDTO>> response = productAdminAdaptor.getProducts(productIds);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("order 전용 리스트 조회 실패");
-			}
-			return response.getBody();
-		} catch (FeignException e) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("order 전용 리스트 조회 실패");
 		}
-
+		return response.getBody();
 	}
 
 	/**
@@ -84,67 +70,47 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 */
 	@Override
 	public void updateProduct(long productId, RequestProductDTO request) throws FeignException {
-		try {
-			ResponseEntity<Void> response = productAdminAdaptor.putUpdateProduct(productId, request);
+		ResponseEntity<Void> response = productAdminAdaptor.putUpdateProduct(productId, request);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductUpdateProcessException("도서 정보 수정 실패");
-			}
-		} catch (FeignException e) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductUpdateProcessException("도서 정보 수정 실패");
 		}
-
 	}
 
 	/**
 	 * 도서 재고 수정
 	 */
 	@Override
-	public void updateProductStock(long productId, RequestProductStockUpdateDTO request) {
-		try {
-			ResponseEntity<Void> response = productAdminAdaptor.putUpdateProductStock(productId, request);
+	public void updateProductStock(long productId, RequestProductStockUpdateDTO request) throws FeignException {
+		ResponseEntity<Void> response = productAdminAdaptor.putUpdateProductStock(productId, request);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductUpdateProcessException("도서 재고 수정 실패");
-			}
-		} catch (FeignException e) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductUpdateProcessException("도서 재고 수정 실패");
 		}
-
 	}
 
 	/**
 	 * 도서 판매가 수정
 	 */
 	@Override
-	public void updateProductSalePrice(long productId, RequestProductSalePriceUpdateDTO request) {
-		try {
-			ResponseEntity<Void> response = productAdminAdaptor.putUpdateProductSalePrice(productId, request);
+	public void updateProductSalePrice(long productId, RequestProductSalePriceUpdateDTO request) throws FeignException {
+		ResponseEntity<Void> response = productAdminAdaptor.putUpdateProductSalePrice(productId, request);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductUpdateProcessException("도서 판매가 수정 실패");
-			}
-		} catch (FeignException e) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductUpdateProcessException("도서 판매가 수정 실패");
 		}
-
 	}
 
 	/**
 	 * Coupon 전용 - Sale중인 전체 도서 페이지로 조회
 	 */
 	@Override
-	public PageResponse<ResponseProductCouponDTO> getProductsToCoupon(Pageable pageable){
-		try {
-			ResponseEntity<PageResponse<ResponseProductCouponDTO>> response = productAdminAdaptor.getProductsToCoupon(pageable);
+	public PageResponse<ResponseProductCouponDTO> getProductsToCoupon(Pageable pageable) throws FeignException {
+		ResponseEntity<PageResponse<ResponseProductCouponDTO>> response = productAdminAdaptor.getProductsToCoupon(pageable);
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("coupon 전용 Sale 상태 도서 리스트 조회 실패");
-			}
-			return response.getBody();
-		} catch (FeignException e) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("coupon 전용 Sale 상태 도서 리스트 조회 실패");
 		}
-
+		return response.getBody();
 	}
 }
