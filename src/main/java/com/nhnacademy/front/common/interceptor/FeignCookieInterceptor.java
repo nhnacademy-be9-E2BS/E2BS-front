@@ -19,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FeignCookieInterceptor implements RequestInterceptor {
+	private static final String ROOT_URL = "/";
+	private static final String LOGIN_URL = "/login";
+	private static final String ADMIN_LOGIN_URL = "/admin/login";
+	private static final String REGISTER_URL = "/register";
 
 	@Override
 	public void apply(RequestTemplate requestTemplate) {
@@ -34,8 +38,8 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 
 		if (newCookie.isEmpty()) {
 			String path = request.getRequestURI();
-			if (path.equals("/") || path.startsWith("/login") || path.startsWith("/register") ||
-				path.startsWith("/admin/login")) {
+			if (path.equals(ROOT_URL) || path.startsWith(LOGIN_URL) || path.startsWith(REGISTER_URL) ||
+				path.startsWith(ADMIN_LOGIN_URL)) {
 				return;
 			}
 
@@ -54,8 +58,6 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 			if (cookieHeaders.toString().isEmpty()) {
 				throw new LoginRedirectException("로그인을 다시 해주세요");
 			}
-
-			log.info("FeignCookieInterceptor:{}", cookieHeaders.toString());
 
 			requestTemplate.header(JwtRule.JWT_ISSUE_HEADER.getValue(), cookieHeaders.toString());
 			return;
