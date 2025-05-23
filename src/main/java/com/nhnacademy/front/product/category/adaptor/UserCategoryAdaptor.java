@@ -15,6 +15,6 @@ public interface UserCategoryAdaptor {
 	@GetMapping
 	ResponseEntity<List<ResponseCategoryDTO>> getCategoriesToDepth3();
 
-	@GetMapping("{/categoryId}")
+	@GetMapping("/{categoryId}")
 	ResponseEntity<List<ResponseCategoryDTO>> getCategoriesById(@PathVariable("categoryId") Long categoryId);
 }

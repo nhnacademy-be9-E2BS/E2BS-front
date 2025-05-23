@@ -2,12 +2,14 @@ package com.nhnacademy.front.product.publisher;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,8 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.publisher.controller.PublisherController;
 import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
@@ -39,7 +41,12 @@ class PublisherControllerTest {
 	private PublisherService publisherService;
 
 	@MockitoBean
-	private UserCategoryService userCategoryService;
+	private CategoryInterceptor categoryInterceptor;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+	}
 
 	@Autowired
 	private ObjectMapper objectMapper;
