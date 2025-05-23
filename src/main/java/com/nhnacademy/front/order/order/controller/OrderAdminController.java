@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
@@ -29,6 +30,7 @@ public class OrderAdminController {
 	private final OrderAdminService orderAdminService;
 	private final OrderService orderService;
 
+	@JwtTokenCheck
 	@GetMapping("/admin/settings/orders")
 	public String getOrders(Model model, @PageableDefault(page = 0, size = 10) Pageable pageable,
 		@RequestParam(required = false) Long status) {
@@ -44,11 +46,13 @@ public class OrderAdminController {
 		return "admin/order/ordersManagement";
 	}
 
+	@JwtTokenCheck
 	@PostMapping("/admin/settings/orders/{orderCode}")
 	public ResponseEntity<Void> startDelivery(@PathVariable String orderCode) {
 		return orderAdminService.startDelivery(orderCode);
 	}
 
+	@JwtTokenCheck
 	@GetMapping("/admin/settings/orders/{orderCode}")
 	public String getOrderDetails(Model model, @PathVariable String orderCode) {
 		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);

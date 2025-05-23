@@ -16,6 +16,7 @@ import com.nhnacademy.front.account.member.exception.NotFoundMemberIdException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberRankNameException;
 import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordException;
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
+import com.nhnacademy.front.account.memberrank.exception.NotFoundMemberRankException;
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.exception.EmptyResponseException;
 import com.nhnacademy.front.common.exception.LoginRedirectException;
@@ -39,7 +40,8 @@ public class WebAdviceController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 
-	@ExceptionHandler({NotFoundMemberIdException.class, NotFoundMemberRankNameException.class})
+	@ExceptionHandler({NotFoundMemberIdException.class, NotFoundMemberRankNameException.class,
+		NotFoundMemberRankException.class})
 	public ResponseEntity<String> notFoundMemberIdException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}

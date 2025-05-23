@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthService {
 
 	private final AuthAdaptor authAdaptor;
-	private static final int refreshExpiration = 10800000;
+	private static final int REFRESH_EXPIRATION = 10800000;
 
 	/**
 	 * authAdaptor 를 이용하여 auth 에 응답을 요청
@@ -63,7 +63,7 @@ public class AuthService {
 			accessCookie.setPath("/");
 			accessCookie.setSecure(true);
 			accessCookie.setHttpOnly(true);
-			accessCookie.setMaxAge(refreshExpiration);
+			accessCookie.setMaxAge(REFRESH_EXPIRATION);
 			response.addCookie(accessCookie);
 
 			request.setAttribute("access-refresh", token);
