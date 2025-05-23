@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="categoryCheckbox(category, prefix)">
+    <div class="form-check ms-2">
+        <th:block th:if="${category.children != null and !category.children.isEmpty()}">
+            <!-- 자식이 있는 경우: 체크박스 대신 라벨만 -->
+            <label class="form-label fw-bold" th:text="${prefix + category.categoryName}"></label>
+        </th:block>
+
+        <th:block th:unless="${category.children != null and !category.children.isEmpty()}">
+            <!-- 자식이 없는 경우에만 체크박스 렌더링 -->
+            <input class="form-check-input category-checkbox"
+                   type="checkbox"
+                   th:id="'cat-' + ${category.categoryId}"
+                   th:name="categoryIds"
+                   th:value="${category.categoryId}"
+                   onchange="limitCategorySelection(this)"
+                   th:checked="${book.categoryIds != null} ? ${book.categoryIds.contains(category.categoryId)} : false">
+            <label class="form-check-label"
+                   th:for="'cat-' + ${category.categoryId}"
+                   th:text="${prefix + category.categoryName}">
+            </label>
+        </th:block>
+    </div>
+
+    <!-- 자식 카테고리 재귀 -->
+    <th:block th:if="${category.children != null and !category.children.isEmpty()}">
+        <th:block th:each="child : ${category.children}">
+            <th:block th:replace="fragments/categoryDropdownCheckboxFragment :: categoryCheckbox(category=${child}, prefix='  ' + ${prefix})" />
+        </th:block>
+    </th:block>
+</th:block>
+</body>
+</html>

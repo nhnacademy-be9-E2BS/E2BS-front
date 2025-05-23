@@ -1,5 +1,7 @@
 package com.nhnacademy.front.product.product.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,11 +22,18 @@ import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
+import com.nhnacademy.front.product.category.service.AdminCategoryService;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
+import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
+import com.nhnacademy.front.product.tag.service.TagService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +44,8 @@ public class ProductAdminController {
 
 	private final ProductAdminService productAdminService;
 	private final ProductService productService;
+	private final AdminCategoryService adminCategoryService;
+	private final TagService tagService;
 
 	/**
 	 * 관리자 페이지 -> 전체 도서 리스트 조회
@@ -112,5 +123,42 @@ public class ProductAdminController {
 		}
 		productAdminService.updateProductSalePrice(bookId, request);
 		return ResponseEntity.ok().build();
+	}
+
+
+	/**
+	 * 관리자가 알라딘 api로 도서 조회
+	 */
+
+	@GetMapping("/aladdin/search")
+	public String searchProducts(@ModelAttribute RequestProductApiSearchDTO request,@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
+		PageResponse<ResponseProductsApiSearchDTO> response = productAdminService.getProductsApi(request, pageable);
+		Page<ResponseProductsApiSearchDTO> products = PageResponseConverter.toPage(response);
+		model.addAttribute("products", products);
+		return "admin/product/books/books-api-search";
+	}
+
+
+	@GetMapping("/search")
+	public String showSearchForm() {
+		return "admin/product/search";
+	}
+
+	@PostMapping("/aladdin/register")
+	public String showRegisterForm(@ModelAttribute RequestProductApiCreateDTO dto, Model model) {
+		model.addAttribute("book", dto);
+
+		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+		model.addAttribute("categories", categories);
+
+		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
+		model.addAttribute("tags", tags);
+		return "/admin/product/books/books-api-register";
+	}
+
+	@PostMapping("/aladdin/register/submit")
+	public String submitBook(@ModelAttribute RequestProductApiCreateDTO dto) {
+		productAdminService.createProductApi(dto);
+		return "redirect:/admin/settings/books/search";
 	}
 }

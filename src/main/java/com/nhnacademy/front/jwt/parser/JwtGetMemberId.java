@@ -13,6 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class JwtGetMemberId {
 
+	private JwtGetMemberId() {
+	}
+
 	public static String jwtGetMemberId(HttpServletRequest request) {
 		String accessToken = "";
 

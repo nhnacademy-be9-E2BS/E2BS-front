@@ -37,18 +37,10 @@ public class JwtTokenCheckAop {
 		try {
 			return joinPoint.proceed();
 		} catch (FeignException.Unauthorized ex) {
-
-			String accessToken = "";
 			String refreshToken = "";
-
-			Cookie[] cookies = request.getCookies();
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if (cookie.getName().equals(JwtRule.JWT_ISSUE_HEADER.getValue())) {
-						accessToken = cookie.getValue();
-						break;
-					}
-				}
+			String accessToken = extractAccessTokenFromCookie();
+			if (accessToken == null) {
+				throw new LoginRedirectException(UNAUTHORIZED_MESSAGE);
 			}
 
 			Long exp = JwtExpParser.getExp(accessToken);
@@ -78,6 +70,21 @@ public class JwtTokenCheckAop {
 			return joinPoint.proceed();
 		}
 
+	}
+
+	private String extractAccessTokenFromCookie() {
+		Cookie[] cookies = request.getCookies();
+		if (cookies == null) {
+			return null;
+		}
+
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(JwtRule.JWT_ISSUE_HEADER.getValue())) {
+				return cookie.getValue();
+			}
+		}
+
+		return null;
 	}
 
 }

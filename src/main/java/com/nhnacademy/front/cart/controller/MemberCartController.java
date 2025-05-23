@@ -31,23 +31,24 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class MemberCartController {
+	private static final String JWT_TOKEN_NULL_MESSAGE = "JWT token is null";
 
 	private final MemberCartService memberCartService;
-
 
 	/**
 	 * 회원 장바구니 항목 추가
 	 */
 	@JwtTokenCheck
 	@PostMapping("/members/carts/items")
-	public ResponseEntity<Void> memberAddToCart(HttpServletRequest request, @Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult) {
+	public ResponseEntity<Void> memberAddToCart(HttpServletRequest request,
+		@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		if (Objects.isNull(memberId)) {
-			throw new JwtException("JWT token is null");
+			throw new JwtException(JWT_TOKEN_NULL_MESSAGE);
 		}
 
 		requestDto.setMemberId(memberId);
@@ -65,7 +66,7 @@ public class MemberCartController {
 	public String getCartsByMember(HttpServletRequest request, Model model) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		if (Objects.isNull(memberId)) {
-			throw new JwtException("JWT token is null");
+			throw new JwtException(JWT_TOKEN_NULL_MESSAGE);
 		}
 
 		List<ResponseCartItemsForMemberDTO> cartItemsByMember = memberCartService.getCartItemsByMember(memberId);
@@ -86,7 +87,8 @@ public class MemberCartController {
 	 */
 	@JwtTokenCheck
 	@PutMapping("/members/carts/items/{cartItemsId}")
-	public ResponseEntity<Void> updateCartItemForMember(@PathVariable long cartItemsId, @Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult) {
+	public ResponseEntity<Void> updateCartItemForMember(@PathVariable long cartItemsId,
+		@Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -113,7 +115,7 @@ public class MemberCartController {
 	public ResponseEntity<Void> deleteCartForMember(HttpServletRequest request) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		if (Objects.isNull(memberId)) {
-			throw new JwtException("JWT token is null");
+			throw new JwtException(JWT_TOKEN_NULL_MESSAGE);
 		}
 
 		memberCartService.deleteCartForMember(memberId);

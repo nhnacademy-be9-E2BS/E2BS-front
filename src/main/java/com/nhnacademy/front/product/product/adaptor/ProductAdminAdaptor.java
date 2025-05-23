@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 
 @FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
 public interface ProductAdminAdaptor {
@@ -42,5 +45,11 @@ public interface ProductAdminAdaptor {
 
 	@GetMapping("/states/sale")
 	ResponseEntity<PageResponse<ResponseProductCouponDTO>> getProductsToCoupon(@SpringQueryMap Pageable pageable);
+
+	@GetMapping("/aladdin/search")
+	ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> searchProducts(@SpringQueryMap RequestProductApiSearchDTO request, Pageable pageable);
+
+	@PostMapping("/aladdin/register")
+	ResponseEntity<Void> postCreateProductByApi(@RequestBody RequestProductApiCreateDTO request);
 
 }

@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 
 public interface ProductAdminService {
 	//관리자 - 도서 DB에 저장
@@ -32,5 +35,9 @@ public interface ProductAdminService {
 
 	//Coupon전용 - Sale중인 전체 도서 페이지로 조회
 	PageResponse<ResponseProductCouponDTO> getProductsToCoupon(Pageable pageable);
+
+	PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable);
+
+	void createProductApi(RequestProductApiCreateDTO request);
 
 }
