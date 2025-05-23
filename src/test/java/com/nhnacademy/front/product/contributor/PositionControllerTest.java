@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,6 +47,9 @@ class PositionControllerTest {
 
 	@MockitoBean
 	private UserCategoryService userCategoryService;
+
+	@MockitoBean
+	private RedisTemplate<String, Object> redisTemplate;
 
 	@Test
 	@DisplayName("position 등록")

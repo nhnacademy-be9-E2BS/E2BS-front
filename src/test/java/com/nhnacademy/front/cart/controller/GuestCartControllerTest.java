@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -40,6 +41,9 @@ class GuestCartControllerTest {
 
 	@MockitoBean
 	private UserCategoryService userCategoryService;
+
+	@MockitoBean
+	private RedisTemplate<String, Object> redisTemplate;
 
 	@Autowired
 	private ObjectMapper objectMapper;

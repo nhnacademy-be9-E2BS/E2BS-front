@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -45,6 +46,9 @@ class OrderAdminControllerTest {
 
 	@MockitoBean
 	private UserCategoryService userCategoryService;
+
+	@MockitoBean
+	private RedisTemplate<String, Object> redisTemplate;
 
 	@Autowired
 	private ObjectMapper objectMapper;

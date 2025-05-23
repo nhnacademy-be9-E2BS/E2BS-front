@@ -12,7 +12,9 @@ import com.nhnacademy.front.product.category.model.dto.response.ResponseCategory
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserCategoryService {
@@ -29,6 +31,7 @@ public class UserCategoryService {
 			if (!response.getStatusCode().is2xxSuccessful()) {
 				throw new CategoryGetProcessException("카테고리 헤더 조회 실패");
 			}
+			log.info(response.getBody() + "");
 			return response.getBody();
 		} catch (FeignException e) {
 			throw new CategoryGetProcessException("카테고리 헤더 조회 실패");
