@@ -22,6 +22,7 @@ import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDTO;
@@ -45,6 +46,7 @@ public class OrderController {
 	private String tossFailUrl;
 
 	private final OrderService orderService;
+	private final DeliveryFeeSevice deliveryFeeSevice;
 
 	/**
 	 * 결제 주문서 작성 페이지
@@ -54,6 +56,7 @@ public class OrderController {
 	public String getCheckOut(Model model) {
 		// 사용자가 주문하려는 상품 정보,쿠폰 내역, 포인트 정보 등을 보내줘야 함
 		// 지금은 임시 값을 넣어 확인
+		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
 		model.addAttribute("tossClientKey", tossClientKey);
 		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
 		model.addAttribute("tossFailUrl", tossFailUrl);

@@ -31,6 +31,8 @@ import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 import com.nhnacademy.front.order.order.controller.OrderController;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderDetailDTO;
@@ -53,6 +55,9 @@ class OrderControllerTest {
 
 	@MockitoBean
 	private OrderService orderService;
+
+	@MockitoBean
+	private DeliveryFeeSevice deliveryFeeSevice;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -93,6 +98,7 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("주문서 페이지 접근 확인")
 	void testGetCheckOut() throws Exception {
+		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(mock(ResponseDeliveryFeeDTO.class));
 		mockMvc.perform(get("/order"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("payment/checkout"));
