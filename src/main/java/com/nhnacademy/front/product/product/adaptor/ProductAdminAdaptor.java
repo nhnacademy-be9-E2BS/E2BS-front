@@ -25,14 +25,18 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsA
 
 @FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
 public interface ProductAdminAdaptor {
-	@PostMapping
-	ResponseEntity<Void> postCreateProduct(@RequestBody RequestProductDTO request);
 
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(@SpringQueryMap Pageable pageable);
 
 	@GetMapping("/order")
 	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
+
+	@GetMapping("/register")
+	ResponseEntity<Void> getRegisterView();
+
+	@PostMapping("/register")
+	ResponseEntity<Void> postCreateProduct(@RequestBody RequestProductDTO request);
 
 	@PutMapping("/{bookId}")
 	ResponseEntity<Void> putUpdateProduct(@PathVariable Long bookId, @RequestBody RequestProductDTO request);

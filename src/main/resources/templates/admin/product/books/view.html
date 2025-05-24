@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 목록</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .content { width: 100%; }
+        .book-list { list-style: none; padding: 0; margin: 0; }
+        .book-card {
+            display: flex;
+            align-items: stretch;
+            background: #e6f0fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+            padding: 20px 28px;
+            min-height: 150px;
+        }
+        .book-image {
+            width: 110px;
+            min-width: 110px;
+            margin-right: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .book-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #d3e0f0;
+            background: #fff;
+        }
+        .book-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+        .book-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #235;
+        }
+        .book-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            font-size: 1em;
+            color: #444;
+        }
+        .book-actions {
+            display: flex;
+            align-items: flex-start;
+            margin-left: 30px;
+        }
+        .book-actions a {
+            background: #2582e6;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background 0.2s;
+        }
+        .book-actions a:hover {
+            background: #1a5fa3;
+        }
+        .pagination {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .pagination a {
+            margin: 0 5px;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content">
+        <h2>도서 목록</h2>
+        <ul class="book-list">
+            <li class="book-card" th:each="product : ${products.content}">
+                <!-- 이미지 -->
+                <div class="book-image"
+                     th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
+                    <img th:src="${product.productImagePaths[0].productImagePath}"
+                         th:alt="${product.productTitle} + ' 표지 이미지'"
+                         onerror="this.src='https://via.placeholder.com/110x150?text=No+Image'">
+                </div>
+                <div class="book-image"
+                     th:if="${product.productImagePaths == null or #lists.isEmpty(product.productImagePaths)}">
+                    <img src="https://via.placeholder.com/110x150?text=No+Image"
+                         th:alt="${product.productTitle} + ' 표지 이미지'">
+                </div>
+                <!-- 정보 -->
+                <div class="book-info">
+                    <div class="book-title" th:text="${product.productTitle}">도서 제목</div>
+                    <div class="book-meta">
+                        <span>출판사: <span th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">출판사</span></span>
+                    </div>
+                    <div class="book-meta">
+                        <span>정가: <span th:text="${product.productRegularPrice}">0</span>원</span>
+                        <span>판매가: <span th:text="${product.productSalePrice}">0</span>원</span>
+                    </div>
+                    <div class="book-meta">
+                        <span>재고: <span th:text="${product.productStock}">0</span></span>
+                    </div>
+                </div>
+                <!-- 수정 버튼 -->
+                <div class="book-actions">
+                    <a th:href="@{/admin/settings/books/{id}(id=${product.productId})}">수정</a>
+                </div>
+            </li>
+        </ul>
+        <!-- 페이지네이션 -->
+        <div class="pagination" th:if="${products.totalPages > 1}">
+            <a th:href="@{/admin/settings/books(page=0, size=${products.size})}">처음</a>
+            <span th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}">
+                <a th:href="@{/admin/settings/books(page=${i}, size=${products.size})}"
+                   th:text="${i + 1}"
+                   th:classappend="${products.number == i} ? 'active' : ''"></a>
+            </span>
+            <a th:href="@{/admin/settings/books(page=${products.totalPages - 1}, size=${products.size})}">마지막</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
