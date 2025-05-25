@@ -479,7 +479,7 @@
                 // 지금은 외래키(배달비, 회원id)는 임의로 넣어둠
                 const order = {
                     memberCouponId: selectedCouponId,
-                    deliveryFeeId: 1,
+                    deliveryFeeId: [[${deliveryFee.deliveryFeeId}]],
                     customerId: 1,
                     orderReceiverName: document.getElementById("receiverName").value,
                     orderReceiverPhone: document.getElementById("receiverPhone").value,
@@ -832,8 +832,8 @@
             // 쿠폰 리스트 div
             const couponDivs = document.querySelectorAll("#couponList > div");
 
-            const FREE_SHIPPING_THRESHOLD = 30000;
-            const SHIPPING_COST = 5000;
+            const FREE_SHIPPING_THRESHOLD = [[${deliveryFee.deliveryFeeFreeAmount}]];
+            const SHIPPING_COST = [[${deliveryFee.deliveryFeeAmount}]];
             const MAX_POINT = parseInt(pointInput.max);
 
             // 금액에서 , 제거하기

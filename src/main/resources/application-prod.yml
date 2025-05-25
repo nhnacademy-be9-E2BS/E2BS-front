@@ -65,6 +65,11 @@ order:
     url: https://e2bs.shop/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
   order:
     url: https://e2bs.shop/api/order
+  delivery:
+    admin:
+      url: https://e2bs.shop/api/admin/deliveryFee
+    user:
+      url: https://e2bs.shop/api/deliveryFee
 
   toss:
     client-key: test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO
