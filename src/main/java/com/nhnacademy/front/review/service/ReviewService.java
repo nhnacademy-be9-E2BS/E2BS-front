@@ -12,7 +12,6 @@ import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 public interface ReviewService {
 	void createReview(RequestCreateReviewDTO request);
 	ResponseUpdateReviewDTO updateReview(long reviewId, RequestUpdateReviewDTO request);
-	PageResponse<ResponseReviewPageDTO> getReviewsByCustomer(long customerId, Pageable pageable);
 	PageResponse<ResponseReviewPageDTO> getReviewsByProduct(long productId, Pageable pageable);
 	ResponseReviewInfoDTO getReviewInfo(long productId);
 }

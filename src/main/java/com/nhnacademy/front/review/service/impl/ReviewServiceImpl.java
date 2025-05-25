@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.review.adaptor.CustomerReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ProductReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ReviewAdaptor;
 import com.nhnacademy.front.review.exception.ReviewProcessException;
@@ -24,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
-	private final CustomerReviewAdaptor customerReviewAdaptor;
 	private final ProductReviewAdaptor productReviewAdaptor;
 	private final ReviewAdaptor reviewAdaptor;
 
@@ -45,16 +43,6 @@ public class ReviewServiceImpl implements ReviewService {
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
 			throw new ReviewProcessException("리뷰 수정 실패: " + result.getStatusCode());
-		}
-		return result.getBody();
-	}
-
-	@Override
-	public PageResponse<ResponseReviewPageDTO> getReviewsByCustomer(long customerId, Pageable pageable) throws FeignException {
-		ResponseEntity<PageResponse<ResponseReviewPageDTO>> result = customerReviewAdaptor.getReviewsByCustomer(customerId, pageable);
-
-		if (!result.getStatusCode().is2xxSuccessful()) {
-			throw new ReviewProcessException("고객 리뷰 페이징 목록 조회 실패: " + result.getStatusCode());
 		}
 		return result.getBody();
 	}

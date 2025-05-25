@@ -38,7 +38,10 @@ public class ReviewController {
 
 	private final ReviewService reviewService;
 
-
+	
+	/**
+	 * 리뷰 작성
+	 */
 	@PostMapping("/reviews")
 	public ResponseEntity<Void> createReview(@Validated @ModelAttribute RequestCreateReviewDTO  requestDto, BindingResult bindingResult,
 											 HttpServletRequest request) {
@@ -54,6 +57,9 @@ public class ReviewController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
+	/**
+	 * 리뷰 수정
+	 */
 	@PutMapping("/reviews/{reviewId}")
 	public ResponseEntity<ResponseUpdateReviewDTO> updateReview(@PathVariable long reviewId, @Validated @ModelAttribute RequestUpdateReviewDTO requestDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
@@ -64,6 +70,9 @@ public class ReviewController {
 		return ResponseEntity.ok(body);
 	}
 
+	/**
+	 * 상품에 대한 리뷰 페이징 목록 조회
+	 */
 	@GetMapping("/products/{productId}/reviews")
 	public String getReviewsByProduct(@PathVariable long productId, @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
 		ResponseReviewInfoDTO reviewInfo = reviewService.getReviewInfo(productId);

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class RequestCreateReviewMetaDTO {
 
 	@NotNull
-	private long productId;
+	private Long productId;
 
 	private Long customerId;
 
@@ -20,6 +20,6 @@ public class RequestCreateReviewMetaDTO {
 	private String reviewContent;
 
 	@NotNull
-	int reviewGrade;
+	Integer reviewGrade;
 
 }

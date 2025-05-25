@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class RequestCreateReviewDTO {
 
 	@NotNull
-	private long productId;
+	private Long productId;
 
 	private Long customerId;
 
@@ -22,7 +22,7 @@ public class RequestCreateReviewDTO {
 	private String reviewContent;
 
 	@NotNull
-	int reviewGrade;
+	Integer reviewGrade;
 
 	private MultipartFile reviewImage;
 
