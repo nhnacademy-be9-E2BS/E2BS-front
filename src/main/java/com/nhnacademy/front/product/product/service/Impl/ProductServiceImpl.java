@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.adaptor.ProductAdminAdaptor;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateByQueryDTO;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
 import com.nhnacademy.front.product.product.exception.ProductUpdateProcessException;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductGetDTO;
@@ -22,6 +24,7 @@ import com.nhnacademy.front.product.product.model.dto.request.RequestProductStoc
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
 
@@ -144,7 +147,17 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable) {
-		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> response = productAdminAdaptor.searchProducts(request, pageable);
+		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> response = productAdminAdaptor.searchBooksByQuery(request, pageable);
+
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new ProductGetProcessException("도서 조회 실패");
+		}
+		return response.getBody();
+	}
+
+	@Override
+	public PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi(RequestProductApiSearchByQueryTypeDTO request, Pageable pageable) {
+		ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> response = productAdminAdaptor.listBooksByCategory(request, pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("도서 조회 실패");
@@ -159,7 +172,15 @@ public class ProductServiceImpl implements ProductService {
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductCreateProcessException("도서 등록 실패");
 		}
+	}
 
+	@Override
+	public void createProductQueryApi(RequestProductApiCreateByQueryDTO request) {
+		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductQueryByApi(request);
+
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new ProductCreateProcessException("도서 등록 실패");
+		}
 	}
 
 }

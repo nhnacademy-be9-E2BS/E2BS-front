@@ -5,22 +5,39 @@
 <body>
 <div layout:fragment="content">
 
-    <h2> 도서 검색 </h2>
+
+    <h2>📚 도서 검색</h2>
 
     <form method="GET" action="/admin/settings/books/aladdin/search" class="row g-3 mb-4">
+        <h5>🔍 키워드로 검색</h5>
         <div class="col-md-6">
             <input type="text" name="query" class="form-control" th:value="${param.query}" placeholder="검색어 입력">
         </div>
         <div class="col-md-3">
             <select name="queryType" class="form-select">
                 <option value="Title" th:selected="${param.queryType == 'Title'}">제목</option>
+                <option value="Author" th:selected="${param.queryType == 'Author'}">저자</option>
                 <option value="Publisher" th:selected="${param.queryType == 'Publisher'}">출판사</option>
-                <option value="Publisher" th:selected="${param.queryType == 'Author'}">저자</option>
-                <option value="Publisher" th:selected="${param.queryType == 'Keyword'}">제목+저자</option>
+                <option value="Keyword" th:selected="${param.queryType == 'Keyword'}">제목+저자</option>
             </select>
         </div>
         <div class="col-md-3">
             <button type="submit" class="btn btn-primary w-100">검색</button>
+        </div>
+    </form>
+
+    <form method="GET" action="/admin/settings/books/aladdin/list" class="row g-3 mb-4">
+        <h5>🔥 목록 조회 (베스트셀러 / 신간)</h5>
+        <div class="col-md-6">
+            <select name="queryType" class="form-select">
+                <option value="ItemNewAll" th:selected="${param.queryType == 'ItemNewAll'}">신간 전체</option>
+                <option value="ItemNewSpecial" th:selected="${param.queryType == 'ItemNewSpecial'}">추천 신간</option>
+                <option value="Bestseller" th:selected="${param.queryType == 'Bestseller'}">베스트셀러</option>
+                <option value="BlogBest" th:selected="${param.queryType == 'BlogBest'}">블로그 인기</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-secondary w-100">불러오기</button>
         </div>
     </form>
 

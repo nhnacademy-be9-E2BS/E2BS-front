@@ -23,20 +23,25 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.AdminCategoryService;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateByQueryDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
 import com.nhnacademy.front.product.tag.service.TagService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/settings/books")
+@Slf4j
 public class ProductAdminController {
 
 	private final ProductService productService;
@@ -100,6 +105,16 @@ public class ProductAdminController {
 		return "admin/product/books/books-api-search";
 	}
 
+	@GetMapping("/aladdin/list")
+	public String searchProductsByQuery(@ModelAttribute RequestProductApiSearchByQueryTypeDTO request,@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
+
+		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> response = productService.getProductsApi(request, pageable);
+		Page<ResponseProductsApiSearchByQueryTypeDTO> products = PageResponseConverter.toPage(response);
+		model.addAttribute("products", products);
+		model.addAttribute("queryType", request.getQueryType());
+		return "admin/product/books/books-api-search-query";
+	}
+
 
 	@GetMapping("/search")
 	public String showSearchForm() {
@@ -108,6 +123,7 @@ public class ProductAdminController {
 
 	@PostMapping("/aladdin/register")
 	public String showRegisterForm(@ModelAttribute RequestProductApiCreateDTO dto, Model model) {
+
 		model.addAttribute("book", dto);
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
@@ -118,9 +134,31 @@ public class ProductAdminController {
 		return "/admin/product/books/books-api-register";
 	}
 
+	@PostMapping("/aladdin/register/list")
+	public String showRegisterForm(@ModelAttribute RequestProductApiCreateByQueryDTO dto, Model model) {
+		log.info("here!!!!!!!!!!!!!!!!!!!m: {}", dto.getQueryType()); // ← 여기
+
+		model.addAttribute("book", dto);
+		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+		model.addAttribute("categories", categories);
+
+		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
+		model.addAttribute("tags", tags);
+		return "/admin/product/books/books-api-register-query";
+	}
+
+	@PostMapping("/aladdin/register/submit/list")
+	public String submitBook(@ModelAttribute RequestProductApiCreateByQueryDTO dto) {
+		log.info("🔍 queryType from form: {}", dto.getQueryType()); // ← 여기
+
+		productService.createProductQueryApi(dto);
+		return "redirect:/admin/settings/books/search";
+	}
+
 	@PostMapping("/aladdin/register/submit")
 	public String submitBook(@ModelAttribute RequestProductApiCreateDTO dto) {
 		productService.createProductApi(dto);
 		return "redirect:/admin/settings/books/search";
 	}
+
 }

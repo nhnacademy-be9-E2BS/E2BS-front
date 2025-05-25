@@ -36,7 +36,7 @@
 
                         <!-- 등록 버튼 -->
                         <div class="col-auto pe-3">
-                            <form th:action="@{/admin/settings/books/aladdin/register}" method="post">
+                            <form th:action="@{/admin/settings/books/aladdin/register/list}" method="post">
                                 <input type="hidden" name="publisherName" th:value="${product.publisherName}">
                                 <input type="hidden" name="productTitle" th:value="${product.productTitle}">
                                 <input type="hidden" name="productIsbn" th:value="${product.productIsbn}">
@@ -46,6 +46,9 @@
                                 <input type="hidden" name="productSalePrice" th:value="${product.productSalePrice}">
                                 <input type="hidden" name="contributors" th:value="${product.contributors}">
                                 <input type="hidden" name="productPublishedAt" th:value="${product.productPublishedAt}">
+                                <input type="hidden" name="queryType" th:value="${queryType}">
+
+
                                 <button type="submit" class="btn btn-sm btn-primary">등록</button>
                             </form>
                         </div>
