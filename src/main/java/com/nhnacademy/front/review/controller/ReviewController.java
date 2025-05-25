@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -26,7 +27,6 @@ import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
-import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 import com.nhnacademy.front.review.service.ReviewService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,13 +38,14 @@ public class ReviewController {
 
 	private final ReviewService reviewService;
 
-	
+
+
 	/**
 	 * 리뷰 작성
 	 */
 	@PostMapping("/reviews")
 	public ResponseEntity<Void> createReview(@Validated @ModelAttribute RequestCreateReviewDTO  requestDto, BindingResult bindingResult,
-											 HttpServletRequest request) {
+								HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}

@@ -26,7 +26,7 @@ import com.nhnacademy.front.cart.service.impl.GuestCartServiceImpl;
 import feign.FeignException;
 
 @ExtendWith(MockitoExtension.class)
-public class GuestCartServiceImplTest {
+class GuestCartServiceImplTest {
 
 	@Mock
 	private GuestCartAdaptor guestCartAdaptor;
@@ -34,7 +34,7 @@ public class GuestCartServiceImplTest {
 	@InjectMocks
 	private GuestCartServiceImpl guestCartService;
 
-	private final String SESSION_ID = "test-session";
+	private static final String SESSION_ID = "test-session";
 
 
 	@Test
