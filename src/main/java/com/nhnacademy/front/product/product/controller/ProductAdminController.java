@@ -136,7 +136,6 @@ public class ProductAdminController {
 
 	@PostMapping("/aladdin/register/list")
 	public String showRegisterForm(@ModelAttribute RequestProductApiCreateByQueryDTO dto, Model model) {
-		log.info("here!!!!!!!!!!!!!!!!!!!m: {}", dto.getQueryType()); // ← 여기
 
 		model.addAttribute("book", dto);
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
