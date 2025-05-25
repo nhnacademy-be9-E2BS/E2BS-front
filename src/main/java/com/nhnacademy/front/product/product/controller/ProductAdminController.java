@@ -53,8 +53,8 @@ public class ProductAdminController {
 	 * 관리자 도서 단일 조회
 	 */
 	@JwtTokenCheck
-	@GetMapping("/{bookId}")
-	public String getProductsById(@PathVariable Long bookId, Model model) {
+	@GetMapping("/register/{bookId}")
+	public String getProductById(@PathVariable Long bookId, Model model) {
 		ResponseProductReadDTO response = productService.getProduct(bookId);
 
 		model.addAttribute("product", response);
@@ -89,7 +89,7 @@ public class ProductAdminController {
 	 * 관리자가 도서를 수정
 	 */
 	@JwtTokenCheck
-	@PutMapping("/{bookId}")
+	@PutMapping("/register/{bookId}")
 	public ResponseEntity<Void> updateProduct(@Validated @RequestBody RequestProductDTO request,
 		BindingResult bindingResult, @PathVariable Long bookId) {
 		if (bindingResult.hasErrors()) {
