@@ -897,7 +897,9 @@ a {
 }
 
 .card-product__img {
-    position: relative
+    width: 188px;
+    height: 256px;
+    object-fit: cover;
 }
 
 .card-product__imgOverlay {

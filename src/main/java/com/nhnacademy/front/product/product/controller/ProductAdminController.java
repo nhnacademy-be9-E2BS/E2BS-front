@@ -60,24 +60,18 @@ public class ProductAdminController {
 		return "admin/product/books/view";
 	}
 
-	/**
-	 * 관리자 도서 단일 조회
-	 */
-	@JwtTokenCheck
-	@GetMapping("/{bookId}")
-	public String getProductsById(@PathVariable Long bookId, Model model) {
-		ResponseProductReadDTO response = productService.getProduct(bookId);
 
-		model.addAttribute("product", response);
-		return "admin/product/books/register";
-	}
 
 	/**
 	 * 관리자 도서 등록 뷰로 이동
 	 */
 	@JwtTokenCheck
 	@GetMapping("/register")
-	public String getRegisterView() {
+	public String getRegisterView(Model model) {
+		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+		model.addAttribute("categories", categories);
+		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
+		model.addAttribute("tags", tags);
 
 		return "admin/product/books/register";
 	}
@@ -98,10 +92,21 @@ public class ProductAdminController {
 	}
 
 	/**
+	 * 관리자 도서 정보 단일 조회
+	 */
+	@JwtTokenCheck
+	@GetMapping("/register/{bookId}")
+	public String getProductsById(@PathVariable Long bookId, Model model) {
+		ResponseProductReadDTO response = productService.getProduct(bookId);
+		model.addAttribute("product", response);
+		return "admin/product/books/register";
+	}
+
+	/**
 	 * 관리자가 도서를 수정
 	 */
 	@JwtTokenCheck
-	@PutMapping("/{bookId}")
+	@PutMapping("/register/{bookId}")
 	public ResponseEntity<Void> updateProduct(@Validated @RequestBody RequestProductDTO request,
 		BindingResult bindingResult, @PathVariable Long bookId) {
 		if (bindingResult.hasErrors()) {

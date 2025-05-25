@@ -31,7 +31,8 @@ button:focus {
 h1, h2, h3, h4, h5, h6 {
     font-family: "Oswald", sans-serif;
     color: #222;
-    line-height: 1.1
+    line-height: 1.1;
+    text-align: center;
 }
 
 h1, .h1 {
