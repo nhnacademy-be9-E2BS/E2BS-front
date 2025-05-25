@@ -2,6 +2,7 @@ package com.nhnacademy.front.account.member.service;
 
 import java.util.Objects;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,12 +67,16 @@ public class MemberService {
 			return null;
 		}
 
-		ResponseMemberInfoDTO memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
-		if (Objects.isNull(memberInfoDTO)) {
+		ResponseEntity<ResponseMemberInfoDTO> memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
+		if (!memberInfoDTO.getStatusCode().is2xxSuccessful()) {
 			return null;
 		}
 
-		return memberInfoDTO.getCustomer().getCustomerName();
+		if (Objects.isNull(memberInfoDTO.getBody())) {
+			return null;
+		}
+
+		return memberInfoDTO.getBody().getCustomer().getCustomerName();
 	}
 
 }

@@ -4,7 +4,7 @@
         layout:decorate="~{layouts/mypage-layout}">
 <body>
 <div layout:fragment="content">
-    <h2>마이페이지</h2>
+    <h3>회원 등급</h3>
     <section>
         <div class="container" style="padding: 20px;">
             <style>
@@ -75,7 +75,7 @@
             <!-- 등급 배너 -->
             <div class="grade-banner">
                 <p>
-                    <strong th:text="${memberName} + ' 님의 이번 달 등급은 '"></strong>
+                    <strong th:text="${memberName} + ' 님의 등급은 '"></strong>
                     <span th:switch="${rankName}">
                         <strong th:case="NORMAL" class="'badge-normal'">일반</strong>
                         <strong th:case="ROYAL" class="'badge-royal'">로얄</strong>

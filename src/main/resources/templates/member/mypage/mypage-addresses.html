@@ -3,7 +3,7 @@
       layout:decorate="~{layouts/mypage-layout}">
 <body>
 <div layout:fragment="content">
-    <h2>마이페이지</h2>
+    <h3>배송지 목록</h3>
     <section>
         <div class="container" style="padding: 20px;">
             <style>
@@ -87,7 +87,6 @@
 
             <div class="address-box-container">
                 <div class="address-header">
-                    <h3>배송지 목록</h3>
                     <button class="btn-add-address"
                             th:disabled="${#lists.size(addresses) >= 10}"
                             th:onclick="|location.href='@{/mypage/addresses/save}'|">

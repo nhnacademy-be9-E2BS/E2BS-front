@@ -19,6 +19,10 @@ spring:
       password: "*N2vya7H@muDTwdNMR!"
       database: 293
 
+home:
+  member:
+    name:
+      url: http://localhost:10232/api/home
 
 member:
   url: http://localhost:10232/api/members
