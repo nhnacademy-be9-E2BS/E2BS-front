@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.exception.EmptyResponseException;
 import com.nhnacademy.front.home.adaptor.HomeAdaptor;
-import com.nhnacademy.front.home.dto.response.ResponseHomeMemberNameDTO;
+import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
 import feign.FeignException;
@@ -20,7 +20,7 @@ public class HomeService {
 
 	private final HomeAdaptor homeAdaptor;
 
-	public String getMemberNameFromHome(HttpServletRequest request) {
+	public ResponseHomeMemberNameDTO getMemberNameFromHome(HttpServletRequest request) {
 		try {
 			String memberId = JwtGetMemberId.jwtGetMemberId(request);
 			if (Objects.isNull(memberId)) {
@@ -32,7 +32,7 @@ public class HomeService {
 				throw new EmptyResponseException("회원 이름을 가져오지 못했습니다.");
 			}
 
-			return response.getBody().getMemberName();
+			return response.getBody();
 		} catch (FeignException ex) {
 			return null;
 		}

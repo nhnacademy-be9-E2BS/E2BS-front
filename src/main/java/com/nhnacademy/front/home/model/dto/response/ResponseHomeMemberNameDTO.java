@@ -1,4 +1,6 @@
-package com.nhnacademy.front.home.dto.response;
+package com.nhnacademy.front.home.model.dto.response;
+
+import com.nhnacademy.front.account.memberrole.model.domain.MemberRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,5 +13,6 @@ public class ResponseHomeMemberNameDTO {
 
 	private String memberId;
 	private String memberName;
+	private MemberRole memberRole;
 
 }

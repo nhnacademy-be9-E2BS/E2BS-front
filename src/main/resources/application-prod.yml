@@ -24,6 +24,10 @@ member:
   mypage:
     url: https://e2bs.shop/api/mypage
 
+admin:
+  settings:
+    url: https://e2bs.shop/api/admin/settings
+
 auth:
   jwt:
     create:

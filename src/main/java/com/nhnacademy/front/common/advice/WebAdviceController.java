@@ -10,6 +10,10 @@ import com.nhnacademy.front.account.address.exception.DeleteAddressFailedExcepti
 import com.nhnacademy.front.account.address.exception.GetAddressFailedException;
 import com.nhnacademy.front.account.address.exception.SaveAddressFailedException;
 import com.nhnacademy.front.account.address.exception.UpdateAddressFailedException;
+import com.nhnacademy.front.account.admin.exception.AdminSettingsFailedException;
+import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberDeleteFailedException;
+import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFailedException;
+import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
 import com.nhnacademy.front.account.auth.exception.SaveJwtTokenProcessException;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberIdException;
@@ -36,7 +40,9 @@ public class WebAdviceController {
 	@ExceptionHandler({RegisterNotEqualsPasswordException.class, GetAddressFailedException.class,
 		SaveJwtTokenProcessException.class, EmptyResponseException.class, RegisterProcessException.class,
 		EmptyRequestException.class, ValidationFailedException.class, LoginProcessException.class,
-		SaveAddressFailedException.class, DeleteAddressFailedException.class, UpdateAddressFailedException.class})
+		SaveAddressFailedException.class, DeleteAddressFailedException.class, UpdateAddressFailedException.class,
+		AdminSettingsFailedException.class, AdminSettingsMembersFailedException.class,
+		AdminSettingsMemberUpdateFailedException.class, AdminSettingsMemberDeleteFailedException.class})
 	public ResponseEntity<String> registerNotEqualsPasswordException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}

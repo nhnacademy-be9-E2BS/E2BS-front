@@ -35,6 +35,10 @@ member:
   mypage:
     url: http://localhost:10232/api/mypage
 
+admin:
+  settings:
+    url: http://localhost:10232/api/admin/settings
+
 auth:
   jwt:
     create:
