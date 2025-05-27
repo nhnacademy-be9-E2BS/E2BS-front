@@ -1,8 +1,18 @@
 package com.nhnacademy.front.product.product.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -10,8 +20,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/books")
 public class ProductController {
-	@GetMapping
-	public String getBookDetails() {
+
+	private final ProductService productService;
+
+	/**
+	 * 사용자 - 도서 상세 페이지 조회
+	 */
+	@GetMapping("/{bookId}")
+	public String getProduct(@PathVariable Long bookId, Model model) {
+		ResponseProductReadDTO response = productService.getProduct(bookId);
+
+		model.addAttribute("product", response);
 		return "product/product-detail";
+	}
+
+	/**
+	 * 사용자 - 카테고리를 눌러서 그 카테고리에 해당하는 도서 리스트 조회 (페이징)
+	 */
+	@GetMapping("/category/{categoryId}")
+	public String getProduct(@PageableDefault(page = 0, size = 9) Pageable pageable,
+		@PathVariable Long categoryId, Model model) {
+		PageResponse<ResponseProductReadDTO> response = productService.getProductsByCategoryId(pageable, categoryId);
+		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
+
+		model.addAttribute("products", products);
+		return "product/category";
 	}
 }

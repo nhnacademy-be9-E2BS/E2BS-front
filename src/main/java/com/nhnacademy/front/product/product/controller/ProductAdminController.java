@@ -1,7 +1,5 @@
 package com.nhnacademy.front.product.product.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -18,19 +16,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
-import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
-import com.nhnacademy.front.product.category.service.AdminCategoryService;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateByQueryDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
-import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
-import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
 import com.nhnacademy.front.product.tag.service.TagService;
@@ -44,51 +37,84 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductAdminController {
 
+	private final ProductAdminService productAdminService;
 	private final ProductService productService;
 	private final AdminCategoryService adminCategoryService;
 	private final TagService tagService;
 
-	
+	/**
+	 * 관리자 페이지 -> 전체 도서 리스트 조회
+	 */
+	@JwtTokenCheck
+	@GetMapping
+	public String getProducts(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
+		PageResponse<ResponseProductReadDTO> response = productAdminService.getProducts(pageable);
+		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
+
+		model.addAttribute("products", products);
+		return "admin/product/books/view";
+	}
+
+	/**
+	 * 관리자 도서 단일 조회
+	 */
+	@JwtTokenCheck
+	@GetMapping("/register/{bookId}")
+	public String getProductById(@PathVariable Long bookId, Model model) {
+		ResponseProductReadDTO response = productService.getProduct(bookId);
+
+		model.addAttribute("product", response);
+		return "admin/product/books/register";
+	}
+
+	/**
+	 * 관리자 도서 등록 뷰로 이동
+	 */
+	@JwtTokenCheck
+	@GetMapping("/register")
+	public String getRegisterView() {
+
+		return "admin/product/books/register";
+	}
 
 	/**
 	 * 관리자가 admin settings 페이지에서 도서 등록
 	 * 관리자 -> 도서 등록
 	 */
-	@GetMapping("/register")
-	public String getProducts(Model model) {
-		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
-
-		return "admin/product/books/register";
-	}
-
-
-	/**
-	 * 관리자가 도서를 생성
-	 */
+	@JwtTokenCheck
 	@PostMapping("/register")
-	public String createProduct(@Validated @ModelAttribute("book") RequestProductCreateDTO request,
-		BindingResult bindingResult) {
+	public String createProduct(@Validated @ModelAttribute RequestProductDTO request, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
-
-		productService.createProduct(request);
-
-		return "redirect:/admin/settings/books/register";
+		productAdminService.createProduct(request);
+		return "admin/product/books/register";
 	}
 
 	/**
 	 * 관리자가 도서를 수정
 	 */
-	@PutMapping("/{bookId}")
-	public ResponseEntity<Void> updateProduct(@Validated @RequestBody RequestProductUpdateDTO request,
-		BindingResult bindingResult, @PathVariable Long productId) {
+	@JwtTokenCheck
+	@PutMapping("/register/{bookId}")
+	public ResponseEntity<Void> updateProduct(@Validated @RequestBody RequestProductDTO request,
+		BindingResult bindingResult, @PathVariable Long bookId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
-		productService.updateProduct(productId, request);
+		productAdminService.updateProduct(bookId, request);
+		return ResponseEntity.ok().build();
+	}
 
+	/**
+	 * 관리자가 도서 판매가를 수정
+	 */
+	@JwtTokenCheck
+	@PutMapping("/{bookId}/salePrice")
+	public ResponseEntity<Void> updateProduct(@Validated @RequestBody RequestProductSalePriceUpdateDTO request,
+		BindingResult bindingResult, @PathVariable Long bookId) {
+		if (bindingResult.hasErrors()) {
+			throw new ValidationFailedException(bindingResult);
+		}
 		return ResponseEntity.ok().build();
 	}
 

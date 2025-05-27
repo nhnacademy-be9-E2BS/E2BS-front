@@ -17,11 +17,11 @@ $(document).ready(function () {
             url: '/reviews',
             type: 'POST',
             data: formData,
-            processData: false, // 중요: multipart 사용 시 false
-            contentType: false, // 중요: multipart 사용 시 false
+            processData: false, // 중요 multipart 사용 시 false: false로 설정해야 FormData 사용 가능
+            contentType: false, // 중요 multipart 사용 시 false: query string으로 변환되지 않도록 false 설정
             success: function () {
                 alert("리뷰가 등록되었습니다.");
-                location.reload(); // 또는 페이지 이동
+                location.reload();
             },
             error: function (xhr) {
                 alert("리뷰 등록에 실패했습니다.\n상태 코드: " + xhr.status);

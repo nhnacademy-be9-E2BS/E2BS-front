@@ -20,6 +20,7 @@ import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiC
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductUpdateDTO;
@@ -30,18 +31,26 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsA
 
 @FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
 public interface ProductAdminAdaptor {
-	@PostMapping("/register")
-	ResponseEntity<Void> postCreateProduct(@RequestBody RequestProductCreateDTO request);
+	@PostMapping
+	ResponseEntity<Void> postCreateProduct(@RequestBody RequestProductDTO request);
+
+	@GetMapping
+	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(@SpringQueryMap Pageable pageable);
+
+	@GetMapping("/order")
+	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
 
 	@PutMapping("/{bookId}")
-	ResponseEntity<Void> putUpdateProduct(@PathVariable Long bookId, @RequestBody RequestProductUpdateDTO request);
+	ResponseEntity<Void> putUpdateProduct(@PathVariable Long bookId, @RequestBody RequestProductDTO request);
 
 	@PutMapping("/{bookId}/stock")
 	ResponseEntity<Void> putUpdateProductStock(@PathVariable Long bookId, @RequestBody RequestProductStockUpdateDTO request);
 
-	@PutMapping("/{bookId}/sale-price")
+	@PutMapping("/{bookId}/salePrice")
 	ResponseEntity<Void> putUpdateProductSalePrice(@PathVariable Long bookId, @RequestBody RequestProductSalePriceUpdateDTO request);
 
+	@GetMapping("/states/sale")
+	ResponseEntity<PageResponse<ResponseProductCouponDTO>> getProductsToCoupon(@SpringQueryMap Pageable pageable);
 
 	@GetMapping("/order")
 	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
