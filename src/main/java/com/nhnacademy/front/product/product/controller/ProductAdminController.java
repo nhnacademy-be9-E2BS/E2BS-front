@@ -63,14 +63,15 @@ public class ProductAdminController {
 		return "admin/product/books/view";
 	}
 
+
+
 	/**
-	 * 관리자 도서 단일 조회
+	 * 관리자 도서 정보 단일 조회
 	 */
 	@JwtTokenCheck
 	@GetMapping("/register/{bookId}")
-	public String getProductById(@PathVariable Long bookId, Model model) {
+	public String getProductsById(@PathVariable Long bookId, Model model) {
 		ResponseProductReadDTO response = productService.getProduct(bookId);
-
 		model.addAttribute("product", response);
 		return "admin/product/books/register";
 	}
@@ -103,16 +104,6 @@ public class ProductAdminController {
 		return "admin/product/books/register";
 	}
 
-	/**
-	 * 관리자 도서 정보 단일 조회
-	 */
-	@JwtTokenCheck
-	@GetMapping("/register/{bookId}")
-	public String getProductsById(@PathVariable Long bookId, Model model) {
-		ResponseProductReadDTO response = productService.getProduct(bookId);
-		model.addAttribute("product", response);
-		return "admin/product/books/register";
-	}
 
 	/**
 	 * 관리자가 도서를 수정
