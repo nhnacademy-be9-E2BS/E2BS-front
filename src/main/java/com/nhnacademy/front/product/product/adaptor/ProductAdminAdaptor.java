@@ -69,4 +69,8 @@ public interface ProductAdminAdaptor {
 
 	@PostMapping("/aladdin/register/list")
 	ResponseEntity<Void> postCreateProductQueryByApi(@RequestBody RequestProductApiCreateByQueryDTO request);
+
+
 }
+
+
