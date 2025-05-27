@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/mypage-layout}">
+<body>
+<div layout:fragment="content">
+    <h3>회원 정보 수정</h3>
+
+    <section>
+        <div class="container" style="padding: 20px; max-width: 600px;">
+            <style>
+                #withdraw-button {
+                    background-color: #dc3545;
+                    color: white;
+                    padding: 10px 20px;
+                    font-size: 14px;
+                    border: none;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    transition: background-color 0.2s ease;
+                }
+
+                #withdraw-button:hover {
+                    background-color: #c82333;
+                }
+            </style>
+            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <form id="withdraw-form" action="/mypage/info" method="post" onsubmit="return confirmWithdraw();">
+                    <button type="submit" id="withdraw-button">회원 탈퇴</button>
+                </form>
+            </div>
+
+
+            <form class="row" action="/mypage/info" method="post" id="edit_form">
+                <input type="hidden" name="_method" value="put"/>
+                <!-- 아이디 (수정 불가) -->
+                <div class="col-md-12 form-group">
+                    <label for="memberId">아이디</label>
+                    <input type="text" class="form-control" id="memberId" name="memberId"
+                           th:value="${member.memberId}" readonly>
+                </div>
+
+                <!-- 이름 -->
+                <div class="col-md-12 form-group">
+                    <label for="customerName">이름</label>
+                    <input type="text" class="form-control" id="customerName" name="customerName"
+                           th:value="${member.customer.getCustomerName()}" required>
+                </div>
+
+                <!-- 이메일 -->
+                <div class="col-md-12 form-group">
+                    <label for="customerEmail">이메일</label>
+                    <input type="email" class="form-control" id="customerEmail" name="customerEmail"
+                           th:value="${member.customer.getCustomerEmail()}" required>
+                </div>
+
+                <!-- 생일 -->
+                <div class="col-md-12 form-group">
+                    <label for="memberBirth">생일</label>
+                    <input type="date" class="form-control" id="memberBirth" name="memberBirth"
+                           th:value="${member.memberBirth}" required>
+                </div>
+
+                <!-- 휴대전화 -->
+                <div class="col-md-12 form-group">
+                    <label for="memberPhone">휴대전화</label>
+                    <input type="tel" class="form-control" id="memberPhone" name="memberPhone"
+                           th:value="${member.memberPhone}" maxlength="13" required>
+                </div>
+
+                <!-- 비밀번호 변경 안내 -->
+                <div class="col-md-12 form-group">
+                    <small class="text-muted">비밀번호를 변경하려면 <a href="/mypage/password">여기</a>를 클릭하세요.</small>
+                </div>
+
+                <div class="col-md-12 form-group mt-3">
+                    <button type="submit" class="button button-register w-100">수정하기</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        function confirmWithdraw() {
+            return confirm("정말 탈퇴하시겠습니까?");
+        }
+
+        // 전화번호 형식 자동 삽입
+        const phoneInput = document.getElementById('memberPhone');
+        phoneInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length <= 3) {
+                e.target.value = value;
+            } else if (value.length <= 7) {
+                e.target.value = value.slice(0, 3) + '-' + value.slice(3);
+            } else {
+                e.target.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+            }
+        });
+
+        // 생일 max/min 제한
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('memberBirth').setAttribute('max', today);
+        document.getElementById('memberBirth').setAttribute('min', '1900-01-01');
+    </script>
+</div>
+</body>
+</html>

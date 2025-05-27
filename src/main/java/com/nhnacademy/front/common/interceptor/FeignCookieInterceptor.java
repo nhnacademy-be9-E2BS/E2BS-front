@@ -59,7 +59,6 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 		} else {
 			data = newCookie.get().getValue();
 		}
-
 		cookieHeaders.append(JwtRule.JWT_ISSUE_HEADER.getValue() + "=" + data);
 		requestTemplate.header(JwtRule.JWT_ISSUE_HEADER.getValue(), cookieHeaders.toString());
 

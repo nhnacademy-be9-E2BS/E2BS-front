@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="categoryOption(category, prefix)">
+  <option th:value="${category.categoryId}"
+          th:text="${(prefix != null ? prefix : '') + category.categoryName}"
+          th:selected="${book.categoryIds != null} ? ${book.categoryIds.contains(category.categoryId)} : false">
+  </option>
+
+  <th:block th:if="${category.children != null and !category.children.isEmpty()}">
+    <th:block th:each="child : ${category.children}">
+      <th:block th:replace="fragments/categoryFragment :: categoryOption(category=${child}, prefix='  ' + ${prefix})" />
+    </th:block>
+  </th:block>
+</th:block>
+</body>
+</html>

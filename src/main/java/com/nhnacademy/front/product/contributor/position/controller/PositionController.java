@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/mypage/positions")
+@RequestMapping("/admin/settings/positions")
 public class PositionController {
 	private final PositionService positionService;
 
@@ -41,7 +41,7 @@ public class PositionController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		positionService.createPosition(requestPositionDTO);
-		return "redirect:/admin/mypage/positions";
+		return "redirect:/admin/settings/positions";
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class PositionController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		positionService.updatePosition(positionId, requestPositionDTO);
-		return "redirect:/admin/mypage/positions";
+		return "redirect:/admin/settings/positions";
 	}
 
 	/**

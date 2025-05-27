@@ -7,6 +7,7 @@
                 <div class="head">도서 관리</div>
                   <ul>
                     <li class="filter-list"><a href="/admin/settings/books/register">도서 등록</a></li>
+                    <li class="filter-list"><a href="/admin/settings/books/search">도서 API 검색</a></li>
                     <li class="filter-list"><a href="/admin/settings/books">도서 조회</a></li>
 
                     <li class="filter-list"><a href="/admin/settings/tags">태그</a></li>
@@ -21,7 +22,8 @@
               <div class="common-filter">
                 <div class="head">회원 관리</div>
                   <ul>
-                    <li class="filter-list"><a href="#">회원 조회</a></li>
+                    <li class="filter-list"><a th:href="@{/admin/settings/members}">회원 조회</a></li>
+                    <li class="filter-list"><a th:href="@{/admin/settings/non-members}">비회원 조회</a></li>
                     <li class="filter-list"><a href="#">Samsung</a></li>
                   </ul>
               </div>
@@ -89,20 +91,20 @@
     <div class="common-filter">
       <div class="head">주문 내역</div>
       <ul>
-        <li class="filter-list"><a href="/mypage/orders">주문 내역 조회</a></li>
+        <li class="filter-list"><a th:href="@{/mypage/orders}">주문 내역 조회</a></li>
         <li class="filter-list"><a href="/mypage/return">반품 내역</a></li>
         <li class="filter-list"><a href="/mypage/cancel">취소 내역</a></li>
-        <li class="filter-list"><a href="/mypage/reviews">리뷰 내역 조회</a></li>
       </ul>
     </div>
 
     <div class="common-filter">
       <div class="head">회원 정보 관리</div>
       <ul>
-        <li class="filter-list"><a href="/mypage/my-page-update">개인정보 수정</a></li>
+        <li class="filter-list"><a th:href="@{/mypage/info}">개인정보 수정</a></li>
         <li class="filter-list"><a th:href="@{/mypage/addresses}">배송지 관리</a></li>
         <li class="filter-list"><a th:href="@{/mypage/rank}">회원 등급</a></li>
-        <li class="filter-list"><a th:href="@{/mypage/couponBox}">할인쿠폰</a></li>
+        <li class="filter-list"><a th:href="@{/mypage/couponBox}">할인 쿠폰</a></li>
+        <li class="filter-list"><a th:href="@{/mypage/}">포인트 내역</a></li>
       </ul>
     </div>
   </div>

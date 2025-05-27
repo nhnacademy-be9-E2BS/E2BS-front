@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <h4>Register New Contributor</h4>
-                    <form class="row login_form" action="/admin/mypage/contributors" method="post">
+                    <form class="row login_form" action="/admin/settings/contributors" method="post">
                         <div class="col-md-6 form-group">
                             <input type="text" class="form-control" name="contributorName" placeholder="기여자 이름" required>
 
@@ -47,7 +47,7 @@
                         <tr th:each="contributor : ${contributors}">
                             <td th:text="${contributor.contributorId}"></td>
                             <td>
-                                <form th:action="@{'/admin/mypage/contributors/' + ${contributor.contributorId}}" method="post">
+                                <form th:action="@{'/admin/settings/contributors/' + ${contributor.contributorId}}" method="post">
                                     <input type="hidden" name="_method" value="put"/>
 
                                     <div class="d-flex align-items-center gap-2">
@@ -82,20 +82,20 @@
                             <nav>
                                 <ul class="pagination" th:if="${contributors.totalPages > 0}">
                                     <li class="page-item" th:classappend="${!contributors.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link" th:href="@{'/admin/mypage/contributors'(page=0, size=10)}">처음</a>
+                                        <a class="page-link" th:href="@{'/admin/settings/contributors'(page=0, size=10)}">처음</a>
                                     </li>
 
                                     <li class="page-item"
                                         th:each="i : ${#numbers.sequence(0, contributors.totalPages - 1)}"
                                         th:classappend="${i == contributors.number} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/contributors'(page=${i}, size=10)}"
+                                           th:href="@{'/admin/settings/contributors'(page=${i}, size=10)}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
                                     <li class="page-item" th:classappend="${!contributors.hasNext()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/contributors'(page=${contributors.totalPages - 1}, size=10)}">마지막</a>
+                                           th:href="@{'/admin/settings/contributors'(page=${contributors.totalPages - 1}, size=10)}">마지막</a>
                                     </li>
                                 </ul>
                             </nav>
