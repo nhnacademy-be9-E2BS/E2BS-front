@@ -25,6 +25,7 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.product.controller.ProductController;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 import com.nhnacademy.front.product.state.model.dto.domain.ProductStateName;
@@ -39,6 +40,9 @@ class ProductControllerTest {
 
 	@MockitoBean
 	private ProductService productService;
+
+	@MockitoBean
+	private ProductAdminService productAdminService;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
