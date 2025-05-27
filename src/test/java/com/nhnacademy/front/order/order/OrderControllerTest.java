@@ -9,11 +9,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +28,22 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 import com.nhnacademy.front.order.order.controller.OrderController;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderDetailDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
-import com.nhnacademy.front.product.category.service.UserCategoryService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @WithMockUser(username = "admin", roles = {"ADMIN", "MEMBER", "USER"})
 @WebMvcTest(controllers = OrderController.class)
@@ -44,7 +57,15 @@ class OrderControllerTest {
 	private OrderService orderService;
 
 	@MockitoBean
-	private UserCategoryService userCategoryService;
+	private DeliveryFeeSevice deliveryFeeSevice;
+
+	@MockitoBean
+	private CategoryInterceptor categoryInterceptor;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+	}
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -77,6 +98,7 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("주문서 페이지 접근 확인")
 	void testGetCheckOut() throws Exception {
+		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(mock(ResponseDeliveryFeeDTO.class));
 		mockMvc.perform(get("/order"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("payment/checkout"));
@@ -200,5 +222,64 @@ class OrderControllerTest {
 				.param("orderId", "TEST-ORDER-CODE")
 				.with(csrf()))
 			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("getMemberOrders - 회원 주문 내역 조회")
+	void testGetMemberOrders() throws Exception {
+		// given
+		PageResponse<ResponseOrderDTO> pageResponse = new PageResponse<>();
+		pageResponse.setContent(List.of(new ResponseOrderDTO()));
+		pageResponse.setNumber(0);
+		pageResponse.setSize(10);
+		pageResponse.setTotalElements(1L);
+		ResponseEntity<PageResponse<ResponseOrderDTO>> responseEntity = ResponseEntity.ok(pageResponse);
+		when(orderService.getOrdersByMemberId(any(Pageable.class), anyString())).thenReturn(responseEntity);
+
+		try (MockedStatic<JwtGetMemberId> mockStatic = mockStatic(JwtGetMemberId.class)) {
+			mockStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class)))
+				.thenReturn("TEST-MEMBERID");
+			// when & then
+			mockMvc.perform(get("/mypage/orders")
+					.param("page", "0")
+					.param("size", "10"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("member/mypage/orders"))
+				.andExpect(model().attributeExists("orders"));
+		}
+	}
+
+	@Test
+	@DisplayName("getMemberOrderDetails - 회원 주문 상세 내역 페이지")
+	void testGetMemberOrderDetails() throws Exception {
+		// given
+		String orderCode = "TEST-ORDER-CODE";
+
+		ResponseOrderDTO order = new ResponseOrderDTO();
+		order.setState("WAIT");
+		ResponseOrderDetailDTO detail1 = new ResponseOrderDetailDTO();
+		detail1.setOrderDetailPerPrice(1000);
+		detail1.setOrderQuantity(2);
+		detail1.setWrapperPrice(500L);
+
+		ResponseOrderDetailDTO detail2 = new ResponseOrderDetailDTO();
+		detail2.setOrderDetailPerPrice(2000);
+		detail2.setOrderQuantity(1);
+
+		List<ResponseOrderDetailDTO> orderDetails = List.of(detail1, detail2);
+
+		ResponseOrderWrapperDTO wrapperDTO = new ResponseOrderWrapperDTO();
+		wrapperDTO.setOrder(order);
+		wrapperDTO.setOrderDetails(orderDetails);
+
+		when(orderService.getOrderByOrderCode(orderCode)).thenReturn(ResponseEntity.ok(wrapperDTO));
+
+		// when & then
+		mockMvc.perform(get("/mypage/orders/" + orderCode))
+			.andExpect(status().isOk())
+			.andExpect(view().name("member/mypage/orderDetails"))
+			.andExpect(model().attributeExists("order"))
+			.andExpect(model().attributeExists("orderDetails"))
+			.andExpect(model().attributeExists("productAmount"));
 	}
 }

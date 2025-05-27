@@ -2,12 +2,14 @@ package com.nhnacademy.front.product.tag;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,12 +23,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.tag.controller.TagController;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
-import com.nhnacademy.front.product.tag.service.Impl.TagServiceImpl;
+import com.nhnacademy.front.product.tag.service.impl.TagServiceImpl;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = TagController.class)
@@ -39,7 +41,12 @@ class TagControllerTest {
 	private TagServiceImpl tagService;
 
 	@MockitoBean
-	private UserCategoryService userCategoryService;
+	private CategoryInterceptor categoryInterceptor;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+	}
 
 	@Test
 	@DisplayName("태그 리스트 조회")
@@ -133,6 +140,5 @@ class TagControllerTest {
 			.andExpect(result -> assertThat(result.getResolvedException())
 				.isInstanceOf(ValidationFailedException.class));
 	}
-
 
 }

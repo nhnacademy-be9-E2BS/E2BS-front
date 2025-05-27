@@ -6,10 +6,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.nhnacademy.front.account.address.exception.DeleteAddressFailedException;
+import com.nhnacademy.front.account.address.exception.GetAddressFailedException;
+import com.nhnacademy.front.account.address.exception.SaveAddressFailedException;
+import com.nhnacademy.front.account.address.exception.UpdateAddressFailedException;
 import com.nhnacademy.front.account.auth.exception.SaveJwtTokenProcessException;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
+import com.nhnacademy.front.account.member.exception.NotFoundMemberIdException;
+import com.nhnacademy.front.account.member.exception.NotFoundMemberRankNameException;
 import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordException;
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
+import com.nhnacademy.front.account.memberrank.exception.NotFoundMemberRankException;
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.exception.EmptyResponseException;
 import com.nhnacademy.front.common.exception.LoginRedirectException;
@@ -25,39 +32,18 @@ public class WebAdviceController {
 		return modelAndView;
 	}
 
-	@ExceptionHandler(LoginProcessException.class)
-	public ResponseEntity<String> loginProcessException(Exception ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-	}
-
-	@ExceptionHandler(ValidationFailedException.class)
-	public ResponseEntity<String> validationFailedException(Exception ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-	}
-
-	@ExceptionHandler(EmptyRequestException.class)
-	public ResponseEntity<String> emptyRequestException(Exception ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-	}
-
-	@ExceptionHandler(RegisterProcessException.class)
-	public ResponseEntity<String> registerProcessException(Exception ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-	}
-
-	@ExceptionHandler(RegisterNotEqualsPasswordException.class)
+	@ExceptionHandler({RegisterNotEqualsPasswordException.class, GetAddressFailedException.class,
+		SaveJwtTokenProcessException.class, EmptyResponseException.class, RegisterProcessException.class,
+		EmptyRequestException.class, ValidationFailedException.class, LoginProcessException.class,
+		SaveAddressFailedException.class, DeleteAddressFailedException.class, UpdateAddressFailedException.class})
 	public ResponseEntity<String> registerNotEqualsPasswordException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 
-	@ExceptionHandler(SaveJwtTokenProcessException.class)
-	public ResponseEntity<String> saveJwtTokenProcessException(Exception ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-	}
-
-	@ExceptionHandler(EmptyResponseException.class)
-	public ResponseEntity<String> emptyResponseException(Exception ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	@ExceptionHandler({NotFoundMemberIdException.class, NotFoundMemberRankNameException.class,
+		NotFoundMemberRankException.class})
+	public ResponseEntity<String> notFoundMemberIdException(Exception ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}
 
 }

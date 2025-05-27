@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -27,6 +26,7 @@ import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 import com.nhnacademy.front.review.service.ReviewService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,11 +39,9 @@ public class ReviewController {
 	private final ReviewService reviewService;
 
 
-	@GetMapping("/products/{productId}/reviews/register")
-	public String createReviewForm() {
-		return "review/review-register";
-	}
-
+	/**
+	 * 리뷰 작성
+	 */
 	@PostMapping("/reviews")
 	public ResponseEntity<Void> createReview(@Validated @ModelAttribute RequestCreateReviewDTO  requestDto, BindingResult bindingResult,
 								HttpServletRequest request) {
@@ -59,24 +57,22 @@ public class ReviewController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
+	/**
+	 * 리뷰 수정
+	 */
 	@PutMapping("/reviews/{reviewId}")
-	public ResponseEntity<Void> updateReview(@PathVariable long reviewId, @Validated @RequestBody RequestUpdateReviewDTO requestDto, BindingResult bindingResult) {
+	public ResponseEntity<ResponseUpdateReviewDTO> updateReview(@PathVariable long reviewId, @Validated @ModelAttribute RequestUpdateReviewDTO requestDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		reviewService.updateReview(reviewId, requestDto);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		ResponseUpdateReviewDTO body = reviewService.updateReview(reviewId, requestDto);
+		return ResponseEntity.ok(body);
 	}
 
-	@GetMapping("/customers/reviews")
-	public String getReviewsByCustomer(@PageableDefault(size = 5) Pageable pageable, Model model) {
-		// PageResponse<ResponseReviewPageDTO> reviewsByCustomer = reviewService.getReviewsByCustomer(customerId, pageable);
-		//
-		// model.addAttribute("reviewsByCustomer", reviewsByCustomer);
-		return "review/customer-review";
-	}
-
+	/**
+	 * 상품에 대한 리뷰 페이징 목록 조회
+	 */
 	@GetMapping("/products/{productId}/reviews")
 	public String getReviewsByProduct(@PathVariable long productId, @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
 		ResponseReviewInfoDTO reviewInfo = reviewService.getReviewInfo(productId);

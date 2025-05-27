@@ -21,6 +21,12 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+	private static final String ROOT_URL = "/";
+	private static final String LOGIN_URL = "/login";
+	private static final String LOGOUT_URL = "/logout";
+	private static final String ADMIN_LOGIN_URL = "/admin/login";
+	private static final String REGISTER_URL = "/register";
+	private static final String ACTUATOR_HEALTH = "/actuator/health";
 
 	private final AuthService authService;
 	private final RedisTemplate<String, String> redisTemplate;
@@ -44,7 +50,7 @@ public class SecurityConfig {
 			 *  권한있는 회원만 접근 가능한 URL 설정
 			 */
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/", "/login", "/register", "/admin/login", "/actuator/health").permitAll()
+				.requestMatchers(LOGIN_URL, ROOT_URL, REGISTER_URL, ADMIN_LOGIN_URL, ACTUATOR_HEALTH).permitAll()
 				.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/scss/**", "/vendors/**",
 					"/Aroma Shop-doc/**").permitAll()
 				.anyRequest().permitAll()
@@ -54,8 +60,8 @@ public class SecurityConfig {
 			 * 로그인 기능
 			 */
 			.formLogin(form -> form
-				.loginPage("/login")
-				.loginProcessingUrl("/login")
+				.loginPage(LOGIN_URL)
+				.loginProcessingUrl(LOGIN_URL)
 				.usernameParameter("memberId")
 				.passwordParameter("customerPassword")
 				.successHandler(customAuthenticationSuccessHandler)
@@ -67,7 +73,7 @@ public class SecurityConfig {
 			 */
 			.logout(logout -> logout
 				.addLogoutHandler(customLogoutHandler)
-				.logoutUrl("/logout")
+				.logoutUrl(LOGOUT_URL)
 			);
 
 		return http.build();

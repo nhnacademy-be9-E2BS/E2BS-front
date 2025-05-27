@@ -19,49 +19,40 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FeignCookieInterceptor implements RequestInterceptor {
+	private static final String ROOT_URL = "/";
+	private static final String LOGIN_URL = "/login";
+	private static final String ADMIN_LOGIN_URL = "/admin/login";
+	private static final String REGISTER_URL = "/register";
+
+	private static final String SET_COOKIE = "Set-Cookie";
+	private static final String ACCESS_REFRESH = "access-refresh";
+
+	private static final String LOGIN_EXCEPTION_MESSAGE = "로그인을 다시 해주세요.";
 
 	@Override
 	public void apply(RequestTemplate requestTemplate) {
-		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		HttpServletRequest request = ((ServletRequestAttributes)Objects
+			.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+		if (isPublicPath(request.getRequestURI())) {
+			return;
+		}
 
 		Optional<Cookie> newCookie = Optional.ofNullable(request.getCookies())
 			.map(Arrays::stream)
 			.orElse(Stream.empty())
-			.filter(v -> v.getName().equals("Set-Cookie"))
+			.filter(v -> v.getName().equals(SET_COOKIE))
 			.findFirst();
 
 		StringBuilder cookieHeaders = new StringBuilder();
 
 		if (newCookie.isEmpty()) {
-			String path = request.getRequestURI();
-			if (path.equals("/") || path.startsWith("/login") || path.startsWith("/register") ||
-				path.startsWith("/admin/login")) {
-				return;
-			}
-
-			Cookie[] cookies = request.getCookies();
-			if (cookies == null || cookies.length == 0) {
-				return;
-			}
-
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals(JwtRule.JWT_ISSUE_HEADER.getValue())) {
-					cookieHeaders.append(cookie.getName() + "=" + cookie.getValue());
-					break;
-				}
-			}
-
-			if (cookieHeaders.toString().isEmpty()) {
-				throw new LoginRedirectException("로그인을 다시 해주세요");
-			}
-
-			log.info("FeignCookieInterceptor:{}", cookieHeaders.toString());
+			cookieHeaders.append(extractAccessTokenFromCookie(request));
 
 			requestTemplate.header(JwtRule.JWT_ISSUE_HEADER.getValue(), cookieHeaders.toString());
 			return;
 		}
 
-		String o = (String)request.getAttribute("access-refresh");
+		String o = (String)request.getAttribute(ACCESS_REFRESH);
 		String data = "";
 		if (Objects.nonNull(o)) {
 			data = o;
@@ -72,6 +63,28 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 		cookieHeaders.append(JwtRule.JWT_ISSUE_HEADER.getValue() + "=" + data);
 		requestTemplate.header(JwtRule.JWT_ISSUE_HEADER.getValue(), cookieHeaders.toString());
 
+	}
+
+	private String extractAccessTokenFromCookie(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies == null) {
+			throw new LoginRedirectException(LOGIN_EXCEPTION_MESSAGE);
+		}
+
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(JwtRule.JWT_ISSUE_HEADER.getValue())) {
+				return cookie.getName() + "=" + cookie.getValue();
+			}
+		}
+
+		throw new LoginRedirectException(LOGIN_EXCEPTION_MESSAGE);
+	}
+
+	private boolean isPublicPath(String path) {
+		return path.equals(ROOT_URL) ||
+			path.startsWith(LOGIN_URL) ||
+			path.startsWith(REGISTER_URL) ||
+			path.startsWith(ADMIN_LOGIN_URL);
 	}
 
 }

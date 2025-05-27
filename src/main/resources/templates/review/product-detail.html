@@ -211,12 +211,17 @@
 							<br>
 
 							<div class="review_list">
-								<div class="review_item" th:each="review : ${reviewsByProduct.content}">
+								<div class="review_item" th:each="review, stat : ${reviewsByProduct.content}">
 									<div class="media">
 										<div class="media-body">
 											<div class="d-flex justify-content-between align-items-center">
 												<h4 class="mb-0" th:text="${review.customerName}">이름</h4>
 												<p class="mb-0 text-muted" th:text="${#temporals.format(review.reviewCreatedAt, 'yy-MM-dd')}">날짜</p>
+
+												<button class="btn btn-primary"
+														th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">
+													<i class="bi bi-pencil-square"></i> 수정
+												</button>
 											</div>
 
 											<div>
@@ -227,11 +232,39 @@
 									</div>
 
 									<div class="d-flex">
-										<!--th:src="@{${review.reviewImage}}"-->
-										<img src="/img/product/product1.png" alt="리뷰 이미지" style="max-width: 150px;">
+                                        <!--<img src="/img/product/product1.png" alt="리뷰 이미지" style="max-width: 150px;">-->
+										<div th:if="${!#strings.isEmpty(review.reviewImage)}"
+											 th:id="${'image-' + stat.index}">
+											<img th:src="${review.reviewImage}" alt="리뷰 이미지" style="max-width: 350px;">
+										</div>
 									</div>
 
-									<p th:text="${review.reviewContent}">리뷰내용</p>
+									<p th:id="${'text-' + stat.index}" th:text="${review.reviewContent}">리뷰내용</p>
+									<!-- 리뷰 수정 폼 (기본은 숨김) stat은 타임리프에서 제공하는 현재 반복 상태 정보를 담는 객체 -->
+									<div th:id="${'edit-form-' + stat.index}" style="display: none;">
+										<form th:action="@{/reviews/update}" enctype="multipart/form-data">
+											<input type="hidden" name="reviewId" th:value="${review.reviewId}">
+											<textarea name="reviewContent" class="form-control mb-2" rows="3"
+													  th:text="${review.reviewContent}"></textarea>
+
+											<div class="custom-file">
+												<input type="file" class="custom-file-input" id="updateImage" name="reviewImage">
+												<label class="custom-file-label" for="updateImage">수정할 파일을 선택하세요</label>
+											</div>
+
+											<!-- 이미지 미리보기 영역 -->
+											<div class="preview-container mb-2">
+												<img id="update-imagePreview" src="#" alt="이미지 미리보기" style="display:none; max-width: 350px;" />
+											</div>
+
+											<button type="button" class="btn btn-success btn-sm"
+													th:onclick="|submitReviewUpdate('${review.reviewId}', '${stat.index}')|">
+												저장
+											</button>
+											<button type="button" class="btn btn-secondary btn-sm"
+													th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">취소</button>
+										</form>
+									</div>
 								</div>
 
 								<!-- 페이징 -->
@@ -287,11 +320,15 @@
 									</div>
 
 									<div class="form-group">
-<!--										<div class="custom-file">-->
-<!--											<input type="file" class="custom-file-input" id="image-file" name="reviewImage">-->
-<!--											<label class="custom-file-label" for="image-file">파일을 선택하세요</label>-->
-<!--										</div>-->
-										<input type="hidden" name="reviewImage" />
+										<div class="custom-file">
+											<input type="file" class="custom-file-input" id="createImage" name="reviewImage">
+											<label class="custom-file-label" for="createImage">파일을 선택하세요</label>
+										</div>
+
+										<!-- 이미지 미리보기 영역 -->
+										<div class="preview-container mb-2">
+											<img id="create-imagePreview" src="#" alt="이미지 미리보기" style="display:none; max-width: 350px;" />
+										</div>
 
 										<label for="textarea"></label><textarea class="form-control different-control w-100" name="reviewContent" id="textarea" cols="30" rows="5" placeholder="리뷰 내용"></textarea>
 									</div>
@@ -427,6 +464,7 @@
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script th:src="@{/js/review/review-create.js}"></script>
+	<script th:src="@{/js/review/review-update.js}"></script>
 	<script th:src="@{/js/review/star-count.js}"></script>
 </div>
 </body>

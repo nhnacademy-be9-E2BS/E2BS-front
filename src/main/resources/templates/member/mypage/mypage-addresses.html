@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mypage-layout}">
+<body>
+<div layout:fragment="content">
+    <h2>마이페이지</h2>
+    <section>
+        <div class="container" style="padding: 20px;">
+            <style>
+                .info-box h3 {
+                    margin: 0;
+                    font-size: 1.2rem;
+                    color: #333;
+                }
+
+                .info-box p {
+                    margin-top: 10px;
+                    font-size: 1.6rem;
+                    font-weight: bold;
+                    color: #007bff;
+                }
+
+                .address-box-container {
+                    margin-top: 40px;
+                }
+
+                .address-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .address-box {
+                    border: 1px solid #ccc;
+                    border-radius: 10px;
+                    padding: 16px;
+                    margin-top: 12px;
+                    position: relative;
+                }
+
+                .address-actions {
+                    position: absolute;
+                    right: 16px;
+                    top: 16px;
+                    display: flex;
+                    gap: 8px;
+                }
+
+                .address-tag {
+                    background-color: #007bff;
+                    color: white;
+                    border-radius: 6px;
+                    padding: 2px 8px;
+                    font-size: 0.8rem;
+                    margin-right: 8px;
+                }
+
+                .btn-add-address {
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                    font-size: 1rem;
+                    background-color: #28a745;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                }
+
+                .btn-add-address:disabled {
+                    background-color: #ccc;
+                    cursor: not-allowed;
+                }
+
+                .btn-action {
+                    background: none;
+                    border: none;
+                    color: #007bff;
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    padding: 4px 8px;
+                }
+
+                .btn-action:hover {
+                    text-decoration: underline;
+                }
+            </style>
+
+            <div class="address-box-container">
+                <div class="address-header">
+                    <h3>배송지 목록</h3>
+                    <button class="btn-add-address"
+                            th:disabled="${#lists.size(addresses) >= 10}"
+                            th:onclick="|location.href='@{/mypage/addresses/save}'|">
+                        배송지 추가
+                    </button>
+
+                </div>
+
+                <div th:each="address : ${addresses}" class="address-box">
+                    <div class="address-actions">
+                        <a th:href="@{/mypage/addresses/{addressId}(addressId=${address.addressId})}"
+                           class="btn-action">수정</a>
+                        <form th:action="@{/mypage/addresses/{addressId}(addressId=${address.addressId})}"
+                              method="post"
+                              onsubmit="return confirm('정말 삭제하시겠습니까?')">
+                            <input type="hidden" name="_method" value="delete"/>
+                            <button type="submit" class="btn-action" style="color: red;">삭제</button>
+                        </form>
+                    </div>
+
+                    <div>
+                        <strong th:text="${address.addressAlias != null ? address.addressAlias : '배송지'}">배송지</strong>
+                        <span th:if="${address.addressDefault}" class="address-tag"
+                              style="background-color: gold; color: black;">⭐ 기본 배송지</span>
+                    </div>
+
+                    <div>
+                        <strong>우편번호:</strong>
+                        <span th:text="${address.addressCode}">12345</span>
+                    </div>
+
+                    <div>
+                        <strong>주소:</strong>
+                        <span th:text="${address.addressInfo}">서울시 강남구 역삼동 123-45</span>
+                    </div>
+
+                    <div th:if="${address.addressDetail}">
+                        <strong>상세주소:</strong>
+                        <span th:text="${address.addressDetail}">101동 1001호</span>
+                    </div>
+
+                    <div>
+                        <strong>참고항목:</strong>
+                        <span th:text="${address.addressExtra}">공동현관 비밀번호 1234</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

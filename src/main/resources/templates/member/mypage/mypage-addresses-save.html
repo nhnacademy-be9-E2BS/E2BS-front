@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mypage-layout}">
+<body>
+<div layout:fragment="content">
+    <!-- ================ 배송지 추가 배너 ================= -->
+    <section class="blog-banner-area" id="category">
+        <div class="container h-100">
+            <div class="blog-banner">
+                <div class="text-center">
+                    <h1>배송지 추가</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================ 배송지 입력 폼 ================= -->
+    <section class="checkout_area section-margin--small">
+        <div class="container">
+            <form th:action="@{/mypage/addresses/save}" method="post">
+                <div class="billing_details">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h3>배송지 정보 입력</h3>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td><strong>배송지 별칭</strong></td>
+                                    <td><input type="text" name="addressAlias" placeholder="예: 집, 회사"
+                                               class="form-control"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>우편번호</strong></td>
+                                    <td>
+                                        <input type="text" id="postcode" name="addressCode"
+                                               class="form-control d-inline w-25" placeholder="우편번호" readonly required>
+                                        <input type="button" class="btn btn-sm btn-outline-primary ml-2"
+                                               onclick="execDaumPostcode()" value="주소 찾기">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>주소</strong></td>
+                                    <td>
+                                        <input type="text" id="address" name="addressInfo" class="form-control"
+                                               placeholder="도로명 주소" readonly required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>상세주소</strong></td>
+                                    <td><input type="text" name="addressDetail" id="detailAddress" class="form-control"
+                                               placeholder="상세주소" required></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>참고항목</strong></td>
+                                    <td><input type="text" id="extraAddress" name="addressExtra" class="form-control"
+                                               readonly></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>기본 배송지 설정</strong></td>
+                                    <td>
+                                        <input type="checkbox" name="addressDefault" value="true"> 기본 배송지로 설정
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary">배송지 저장</button>
+                                <a th:href="@{/mypage/addresses}"
+                                   class="btn btn-outline-secondary ml-2">취소</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- ================ 주소 API script ================= -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+        function execDaumPostcode() {
+            new daum.Postcode({
+                oncomplete: function (data) {
+                    var addr = ''; // 주소
+                    var extraAddr = ''; // 참고항목
+
+                    if (data.userSelectedType === 'R') {
+                        addr = data.roadAddress;
+                    } else {
+                        alert('도로명 주소만 선택 가능합니다.');
+                        return;
+                    }
+
+                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                        extraAddr += data.bname;
+                    }
+                    if (data.buildingName !== '' && data.apartment === 'Y') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if (extraAddr !== '') {
+                        extraAddr = '(' + extraAddr + ')';
+                    }
+
+                    document.getElementById("postcode").value = data.zonecode;
+                    document.getElementById("address").value = addr;
+                    document.getElementById("extraAddress").value = extraAddr;
+                    document.getElementById("detailAddress").focus();
+                }
+            }).open();
+        }
+    </script>
+</div>
+</body>
+</html>

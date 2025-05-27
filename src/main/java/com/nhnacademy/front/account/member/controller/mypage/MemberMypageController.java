@@ -1,7 +1,5 @@
 package com.nhnacademy.front.account.member.controller.mypage;
 
-import java.util.Objects;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +12,6 @@ import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -27,13 +24,9 @@ public class MemberMypageController {
 
 	@JwtTokenCheck
 	@GetMapping
-	public String getMypage(HttpServletRequest request,
-		Model model) {
+	public String getMypage(HttpServletRequest request, Model model) {
 
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
-		if (Objects.isNull(memberId)) {
-			throw new BadRequestException("다시 로그인 해주세요.");
-		}
 
 		RequestMemberIdDTO requestMemberIdDTO = new RequestMemberIdDTO(memberId);
 		String memberName = memberService.getMemberName(request);
@@ -50,9 +43,13 @@ public class MemberMypageController {
 			pointAmount = pointAmountFromBack;
 		}
 
+		String rankName = String.valueOf(memberMypageService.getMemberRankName(request));
+
+		model.addAttribute("memberId", memberId);
 		model.addAttribute("memberName", memberName);
 		model.addAttribute("couponCnt", couponCnt);
 		model.addAttribute("pointAmount", pointAmount);
+		model.addAttribute("rankName", rankName);
 
 		return "member/mypage/mypage";
 	}
