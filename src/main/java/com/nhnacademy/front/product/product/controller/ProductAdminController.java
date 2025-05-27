@@ -83,10 +83,6 @@ public class ProductAdminController {
 	@JwtTokenCheck
 	@GetMapping("/register")
 	public String getRegisterView(Model model) {
-		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
-		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
-		model.addAttribute("tags", tags);
 
 		return "admin/product/books/register";
 	}

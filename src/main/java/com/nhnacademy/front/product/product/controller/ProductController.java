@@ -48,14 +48,4 @@ public class ProductController {
 		model.addAttribute("products", products);
 		return "product/category";
 	}
-
-	@GetMapping
-	public String testListView(@PageableDefault(page = 0, size = 9) Pageable pageable, Model model) {
-		PageResponse<ResponseProductReadDTO> response = productAdminService.getProducts(pageable);
-		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
-
-		model.addAttribute("products", products);
-
-		return "product/category";
-	}
 }

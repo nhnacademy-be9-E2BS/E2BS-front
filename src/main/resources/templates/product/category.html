@@ -64,51 +64,29 @@
     </div>
   </section>
 
-  <!-- 페이지네이션 테스트용-->
+
+  <!-- 페이지네이션 -->
   <nav th:if="${products.totalPages > 1}">
     <ul class="pagination justify-content-center">
       <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
         <a class="page-link"
-           th:href="@{/books(query=${param.query}, queryType=${param.queryType}, page=0, size=${products.size})}">처음</a>
+           th:href="@{/category/{categoryId}(categoryId=${categoryId}, query=${param.query}, queryType=${param.queryType}, page=0, size=${products.size})}">처음</a>
       </li>
 
       <li class="page-item"
           th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
           th:classappend="${i == products.number} ? 'active'">
         <a class="page-link"
-           th:href="@{/books(query=${param.query}, queryType=${param.queryType}, page=${i}, size=${products.size})}"
+           th:href="@{/category/{categoryId}(categoryId=${categoryId}, query=${param.query}, queryType=${param.queryType}, page=${i}, size=${products.size})}"
            th:text="${i + 1}">1</a>
       </li>
 
       <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
         <a class="page-link"
-           th:href="@{/books(query=${param.query}, queryType=${param.queryType}, page=${products.totalPages - 1}, size=${products.size})}">마지막</a>
+           th:href="@{/category/{categoryId}(categoryId=${categoryId}, query=${param.query}, queryType=${param.queryType}, page=${products.totalPages - 1}, size=${products.size})}">마지막</a>
       </li>
     </ul>
   </nav>
-
-<!--  &lt;!&ndash; 페이지네이션 categoty용 테스트 끝나면 이거로 사용&ndash;&gt;-->
-<!--  <nav th:if="${products.totalPages > 1}">-->
-<!--    <ul class="pagination justify-content-center">-->
-<!--      <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">-->
-<!--        <a class="page-link"-->
-<!--           th:href="@{/category/{categoryId}(categoryId=${categoryId}, query=${param.query}, queryType=${param.queryType}, page=0, size=${products.size})}">처음</a>-->
-<!--      </li>-->
-
-<!--      <li class="page-item"-->
-<!--          th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"-->
-<!--          th:classappend="${i == products.number} ? 'active'">-->
-<!--        <a class="page-link"-->
-<!--           th:href="@{/category/{categoryId}(categoryId=${categoryId}, query=${param.query}, queryType=${param.queryType}, page=${i}, size=${products.size})}"-->
-<!--           th:text="${i + 1}">1</a>-->
-<!--      </li>-->
-
-<!--      <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">-->
-<!--        <a class="page-link"-->
-<!--           th:href="@{/category/{categoryId}(categoryId=${categoryId}, query=${param.query}, queryType=${param.queryType}, page=${products.totalPages - 1}, size=${products.size})}">마지막</a>-->
-<!--      </li>-->
-<!--    </ul>-->
-<!--  </nav>-->
 </div>
 </body>
 </html>
