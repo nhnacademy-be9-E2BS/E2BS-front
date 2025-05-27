@@ -94,3 +94,6 @@ guest:
 
 review:
   url: https://e2bs.shop/api/reviews
+
+index:
+  url: https://e2bs.shop/api
