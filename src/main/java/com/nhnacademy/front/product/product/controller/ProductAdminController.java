@@ -72,6 +72,7 @@ public class ProductAdminController {
 	@GetMapping("/register/{bookId}")
 	public String getProductsById(@PathVariable Long bookId, Model model) {
 		ResponseProductReadDTO response = productService.getProduct(bookId);
+
 		model.addAttribute("product", response);
 		return "admin/product/books/register";
 	}
@@ -82,10 +83,6 @@ public class ProductAdminController {
 	@JwtTokenCheck
 	@GetMapping("/register")
 	public String getRegisterView(Model model) {
-		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
-		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
-		model.addAttribute("tags", tags);
 
 		return "admin/product/books/register";
 	}
@@ -103,7 +100,6 @@ public class ProductAdminController {
 		productAdminService.createProduct(request);
 		return "admin/product/books/register";
 	}
-
 
 	/**
 	 * 관리자가 도서를 수정
