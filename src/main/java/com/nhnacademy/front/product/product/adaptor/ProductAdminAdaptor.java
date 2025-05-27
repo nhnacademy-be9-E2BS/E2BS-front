@@ -3,7 +3,6 @@ package com.nhnacademy.front.product.product.adaptor;
 import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +25,7 @@ public interface ProductAdminAdaptor {
 	ResponseEntity<Void> postCreateProduct(@RequestBody RequestProductDTO request);
 
 	@GetMapping
-	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(Pageable pageable);
 
 	@GetMapping("/order")
 	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
@@ -41,6 +40,6 @@ public interface ProductAdminAdaptor {
 	ResponseEntity<Void> putUpdateProductSalePrice(@PathVariable Long bookId, @RequestBody RequestProductSalePriceUpdateDTO request);
 
 	@GetMapping("/states/sale")
-	ResponseEntity<PageResponse<ResponseProductCouponDTO>> getProductsToCoupon(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseProductCouponDTO>> getProductsToCoupon(Pageable pageable);
 
 }

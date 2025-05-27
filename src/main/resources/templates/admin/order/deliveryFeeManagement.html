@@ -59,7 +59,7 @@
                                     <!-- 처음 버튼 -->
                                     <li class="page-item" th:classappend="${!deliveryFees.hasPrevious()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/settings/deliveryFees'(page=0, size=5)}">처음</a>
+                                           th:href="@{'/admin/settings/deliveryFee'(page=0, size=${deliveryFees.size})}">처음</a>
                                     </li>
 
                                     <!-- 전체 페이지 번호 출력 -->
@@ -67,14 +67,14 @@
                                         th:each="i : ${#numbers.sequence(0, deliveryFees.totalPages - 1)}"
                                         th:classappend="${i == deliveryFees.number} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/settings/deliveryFees'(page=${i}, size=5)}"
+                                           th:href="@{'/admin/settings/deliveryFee'(page=${i}, size=${deliveryFees.size})}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
                                     <!-- 마지막 버튼 -->
                                     <li class="page-item" th:classappend="${!deliveryFees.hasNext()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/settings/deliveryFees'(page=${deliveryFees.totalPages - 1}, size=5)}">마지막</a>
+                                           th:href="@{'/admin/settings/deliveryFee'(page=${deliveryFees.totalPages - 1}, size=${deliveryFees.size})}">마지막</a>
                                     </li>
                                 </ul>
                             </nav>

@@ -77,6 +77,6 @@ public class MemberCouponController {
 		Page<ResponseMemberCouponDTO> memberCoupons = PageResponseConverter.toPage(response);
 
 		model.addAttribute("memberCoupons", memberCoupons);
-		return "member/coupon-box";
+		return "member/mypage/coupon-box";
 	}
 }

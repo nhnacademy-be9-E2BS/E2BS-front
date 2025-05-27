@@ -1,7 +1,6 @@
 package com.nhnacademy.front.coupon.membercoupon.adaptor;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,5 +13,5 @@ import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseMembe
 public interface MemberCouponBoxAdaptor {
 
 	@GetMapping("/{memberId}/coupons")
-	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@PathVariable String memberId, @SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@PathVariable String memberId, Pageable pageable);
 }

@@ -1,7 +1,6 @@
 package com.nhnacademy.front.order.wrapper.adaptor;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +18,10 @@ import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 public interface WrapperAdaptor {
 
 	@GetMapping("/wrappers")
-	ResponseEntity<PageResponse<ResponseWrapperDTO>> getWrappersBySaleable(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseWrapperDTO>> getWrappersBySaleable(Pageable pageable);
 
 	@GetMapping("/admin/wrappers")
-	ResponseEntity<PageResponse<ResponseWrapperDTO>> getWrappers(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseWrapperDTO>> getWrappers(Pageable pageable);
 
 	@PostMapping("/admin/wrappers")
 	ResponseEntity<Void> postCreateWrapper(@RequestBody RequestRegisterWrapperDTO registerRequest);
