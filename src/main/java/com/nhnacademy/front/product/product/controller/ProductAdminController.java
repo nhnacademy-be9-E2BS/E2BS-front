@@ -39,12 +39,10 @@ import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
 import com.nhnacademy.front.product.tag.service.TagService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/settings/books")
-@Slf4j
 public class ProductAdminController {
 
 	private final ProductAdminService productAdminService;
@@ -82,7 +80,11 @@ public class ProductAdminController {
 	 */
 	@JwtTokenCheck
 	@GetMapping("/register")
-	public String getRegisterView() {
+	public String getRegisterView(Model model) {
+		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+		model.addAttribute("categories", categories);
+		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
+		model.addAttribute("tags", tags);
 
 		return "admin/product/books/register";
 	}
@@ -98,6 +100,17 @@ public class ProductAdminController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		productAdminService.createProduct(request);
+		return "admin/product/books/register";
+	}
+
+	/**
+	 * 관리자 도서 정보 단일 조회
+	 */
+	@JwtTokenCheck
+	@GetMapping("/register/{bookId}")
+	public String getProductsById(@PathVariable Long bookId, Model model) {
+		ResponseProductReadDTO response = productService.getProduct(bookId);
+		model.addAttribute("product", response);
 		return "admin/product/books/register";
 	}
 
@@ -125,6 +138,7 @@ public class ProductAdminController {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
+		productAdminService.updateProductSalePrice(bookId, request);
 		return ResponseEntity.ok().build();
 	}
 
@@ -184,7 +198,6 @@ public class ProductAdminController {
 
 	@PostMapping("/aladdin/register/submit/list")
 	public String submitBook(@ModelAttribute RequestProductApiCreateByQueryDTO dto) {
-		log.info("🔍 queryType from form: {}", dto.getQueryType()); // ← 여기
 
 		productService.createProductQueryApi(dto);
 		return "redirect:/admin/settings/books/search";
