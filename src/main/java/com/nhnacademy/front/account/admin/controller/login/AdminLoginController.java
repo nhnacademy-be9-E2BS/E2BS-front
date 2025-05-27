@@ -1,4 +1,4 @@
-package com.nhnacademy.front.account.admin.controller;
+package com.nhnacademy.front.account.admin.controller.login;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
