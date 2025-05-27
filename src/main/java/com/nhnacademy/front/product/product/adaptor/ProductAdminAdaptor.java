@@ -25,8 +25,6 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsA
 
 @FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
 public interface ProductAdminAdaptor {
-	@PostMapping
-	ResponseEntity<Void> postCreateProduct(@RequestBody RequestProductDTO request);
 
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(@SpringQueryMap Pageable pageable);
