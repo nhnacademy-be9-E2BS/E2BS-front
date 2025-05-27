@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class RequestDeleteCartItemsForGuestDTO {
 	private String sessionId;
 	@NotNull
-	private long productId;
+	private Long productId;
 }

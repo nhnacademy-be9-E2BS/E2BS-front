@@ -75,6 +75,11 @@ product:
     admin:
       url: http://localhost:10232/api/admin/categories
 
+  book:
+    member:
+      url: http://localhost:10232/api/books
+    admin:
+      url: http://localhost:10232/api/admin/books
 
 order:
   wrapper:

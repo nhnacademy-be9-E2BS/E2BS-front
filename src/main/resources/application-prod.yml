@@ -62,6 +62,11 @@ product:
     admin:
       url: https://e2bs.shop/api/admin/categories
 
+  book:
+    member:
+      url: https://e2bs.shop/api/books
+    admin:
+      url: https://e2bs.shop/api/admin/books
 
 
 order:
