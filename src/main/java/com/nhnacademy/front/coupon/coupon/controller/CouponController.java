@@ -1,5 +1,7 @@
 package com.nhnacademy.front.coupon.coupon.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,16 +28,19 @@ import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 import com.nhnacademy.front.coupon.coupon.service.CouponService;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.response.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
+import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
+import com.nhnacademy.front.product.category.service.AdminCategoryService;
 
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/mypage/coupons")
+@RequestMapping("/admin/settings/coupons")
 public class CouponController {
 
 	private final CouponService couponServiceImpl;
 	private final CouponPolicyService couponPolicyServiceImpl;
+	private final AdminCategoryService adminCategoryService;
 
 	/**
 	 * 관리자 쿠폰 생성 뷰
@@ -48,6 +53,8 @@ public class CouponController {
 		Page<ResponseCouponPolicyDTO> couponPolicies = PageResponseConverter.toPage(couponPolicyDTO);
 
 		// 상준; 카테고리, 상품 정보도 받아오기 + coupon-register.html 수정
+		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+		model.addAttribute("categories", categories);
 
 		model.addAttribute("couponPolicies", couponPolicies);
 		return "admin/coupon/coupon-register";
@@ -63,7 +70,7 @@ public class CouponController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		couponServiceImpl.createCoupon(request);
-		return "redirect:/admin/mypage/coupons";
+		return "redirect:/admin/settings/coupons";
 	}
 
 	/**

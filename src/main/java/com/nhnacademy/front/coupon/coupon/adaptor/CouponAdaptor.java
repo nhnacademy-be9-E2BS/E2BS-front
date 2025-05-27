@@ -1,7 +1,6 @@
 package com.nhnacademy.front.coupon.coupon.adaptor;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +20,7 @@ public interface CouponAdaptor {
 	ResponseEntity<Void> createCoupon(@RequestBody RequestCouponDTO request);
 
 	@GetMapping
-	ResponseEntity<PageResponse<ResponseCouponDTO>> getCoupons(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseCouponDTO>> getCoupons(Pageable pageable);
 
 	@GetMapping("/{couponId}")
 	ResponseEntity<ResponseCouponDTO> getCoupon(@PathVariable Long couponId);
@@ -30,5 +29,5 @@ public interface CouponAdaptor {
 	ResponseEntity<Void> updateCoupon(@PathVariable Long couponId);
 
 	@GetMapping("/isActive")
-	ResponseEntity<PageResponse<ResponseCouponDTO>> getCouponsIsActive(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseCouponDTO>> getCouponsIsActive(Pageable pageable);
 }

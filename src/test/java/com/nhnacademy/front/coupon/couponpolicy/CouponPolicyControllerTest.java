@@ -56,7 +56,7 @@ class CouponPolicyControllerTest {
 
 		when(couponPolicyService.getCouponPolicies(any(Pageable.class))).thenReturn(pageResponse);
 
-		mockMvc.perform(get("/admin/mypage/couponPolicies"))
+		mockMvc.perform(get("/admin/settings/couponPolicies"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("admin/coupon/coupon-policy"))
 			.andExpect(model().attributeExists("couponPolicies"));
@@ -69,7 +69,7 @@ class CouponPolicyControllerTest {
 
 		when((couponPolicyService.getCouponPolicyById(1L))).thenReturn(dto);
 
-		mockMvc.perform(get("/admin/mypage/couponPolicies/1"))
+		mockMvc.perform(get("/admin/settings/couponPolicies/1"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("admin/coupon/coupon-policy-detail"))
 			.andExpect(model().attributeExists("couponPolicy"));
@@ -80,7 +80,7 @@ class CouponPolicyControllerTest {
 	void testCreateCouponPolicy() throws Exception {
 		doNothing().when(couponPolicyService).createCouponPolicy(any(RequestCouponPolicyDTO.class));
 
-		mockMvc.perform(post("/admin/mypage/couponPolicies")
+		mockMvc.perform(post("/admin/settings/couponPolicies")
 				.param("couponPolicyName", "NewPolicy")
 				.param("couponPolicyMinimum", "1000")
 				.param("couponPolicyDiscountRate", "10")
@@ -89,6 +89,6 @@ class CouponPolicyControllerTest {
 				.param("couponPolicyCreatedAt", "2025-05-12T15:00")
 				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/admin/mypage/couponPolicies"));
+			.andExpect(redirectedUrl("/admin/settings/couponPolicies"));
 	}
 }

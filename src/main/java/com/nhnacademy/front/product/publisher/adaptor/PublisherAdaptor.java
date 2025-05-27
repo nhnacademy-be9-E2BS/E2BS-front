@@ -1,7 +1,6 @@
 package com.nhnacademy.front.product.publisher.adaptor;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,7 @@ import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublish
 public interface PublisherAdaptor {
 
 	@GetMapping
-	ResponseEntity<PageResponse<ResponsePublisherDTO>> getPublishers(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponsePublisherDTO>> getPublishers(Pageable pageable);
 
 	@PostMapping
 	ResponseEntity<Void> postCreatePublisher(@RequestBody RequestPublisherDTO request);

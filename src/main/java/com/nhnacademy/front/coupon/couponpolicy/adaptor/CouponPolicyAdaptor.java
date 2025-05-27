@@ -1,7 +1,6 @@
 package com.nhnacademy.front.coupon.couponpolicy.adaptor;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +25,7 @@ public interface CouponPolicyAdaptor {
 	 * 관리자 쿠폰 정책 전체 조회 
 	 */
 	@GetMapping
-	ResponseEntity<PageResponse<ResponseCouponPolicyDTO>> getCouponPolicies(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseCouponPolicyDTO>> getCouponPolicies(Pageable pageable);
 
 	/**
 	 * 관리자 쿠폰 정책 단건 조회

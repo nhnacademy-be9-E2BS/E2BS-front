@@ -31,7 +31,7 @@ public interface ProductAdminAdaptor {
 	@PostMapping
 
 	@GetMapping
-	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(Pageable pageable);
 
 	@GetMapping("/order")
 	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
@@ -52,7 +52,7 @@ public interface ProductAdminAdaptor {
 	ResponseEntity<Void> putUpdateProductSalePrice(@PathVariable Long bookId, @RequestBody RequestProductSalePriceUpdateDTO request);
 
 	@GetMapping("/states/sale")
-	ResponseEntity<PageResponse<ResponseProductCouponDTO>> getProductsToCoupon(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseProductCouponDTO>> getProductsToCoupon(Pageable pageable);
 
 	// 일반 검색 (query + queryType)
 	@GetMapping("/aladdin/search")
