@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 
 	private final ProductService productService;
+	private final ProductAdminService productAdminService;
 
 	/**
 	 * 사용자 - 도서 상세 페이지 조회
@@ -44,6 +46,16 @@ public class ProductController {
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
 		model.addAttribute("products", products);
+		return "product/category";
+	}
+
+	@GetMapping
+	public String testListView(@PageableDefault(page = 0, size = 9) Pageable pageable, Model model) {
+		PageResponse<ResponseProductReadDTO> response = productAdminService.getProducts(pageable);
+		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
+
+		model.addAttribute("products", products);
+
 		return "product/category";
 	}
 }

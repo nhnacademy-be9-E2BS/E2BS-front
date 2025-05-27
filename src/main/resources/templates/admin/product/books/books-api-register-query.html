@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+
+<style>
+    .dropdown-menu.scrollable-category {
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1055;
+    }
+
+    .dropdown-menu.scrollable-category label {
+        white-space: nowrap;
+    }
+
+    .dropdown-menu.scrollable-category .form-check {
+        margin-bottom: 4px;
+    }
+</style>
+
+<body>
+
+<div layout:fragment="content">
+    <section class="container mt-4">
+        <h2>도서 정보 확인 및 등록</h2>
+
+        <form th:action="@{/admin/settings/books/aladdin/register/submit/list}" method="post" class="mt-4">
+            <div class="mb-3">
+                <label for="productTitle" class="form-label">도서 제목</label>
+                <input type="text" class="form-control" id="productTitle" name="productTitle"
+                       th:value="${book.productTitle}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="publisherName" class="form-label">출판사</label>
+                <input type="text" class="form-control" id="publisherName" name="publisherName"
+                       th:value="${book.publisherName}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="productPublishedAt" class="form-label">출판일</label>
+                <input type="date" class="form-control" id="productPublishedAt" name="productPublishedAt"
+                       th:value="${book.productPublishedAt}" required readonly>
+            </div>
+
+
+            <div class="mb-3">
+                <label for="contributors" class="form-label">기여자 정보</label>
+                <input type="text" class="form-control" id="contributors" name="contributors"
+                       th:value="${book.contributors}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="productIsbn" class="form-label">ISBN</label>
+                <input type="text" class="form-control" id="productIsbn" name="productIsbn"
+                       th:value="${book.productIsbn}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="productImage" class="form-label">이미지 URL</label>
+                <input type="text" class="form-control" id="productImage" name="productImage"
+                       th:value="${book.productImage}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="productDescription" class="form-label">도서 설명</label>
+                <div id="editorDescription"></div>
+                <input type="hidden" class="form-control" id="productDescription" name="productDescription"
+                       th:value="${book.productDescription}" >
+            </div>
+
+            <div class="mb-3">
+                <label for="productContent" class="form-label">목차</label>
+                <div id="editorContent"></div>
+                <input type="hidden" class="form-control" id="productContent" name="productContent"
+                       th:value="${book.productContent}" >
+            </div>
+
+            <div class="mb-3">
+                <label for="productRegularPrice" class="form-label">정가</label>
+                <input type="number" class="form-control" id="productRegularPrice" name="productRegularPrice"
+                       th:value="${book.productRegularPrice}" required readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="productSalePrice" class="form-label">판매가</label>
+                <input type="number" class="form-control" id="productSalePrice" name="productSalePrice"
+                       th:value="${book.productSalePrice}" required readonly>
+            </div>
+
+
+            <div class="mb-3">
+                <label for="productStock" class="form-label">재고</label>
+                <input type="number" class="form-control" id="productStock" name="productStock"
+                       th:value="${book.productStock}" >
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label d-block">포장 여부</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="packageableYes" name="productPackageable" value="true"
+                           th:checked="${book.productPackageable}">
+                    <label class="form-check-label" for="packageableYes">예</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="packageableNo" name="productPackageable" value="false"
+                           th:checked="${!book.productPackageable}">
+                    <label class="form-check-label" for="packageableNo">아니오</label>
+                </div>
+
+            </div>
+
+
+
+            <div class="dropdown mb-3">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    카테고리 선택
+                </button>
+                <ul class="dropdown-menu scrollable-category">
+                    <li th:each="category : ${categories}">
+                        <th:block th:replace="fragments/categoryDropdownCheckboxFragment :: categoryCheckbox(category=${category}, prefix='', bookQueryType=${book.queryType})"/>
+                    </li>
+                </ul>
+
+                <div class="form-text">최대 10개까지 선택할 수 있습니다.</div>
+            </div>
+
+
+
+
+            <div class="mb-3">
+                <label class="form-label">태그 선택</label>
+                <div class="form-check" th:each="tag : ${tags}">
+                    <input class="form-check-input" type="checkbox"
+                           th:id="'tag-' + ${tag.tagId}"
+                           th:name="tagIds"
+                           th:value="${tag.tagId}"
+                           th:checked="${book.tagIds != null} ? ${book.tagIds.contains(tag.tagId)} : false">
+                    <label class="form-check-label" th:for="'tag-' + ${tag.tagId}" th:text="${tag.tagName}">태그명</label>
+                </div>
+            </div>
+
+
+
+            <input type="hidden" name="queryType" th:value="${book.queryType}" />
+
+            <button type="submit" class="btn btn-primary">등록</button>
+            <a th:href="@{/admin/settings/books/search}" class="btn btn-secondary">취소</a>
+        </form>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script>
+        const editorContent = new toastui.Editor({
+            el: document.querySelector('#editorContent'),
+            height: '200px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical',
+
+        });
+
+        const editorDescription = new toastui.Editor({
+            el: document.querySelector('#editorDescription'),
+            height: '400px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical',
+            initialValue: document.getElementById('productDescription').value
+        });
+
+        document.querySelector('form').addEventListener('submit', function () {
+            document.querySelector('#productContent').value = editorContent.getHTML();
+            document.querySelector('#productDescription').value = editorDescription.getHTML();
+        });
+        function limitCategorySelection(checkbox) {
+            const checkedBoxes = document.querySelectorAll('.category-checkbox:checked');
+            if (checkedBoxes.length > 10) {
+                checkbox.checked = false;
+                alert("카테고리는 최대 10개까지만 선택할 수 있습니다.");
+            }
+        }
+
+        function openPopup(type) {
+            window.open(`/admin/${type}/create`, `${type}Popup`, "width=600,height=400");
+        }
+        // 사진 미리보기 기능
+        document.getElementById('imagePaths').addEventListener('change', function(event) {
+            const previewContainer = document.getElementById('previewContainer');
+            previewContainer.innerHTML = ''; // 기존 미리보기 초기화
+
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'col-md-4 mb-3'; // 한 줄에 3개씩 (col-md-4는 12/4 = 3개)
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = 'Preview';
+                    img.className = 'img-fluid';
+                    img.style.maxHeight = '150px'; // 이미지 크기 조정
+                    imgDiv.appendChild(img);
+                    previewContainer.appendChild(imgDiv);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+</div>
+
+
+</body>
+</html>
