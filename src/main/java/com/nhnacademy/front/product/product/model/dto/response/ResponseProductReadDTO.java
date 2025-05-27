@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
+import com.nhnacademy.front.product.image.model.dto.response.ResponseProductImageDTO;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
+import com.nhnacademy.front.product.state.model.dto.response.ResponseProductStateDTO;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
 
 import lombok.AllArgsConstructor;

@@ -60,7 +60,17 @@ public class ProductAdminController {
 		return "admin/product/books/view";
 	}
 
+	/**
+	 * 관리자 도서 단일 조회
+	 */
+	@JwtTokenCheck
+	@GetMapping("/register/{bookId}")
+	public String getProductById(@PathVariable Long bookId, Model model) {
+		ResponseProductReadDTO response = productService.getProduct(bookId);
 
+		model.addAttribute("product", response);
+		return "admin/product/books/register";
+	}
 
 	/**
 	 * 관리자 도서 등록 뷰로 이동
@@ -75,7 +85,6 @@ public class ProductAdminController {
 
 		return "admin/product/books/register";
 	}
-
 
 	/**
 	 * 관리자가 admin settings 페이지에서 도서 등록

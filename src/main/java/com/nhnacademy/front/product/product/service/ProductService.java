@@ -14,6 +14,4 @@ public interface ProductService {
 
 	//공통 - 카테고리별 도서 여러권 페이지로 조회
 	PageResponse<ResponseProductReadDTO> getProductsByCategoryId(Pageable pageable, long categoryId);
-
-
 }

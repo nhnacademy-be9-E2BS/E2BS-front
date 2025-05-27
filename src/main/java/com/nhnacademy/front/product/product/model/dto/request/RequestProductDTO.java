@@ -19,8 +19,10 @@ public class RequestProductDTO {
 	 */
 
 	//상품상태
-	private long productStateId;
+	@NotNull
+	private Long productStateId;
 	//출판사
+	@NotNull
 	private Long publisherId;
 
 	//제목, 목차, 설명
@@ -38,14 +40,17 @@ public class RequestProductDTO {
 	@NotNull
 	private String productIsbn;
 	//정가
-	private long productRegularPrice;
+	@NotNull
+	private Long productRegularPrice;
 	//판매가
-	private long productSalePrice;
+	@NotNull
+	private Long productSalePrice;
 	//포장가능여부
 	@NotNull
 	private boolean productPackageable;
 	//상품재고
-	private int productStock;
+	@NotNull
+	private Integer productStock;
 
 	// 이미지
 	@NotNull
@@ -53,8 +58,10 @@ public class RequestProductDTO {
 	// 태그
 	private List<Long> tagIds;
 	// 카테고리 Id
+	@NotNull
 	private List<Long> categoryIds;
 	// 기여자 Id
+	@NotNull
 	private List<Long> contributorIds;
 
 }
