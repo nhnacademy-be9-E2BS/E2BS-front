@@ -105,3 +105,6 @@ guest:
 
 review:
   url: http://localhost:10232/api/reviews
+
+index:
+  url: http://localhost:10232/api
