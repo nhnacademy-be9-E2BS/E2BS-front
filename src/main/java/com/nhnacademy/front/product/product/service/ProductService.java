@@ -13,4 +13,3 @@ public interface ProductService {
 	PageResponse<ResponseProductReadDTO> getProductsByCategoryId(Pageable pageable, long categoryId);
 
 }
-
