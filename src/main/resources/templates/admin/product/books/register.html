@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="content">
+            <h3>도서 직접 등록</h3>
+            <div class="row">
+                <div class="col-lg-8">
+                    <form class="row login_form" action="/admin/settings/books" method="post">
+                        <!-- 도서 이름 -->
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" name="productTitle" placeholder="도서 이름" required>
+                        </div>
+
+                        <!-- 목차 (위즈윅 에디터) -->
+                        <div class="col-md-18 form-group">
+                            <label>목차</label>
+                            <div id="editorContent"></div>
+                            <input type="hidden" name="productContent" id="productContent">
+                        </div>
+
+                        <!-- 설명 (위즈윅 에디터) -->
+                        <div class="col-md-18 form-group">
+                            <label>설명</label>
+                            <div id="editorDescription"></div>
+                            <input type="hidden" name="productDescription" id="productDescription">
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" name="contributor" placeholder="기여자" required>
+                        </div>
+
+                        <!-- 출판사 -->
+                        <div class="col-md-12 form-group">
+                            <label>출판사</label>
+                            <select name="publisherId" required>
+                                <option value="">출판사 선택</option>
+                                <option th:each="publisher : ${publishers}"
+                                        th:value="${publisher.id}"
+                                        th:text="${publisher.name}">
+                                </option>
+                            </select>
+                            <button type="button" onclick="openPopup('publisher')">출판사 추가</button>
+                        </div>
+                        <!-- ISBN -->
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" name="productIsbn" placeholder="ISBN" required>
+                        </div>
+
+                        <!-- 정가 -->
+                        <div class="col-md-12 form-group">
+                            <input type="number" class="form-control" name="productRegularPrice" placeholder="정가" required>
+                        </div>
+
+                        <!-- 판매가 -->
+                        <div class="col-md-12 form-group">
+                            <input type="number" class="form-control" name="productSalePrice" placeholder="판매가" required>
+                        </div>
+
+                        <!-- 카테고리 -->
+                        <div class="col-md-12 form-group">
+                            <label>상품 카테고리 (최소 1개, 최대 10개)</label>
+                            <select name="categoryId">
+                                <option value="">카테고리 선택</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- 재고 -->
+                        <div class="col-md-12 form-group">
+                            <input type="number" class="form-control" name="productStock" placeholder="재고" required>
+                        </div>
+                        <!-- 사진 업로드 (여러 장 가능) -->
+                        <div class="col-md-12 form-group">
+                            <label for="imagePaths">사진 업로드</label>
+                            <input type="file" class="form-control-file" name="imagePaths" id="imagePaths" multiple accept="image/*" required>
+                        </div>
+
+                        <!-- 사진 미리보기 (한 줄에 3개씩) -->
+                        <div class="col-md-12 form-group">
+                            <label>업로드된 사진 미리보기</label>
+                            <div class="row" id="previewContainer">
+                                <!-- JavaScript로 동적으로 추가 -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <label>도서 태그 </label>
+                            <select name="tagId">
+                                <option value="">태그 선택</option>
+                                <option th:each="tag : ${tags}"
+                                        th:value="${tag.id}"
+                                        th:text="${tag.name}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <label>포장 가능 여부</label>
+                            <div>
+                                <select name="packageable">
+                                    <option value="true">가능</option>
+                                    <option value="false">불가능</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 form-group mt-3">
+                            <button type="submit" class="button button-register w-100">도서 등록</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+
+
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script>
+        const editorContent = new toastui.Editor({
+            el: document.querySelector('#editorContent'),
+            height: '200px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical'
+        });
+
+        const editorDescription = new toastui.Editor({
+            el: document.querySelector('#editorDescription'),
+            height: '400px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical'
+        });
+
+        document.querySelector('form').addEventListener('submit', function () {
+            document.querySelector('#productContent').value = editorContent.getHTML();
+            document.querySelector('#productDescription').value = editorDescription.getHTML();
+        });
+
+        function openPopup(type) {
+            window.open(`/admin/${type}/create`, `${type}Popup`, "width=600,height=400");
+        }
+        // 사진 미리보기 기능
+        document.getElementById('imagePaths').addEventListener('change', function(event) {
+            const previewContainer = document.getElementById('previewContainer');
+            previewContainer.innerHTML = ''; // 기존 미리보기 초기화
+
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'col-md-4 mb-3'; // 한 줄에 3개씩 (col-md-4는 12/4 = 3개)
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = 'Preview';
+                    img.className = 'img-fluid';
+                    img.style.maxHeight = '150px'; // 이미지 크기 조정
+                    imgDiv.appendChild(img);
+                    previewContainer.appendChild(imgDiv);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+</div>
+</body>
+</html>
