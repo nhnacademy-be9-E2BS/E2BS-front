@@ -1,7 +1,6 @@
 package com.nhnacademy.front.product.contributor.adaptor;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,7 @@ import com.nhnacademy.front.product.contributor.dto.response.ResponseContributor
 @FeignClient(name = "contributor-service", url = "${product.contributor.url}")
 public interface ContributorAdaptor {
 	@GetMapping
-	ResponseEntity<PageResponse<ResponseContributorDTO>> getContributors(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponseContributorDTO>> getContributors(Pageable pageable);
 
 	@GetMapping
 	ResponseContributorDTO getContributor(@RequestParam("contributorId") long contributorId);

@@ -12,13 +12,16 @@ import com.nhnacademy.front.product.product.adaptor.ProductAdminAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
 import com.nhnacademy.front.product.product.exception.ProductUpdateProcessException;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateByQueryDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 import com.nhnacademy.front.product.product.service.ProductAdminService;
 
@@ -30,7 +33,6 @@ import lombok.RequiredArgsConstructor;
 public class ProductAdminServiceImpl implements ProductAdminService {
 
 	private final ProductAdminAdaptor productAdminAdaptor;
-	private final AdminCategoryService adminCategoryService;
 
 	/**
 	 * product를 back에서 저장 (관계 테이블들도)
@@ -123,8 +125,8 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 * 알라딘 api로 검색어에 따른 결과 조회
 	 */
 	@Override
-	public PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable) {
-		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> response = productAdminAdaptor.searchProducts(request, pageable);
+	public PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable) throws FeignException {
+		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> response = productAdminAdaptor.searchBooksByQuery(request, pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("도서 조회 실패");
@@ -133,13 +135,32 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	}
 
 	@Override
-	public void createProductApi(RequestProductApiCreateDTO request) {
+	public PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi (
+		RequestProductApiSearchByQueryTypeDTO request, Pageable pageable) throws FeignException {
+		ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> response = productAdminAdaptor.listBooksByCategory(request, pageable);
+
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new ProductGetProcessException("도서 조회 실패");
+		}
+		return response.getBody();
+	}
+
+	@Override
+	public void createProductApi(RequestProductApiCreateDTO request) throws FeignException {
 		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductByApi(request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductCreateProcessException("도서 등록 실패");
 		}
+	}
 
+	@Override
+	public void createProductQueryApi(RequestProductApiCreateByQueryDTO request) throws FeignException {
+		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductQueryByApi(request);
+
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new ProductCreateProcessException("도서 등록 실패");
+		}
 	}
 
 }

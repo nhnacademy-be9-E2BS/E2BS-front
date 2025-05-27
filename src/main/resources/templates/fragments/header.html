@@ -37,7 +37,7 @@
 
                         <ul class="nav-shop">
                             <!-- 로그인 안 된 경우 -->
-                            <li class="nav-item" th:if="${memberName == null}">
+                            <li class="nav-item" th:if="${memberRole == null || memberName == null}">
                                 <a class="button button-header" th:href="@{/login}">Login</a>
                             </li>
 
@@ -47,16 +47,22 @@
                                 <span class="nav-link" th:text="${memberName}">회원명</span>
                             </li>
 
-                            <li class="nav-item dropdown mypage-hover" th:if="${memberName != null}">
-                                <!-- 마이페이지 드롭다운 트리거 -->
+                            <li class="nav-item dropdown mypage-hover"
+                                th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}">
                                 <a class="nav-link dropdown-toggle" href="/mypage" id="mypageDropdown">마이페이지</a>
                                 <ul class="dropdown-menu mypage-dropdown" aria-labelledby="mypageDropdown">
                                     <li><a class="dropdown-item" href="/mypage">나의 계정</a></li>
-                                    <li><a class="dropdown-item" href="#">주문/배송조회</a></li>
+                                    <li><a class="dropdown-item" href="/mypage/orders">주문/배송조회</a></li>
                                     <li><a class="dropdown-item" href="#">보관함</a></li>
                                     <li><a class="dropdown-item" href="#">구매함</a></li>
                                     <li><a class="dropdown-item" href="#">나의 서재</a></li>
                                 </ul>
+                            </li>
+
+                            <li class="nav-item dropdown mypage-hover"
+                                th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'ADMIN'}">
+                                <a class="nav-link dropdown-toggle" href="/admin/settings" id="settingsDropdown">관리자
+                                    페이지</a>
                             </li>
 
                             <li class="nav-item" th:if="${memberName != null}">

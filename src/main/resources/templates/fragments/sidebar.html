@@ -10,18 +10,20 @@
                     <li class="filter-list"><a href="/admin/settings/books/search">도서 API 검색</a></li>
                     <li class="filter-list"><a href="/admin/settings/books">도서 조회</a></li>
 
-                    <li class="filter-list"><a href="/admin/mypage/tags">태그</a></li>
-                    <li class="filter-list"><a href="#">카테고리</a></li>
-                    <li class="filter-list"><a href="#">출판사</a></li>
-                    <li class="filter-list"><a href="#">포장지</a></li>
-                    <li class="filter-list"><a href="#">기여자</a></li>
+                    <li class="filter-list"><a href="/admin/settings/tags">태그</a></li>
+                    <li class="filter-list"><a href="/admin/settings/categories">카테고리</a></li>
+                    <li class="filter-list"><a href="/admin/settings/publishers">출판사</a></li>
+                    <li class="filter-list"><a href="/admin/settings/wrappers">포장지</a></li>
+                    <li class="filter-list"><a href="/admin/settings/contributors">기여자</a></li>
+                    <li class="filter-list"><a href="/admin/settings/positions">역할</a></li>
                   </ul>
               </div>
 
               <div class="common-filter">
                 <div class="head">회원 관리</div>
                   <ul>
-                    <li class="filter-list"><a href="#">회원 조회</a></li>
+                    <li class="filter-list"><a th:href="@{/admin/settings/members}">회원 조회</a></li>
+                    <li class="filter-list"><a th:href="@{/admin/settings/non-members}">비회원 조회</a></li>
                     <li class="filter-list"><a href="#">Samsung</a></li>
                   </ul>
               </div>
@@ -36,7 +38,9 @@
                 <div class="head">정책 관리</div>
                   <ul>
                     <li class="filter-list"><a href="/admin/settings/deliveryFee">배송비 정책</a></li>
-                    <li class="filter-list"><a href="#">포인트 정책</a></li>
+                    <li class="filter-list"><a href="/admin/settings/couponPolicies">쿠폰 정책</a></li>
+                    <li class="filter-list"><a href="/admin/settings/coupons/register">쿠폰 등록</a></li>
+                    <li class="filter-list"><a href="/admin/settings/coupons">쿠폰 관리</a></li>
                     <li class="filter-list"><a href="#">포인트 정책</a></li>
 
                   </ul>
@@ -87,20 +91,20 @@
     <div class="common-filter">
       <div class="head">주문 내역</div>
       <ul>
-        <li class="filter-list"><a href="/member/orders">주문 내역 조회</a></li>
-        <li class="filter-list"><a href="/member/return">반품 내역</a></li>
-        <li class="filter-list"><a href="/member/cancel">취소 내역</a></li>
-        <li class="filter-list"><a href="/member/reviews">리뷰 내역 조회</a></li>
+        <li class="filter-list"><a th:href="@{/mypage/orders}">주문 내역 조회</a></li>
+        <li class="filter-list"><a href="/mypage/return">반품 내역</a></li>
+        <li class="filter-list"><a href="/mypage/cancel">취소 내역</a></li>
       </ul>
     </div>
 
     <div class="common-filter">
       <div class="head">회원 정보 관리</div>
       <ul>
-        <li class="filter-list"><a href="/member/my-page-update">개인정보 수정</a></li>
+        <li class="filter-list"><a th:href="@{/mypage/info}">개인정보 수정</a></li>
         <li class="filter-list"><a th:href="@{/mypage/addresses}">배송지 관리</a></li>
         <li class="filter-list"><a th:href="@{/mypage/rank}">회원 등급</a></li>
-        <li class="filter-list"><a href="/member/coupons">할인쿠폰</a></li>
+        <li class="filter-list"><a th:href="@{/mypage/couponBox}">할인 쿠폰</a></li>
+        <li class="filter-list"><a th:href="@{/mypage/}">포인트 내역</a></li>
       </ul>
     </div>
   </div>

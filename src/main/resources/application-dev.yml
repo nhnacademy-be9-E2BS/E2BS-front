@@ -19,6 +19,10 @@ spring:
       password: "*N2vya7H@muDTwdNMR!"
       database: 293
 
+home:
+  member:
+    name:
+      url: http://localhost:10232/api/home
 
 member:
   url: http://localhost:10232/api/members
@@ -30,6 +34,10 @@ member:
 
   mypage:
     url: http://localhost:10232/api/mypage
+
+admin:
+  settings:
+    url: http://localhost:10232/api/admin/settings
 
 auth:
   jwt:
@@ -44,8 +52,8 @@ coupon:
     url: http://localhost:10232/api/admin/couponPolicies
   member:
     url: http://localhost:10232/api/admin/member-coupons
-  box:
-    url: http://localhost:10232/api/member-coupons
+  order:
+    url: http://localhost:10232/api/order
 
 # 상품 - 출판사, 기여자 역할
 product:
@@ -97,3 +105,6 @@ guest:
 
 review:
   url: http://localhost:10232/api/reviews
+
+index:
+  url: http://localhost:10232/api

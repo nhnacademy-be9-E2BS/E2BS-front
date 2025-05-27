@@ -1,0 +1,18 @@
+package com.nhnacademy.front.coupon.membercoupon.adaptor;
+
+import java.util.List;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
+import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrderCouponDTO;
+
+@FeignClient(name = "member-coupon-order-service", url = "${coupon.order.url}")
+public interface MemberCouponOrderAdaptor {
+
+	@GetMapping("/{memberId}/coupons")
+	ResponseEntity<List<ResponseOrderCouponDTO>> getCouponsInOrder(@PathVariable("memberId") String memberId, RequestCartOrderDTO request);
+}

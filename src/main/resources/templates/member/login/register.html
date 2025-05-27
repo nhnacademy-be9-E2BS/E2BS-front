@@ -24,10 +24,15 @@
                         <form class="row login_form" action="/register" method="post" id="register_form">
                             <!--아이디-->
                             <div class="col-md-12 form-group">
-                                <input type="text" class="form-control" id="memberId" name="memberId"
-                                       placeholder="아이디를 입력하세요"
-                                       onfocus="this.placeholder = ''" onblur="this.placeholder = '아이디를 입력하세요'"
-                                       required>
+                                <div class="d-flex gap-2">
+                                    <input type="text" class="form-control" id="memberId" name="memberId"
+                                           placeholder="아이디를 입력하세요" onfocus="this.placeholder=''"
+                                           onblur="this.placeholder='아이디를 입력하세요'" required>
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="checkIdDuplicate()">중복 확인
+                                    </button>
+                                </div>
+                                <small id="idCheckMessage" class="text-muted mt-1 d-block"></small>
                             </div>
                             <!--이름-->
                             <div class="col-md-12 form-group">
@@ -95,6 +100,55 @@
         document.getElementById('memberBirth').setAttribute('min', '1900-01-01');
 
     </script>
+    <script>
+        function getApiBaseUrl() {
+            const origin = window.location.origin;
+
+            if (origin.includes("localhost:10238")) {
+                return "http://localhost:10232"; // 개발 환경
+            }
+
+            if (origin.includes("e2bs.shop")) {
+                return "https://e2bs.shop"; // 운영 환경
+            }
+            return "http://localhost:10232";
+        }
+
+        function checkIdDuplicate() {
+            const memberId = document.getElementById('memberId').value.trim();
+            const messageElement = document.getElementById('idCheckMessage');
+
+            if (!memberId) {
+                messageElement.textContent = '아이디를 입력해주세요.';
+                messageElement.className = 'text-danger mt-1 d-block';
+                return;
+            }
+
+            const apiBaseUrl = getApiBaseUrl();
+
+            fetch(`${apiBaseUrl}/api/register/members/${encodeURIComponent(memberId)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`서버 오류: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.available) {
+                        messageElement.textContent = '사용 가능한 아이디입니다.';
+                        messageElement.className = 'text-success';
+                    } else {
+                        messageElement.textContent = '이미 사용 중인 아이디입니다.';
+                        messageElement.className = 'text-danger';
+                    }
+                })
+                .catch(error => {
+                    messageElement.textContent = '서버 오류가 발생했습니다.';
+                    messageElement.className = 'text-danger';
+                });
+        }
+    </script>
+
 </div>
 </body>
 </html>

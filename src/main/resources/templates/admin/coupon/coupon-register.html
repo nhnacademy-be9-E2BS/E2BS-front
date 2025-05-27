@@ -4,6 +4,28 @@
       layout:decorate="~{layouts/admin-layout}">
 <body>
 <div layout:fragment="content">
+    <style>
+        .category-dash ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .category-dash ul li {
+            border-left: 1px dashed #ccc;
+            padding-left: 10px;
+        }
+
+        .category-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toggle {
+            cursor: pointer;
+            margin-right: 5px;
+        }
+    </style>
+
     <section>
         <div class="container">
             <h2>Coupon Register</h2>
@@ -13,7 +35,7 @@
                     <h4>Register New Coupon</h4>
 
                     <!-- 쿠폰 등록 폼 -->
-                    <form class="row login_form" action="/admin/mypage/coupons/register" method="post">
+                    <form class="row login_form" action="/admin/settings/coupons/register" method="post">
                         <table class="table table-bordered">
                             <tbody>
                             <!-- 쿠폰명 -->
@@ -29,7 +51,7 @@
                                 <th>쿠폰 정책</th>
                                 <td>
                                     <select class="form-control" name="couponPolicyId" required>
-                                        <option value="" disabled selected>선택해주세요</option>
+                                        <option value="none" disabled selected>선택해주세요</option>
                                         <option th:each="policy : ${couponPolicies}"
                                                 th:value="${policy.couponPolicyId}"
                                                 th:text="${policy.couponPolicyName + ' (' + #temporals.format(policy.couponPolicyCreatedAt, 'yyyy-MM-dd') + ')'}">
@@ -61,11 +83,49 @@
                             <tr id="categoryRow" class="hidden">
                                 <th>카테고리</th>
                                 <td>
-                                    <select class="form-control" name="categoryId" multiple size="8">
-                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">카테고리</option>
-                                    </select>
+                                    <!-- 조회 영역 -->
+                                    <div class="row mb-5">
+                                        <div class="col-12 category-dash">
+                                            <ul id="categoryTree">
+                                                <li th:each="category : ${categories}" class="mb-2">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <!-- 들여쓰기 + 텍스트 -->
+                                                        <div class="category-left">
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="toggle me-2" onclick="toggleClick(this)">📁</span>
+                                                                <span th:text="${category.categoryName}"></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- 오른쪽 버튼 -->
+                                                        <div class="ms-2">
+                                                            <button type="button"
+                                                                    class="btn btn-sm btn-outline-success"
+                                                                    th:attr="data-id=${category.categoryId}, data-name=${category.categoryName}"
+                                                                    onclick="selectCategory(this)">선택</button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- 자식 카테고리 -->
+                                                    <ul th:if="${#lists.size(category.children) > 0}" class="ms-4 mt-2">
+                                                        <th:block th:replace="admin/coupon/coupon-register-categoryFragment :: categoryFragment(category=${category})" />
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
+
+                            <!-- 선택한 카테고리 -->
+                            <tr id="categoryRow2" class="hidden">
+                                <th>선택한 카테고리</th>
+                                <td>
+                                    <span id="selectedCategoryName">없음</span>
+                                    <input type="hidden" name="categoryId" id="selectedCategoryId" />
+                                </td>
+                            </tr>
+
 
                             <!-- 도서 선택 -->
                             <tr id="productRow" class="hidden">
@@ -87,13 +147,62 @@
 
                     <!-- 스크립트 및 스타일 -->
                     <script>
+                        function selectCategory(button) {
+                            const categoryId = button.getAttribute("data-id");
+                            const categoryName = button.getAttribute("data-name");
+
+                            // 값 표시
+                            document.getElementById("selectedCategoryName").textContent = categoryName;
+                            document.getElementById("selectedCategoryId").value = categoryId;
+                        }
+
+                        // 폼 제출 시 유효성 검사
+                        document.querySelector("form").addEventListener("submit", function (e) {
+                            const couponType = document.querySelector("input[name='couponType']:checked").value;
+                            const categoryId = document.getElementById("selectedCategoryId").value;
+                            const couponPolicy = document.querySelector("select[name='couponPolicyId']");
+
+                            // 쿠폰 정책 선택 검사
+                            if (couponPolicy.value === "none") {
+                                e.preventDefault();
+                                alert("쿠폰 정책을 선택해주세요.");
+                                return;
+                            }
+
+                            // 카테고리 선택 안 한 경우
+                            if (couponType === "category" && !categoryId) {
+                                e.preventDefault();
+                                alert("카테고리를 선택해주세요.");
+                            }
+
+                        });
+
+                        document.addEventListener("DOMContentLoaded", () => {
+                            const toggles = document.querySelectorAll("#categoryTree .toggle");
+
+                            toggles.forEach(span => {
+                                const li = span.closest("li");
+                                const childUl = li.querySelector("ul");
+
+                                if (!childUl) {
+                                    span.textContent = "🔹"; // 자식이 없는 경우
+                                } else {
+                                    span.textContent = "📂"; // 처음에 다 열어서 보여줌
+                                    // childUl.style.display = "none"; // 기본은 닫힌 상태
+                                }
+                            });
+                        });
+
                         document.addEventListener("DOMContentLoaded", function () {
                             const radios = document.querySelectorAll("input[name='couponType']");
-                            const categoryRow = document.getElementById("categoryRow");
+                            const categoryRow = document.getElementById("categoryRow")
+                            const categoryRow2 = document.getElementById("categoryRow2");
                             const productRow = document.getElementById("productRow");
+
 
                             function updateVisibility(value) {
                                 categoryRow.classList.toggle("hidden", value !== "category");
+                                categoryRow2.classList.toggle("hidden", value !== "category");
                                 productRow.classList.toggle("hidden", value !== "product");
                             }
 
@@ -105,7 +214,19 @@
                                 });
                             });
                         });
+
+                        function toggleClick(element) {
+                            const parentLi = element.closest("li");
+                            const childUl = parentLi.querySelector("ul");
+
+                            if (childUl) {
+                                const isVisible = childUl.style.display !== "none";
+                                childUl.style.display = isVisible ? "none" : "block";
+                                element.textContent = isVisible ? "📁" : "📂"; // 닫힘이면 📁, 열림이면 📂
+                            }
+                        }
                     </script>
+
 
                     <style>
                         .hidden {

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="container mt-4">
+        <!-- 📋 검색 결과 -->
+        <div th:if="${products != null}">
+            <p th:text="'검색결과: ' + ${products.totalElements} + '건'"></p>
+
+            <div class="d-flex flex-column gap-3">
+                <div class="card shadow-sm" th:each="product : ${products.content}">
+                    <div class="row g-0 align-items-center">
+                        <!-- 이미지 -->
+                        <div class="col-auto">
+                            <img th:src="${product.productImage}" alt="도서 이미지"
+                                 class="img-fluid rounded-start"
+                                 style="width: 80px; height: 100px; object-fit: cover; margin: 10px;">
+                        </div>
+
+                        <!-- 정보 -->
+                        <div class="col">
+                            <div class="card-body py-2">
+                                <h6 class="card-title fw-bold mb-1" th:text="${product.productTitle}">도서 제목</h6>
+                                <p class="card-text small text-muted mb-0">
+                                    출판사: <span th:text="${product.publisherName}">출판사</span>,
+                                    ISBN: <span th:text="${product.productIsbn}">isbn</span>
+                                </p>
+                                <p class="card-text small text-muted">
+                                    정가: <span th:text="${product.productRegularPrice} + '원'">정가</span>,
+                                    판매가: <span th:text="${product.productSalePrice} + '원'">판매가</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 등록 버튼 -->
+                        <div class="col-auto pe-3">
+                            <form th:action="@{/admin/settings/books/aladdin/register/list}" method="post">
+                                <input type="hidden" name="publisherName" th:value="${product.publisherName}">
+                                <input type="hidden" name="productTitle" th:value="${product.productTitle}">
+                                <input type="hidden" name="productIsbn" th:value="${product.productIsbn}">
+                                <input type="hidden" name="productImage" th:value="${product.productImage}">
+                                <input type="hidden" name="productDescription" th:value="${product.productDescription}">
+                                <input type="hidden" name="productRegularPrice" th:value="${product.productRegularPrice}">
+                                <input type="hidden" name="productSalePrice" th:value="${product.productSalePrice}">
+                                <input type="hidden" name="contributors" th:value="${product.contributors}">
+                                <input type="hidden" name="productPublishedAt" th:value="${product.productPublishedAt}">
+                                <input type="hidden" name="queryType" th:value="${queryType}">
+
+
+                                <button type="submit" class="btn btn-sm btn-primary">등록</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 페이지네이션 -->
+            <nav th:if="${products.totalPages > 1}">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/settings/books/aladdin/search(query=${param.query}, queryType=${param.queryType}, page=0, size=${products.size})}">처음</a>
+                    </li>
+
+                    <li class="page-item"
+                        th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+                        th:classappend="${i == products.number} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/admin/settings/books/aladdin/search(query=${param.query}, queryType=${param.queryType}, page=${i}, size=${products.size})}"
+                           th:text="${i + 1}">1</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/settings/books/aladdin/search(query=${param.query}, queryType=${param.queryType}, page=${products.totalPages - 1}, size=${products.size})}">마지막</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+</div>
+</body>
+</html>

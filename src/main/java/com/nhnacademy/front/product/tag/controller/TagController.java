@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
@@ -28,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/mypage/tags")
+@RequestMapping("/admin/settings/tags")
 public class TagController {
 
 	private final TagService tagService;
@@ -37,6 +38,7 @@ public class TagController {
 	 * 관리자가 현재 등록된 태그들을 조회
 	 * 관리자 마이페이지 -> 태그
 	 */
+	@JwtTokenCheck
 	@GetMapping
 	public String getTags(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
 		PageResponse<ResponseTagDTO> response = tagService.getTags(pageable);
@@ -49,6 +51,7 @@ public class TagController {
 	/**
 	 * 태그 생성
 	 */
+	@JwtTokenCheck
 	@PostMapping
 	public String createTag(@Validated @ModelAttribute("tag") RequestTagDTO requestTagDTO,
 		BindingResult bindingResult) {
@@ -58,12 +61,13 @@ public class TagController {
 
 		tagService.createTag(requestTagDTO);
 
-		return "redirect:/admin/mypage/tags";
+		return "redirect:/admin/settings/tags";
 	}
 
 	/**
 	 * 태그 수정
 	 */
+	@JwtTokenCheck
 	@PutMapping("/{tagId}")
 	public ResponseEntity<Void> updateTag(@Validated @RequestBody RequestTagDTO requestTagDTO,
 		BindingResult bindingResult, @PathVariable Long tagId) {
@@ -79,6 +83,7 @@ public class TagController {
 	/**
 	 * 태그 삭제
 	 */
+	@JwtTokenCheck
 	@DeleteMapping("/{tagId}")
 	public ResponseEntity<Void> deleteTag(@PathVariable Long tagId, @Validated @RequestBody RequestTagDTO requestTagDTO) {
 		tagService.deleteTag(tagId, requestTagDTO);

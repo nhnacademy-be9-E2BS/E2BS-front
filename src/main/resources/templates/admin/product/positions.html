@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <h4>Register New Position</h4>
-                    <form class="row login_form" action="/admin/mypage/positions" method="post">
+                    <form class="row login_form" action="/admin/settings/positions" method="post">
                         <div class="col-md-6 form-group">
                             <input type="text" class="form-control" name="positionName" placeholder="역할 이름" required>
                         </div>
@@ -38,7 +38,7 @@
                         <tr th:each="position : ${positions.content}">
                             <td th:text="${position.positionId}">1</td>
                             <td>
-                                <form th:action="@{'/admin/mypage/positions/' + ${position.positionId}}" method="post">
+                                <form th:action="@{'/admin/settings/positions/' + ${position.positionId}}" method="post">
                                     <input type="hidden" name="_method" value="put"/>
 
                                     <div class="d-flex align-items-center gap-2">
@@ -73,20 +73,20 @@
                             <nav>
                                 <ul class="pagination" th:if="${positions.totalPages > 0}">
                                     <li class="page-item" th:classappend="${!positions.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link" th:href="@{'/admin/mypage/positions'(page=0, size=10)}">처음</a>
+                                        <a class="page-link" th:href="@{'/admin/settings/positions'(page=0, size=10)}">처음</a>
                                     </li>
 
                                     <li class="page-item"
                                         th:each="i : ${#numbers.sequence(0, positions.totalPages - 1)}"
                                         th:classappend="${i == positions.number} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/positions'(page=${i}, size=10)}"
+                                           th:href="@{'/admin/settings/positions'(page=${i}, size=10)}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
                                     <li class="page-item" th:classappend="${!positions.hasNext()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/mypage/positions'(page=${positions.totalPages - 1}, size=10)}">마지막</a>
+                                           th:href="@{'/admin/settings/positions'(page=${positions.totalPages - 1}, size=10)}">마지막</a>
                                     </li>
                                 </ul>
                             </nav>

@@ -2,12 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/admin-layout}">
-
 <body>
 <div layout:fragment="content">
     <section class="container mt-4">
-        <div class="container mt-4">
-            <h2>도서 검색</h2>
+        <!-- 📋 검색 결과 -->
+        <div th:if="${products != null}">
             <p th:text="'검색결과: ' + ${products.totalElements} + '건'"></p>
 
             <div class="d-flex flex-column gap-3">
@@ -20,7 +19,7 @@
                                  style="width: 80px; height: 100px; object-fit: cover; margin: 10px;">
                         </div>
 
-                        <!-- 도서 정보 -->
+                        <!-- 정보 -->
                         <div class="col">
                             <div class="card-body py-2">
                                 <h6 class="card-title fw-bold mb-1" th:text="${product.productTitle}">도서 제목</h6>
@@ -47,15 +46,12 @@
                                 <input type="hidden" name="productSalePrice" th:value="${product.productSalePrice}">
                                 <input type="hidden" name="contributors" th:value="${product.contributors}">
                                 <input type="hidden" name="productPublishedAt" th:value="${product.productPublishedAt}">
-
                                 <button type="submit" class="btn btn-sm btn-primary">등록</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-
-
 
             <!-- 페이지네이션 -->
             <nav th:if="${products.totalPages > 1}">
@@ -84,4 +80,3 @@
 </div>
 </body>
 </html>
-

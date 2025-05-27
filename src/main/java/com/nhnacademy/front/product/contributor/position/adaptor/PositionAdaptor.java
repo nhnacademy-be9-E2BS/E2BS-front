@@ -1,7 +1,6 @@
 package com.nhnacademy.front.product.contributor.position.adaptor;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,7 @@ import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePo
 @FeignClient(name = "position-service", url = "${product.contributor.position.url}")
 public interface PositionAdaptor {
 	@GetMapping
-	ResponseEntity<PageResponse<ResponsePositionDTO>> getPositions(@SpringQueryMap Pageable pageable);
+	ResponseEntity<PageResponse<ResponsePositionDTO>> getPositions(Pageable pageable);
 
 	@GetMapping
 	ResponsePositionDTO getPosition(@RequestParam("positionId") long positionId);

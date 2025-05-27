@@ -24,7 +24,7 @@ import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("admin/mypage/couponPolicies")
+@RequestMapping("admin/settings/couponPolicies")
 @RequiredArgsConstructor
 public class CouponPolicyController {
 
@@ -41,7 +41,7 @@ public class CouponPolicyController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		couponPolicyServiceImpl.createCouponPolicy(requestCouponPolicyDTO);
-		return "redirect:/admin/mypage/couponPolicies";
+		return "redirect:/admin/settings/couponPolicies";
 	}
 
 	/**
