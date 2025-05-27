@@ -137,7 +137,7 @@ public class ProductAdminController {
 	/**
 	 * 관리자가 알라딘 api로 도서 조회
 	 */
-
+	@JwtTokenCheck
 	@GetMapping("/aladdin/search")
 	public String searchProducts(@ModelAttribute RequestProductApiSearchDTO request,@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
 		PageResponse<ResponseProductsApiSearchDTO> response = productService.getProductsApi(request, pageable);
@@ -146,6 +146,7 @@ public class ProductAdminController {
 		return "admin/product/books/books-api-search";
 	}
 
+	@JwtTokenCheck
 	@GetMapping("/aladdin/list")
 	public String searchProductsByQuery(@ModelAttribute RequestProductApiSearchByQueryTypeDTO request,@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
 
@@ -156,12 +157,13 @@ public class ProductAdminController {
 		return "admin/product/books/books-api-search-query";
 	}
 
-
+	@JwtTokenCheck
 	@GetMapping("/search")
 	public String showSearchForm() {
 		return "admin/product/search";
 	}
 
+	@JwtTokenCheck
 	@PostMapping("/aladdin/register")
 	public String showRegisterForm(@ModelAttribute RequestProductApiCreateDTO dto, Model model) {
 
@@ -175,6 +177,7 @@ public class ProductAdminController {
 		return "/admin/product/books/books-api-register";
 	}
 
+	@JwtTokenCheck
 	@PostMapping("/aladdin/register/list")
 	public String showRegisterForm(@ModelAttribute RequestProductApiCreateByQueryDTO dto, Model model) {
 
@@ -187,6 +190,7 @@ public class ProductAdminController {
 		return "/admin/product/books/books-api-register-query";
 	}
 
+	@JwtTokenCheck
 	@PostMapping("/aladdin/register/submit/list")
 	public String submitBook(@ModelAttribute RequestProductApiCreateByQueryDTO dto) {
 
@@ -194,6 +198,7 @@ public class ProductAdminController {
 		return "redirect:/admin/settings/books/search";
 	}
 
+	@JwtTokenCheck
 	@PostMapping("/aladdin/register/submit")
 	public String submitBook(@ModelAttribute RequestProductApiCreateDTO dto) {
 		productService.createProductApi(dto);

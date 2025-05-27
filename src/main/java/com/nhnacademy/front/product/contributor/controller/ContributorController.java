@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/mypage/contributors")
+@RequestMapping("/admin/settings/contributors")
 public class ContributorController {
 	private final ContributorService contributorService;
 	private final PositionService positionService;
@@ -48,7 +48,7 @@ public class ContributorController {
 		contributorService.createContributor(requestContributorDTO);
 
 		redirectAttributes.addFlashAttribute("positions", positions);
-		return "redirect:/admin/mypage/contributors";
+		return "redirect:/admin/settings/contributors";
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class ContributorController {
 		}
 
 		contributorService.updateContributor(contributorId, request);
-		return "redirect:/admin/mypage/contributors";
+		return "redirect:/admin/settings/contributors";
 	}
 
 	/**

@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.adaptor.ProductAdminAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
@@ -33,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 public class ProductAdminServiceImpl implements ProductAdminService {
 
 	private final ProductAdminAdaptor productAdminAdaptor;
-	private final AdminCategoryService adminCategoryService;
 
 	/**
 	 * product를 back에서 저장 (관계 테이블들도)
@@ -126,7 +124,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 * 알라딘 api로 검색어에 따른 결과 조회
 	 */
 	@Override
-	public PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable) {
+	public PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable) throws FeignException {
 		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> response = productAdminAdaptor.searchBooksByQuery(request, pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
@@ -136,8 +134,8 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	}
 
 	@Override
-	public PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi(
-		RequestProductApiSearchByQueryTypeDTO request, Pageable pageable) {
+	public PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi (
+		RequestProductApiSearchByQueryTypeDTO request, Pageable pageable) throws FeignException {
 		ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> response = productAdminAdaptor.listBooksByCategory(request, pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
@@ -147,7 +145,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	}
 
 	@Override
-	public void createProductApi(RequestProductApiCreateDTO request) {
+	public void createProductApi(RequestProductApiCreateDTO request) throws FeignException {
 		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductByApi(request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
@@ -156,7 +154,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	}
 
 	@Override
-	public void createProductQueryApi(RequestProductApiCreateByQueryDTO request) {
+	public void createProductQueryApi(RequestProductApiCreateByQueryDTO request) throws FeignException {
 		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductQueryByApi(request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
