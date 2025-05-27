@@ -1,6 +1,8 @@
 package com.nhnacademy.front.account.admin.controller.settings;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.nhnacademy.front.account.admin.model.dto.request.RequestAdminSettingsMemberStateDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
+import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.account.admin.service.AdminSettingsService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
@@ -42,8 +45,8 @@ public class AdminSettingsController {
 
 	@JwtTokenCheck
 	@GetMapping("/members")
-	public String getAdminSettingsMembers(Model model) {
-		PageResponse<ResponseAdminSettingsMembersDTO> response = adminSettingsService.getAdminSettingsMembers();
+	public String getAdminSettingsMembers(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
+		PageResponse<ResponseAdminSettingsMembersDTO> response = adminSettingsService.getAdminSettingsMembers(pageable);
 		Page<ResponseAdminSettingsMembersDTO> members = PageResponseConverter.toPage(response);
 
 		model.addAttribute("members", members);
@@ -78,6 +81,21 @@ public class AdminSettingsController {
 		adminSettingsService.deleteAdminSettingsMember(memberId);
 
 		return "redirect:/admin/settings/members";
+	}
+
+	/**
+	 * 관리자 페이지 비회원 관리 뷰
+	 */
+	@JwtTokenCheck
+	@GetMapping("/non-members")
+	public String getAdminSettingsNonMembers(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
+		PageResponse<ResponseAdminSettingsNonMembersDTO> response = adminSettingsService.getAdminSettingsNonMembers(
+			pageable);
+		Page<ResponseAdminSettingsNonMembersDTO> nonMembers = PageResponseConverter.toPage(response);
+
+		model.addAttribute("nonMembers", nonMembers);
+
+		return "admin/settings/members/admin-settings-non-members";
 	}
 
 }
