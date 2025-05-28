@@ -9,6 +9,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.nhnacademy.front.common.exception.LoginRedirectException;
+import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.jwt.rule.JwtRule;
 
 import feign.RequestInterceptor;
@@ -28,6 +29,10 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 	public void apply(RequestTemplate requestTemplate) {
 		HttpServletRequest request = ((ServletRequestAttributes)Objects
 			.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+
+		if (!JwtHasToken.hasToken(request)) {
+			return;
+		}
 
 		Optional<Cookie> newCookie = Optional.ofNullable(request.getCookies())
 			.map(Arrays::stream)
