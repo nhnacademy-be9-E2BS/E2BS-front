@@ -9,6 +9,30 @@
     <!--================Login Box Area =================-->
     <section class="login_box_area section-margin">
         <div class="container">
+            <style>
+                .payco-title {
+                    color: #e20000;
+                    font-weight: 700;
+                    font-size: 22px;
+                    margin-bottom: 20px;
+                }
+
+                .payco-button {
+                    display: inline-block;
+                    background-color: #e20000;
+                    color: #fff;
+                    font-weight: bold;
+                    padding: 12px 0;
+                    width: 100%;
+                    border-radius: 6px;
+                    text-decoration: none;
+                    transition: background-color 0.3s ease;
+                }
+
+                .payco-button:hover {
+                    background-color: #c00000;
+                }
+            </style>
             <div class="row">
                 <div class="col-lg-6">
                     <div class="login_box_img">
@@ -36,6 +60,12 @@
                             <div class="col-md-12 form-group">
                                 <button type="submit" value="submit" class="button button-login w-100">로그인</button>
                             </div>
+
+
+                            <!-- PAYCO 로그인 박스 -->
+                            <h2 class="payco-title">PAYCO</h2>
+                            <p class="payco-desc">E2BS 서비스는 PAYCO 아이디로<br>간편한 로그인을 이용할 수 있습니다.</p>
+                            <a href="/oauth2/authorization/payco" class="payco-button">PAYCO 로 로그인</a>
                         </form>
                     </div>
                 </div>

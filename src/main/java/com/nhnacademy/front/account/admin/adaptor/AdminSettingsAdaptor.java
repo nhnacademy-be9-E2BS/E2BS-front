@@ -17,7 +17,7 @@ import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettin
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.common.page.PageResponse;
 
-@FeignClient(name = "admin-settings-adaptor", url = "${admin.settings.url}")
+@FeignClient(name = "admin-settings-adaptor", url = "${auth.admin.settings.url}")
 public interface AdminSettingsAdaptor {
 
 	@GetMapping

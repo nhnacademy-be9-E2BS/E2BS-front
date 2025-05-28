@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.address.model.dto.request.RequestMemberAddressSaveDTO;
 import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAddressDTO;
 
-@FeignClient(name = "member-address-adaptor", url = "${member.mypage.url}")
+@FeignClient(name = "member-address-adaptor", url = "${auth.member.mypage.url}")
 public interface AddressAdaptor {
 
 	@GetMapping("/{memberId}/addresses")
