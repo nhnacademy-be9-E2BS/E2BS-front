@@ -2,6 +2,104 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{layouts/user-layout}">
+
+<style>
+	.product_count {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.product_count label {
+		font-weight: bold;
+	}
+
+	.input-text.qty {
+		width: 60px;
+		padding: 5px;
+		text-align: center;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
+
+	.increase, .reduced {
+		background-color: #f5f5f5;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		padding: 5px 10px;
+		cursor: pointer;
+	}
+
+	.increase:hover, .reduced:hover {
+		background-color: #e0e0e0;
+	}
+
+	.increase i, .reduced i {
+		font-size: 14px;
+	}
+
+	.image-slider{
+		position: relative;
+		width: 500px !important;
+		height: 680px !important; /* 이미지 세로 크기 */
+		overflow: hidden;
+	}
+
+	.slider-container {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.slides {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.slide {
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.slide.active {
+		display: block;
+	}
+
+	.prev, .next {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		background-color: rgba(0, 0, 0, 0.5);
+		color: white;
+		border: none;
+		padding: 10px;
+		cursor: pointer;
+		font-size: 18px;
+	}
+
+	.prev {
+		left: 0;
+	}
+
+	.next {
+		right: 0;
+	}
+
+	.prev:hover, .next:hover {
+		background-color: rgba(0, 0, 0, 0.8);
+	}
+
+	.prev:disabled, .next:disabled {
+		background-color: rgba(0, 0, 0, 0.3);
+		cursor: not-allowed;
+	}
+</style>
 <body>
 <div layout:fragment="content">
 	<!-- 상품 이미지 및 상세 -->
@@ -10,75 +108,80 @@
 			<!-- 상품 이미지-->
 			<div class="row s_product_inner">
 				<div class="col-lg-6">
-						<div class="single-prd-item">
-							<img class="img-fluid" src="/img/category/c5.jpg" alt="총균쇠: 인류 사회의 운명">
-							<!-- Thymeleaf로 변경 시: -->
-							<!-- <img class="img-fluid" th:src="${product.productImagePaths[0]}" th:alt="${product.productTitle}" /> -->
+					<div class="card-detail-img">
+						<div class="image-slider" th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
+							<div class="slider-container">
+								<div class="slides">
+									<img th:each="image, iterStat : ${product.productImagePaths}"
+										 th:src="${image.productImagePath}"
+										 th:alt="${product.productTitle} + ' 이미지 ' + ${iterStat.count}"
+										 class="slide" th:classappend="${iterStat.first} ? 'active' : ''"
+										 onerror="this.src='https://via.placeholder.com/110x150?text=No+Image'"
+										 style="width: 500px; height: 680px;">
+								</div>
+								<button class="prev" onclick="changeSlide(-1)" th:disabled="${product.productImagePaths.size() <= 1}">❮</button>
+								<button class="next" onclick="changeSlide(1)" th:disabled="${product.productImagePaths.size() <= 1}">❯</button>
+							</div>
 						</div>
+						<div th:if="${product.productImagePaths == null or #lists.isEmpty(product.productImagePaths)}">
+							<img src="https://via.placeholder.com/110x150?text=No+Image"
+								 th:alt="${product.productTitle} + ' 표지 이미지'"
+								 style="width: 500px; height: 680px;">
+						</div>
+					</div>
 				</div>
 				<!-- 상품 정보 -->
 				<div class="col-lg-5 offset-lg-1">
 					<div class="s_product_text">
-						<h3>총균쇠: 인류 사회의 운명</h3>
-						<!-- Thymeleaf로 변경 시: -->
-						<!-- <h3 th:text="${product.productTitle}"></h3> -->
+						<!--상품 제목-->
+						 <h3 th:text="${product.productTitle}"></h3>
 
-						<h2>₩27,000</h2>
-						<!-- Thymeleaf로 변경 시: -->
-						<!-- <h2 th:text="'₩' + ${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')}"></h2> -->
+						<!-- 가격 -->
+						 <h2 th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'"></h2>
 
 						<ul class="list">
+							<!-- 재고 -->
 							<li>
-								<span>카테고리</span> : 역사, 논픽션, 과학, 인류학
-								<!-- Thymeleaf로 변경 시: -->
-								<!-- <span>카테고리</span> : -->
-								<!-- <span th:unless="${product.categoryIds.isEmpty()}" th:text="${#strings.join(product.categoryIds, ', ')}"></span> -->
-								<!-- <span th:if="${product.categoryIds.isEmpty()}">미지정</span> -->
+								<span>재고</span> :
+								<span th:text="${product.productStock} + ' 개'"></span>
 							</li>
-
-							<!-- Thymeleaf로 변경 시: -->
-							<!-- <li> -->
-							<!--     <span>재고</span> : -->
-							<!--     <span th:text="${product.productStock > 0} ? '재고 있음' : '품절'"></span> -->
-							<!-- </li> -->
 						</ul>
 						<div class="product_count">
-							<label>수량:</label>
-							<input type="text" name="qty" id="sst" value="1" title="수량" class="input-text qty" />
-							<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase" type="button"><i class="lnr lnr-chevron-up"></i></button>
-							<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) && sst > 0 ) result.value--;return false;" class="reduced" type="button"><i class="lnr lnr-chevron-down"></i></button>
+							<label for="quantity">수량:</label>
+							<input type="number" name="qty" id="quantity" th:value="${product.productStock > 0 ? 1 : 0}" title="수량" class="input-text qty" min="0" th:max="${product.productStock}" />
+							<button type="button" class="increase" onclick="adjustQuantity(1)"><i class="lnr lnr-chevron-up"></i></button>
+							<button type="button" class="reduced" onclick="adjustQuantity(-1)"><i class="lnr lnr-chevron-down"></i></button>
 						</div>
 						<div class="card_area">
-							<a class="primary-btn" href="#">장바구니에 추가</a>
-							<!-- Thymeleaf로 변경 시: -->
-							<!-- <a class="primary-btn" th:href="@{/cart/add(productId=${product.productId})}">장바구니에 추가</a> -->
+							<!-- 장바구니 추가 (링크 수정 필요)-->
+							<a class="primary-btn"> <button class="add-cart-btn">장바구니에 추가</button></a>
 
 							<a class="primary-btn" href="#">바로 구매</a>
 							<!-- Thymeleaf로 변경 시: -->
 							<!-- <a class="primary-btn" th:href="@{/checkout(productId=${product.productId})}">바로 구매</a> -->
 						</div>
 						<div class="product_meta mt-3">
-							<p><strong>ISBN:</strong> 9780393317558</p>
+<!--							<p><strong>ISBN:</strong> 9780393317558</p>-->
 							<!-- Thymeleaf로 변경 시: -->
-							<!-- <p><strong>ISBN:</strong> <span th:text="${product.productIsbn}"></span></p> -->
+							 <p><strong>ISBN:</strong> <span th:text="${product.productIsbn}"></span></p>
 
-							<p><strong>출판사:</strong> W. W. Norton & Company</p>
+<!--							<p><strong>출판사:</strong> W. W. Norton & Company</p>-->
 							<!-- Thymeleaf로 변경 시: -->
-							<!-- <p><strong>출판사:</strong> <span th:text="${product.publisherName}"></span></p> -->
+<!--							 <p><strong>출판사:</strong> <span th:text="${product.publisherName}"></span></p>-->
 
-							<p><strong>기여자:</strong> Jared Diamond</p>
+<!--							<p><strong>기여자:</strong> Jared Diamond</p>-->
 							<!-- Thymeleaf로 변경 시: -->
 							<!-- <p><strong>기여자:</strong> -->
 							<!--     <span th:unless="${product.contributorNames.isEmpty()}" th:text="${#strings.join(product.contributorNames, ', ')}"></span> -->
 							<!--     <span th:if="${product.contributorNames.isEmpty()}">미지정</span> -->
 							<!-- </p> -->
 
-							<p><strong>태그:</strong> 퓰리처상, 지리적 결정론, 문명사</p>
+<!--							<p><strong>태그:</strong> 퓰리처상, 지리적 결정론, 문명사</p>-->
 							<!-- Thymeleaf로 변경 시: -->
-							<!-- <p><strong>태그:</strong> -->
-							<!--     <span th:unless="${product.tagNames.isEmpty()}" th:text="${#strings.join(product.tagNames, ', ')}"></span> -->
-							<!--     <span th:if="${product.tagNames.isEmpty()}">미지정</span> -->
-							<!-- </p> -->
+<!--							 <p><strong>태그:</strong>-->
+<!--							     <span th:unless="${product.tagNames.isEmpty()}" th:text="${#strings.join(product.tagNames, ', ')}"></span>-->
+<!--							     <span th:if="${product.tagNames.isEmpty()}">미지정</span>-->
+							 </p>
 						</div>
 					</div>
 				</div>
@@ -100,25 +203,25 @@
 				<!-- 설명 -->
 				<div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
 					<h4>목차</h4>
-					<ul>
-						<li>서문: 얄리의 질문</li>
-						<li>제1부: 에덴에서 카하마르카까지</li>
-						<li>제2부: 식량 생산의 기원</li>
-						<li>제3부: 병균과 무기</li>
-						<li>제4부: 기술, 사회, 정치</li>
-						<li>에필로그: 인류사의 미래</li>
-					</ul>
+<!--					<ul>-->
+<!--						<li>서문: 얄리의 질문</li>-->
+<!--						<li>제1부: 에덴에서 카하마르카까지</li>-->
+<!--						<li>제2부: 식량 생산의 기원</li>-->
+<!--						<li>제3부: 병균과 무기</li>-->
+<!--						<li>제4부: 기술, 사회, 정치</li>-->
+<!--						<li>에필로그: 인류사의 미래</li>-->
+<!--					</ul>-->
 					<!-- Thymeleaf로 변경 시 (목차는 productContent로 가정): -->
-					<!-- <h4>목차</h4> -->
-					<!-- <ul th:if="${product.productContent != null}"> -->
-					<!--     <li th:each="content : ${#strings.split(product.productContent, '\n')}" th:text="${content}"></li> -->
-					<!-- </ul> -->
+					 <h4>목차</h4>
+<!--					 <ul th:if="${product.productContent != null}">-->
+<!--					     <li th:each="content : ${#strings.split(product.productContent, '\n')}" th:text="${content}"></li>-->
+<!--					 </ul>-->
 
 					<h4 class="mt-4">상품 설명</h4>
-					*총균쇠*는 인류 문명의 발달 차이를 설명하는 획기적인 저서로, 지리적·환경적 요인이 문명의 성공과 패배를 결정했다고 주장합니다. 유라시아의 농업 혁명, 병균 저항력, 기술 발전이 어떻게 다른 대륙을 압도했는지 탐구하며, 인종적 우월성 이론을 반박합니다. 퓰리처상을 수상한 이 책은 역사, 인류학, 생물학을 융합한 대중 과학의 걸작입니다.
+<!--					*총균쇠*는 인류 문명의 발달 차이를 설명하는 획기적인 저서로, 지리적·환경적 요인이 문명의 성공과 패배를 결정했다고 주장합니다. 유라시아의 농업 혁명, 병균 저항력, 기술 발전이 어떻게 다른 대륙을 압도했는지 탐구하며, 인종적 우월성 이론을 반박합니다. 퓰리처상을 수상한 이 책은 역사, 인류학, 생물학을 융합한 대중 과학의 걸작입니다.-->
 					<!-- Thymeleaf로 변경 시: -->
-					<!-- <h4 class="mt-4">상품 설명</h4> -->
-					<!-- <p th:utext="${product.productDescription}"></p> -->
+					 <h4 class="mt-4">상품 설명</h4>
+					 <p th:utext="${product.productDescription}"></p>
 				</div>
 
 				<!-- 리뷰 -->
@@ -246,6 +349,62 @@
 			</div>
 		</div>
 	</section>
+	<!-- 사진 넘기기 -->
+	<script>
+		let currentSlide = 0;
+		const slides = document.querySelectorAll('.slide');
+
+		function showSlide(index) {
+			// 경계 처리: 슬라이드 인덱스가 범위를 벗어나면 순환
+			if (index >= slides.length) {
+				currentSlide = 0;
+			} else if (index < 0) {
+				currentSlide = slides.length - 1;
+			} else {
+				currentSlide = index;
+			}
+
+			// 모든 슬라이드를 숨기고 현재 슬라이드만 표시
+			slides.forEach((slide, i) => {
+				slide.style.display = i === currentSlide ? 'block' : 'none';
+			});
+		}
+
+		function changeSlide(direction) {
+			showSlide(currentSlide + direction);
+		}
+
+		// 초기화: 첫 번째 슬라이드만 표시
+		if (slides.length > 0) {
+			showSlide(currentSlide);
+		}
+	</script>
+
+	<!-- 수량 조절 -->
+	<script>
+		function adjustQuantity(change) {
+			const input = document.getElementById('quantity');
+			const maxStock = parseInt(input.max, 10);
+			let currentValue = parseInt(input.value, 10);
+
+			if (isNaN(currentValue)) {
+				currentValue = 0;
+			}
+
+			const newValue = currentValue + change;
+
+			if (newValue >= 0 && newValue <= maxStock) {
+				input.value = newValue;
+			} else if (newValue < 0) {
+				input.value = 0;
+				alert('수량은 0 이하로 설정할 수 없습니다.');
+			} else if (newValue > maxStock) {
+				input.value = maxStock;
+				alert('재고 수량(' + maxStock + '개)을 초과할 수 없습니다.');
+			}
+		}
+	</script>
 </div>
 </body>
 </html>
+
