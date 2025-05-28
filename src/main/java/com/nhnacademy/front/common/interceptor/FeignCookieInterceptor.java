@@ -19,10 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FeignCookieInterceptor implements RequestInterceptor {
-	private static final String ROOT_URL = "/";
-	private static final String LOGIN_URL = "/login";
-	private static final String ADMIN_LOGIN_URL = "/admin/login";
-	private static final String REGISTER_URL = "/register";
+	private static final String AUTH_PATH = "/api/auth/**";
 
 	private static final String SET_COOKIE = "Set-Cookie";
 	private static final String ACCESS_REFRESH = "access-refresh";
@@ -33,7 +30,7 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 	public void apply(RequestTemplate requestTemplate) {
 		HttpServletRequest request = ((ServletRequestAttributes)Objects
 			.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-		if (isPublicPath(request.getRequestURI())) {
+		if (!isAuthPath(request.getRequestURI())) {
 			return;
 		}
 
@@ -79,11 +76,8 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 		throw new LoginRedirectException(LOGIN_EXCEPTION_MESSAGE);
 	}
 
-	private boolean isPublicPath(String path) {
-		return path.equals(ROOT_URL) ||
-			path.startsWith(LOGIN_URL) ||
-			path.startsWith(REGISTER_URL) ||
-			path.startsWith(ADMIN_LOGIN_URL);
+	private boolean isAuthPath(String path) {
+		return path.startsWith(AUTH_PATH);
 	}
 
 }
