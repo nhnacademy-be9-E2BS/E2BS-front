@@ -97,3 +97,7 @@ review:
 
 index:
   url: https://e2bs.shop/api
+
+point:
+  admin:
+    url: http://localhost:10232/api/admin/point-policies

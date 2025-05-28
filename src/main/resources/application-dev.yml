@@ -108,3 +108,7 @@ review:
 
 index:
   url: http://localhost:10232/api
+
+point:
+  admin:
+    url: http://localhost:10232/api/admin/point-policies
