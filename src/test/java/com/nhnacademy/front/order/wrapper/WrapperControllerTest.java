@@ -82,7 +82,7 @@ class WrapperControllerTest {
 		Mockito.when(wrapperService.getWrappers(any())).thenReturn(pageResponse);
 
 		// when & then
-		mockMvc.perform(get("/admin/settings/wrappers/temp"))
+		mockMvc.perform(get("/admin/settings/wrappers"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("admin/product/wrappers"))
 			.andExpect(model().attributeExists("wrappers"));
