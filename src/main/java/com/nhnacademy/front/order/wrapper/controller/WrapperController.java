@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/settings/wrapperTest")
+@RequestMapping("/admin/settings/wrapper")
 @Slf4j
 public class WrapperController {
 
@@ -44,12 +44,12 @@ public class WrapperController {
 	@GetMapping
 	public String getWrappers(@PageableDefault(page = 0, size = 5) Pageable pageable, Model model) {
 		log.info("포장지 조회 요청 controller start");
-		PageResponse<ResponseWrapperDTO> response = wrapperService.getWrappers(pageable);
+		// PageResponse<ResponseWrapperDTO> response = wrapperService.getWrappers(pageable);
 		log.info("service 응답");
-		log.info(response.toString());
-		Page<ResponseWrapperDTO> wrappers = PageResponseConverter.toPage(response);
+		// log.info(response.toString());
+		// Page<ResponseWrapperDTO> wrappers = PageResponseConverter.toPage(response);
 
-		model.addAttribute("wrappers", wrappers);
+		// model.addAttribute("wrappers", wrappers);
 		return "admin/product/wrappers";
 	}
 
