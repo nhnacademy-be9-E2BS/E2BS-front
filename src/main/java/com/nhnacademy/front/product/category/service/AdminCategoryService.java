@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.product.category.adaptor.AdminCategoryAdaptor;
+import com.nhnacademy.front.product.category.adaptor.UserCategoryAdaptor;
 import com.nhnacademy.front.product.category.exception.CategoryCreateProcessException;
 import com.nhnacademy.front.product.category.exception.CategoryDeleteProcessException;
 import com.nhnacademy.front.product.category.exception.CategoryGetProcessException;
@@ -21,12 +22,13 @@ import lombok.RequiredArgsConstructor;
 public class AdminCategoryService {
 
 	private final AdminCategoryAdaptor adminCategoryAdaptor;
+	private final UserCategoryAdaptor userCategoryAdaptor;
 
 	/**
 	 * 관리자 페이지에서 전체 카테고리 리스트를 back에서 조회
 	 */
 	public List<ResponseCategoryDTO> getCategories() throws FeignException {
-		ResponseEntity<List<ResponseCategoryDTO>> response = adminCategoryAdaptor.getCategories();
+		ResponseEntity<List<ResponseCategoryDTO>> response = userCategoryAdaptor.getAllCategories();
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new CategoryGetProcessException("전체 카테고리 리스트 조회 실패");

@@ -82,7 +82,7 @@ class WrapperControllerTest {
 		Mockito.when(wrapperService.getWrappers(any())).thenReturn(pageResponse);
 
 		// when & then
-		mockMvc.perform(get("/admin/settings/wrappers"))
+		mockMvc.perform(get("/admin/settings/papers"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("admin/product/wrappers"))
 			.andExpect(model().attributeExists("wrappers"));
@@ -92,14 +92,14 @@ class WrapperControllerTest {
 	@DisplayName("포장지 생성 - success")
 	void create_wrapper_success_test() throws Exception {
 		// given & when & then
-		mockMvc.perform(post("/admin/settings/wrappers")
+		mockMvc.perform(post("/admin/settings/papers")
 				.param("wrapperPrice", String.valueOf(1000L))
 				.param("wrapperName", "Wrapper A")
 				.param("wrapperImage", "a.jpg")
 				.param("wrapperSaleable", String.valueOf(true))
 				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/admin/settings/wrappers"));
+			.andExpect(redirectedUrl("/admin/settings/papers"));
 	}
 
 	@Test
@@ -109,7 +109,7 @@ class WrapperControllerTest {
 		String wrapperName = null;
 
 		// when & then
-		mockMvc.perform(post("/admin/settings/wrappers")
+		mockMvc.perform(post("/admin/settings/papers")
 				.param("wrapperPrice", String.valueOf(1000L))
 				.param("wrapperName", wrapperName)
 				.param("wrapperImage", "a.jpg")
@@ -128,7 +128,7 @@ class WrapperControllerTest {
 		dto.setWrapperSaleable(true);
 
 		// when & then
-		mockMvc.perform(put("/admin/settings/wrappers/1")
+		mockMvc.perform(put("/admin/settings/papers/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))
@@ -143,7 +143,7 @@ class WrapperControllerTest {
 		dto.setWrapperSaleable(null);
 
 		// when & then
-		mockMvc.perform(put("/admin/settings/wrappers/1")
+		mockMvc.perform(put("/admin/settings/papers/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))
 				.with(csrf()))
