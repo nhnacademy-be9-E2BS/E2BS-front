@@ -83,8 +83,8 @@ order:
 
   toss:
     client-key: test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO
-    success-url: http://localhost:10238/order/success
-    fail-url: http://localhost:10238/order/fail
+    success-url: https://e2bs.shop/order/success
+    fail-url: https://e2bs.shop/order/fail
   admin: http://localhost:10232/api/admin/orders
 
 customer:
