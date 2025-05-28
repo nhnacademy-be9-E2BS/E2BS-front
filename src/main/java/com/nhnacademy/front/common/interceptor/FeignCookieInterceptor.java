@@ -9,6 +9,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.nhnacademy.front.common.exception.LoginRedirectException;
+import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.jwt.rule.JwtRule;
 
 import feign.RequestInterceptor;
@@ -19,8 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FeignCookieInterceptor implements RequestInterceptor {
-	private static final String AUTH_PATH = "/api/auth/**";
-
 	private static final String SET_COOKIE = "Set-Cookie";
 	private static final String ACCESS_REFRESH = "access-refresh";
 
@@ -30,7 +29,8 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 	public void apply(RequestTemplate requestTemplate) {
 		HttpServletRequest request = ((ServletRequestAttributes)Objects
 			.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-		if (!isAuthPath(request.getRequestURI())) {
+
+		if (!JwtHasToken.hasToken(request)) {
 			return;
 		}
 
@@ -74,10 +74,6 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 		}
 
 		throw new LoginRedirectException(LOGIN_EXCEPTION_MESSAGE);
-	}
-
-	private boolean isAuthPath(String path) {
-		return path.startsWith(AUTH_PATH);
 	}
 
 }

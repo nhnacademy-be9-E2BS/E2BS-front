@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseMemberCouponDTO;
 
-@FeignClient(name = "member-coupon-box", url = "${member.mypage.url}")
+@FeignClient(name = "member-coupon-box", url = "${auth.member.mypage.url}")
 public interface MemberCouponBoxAdaptor {
 
 	@GetMapping("/{memberId}/coupons")
-	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@PathVariable String memberId, Pageable pageable);
+	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@PathVariable String memberId,
+		Pageable pageable);
 }
