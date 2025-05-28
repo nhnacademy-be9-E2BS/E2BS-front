@@ -39,6 +39,13 @@ admin:
   settings:
     url: http://localhost:10232/api/admin/settings
 
+oauth:
+  login:
+    url: http://localhost:10232/api/oauth/login
+
+  register:
+    url: http://localhost:10232/api/oauth/reigster
+
 auth:
   jwt:
     create:

@@ -28,6 +28,13 @@ admin:
   settings:
     url: https://e2bs.shop/api/admin/settings
 
+oauth:
+  login:
+    url: https://e2bs.shop/api/oauth/login
+
+  register:
+    url: https://e2bs.shop/api/oauth/register
+
 auth:
   jwt:
     create:
