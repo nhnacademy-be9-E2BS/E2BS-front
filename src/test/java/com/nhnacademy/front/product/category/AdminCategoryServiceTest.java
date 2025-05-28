@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.nhnacademy.front.product.category.adaptor.AdminCategoryAdaptor;
+import com.nhnacademy.front.product.category.adaptor.UserCategoryAdaptor;
 import com.nhnacademy.front.product.category.exception.CategoryCreateProcessException;
 import com.nhnacademy.front.product.category.exception.CategoryDeleteProcessException;
 import com.nhnacademy.front.product.category.exception.CategoryGetProcessException;
@@ -32,6 +33,9 @@ class AdminCategoryServiceTest {
 	@Mock
 	private AdminCategoryAdaptor adminCategoryAdaptor;
 
+	@Mock
+	private UserCategoryAdaptor userCategoryAdaptor;
+
 	@Test
 	@DisplayName("get categories - success")
 	void get_categories_success_test() {
@@ -42,14 +46,14 @@ class AdminCategoryServiceTest {
 					List.of())))));
 
 		ResponseEntity<List<ResponseCategoryDTO>> responseEntity = new ResponseEntity<>(List.of(response), HttpStatus.OK);
-		when(adminCategoryAdaptor.getCategories()).thenReturn(responseEntity);
+		when(userCategoryAdaptor.getAllCategories()).thenReturn(responseEntity);
 
 		// when
 		List<ResponseCategoryDTO> result = adminCategoryService.getCategories();
 
 		// then
 		assertThat(result).isEqualTo(List.of(response));
-		verify(adminCategoryAdaptor, times(1)).getCategories();
+		verify(userCategoryAdaptor, times(1)).getAllCategories();
 	}
 
 	@Test
@@ -57,7 +61,7 @@ class AdminCategoryServiceTest {
 	void get_categories_fail_test() {
 		// given
 		ResponseEntity<List<ResponseCategoryDTO>> responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		when(adminCategoryAdaptor.getCategories()).thenReturn(responseEntity);
+		when(userCategoryAdaptor.getAllCategories()).thenReturn(responseEntity);
 
 		// when & then
 		assertThatThrownBy(() -> adminCategoryService.getCategories())
