@@ -1,7 +1,6 @@
 package com.nhnacademy.front.product.like.adaptor;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.like.model.dto.request.RequestCreateLikeDTO;
 import com.nhnacademy.front.product.like.model.dto.response.ResponseLikedProductDTO;
 
@@ -24,7 +24,7 @@ public interface LikeAdaptor {
 	ResponseEntity<Void> deleteLike(@PathVariable long productId, @RequestParam String memberId);
 
 	@GetMapping("/likes")
-	ResponseEntity<Page<ResponseLikedProductDTO>> getLikedProductsByCustomer(@RequestParam String memberId, Pageable pageable);
+	ResponseEntity<PageResponse<ResponseLikedProductDTO>> getLikedProductsByCustomer(@RequestParam String memberId, Pageable pageable);
 
 	@GetMapping("/{productId}/likes/counts")
 	ResponseEntity<Long> getLikeCounts(@PathVariable long productId);

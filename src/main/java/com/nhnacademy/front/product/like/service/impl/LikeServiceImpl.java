@@ -21,6 +21,7 @@ public class LikeServiceImpl implements LikeService {
 
 	private final LikeAdaptor likeAdaptor;
 
+
 	@Override
 	public void createLike(long productId, RequestCreateLikeDTO requestDto) {
 		ResponseEntity<Void> result = likeAdaptor.createLike(productId, requestDto);
@@ -41,13 +42,12 @@ public class LikeServiceImpl implements LikeService {
 
 	@Override
 	public PageResponse<ResponseLikedProductDTO> getLikeProductsByCustomer(String memberId, Pageable pageable) {
-		// ResponseEntity<PageResponse<ResponseLikedProductDTO>> result = likeAdaptor.getLikedProductsByCustomer(memberId, pageable);
-		//
-		// if (!result.getStatusCode().is2xxSuccessful()) {
-		// 	throw new LikeProcessException("좋아요 상품 페이징 목록 조회 실패: " + result.getStatusCode());
-		// }
-		// return result.getBody();
-		return null;
+		ResponseEntity<PageResponse<ResponseLikedProductDTO>> result = likeAdaptor.getLikedProductsByCustomer(memberId, pageable);
+
+		if (!result.getStatusCode().is2xxSuccessful()) {
+			throw new LikeProcessException("좋아요 상품 페이징 목록 조회 실패: " + result.getStatusCode());
+		}
+		return result.getBody();
 	}
 
 	@Override
@@ -59,4 +59,5 @@ public class LikeServiceImpl implements LikeService {
 		}
 		return result.getBody();
 	}
+
 }
