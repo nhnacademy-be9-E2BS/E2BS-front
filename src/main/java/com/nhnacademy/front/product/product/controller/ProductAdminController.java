@@ -170,7 +170,7 @@ public class ProductAdminController {
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
-		return "/admin/product/books/books-api-register";
+		return "admin/product/books/books-api-register";
 	}
 
 	@JwtTokenCheck
@@ -183,7 +183,7 @@ public class ProductAdminController {
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
-		return "/admin/product/books/books-api-register-query";
+		return "admin/product/books/books-api-register-query";
 	}
 
 	@JwtTokenCheck
