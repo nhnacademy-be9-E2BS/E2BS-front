@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 
@@ -15,6 +14,6 @@ public interface UserCategoryAdaptor {
 	@GetMapping
 	ResponseEntity<List<ResponseCategoryDTO>> getCategoriesToDepth3();
 
-	@GetMapping("/{categoryId}")
-	ResponseEntity<List<ResponseCategoryDTO>> getCategoriesById(@PathVariable("categoryId") Long categoryId);
+	@GetMapping("/all")
+	ResponseEntity<List<ResponseCategoryDTO>> getAllCategories();
 }
