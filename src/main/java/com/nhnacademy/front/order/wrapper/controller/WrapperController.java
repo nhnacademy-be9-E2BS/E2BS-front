@@ -41,14 +41,14 @@ public class WrapperController {
 	 * 등록 되어 있는 모든 포장지 리스트가 보여짐 (판매 여부 상관 없음)
 	 */
 	@JwtTokenCheck
-	@GetMapping
+	@GetMapping("/temp")
 	public String getWrappers(@PageableDefault(page = 0, size = 5) Pageable pageable, Model model) {
 		log.info("포장지 조회 요청 controller start");
 		PageResponse<ResponseWrapperDTO> response = wrapperService.getWrappers(pageable);
 		log.info("service 응답");
 		log.info(response.toString());
 		Page<ResponseWrapperDTO> wrappers = PageResponseConverter.toPage(response);
-
+		log.info(wrappers.toString());
 		model.addAttribute("wrappers", wrappers);
 		return "admin/product/wrappers";
 	}
