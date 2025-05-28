@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/settings/wrapper")
+@RequestMapping("/admin/settings/wrappers")
 @Slf4j
 public class WrapperController {
 
@@ -50,7 +50,7 @@ public class WrapperController {
 		// Page<ResponseWrapperDTO> wrappers = PageResponseConverter.toPage(response);
 
 		// model.addAttribute("wrappers", wrappers);
-		return "admin/product/wrappers-test";
+		return "admin/product/test";
 	}
 
 	/**
