@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -91,11 +92,19 @@ class WrapperControllerTest {
 	@Test
 	@DisplayName("포장지 생성 - success")
 	void create_wrapper_success_test() throws Exception {
-		// given & when & then
-		mockMvc.perform(post("/admin/settings/papers")
+		// given
+		MockMultipartFile mockFile = new MockMultipartFile(
+			"wrapperImage",
+			"a.jpg",
+			"image/jpeg",
+			"image-content".getBytes()
+		);
+
+		// when & then
+		mockMvc.perform(multipart("/admin/settings/papers")
+				.file(mockFile)
 				.param("wrapperPrice", String.valueOf(1000L))
 				.param("wrapperName", "Wrapper A")
-				.param("wrapperImage", "a.jpg")
 				.param("wrapperSaleable", String.valueOf(true))
 				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
@@ -105,13 +114,10 @@ class WrapperControllerTest {
 	@Test
 	@DisplayName("포장지 생성 - fail")
 	void create_wrapper_fail_test() throws Exception {
-		// given
-		String wrapperName = null;
-
-		// when & then
-		mockMvc.perform(post("/admin/settings/papers")
+		// given & when & then
+		mockMvc.perform(multipart("/admin/settings/papers")
 				.param("wrapperPrice", String.valueOf(1000L))
-				.param("wrapperName", wrapperName)
+				.param("wrapperName", "Wrapper A")
 				.param("wrapperImage", "a.jpg")
 				.param("wrapperSaleable", String.valueOf(true))
 				.with(csrf()))
