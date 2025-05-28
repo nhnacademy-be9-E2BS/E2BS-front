@@ -1,0 +1,18 @@
+<th:block th:fragment="category-node(category)">
+    <li class="filter-list">
+        <div class="category-left d-flex align-items-center">
+            <span class="toggle me-2" style="cursor: pointer;" onclick="toggleClick(this)">📁</span>
+            <a class="text-decoration-none"
+               th:href="@{/books/category/{categoryId}(categoryId=${category.categoryId})}"
+               th:text="${category.categoryName}">
+            </a>
+        </div>
+
+        <!-- 자식 카테고리 -->
+        <ul th:if="${#lists.size(category.children) > 0}" class="ms-4 mt-2 d-none">
+            <li th:each="child : ${category.children}">
+                <th:block th:replace="this :: category-node(category=${child})" />
+            </li>
+        </ul>
+    </li>
+</th:block>
