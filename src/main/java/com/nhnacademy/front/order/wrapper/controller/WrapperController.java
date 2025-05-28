@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/settings/wrappers")
+@RequestMapping("/admin/settings/papers")
 @Slf4j
 public class WrapperController {
 
@@ -66,7 +66,7 @@ public class WrapperController {
 
 		wrapperService.createWrapper(requestRegisterWrapperDTO);
 
-		return "redirect:/admin/settings/wrappers";
+		return "redirect:/admin/settings/papers";
 	}
 
 	/**
