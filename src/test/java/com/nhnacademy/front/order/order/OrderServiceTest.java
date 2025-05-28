@@ -86,20 +86,20 @@ class OrderServiceTest {
 	}
 
 	@Test
-	@DisplayName("cancelOrder - 주문 취소")
-	void testCancelOrder() {
+	@DisplayName("deleteOrder - 주문서 삭제")
+	void testDeleteOrder() {
 		// given
 		String orderId = "TEST-ORDER-CODE";
 		ResponseEntity<Void> expectedResponse = ResponseEntity.ok().build();
 
-		when(orderAdaptor.cancelOrder(orderId)).thenReturn(expectedResponse);
+		when(orderAdaptor.deleteOrder(orderId)).thenReturn(expectedResponse);
 
 		// when
-		ResponseEntity<Void> actualResponse = orderService.cancelOrder(orderId);
+		ResponseEntity<Void> actualResponse = orderService.deleteOrder(orderId);
 
 		// then
 		assertEquals(expectedResponse, actualResponse);
-		verify(orderAdaptor).cancelOrder(orderId);
+		verify(orderAdaptor).deleteOrder(orderId);
 	}
 
 	@Test

@@ -214,8 +214,8 @@ class OrderControllerTest {
 
 	@Test
 	@DisplayName("토스 결제 모달 끌 시 주문서 삭제 요청")
-	void testCancelOrder() throws Exception {
-		when(orderService.cancelOrder(anyString()))
+	void testDeleteOrder() throws Exception {
+		when(orderService.deleteOrder(anyString()))
 			.thenReturn(ResponseEntity.ok().build());
 
 		mockMvc.perform(post("/order/cancel")

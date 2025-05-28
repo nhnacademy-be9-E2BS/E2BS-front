@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -135,8 +136,8 @@ public class OrderController {
 	 */
 	@JwtTokenCheck
 	@PostMapping("/order/cancel")
-	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
-		return orderService.cancelOrder(orderId);
+	public ResponseEntity<Void> deleteOrder(@RequestParam String orderId) {
+		return orderService.deleteOrder(orderId);
 	}
 
 	@JwtTokenCheck
@@ -174,5 +175,11 @@ public class OrderController {
 		model.addAttribute("productAmount", productAmount);
 
 		return "member/mypage/orderDetails";
+	}
+
+	@JwtTokenCheck
+	@DeleteMapping("/mypage/orders/{orderCode}")
+	public ResponseEntity<Void> cancelOrder(@PathVariable String orderCode) {
+		return orderService.cancelOrder(orderCode);
 	}
 }
