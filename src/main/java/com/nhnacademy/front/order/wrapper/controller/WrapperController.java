@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/template-test")
+@RequestMapping("/aaa")
 @Slf4j
 public class WrapperController {
 
