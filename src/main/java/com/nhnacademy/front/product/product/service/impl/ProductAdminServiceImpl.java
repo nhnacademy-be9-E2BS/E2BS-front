@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.adaptor.ProductAdminAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
@@ -121,7 +122,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	}
 
 	/**
-	 * 알라딘 api로 검색어에 따른 결과 조회
+	 * 알라딘 api로 검색어, 검색타입에 따른 결과 조회
 	 */
 	@Override
 	public PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable) throws FeignException {
@@ -132,7 +133,9 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 		}
 		return response.getBody();
 	}
-
+	/**
+	 * 알라딘 api로 카테고리로 따른 결과 조회
+	 */
 	@Override
 	public PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi (
 		RequestProductApiSearchByQueryTypeDTO request, Pageable pageable) throws FeignException {
@@ -144,6 +147,10 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 		return response.getBody();
 	}
 
+
+	/**
+	 * 알라딘 api로 검색어, 검색타입으로 책 등록
+	 */
 	@Override
 	public void createProductApi(RequestProductApiCreateDTO request) throws FeignException {
 		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductByApi(request);
@@ -152,7 +159,9 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 			throw new ProductCreateProcessException("도서 등록 실패");
 		}
 	}
-
+	/**
+	 * 알라딘 api로 카테고리로 따른 책 등록
+	 */
 	@Override
 	public void createProductQueryApi(RequestProductApiCreateByQueryDTO request) throws FeignException {
 		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductQueryByApi(request);

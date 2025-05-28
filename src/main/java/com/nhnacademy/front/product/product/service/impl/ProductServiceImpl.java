@@ -14,8 +14,6 @@ import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiC
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
-import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
-import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
 
 import feign.FeignException;
@@ -51,7 +49,8 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public PageResponse<ResponseProductReadDTO> getProductsByCategoryId(Pageable pageable, long categoryId) {
 		try {
-			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productAdaptor.getProductsByCategory(pageable, categoryId);
+			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productAdaptor.getProductsByCategory(
+				pageable, categoryId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
 				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
@@ -59,51 +58,6 @@ public class ProductServiceImpl implements ProductService {
 			return response.getBody();
 		} catch (FeignException e) {
 			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
-		}
-	}
-
-	/**
-	 * 알라딘 api로 검색어에 따른 결과 조회
-	 */
-	@Override
-	public PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable) {
-		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> response = productAdminAdaptor.searchBooksByQuery(request, pageable);
-
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("도서 조회 실패");
-		}
-		return response.getBody();
-	}
-
-	/**
-	 * 하나의 카테고리에 대한 product 리스트 페이징 조회
-	 */
-	@Override
-	public PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi(
-		RequestProductApiSearchByQueryTypeDTO request, Pageable pageable) {
-		ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> response = productAdminAdaptor.listBooksByCategory(request, pageable);
-
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("도서 조회 실패");
-		}
-		return response.getBody();
-	}
-
-	@Override
-	public void createProductApi(RequestProductApiCreateDTO request) {
-		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductByApi(request);
-
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductCreateProcessException("도서 등록 실패");
-		}
-	}
-
-	@Override
-	public void createProductQueryApi(RequestProductApiCreateByQueryDTO request) {
-		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductQueryByApi(request);
-
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductCreateProcessException("도서 등록 실패");
 		}
 	}
 

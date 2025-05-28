@@ -11,89 +11,89 @@ eureka:
 home:
   member:
     name:
-      url: https://e2bs.shop/api/home
+      url: http://localhost:10232/api/home
 
 member:
-  url: https://e2bs.shop/api/members
+  url: http://localhost:10232/api/members
   login:
-    url: https://e2bs.shop/api/login
+    url: http://localhost:10232/api/login
 
   register:
-    url: https://e2bs.shop/api/register
+    url: http://localhost:10232/api/register
 
   mypage:
-    url: https://e2bs.shop/api/mypage
+    url: http://localhost:10232/api/mypage
 
 admin:
   settings:
-    url: https://e2bs.shop/api/admin/settings
+    url: http://localhost:10232/api/admin/settings
 
 auth:
   jwt:
     create:
-      url: https://e2bs.shop/api/auth
+      url:
+        http://localhost:10232/api/auth
 
 # 쿠폰
 coupon:
-  url: https://e2bs.shop/api/admin/coupons
+  url: http://localhost:10232/api/admin/coupons
   policy:
-    url: https://e2bs.shop/api/admin/couponPolicies
+    url: http://localhost:10232/api/admin/couponPolicies
   member:
-    url: https://e2bs.shop/api/admin/member-coupons
+    url: http://localhost:10232/api/admin/member-coupons
   order:
-    url: https://e2bs.shop/api/order
+    url: http://localhost:10232/api/order
 
+# 상품 - 출판사, 기여자 역할
 product:
-  url: https://e2bs.shop/api/products
-
+  url: http://localhost:10232/api/products
   publisher:
-    url: https://e2bs.shop/api/admin/publishers
-
-  tag:
-    url: https://e2bs.shop/api/admin/tags
+    url: http://localhost:10232/api/admin/publishers
 
   contributor:
     position:
-      url: https://e2bs.shop/api/admin/positions
-    url: https://e2bs.shop/api/admin/contributors
+      url: http://localhost:10232/api/admin/positions
+    url: http://localhost:10232/api/admin/contributors
+
+  tag:
+    url: http://localhost:10232/api/admin/tags
 
   category:
     user:
-      url: https://e2bs.shop/api/categories
+      url: http://localhost:10232/api/categories
     admin:
-      url: https://e2bs.shop/api/admin/categories
+      url: http://localhost:10232/api/admin/categories
 
   book:
     member:
-      url: https://e2bs.shop/api/books
+      url: http://localhost:10232/api/books
     admin:
-      url: https://e2bs.shop/api/admin/books
-
+      url: http://localhost:10232/api/admin/books
 
 order:
   wrapper:
-    url: https://e2bs.shop/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
+    url: http://localhost:10232/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
   order:
-    url: https://e2bs.shop/api/order
+    url: http://localhost:10232/api/order
   delivery:
     admin:
-      url: https://e2bs.shop/api/admin/deliveryFee
+      url: http://localhost:10232/api/admin/deliveryFee
     user:
-      url: https://e2bs.shop/api/deliveryFee
+      url: http://localhost:10232/api/deliveryFee
 
   toss:
     client-key: test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO
     success-url: https://e2bs.shop/order/success
     fail-url: https://e2bs.shop/order/fail
-  admin: https://e2bs.shop/api/admin/orders
+  admin: http://localhost:10232/api/admin/orders
 
 customer:
-  url: https://e2bs.shop/api/customers
+  url: http://localhost:10232/api/customers
 guest:
-  url: https://e2bs.shop/api/guests
+  url: http://localhost:10232/api/guests
 
 review:
-  url: https://e2bs.shop/api/reviews
+  url: http://localhost:10232/api/reviews
 
 index:
-  url: https://e2bs.shop/api
+  url: http://localhost:10232/api

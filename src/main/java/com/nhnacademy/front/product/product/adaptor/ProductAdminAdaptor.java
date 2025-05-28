@@ -28,7 +28,6 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsA
 
 @FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
 public interface ProductAdminAdaptor {
-	@PostMapping
 
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(Pageable pageable);
@@ -72,5 +71,3 @@ public interface ProductAdminAdaptor {
 
 
 }
-
-
