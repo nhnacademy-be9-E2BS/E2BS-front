@@ -50,7 +50,7 @@ public class WrapperController {
 		// Page<ResponseWrapperDTO> wrappers = PageResponseConverter.toPage(response);
 
 		// model.addAttribute("wrappers", wrappers);
-		return "admin/product/wrappers";
+		return "admin/product/wrappers-test";
 	}
 
 	/**
