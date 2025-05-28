@@ -23,9 +23,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.controller.ProductController;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
-import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 import com.nhnacademy.front.product.state.model.dto.domain.ProductStateName;
@@ -42,7 +42,7 @@ class ProductControllerTest {
 	private ProductService productService;
 
 	@MockitoBean
-	private ProductAdminService productAdminService;
+	private UserCategoryService userCategoryService;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -109,11 +109,13 @@ class ProductControllerTest {
 		);
 
 		Mockito.when(productService.getProductsByCategoryId(any(), anyLong())).thenReturn(pageResponse);
+		Mockito.when(userCategoryService.getCategoriesById(any())).thenReturn(categoryADTO);
 
 		// when & then
 		mockMvc.perform(get("/books/category/1"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("product/category"))
-			.andExpect(model().attributeExists("products"));
+			.andExpect(model().attributeExists("products"))
+			.andExpect(model().attributeExists("rootCategory"));
 	}
 }

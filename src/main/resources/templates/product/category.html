@@ -87,6 +87,38 @@
       </li>
     </ul>
   </nav>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sidebar = document.querySelector(".sidebar-filter");
+      const toggles = sidebar.querySelectorAll(".toggle");
+
+      toggles.forEach(span => {
+        const li = span.closest("li");
+        const childUl = li.querySelector(":scope > ul");
+
+        if (!childUl) {
+          span.textContent = "🔹";
+          span.style.cursor = "default";
+          span.onclick = null;
+        } else {
+          span.textContent = "📁";
+          childUl.classList.add("d-none");
+        }
+      });
+    });
+
+    function toggleClick(element) {
+      const li = element.closest("li");
+      const childUl = li.querySelector(":scope > ul");
+
+      if (childUl) {
+        const isOpen = !childUl.classList.contains("d-none");
+        childUl.classList.toggle("d-none");
+        element.textContent = isOpen ? "📁" : "📂";
+      }
+    }
+  </script>
 </div>
 </body>
 </html>

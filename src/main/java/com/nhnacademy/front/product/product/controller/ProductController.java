@@ -11,19 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
-import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/books")
+@Slf4j
 public class ProductController {
 
 	private final ProductService productService;
-	private final ProductAdminService productAdminService;
+	private final UserCategoryService userCategoryService;
 
 	/**
 	 * 사용자 - 도서 상세 페이지 조회
@@ -45,7 +48,11 @@ public class ProductController {
 		PageResponse<ResponseProductReadDTO> response = productService.getProductsByCategoryId(pageable, categoryId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
+		ResponseCategoryDTO category = userCategoryService.getCategoriesById(categoryId);
+
 		model.addAttribute("products", products);
+		model.addAttribute("rootCategory", category);
+
 		return "product/category";
 	}
 }
