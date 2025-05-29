@@ -214,8 +214,8 @@ class OrderControllerTest {
 
 	@Test
 	@DisplayName("토스 결제 모달 끌 시 주문서 삭제 요청")
-	void testCancelOrder() throws Exception {
-		when(orderService.cancelOrder(anyString()))
+	void testDeleteOrder() throws Exception {
+		when(orderService.deleteOrder(anyString()))
 			.thenReturn(ResponseEntity.ok().build());
 
 		mockMvc.perform(post("/order/cancel")
@@ -281,5 +281,15 @@ class OrderControllerTest {
 			.andExpect(model().attributeExists("order"))
 			.andExpect(model().attributeExists("orderDetails"))
 			.andExpect(model().attributeExists("productAmount"));
+	}
+
+	@Test
+	@DisplayName("cancelOrder-주문 취소")
+	void testCancelOrder() throws Exception {
+		String orderCode = "TEST-ORDER-CODE";
+		when(orderService.cancelOrder(anyString())).thenReturn(ResponseEntity.ok().build());
+		mockMvc.perform(delete("/mypage/orders/"+orderCode)
+				.with(csrf()))
+			.andExpect(status().isOk());
 	}
 }

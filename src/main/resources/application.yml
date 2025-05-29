@@ -3,6 +3,24 @@ spring:
   application:
     name: FRONT
 
+  security:
+    oauth2:
+      client:
+        registration:
+          payco:
+            client-id: 3RD4qpUi5ZoDO2GNFEnioKX
+            client-secret: kAoXi_Yvk8Po1nxrVqpdNIe0
+            redirect-uri: "https://e2bs.shop/login/oauth2/code/payco"
+            authorization-grant-type: authorization_code
+            scope: profile
+            client-name: PAYCO
+        provider:
+          payco:
+            authorization-uri: https://id.payco.com/oauth2.0/authorize?userLocale=ko_KR&serviceProviderCode=FRIENDS
+            token-uri: https://id.payco.com/oauth2.0/token
+            user-info-uri: https://apis.payco.com/oauth2.0/user/me
+            user-name-attribute: id
+
   mvc:
     hidden method:
       filter:
@@ -99,7 +117,10 @@ order:
     url: http://localhost:10232/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
 
   order:
-    url: http://localhost:10232/api/order
+    auth: http://localhost:10232/api/auth/orders
+    url: http://localhost:10232/api/orders # 비인증 주문 관련 -> 비회원 용 요청
+
+  admin: http://localhost:10232/api/auth/admin/orders
 
   delivery:
     admin:
