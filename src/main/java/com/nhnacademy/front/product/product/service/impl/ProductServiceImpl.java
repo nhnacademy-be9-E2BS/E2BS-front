@@ -1,5 +1,7 @@
 package com.nhnacademy.front.product.product.service.impl;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -61,4 +63,17 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
+
+	/**
+	 * order 전용 - 도서 여러권 리스트 조회
+	 */
+	@Override
+	public List<ResponseProductReadDTO> getProducts(List<Long> productIds) throws FeignException {
+		ResponseEntity<List<ResponseProductReadDTO>> response = productAdaptor.getProducts(productIds);
+
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new ProductGetProcessException("order 전용 리스트 조회 실패");
+		}
+		return response.getBody();
+	}
 }
