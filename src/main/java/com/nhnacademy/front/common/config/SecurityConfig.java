@@ -77,13 +77,13 @@ public class SecurityConfig {
 			/**
 			 * oauth 로그인 기능
 			 */
-			// .oauth2Login(oauth2 -> oauth2
-			// 	.loginPage("/login")
-			// 	.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-			// 	.successHandler(customAuthenticationPaycoSuccessHandler)
-			// 	.failureHandler(customAuthenticationFailureHandler)
-			// 	.permitAll()
-			// )
+			.oauth2Login(oauth2 -> oauth2
+				.loginPage("/oauth/login")
+				.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+				.successHandler(customAuthenticationPaycoSuccessHandler)
+				.failureHandler(customAuthenticationFailureHandler)
+				.permitAll()
+			)
 			/**
 			 * 로그아웃 기능
 			 */
