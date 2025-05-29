@@ -22,7 +22,9 @@ import com.nhnacademy.front.common.exception.ServerErrorException;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -36,10 +38,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 		OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
 
 		String memberId = oAuth2User.getAttribute("idNo");
+		log.info("idNo:{}", memberId);
 		String email = oAuth2User.getAttribute("email");
+		log.info("email:{}", email);
 		String mobile = oAuth2User.getAttribute("mobile");
+		log.info("mobile:{}", mobile);
 		String name = oAuth2User.getAttribute("name");
+		log.info("name:{}", name);
 		String birthdayMMdd = oAuth2User.getAttribute("birthdayMMdd");
+		log.info("birthdayMMdd:{}", birthdayMMdd);
 
 		try {
 			ResponseEntity<ResponseCheckOAuthIdDTO> response = oAuthLoginAdaptor.checkOAuthLoginId(memberId);
