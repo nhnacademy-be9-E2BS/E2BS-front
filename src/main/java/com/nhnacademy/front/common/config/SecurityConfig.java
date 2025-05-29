@@ -2,7 +2,6 @@ package com.nhnacademy.front.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,7 +18,6 @@ import com.nhnacademy.front.common.handler.CustomLogoutHandler;
 
 import lombok.RequiredArgsConstructor;
 
-@Profile("!dev")
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -77,13 +75,13 @@ public class SecurityConfig {
 			/**
 			 * oauth 로그인 기능
 			 */
-			// .oauth2Login(oauth2 -> oauth2
-			// 	.loginPage("/login")
-			// 	.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-			// 	.successHandler(customAuthenticationPaycoSuccessHandler)
-			// 	.failureHandler(customAuthenticationFailureHandler)
-			// 	.permitAll()
-			// )
+			.oauth2Login(oauth2 -> oauth2
+				.loginPage("/login")
+				.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+				.successHandler(customAuthenticationPaycoSuccessHandler)
+				.failureHandler(customAuthenticationFailureHandler)
+				.permitAll()
+			)
 			/**
 			 * 로그아웃 기능
 			 */

@@ -37,7 +37,7 @@ public interface AdminSettingsAdaptor {
 	@DeleteMapping("/members/{memberId}")
 	ResponseEntity<Void> deleteAdminSettingsMember(@PathVariable("memberId") String memberId);
 
-	@GetMapping("/non-members")
+	@GetMapping("/customers")
 	ResponseEntity<PageResponse<ResponseAdminSettingsNonMembersDTO>> getAdminSettingsNonMembers(
 		@SpringQueryMap Pageable pageable);
 
