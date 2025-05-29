@@ -3,6 +3,7 @@ package com.nhnacademy.front.order.order.adaptor;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,7 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 
-@FeignClient(name = "order-service", url = "${order.order.url}")
+@FeignClient(name = "order-service", url = "${order.order.auth}")
 public interface OrderAdaptor {
 
 	@PostMapping("/create/tossPay")
@@ -26,7 +27,7 @@ public interface OrderAdaptor {
 		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO);
 
 	@PostMapping("/cancel")
-	ResponseEntity<Void> cancelOrder(@RequestParam String orderId);
+	ResponseEntity<Void> deleteOrder(@RequestParam String orderId);
 
 	@PostMapping("/confirm")
 	ResponseEntity<Void> confirmOrder(@RequestParam String orderId, @RequestParam String paymentKey,
@@ -35,6 +36,9 @@ public interface OrderAdaptor {
 	@GetMapping("/{orderCode}")
 	ResponseEntity<ResponseOrderWrapperDTO> getOrderByOrderCode(@PathVariable String orderCode);
 
-	@GetMapping("/orders")
+	@GetMapping
 	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, @RequestParam String memberId);
+
+	@DeleteMapping("/{orderCode}")
+	ResponseEntity<Void> cancelOrder(@PathVariable String orderCode);
 }

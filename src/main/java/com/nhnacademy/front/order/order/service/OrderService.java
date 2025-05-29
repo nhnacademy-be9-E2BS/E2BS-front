@@ -48,8 +48,8 @@ public class OrderService {
 	/**
 	 * 토스 결제 모달 창을 끌 시 저장된 주문서를 삭제하는 서비스
 	 */
-	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) throws FeignException {
-		return orderAdaptor.cancelOrder(orderId);
+	public ResponseEntity<Void> deleteOrder(@RequestParam String orderId) throws FeignException {
+		return orderAdaptor.deleteOrder(orderId);
 	}
 
 	/**
@@ -66,5 +66,12 @@ public class OrderService {
 	 */
 	public ResponseEntity<ResponseOrderWrapperDTO> getOrderByOrderCode(String orderCode) throws FeignException {
 		return orderAdaptor.getOrderByOrderCode(orderCode);
+	}
+
+	/**
+	 * 회원이 대기 상태인 특정 주문을 취소하는 메서드
+	 */
+	public ResponseEntity<Void> cancelOrder(String orderCode) throws FeignException {
+		return orderAdaptor.cancelOrder(orderCode);
 	}
 }
