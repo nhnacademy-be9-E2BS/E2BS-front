@@ -282,4 +282,14 @@ class OrderControllerTest {
 			.andExpect(model().attributeExists("orderDetails"))
 			.andExpect(model().attributeExists("productAmount"));
 	}
+
+	@Test
+	@DisplayName("cancelOrder-주문 취소")
+	void testCancelOrder() throws Exception {
+		String orderCode = "TEST-ORDER-CODE";
+		when(orderService.cancelOrder(anyString())).thenReturn(ResponseEntity.ok().build());
+		mockMvc.perform(delete("/mypage/orders/"+orderCode)
+				.with(csrf()))
+			.andExpect(status().isOk());
+	}
 }

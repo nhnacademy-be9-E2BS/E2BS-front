@@ -16,7 +16,7 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 
-@FeignClient(name = "order-service", url = "${order.order.url}")
+@FeignClient(name = "order-service", url = "${order.order.auth}")
 public interface OrderAdaptor {
 
 	@PostMapping("/create/tossPay")
@@ -36,9 +36,9 @@ public interface OrderAdaptor {
 	@GetMapping("/{orderCode}")
 	ResponseEntity<ResponseOrderWrapperDTO> getOrderByOrderCode(@PathVariable String orderCode);
 
-	@GetMapping("/orders")
+	@GetMapping
 	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, @RequestParam String memberId);
 
-	@DeleteMapping("/orders/{orderCode}")
+	@DeleteMapping("/{orderCode}")
 	ResponseEntity<Void> cancelOrder(@PathVariable String orderCode);
 }

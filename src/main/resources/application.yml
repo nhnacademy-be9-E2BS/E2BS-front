@@ -98,7 +98,10 @@ order:
     url: http://localhost:10232/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
 
   order:
-    url: http://localhost:10232/api/order
+    auth: http://localhost:10232/api/auth/orders
+    url: http://localhost:10232/api/orders # 비인증 주문 관련 -> 비회원 용 요청
+
+  admin: http://localhost:10232/api/auth/admin/orders
 
   delivery:
     admin:

@@ -68,6 +68,9 @@ public class OrderService {
 		return orderAdaptor.getOrderByOrderCode(orderCode);
 	}
 
+	/**
+	 * 회원이 대기 상태인 특정 주문을 취소하는 메서드
+	 */
 	public ResponseEntity<Void> cancelOrder(String orderCode) throws FeignException {
 		return orderAdaptor.cancelOrder(orderCode);
 	}
