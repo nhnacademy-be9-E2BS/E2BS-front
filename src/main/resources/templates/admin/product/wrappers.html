@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <h4>Register New Paper</h4>
-                    <form class="row login_form" action="/admin/settings/papers" method="post">
+                    <form class="row login_form" action="/admin/settings/papers" method="post" enctype="multipart/form-data">
                         <div class="col-md-6 form-group">
                             <input type="text" class="form-control" name="wrapperName" placeholder="포장지명" required>
                         </div>
@@ -23,7 +23,7 @@
                         </div>
                         <!-- 추후에 이미지 업로드로 수정 필요 -->
                         <div class="col-md-6 form-group">
-                            <input type="text" class="form-control" name="wrapperImage" placeholder="포장지 이미지" required>
+                            <input type="file" class="form-control-file" name="wrapperImage" accept="image/*" placeholder="포장지 이미지" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <div class="form-check form-check-inline">
@@ -60,7 +60,9 @@
                         <tr th:each="wrapper : ${wrappers}">
                             <td th:text="${wrapper.wrapperName}"></td>
                             <td th:text="${wrapper.wrapperPrice}"></td>
-                            <td th:text="${wrapper.wrapperImage}"></td>
+                            <td>
+                                <img th:src="${wrapper.wrapperImage}" style="max-width: 200px; height: auto;">
+                            </td>
                             <td th:id="'saleable-' + ${wrapper.wrapperId}">
                                 <select
                                         class="form-control saleable-dropdown"

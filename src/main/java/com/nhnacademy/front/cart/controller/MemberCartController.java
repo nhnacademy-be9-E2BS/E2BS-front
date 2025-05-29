@@ -1,7 +1,6 @@
 package com.nhnacademy.front.cart.controller;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +23,12 @@ import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberCartController {
-	private static final String JWT_TOKEN_NULL_MESSAGE = "JWT token is null";
 
 	private final MemberCartService memberCartService;
 
@@ -47,9 +44,6 @@ public class MemberCartController {
 		}
 
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
-		if (Objects.isNull(memberId)) {
-			throw new JwtException(JWT_TOKEN_NULL_MESSAGE);
-		}
 
 		requestDto.setMemberId(memberId);
 
@@ -65,9 +59,6 @@ public class MemberCartController {
 	@GetMapping("/members/carts")
 	public String getCartsByMember(HttpServletRequest request, Model model) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
-		if (Objects.isNull(memberId)) {
-			throw new JwtException(JWT_TOKEN_NULL_MESSAGE);
-		}
 
 		List<ResponseCartItemsForMemberDTO> cartItemsByMember = memberCartService.getCartItemsByMember(memberId);
 
@@ -114,9 +105,6 @@ public class MemberCartController {
 	@DeleteMapping("/members/carts")
 	public ResponseEntity<Void> deleteCartForMember(HttpServletRequest request) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
-		if (Objects.isNull(memberId)) {
-			throw new JwtException(JWT_TOKEN_NULL_MESSAGE);
-		}
 
 		memberCartService.deleteCartForMember(memberId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

@@ -1,5 +1,7 @@
 package com.nhnacademy.front.order.wrapper.model.dto.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +18,7 @@ public class RequestRegisterWrapperDTO {
 	@NotNull
 	private String wrapperName;
 	@NotNull
-	private String wrapperImage;
+	private MultipartFile wrapperImage;
 	@NotNull
 	private Boolean wrapperSaleable;
 }

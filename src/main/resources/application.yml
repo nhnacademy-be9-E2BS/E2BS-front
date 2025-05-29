@@ -54,10 +54,14 @@ coupon:
     url: http://localhost:10232/api/admin/couponPolicies
 
   member:
-    url: http://localhost:10232/api/admin/member-coupons
+    url: http://localhost:10232/api/admin/memberCoupons
 
   order:
     url: http://localhost:10232/api/order
+
+point:
+  admin:
+    url: http://localhost:10232/api/admin/pointPolicies
 
 # 상품 - 출판사, 기여자 역할
 product:

@@ -1,0 +1,45 @@
+<!-- 관리자 페이지 - 포인트 정책 관리 -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <h2>Point Policy Register</h2>
+            <div>
+                ! 정책 등록 시 기존 활성화된 정책은 비활성화 됩니다
+            </div>
+
+            <!-- 등록 폼 -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4>Register New Point Policy</h4>
+                    <form class="row" action="/admin/settings/pointPolicies/register" method="post">
+                        <div class="col-md-12 form-group mt-2">
+                            <select class="form-control" name="pointPolicyType" required>
+                                <option value="none" disabled selected>정책 타입 선택</option>
+                                <th:block th:each="type : ${pointPolicyTypes}">
+                                    <option th:value="${type}" th:text="${type.displayName}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" name="pointPolicyName" placeholder="정책명" required>
+                        </div>
+                        <div class="col-md-12 form-group mt-2">
+                            <input type="number" class="form-control" name="pointPolicyFigure" placeholder="포인트 수치" required>
+                        </div>
+                        <div class="col-md-12 form-group mt-3">
+                            <button type="submit" class="button button-register w-100">Register Policy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -109,7 +108,6 @@ class ReviewControllerTest {
 	void getReviewsByProduct() throws Exception {
 		// given
 		long productId = 1L;
-		Pageable pageable = PageRequest.of(0, 5);
 
 		List<ResponseReviewPageDTO> reviewPageList = List.of(
 				new ResponseReviewPageDTO(1L, 1L, 1L, "name1", "좋아요", 5, "image1", LocalDateTime.now()),

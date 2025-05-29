@@ -15,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.wrapper.adaptor.WrapperAdaptor;
@@ -23,6 +25,7 @@ import com.nhnacademy.front.order.wrapper.exception.WrapperGetProcessException;
 import com.nhnacademy.front.order.wrapper.exception.WrapperUpdateProcessException;
 import com.nhnacademy.front.order.wrapper.model.dto.request.RequestModifyWrapperDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.request.RequestRegisterWrapperDTO;
+import com.nhnacademy.front.order.wrapper.model.dto.request.RequestRegisterWrapperMetaDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
 
@@ -39,14 +42,22 @@ class WrapperServiceTest {
 	@DisplayName("create wrapper - success")
 	void create_wrapper_success_test() {
 		// given
-		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", "a.jpg", true);
-		when(wrapperAdaptor.postCreateWrapper(request)).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
+		MockMultipartFile mockFile = new MockMultipartFile(
+			"wrapperImage",
+			"a.jpg",
+			"image/jpeg",
+			"image-content".getBytes()
+		);
+		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", mockFile, true);
+		RequestRegisterWrapperMetaDTO requestMeta = new RequestRegisterWrapperMetaDTO(1000, "Wrapper A", true);
+		when(wrapperAdaptor.postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), any(MultipartFile.class)))
+			.thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
 
 		// when
 		wrapperService.createWrapper(request);
 
 		// then
-		verify(wrapperAdaptor, times(1)).postCreateWrapper(request);
+		verify(wrapperAdaptor, times(1)).postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), eq(mockFile));
 	}
 
 	@Test
@@ -61,8 +72,16 @@ class WrapperServiceTest {
 	@DisplayName("create wrapper - fail2")
 	void create_wrapper_fail2_test() {
 		// given
-		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", "a.jpg", true);
-		when(wrapperAdaptor.postCreateWrapper(request)).thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+		MockMultipartFile mockFile = new MockMultipartFile(
+			"wrapperImage",
+			"a.jpg",
+			"image/jpeg",
+			"image-content".getBytes()
+		);
+		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", mockFile, true);
+		RequestRegisterWrapperMetaDTO requestMeta = new RequestRegisterWrapperMetaDTO(1000, "Wrapper A", true);
+		when(wrapperAdaptor.postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), any(MultipartFile.class)))
+			.thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
 
 		// when & then
 		assertThatThrownBy(() -> wrapperService.createWrapper(request))
