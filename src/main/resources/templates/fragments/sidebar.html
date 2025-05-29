@@ -35,24 +35,23 @@
                   </ul>
               </div>
               <div class="common-filter">
-                <div class="head">정책 관리</div>
+                <div class="head">쿠폰 관리</div>
                   <ul>
-                    <li class="filter-list"><a href="/admin/settings/deliveryFee">배송비 정책</a></li>
-                    <li class="filter-list"><a href="/admin/settings/couponPolicies">쿠폰 정책</a></li>
                     <li class="filter-list"><a href="/admin/settings/coupons/register">쿠폰 등록</a></li>
-                    <li class="filter-list"><a href="/admin/settings/coupons">쿠폰 관리</a></li>
-                    <li class="filter-list"><a href="#">포인트 정책</a></li>
-
+                    <li class="filter-list"><a href="/admin/settings/coupons">쿠폰 조회</a></li>
+                    <li class="filter-list"><a href="/admin/settings/memberCoupons/issue">쿠폰 발급</a></li>
                   </ul>
               </div>
+              <div class="common-filter">
+                <div class="head">정책 관리</div>
+                <ul>
+                  <li class="filter-list"><a href="/admin/settings/deliveryFee">배송비 정책</a></li>
+                  <li class="filter-list"><a href="/admin/settings/couponPolicies">쿠폰 정책</a></li>
+                  <li class="filter-list"><a href="/admin/settings/pointPolicies">포인트 정책</a></li>
+                </ul>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-  </section>
 </div>
-
-
 
 <div class="col-xl-3 col-lg-4 col-md-5" th:fragment="member-sidebar">
   <div class="sidebar-filter">
@@ -72,7 +71,7 @@
       <ul>
         <li class="filter-list"><a href="/member/my-page-update">개인정보</a></li>
         <li class="filter-list"><a href="/member/rank">등급</a></li>
-        <li class="filter-list"><a href="/member/coupons">할인쿠폰</a></li>
+        <li class="filter-list"><a href="/member/coupons">쿠폰함</a></li>
         <li class="filter-list"><a href="/member/deliveries">배송지 관리</a></li>
       </ul>
     </div>
@@ -103,7 +102,7 @@
         <li class="filter-list"><a th:href="@{/mypage/info}">개인정보 수정</a></li>
         <li class="filter-list"><a th:href="@{/mypage/addresses}">배송지 관리</a></li>
         <li class="filter-list"><a th:href="@{/mypage/rank}">회원 등급</a></li>
-        <li class="filter-list"><a th:href="@{/mypage/couponBox}">할인 쿠폰</a></li>
+        <li class="filter-list"><a th:href="@{/mypage/couponBox}">쿠폰함</a></li>
         <li class="filter-list"><a th:href="@{/mypage/}">포인트 내역</a></li>
         <li class="filter-list"><a th:href="@{/products/likes}">좋아요 목록</a></li>
       </ul>

@@ -1,5 +1,6 @@
 package com.nhnacademy.front.product.product.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -7,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.adaptor.ProductAdminAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
@@ -153,7 +153,10 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 */
 	@Override
 	public void createProductApi(RequestProductApiCreateDTO request) throws FeignException {
-		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductByApi(request);
+		if (request.getTagIds() == null) {
+			request.setTagIds(new ArrayList<>());
+		}
+		ResponseEntity<Void> response = productAdminAdaptor.postCreateProductByApi(request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductCreateProcessException("도서 등록 실패");
@@ -164,7 +167,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 */
 	@Override
 	public void createProductQueryApi(RequestProductApiCreateByQueryDTO request) throws FeignException {
-		ResponseEntity<Void> response =productAdminAdaptor.postCreateProductQueryByApi(request);
+		ResponseEntity<Void> response = productAdminAdaptor.postCreateProductQueryByApi(request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductCreateProcessException("도서 등록 실패");
