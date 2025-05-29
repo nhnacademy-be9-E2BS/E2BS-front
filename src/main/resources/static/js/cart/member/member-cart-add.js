@@ -34,7 +34,7 @@ $(document).ready(function () {
     $('.add-cart-btn').click(function () {
         const card = $(this).closest('.card-product');
         const productId = card.data('product-id');
-        let quantity = card.data('product-quantity');
+        let quantity = $('#quantity').val();
         if (isNaN(quantity)) {
             quantity = 1;
         }

@@ -39,7 +39,7 @@ public class MemberCouponController {
 	 * 쿠폰 리스트를 보고 쿠폰을 선택하여 쿠폰만료일 지정
 	 */
 	@JwtTokenCheck
-	@GetMapping("/admin/settings/member-coupons/issue")
+	@GetMapping("/admin/settings/memberCoupons/issue")
 	public String getMemberCouponsForm(@PageableDefault(size = 5) Pageable pageable, Model model) {
 		PageResponse<ResponseCouponDTO> response = couponService.getCouponsIsActive(pageable);
 		Page<ResponseCouponDTO> couponsIsActive = PageResponseConverter.toPage(response);
@@ -52,7 +52,7 @@ public class MemberCouponController {
 	 * 관리자 페이지 : 활성 상태인 회원들에게 쿠폰 발급
 	 */
 	@JwtTokenCheck
-	@PostMapping("/admin/settings/member-coupons/issue")
+	@PostMapping("/admin/settings/memberCoupons/issue")
 	public String postMemberCoupons(@Validated RequestAllMemberCouponDTO request, BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);

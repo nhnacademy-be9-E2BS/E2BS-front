@@ -274,7 +274,7 @@
 											<ul class="pagination">
 												<!-- 처음 -->
 												<li class="page-item" th:classappend="${!reviewsByProduct.hasPrevious()} ? 'disabled'">
-													<a class="page-link" th:href="@{/products/{productId}/reviews(productId=${productId})(page=0, size=${reviewsByProduct.size})}">처음</a>
+													<a class="page-link" th:href="@{/products/{productId}/reviews(productId=${productId})(page=0, size=${reviewsByProduct.size})}"><<</a>
 												</li>
 
 												<!-- 페이지 번호 -->
@@ -289,7 +289,7 @@
 												<!-- 끝 -->
 												<li class="page-item" th:classappend="${!reviewsByProduct.hasNext()} ? 'disabled'">
 													<a class="page-link"
-													   th:href="@{/products/{productId}/reviews(productId=${productId})(page=${reviewsByProduct.totalPages - 1}, size=${reviewsByProduct.size})}">끝</a>
+													   th:href="@{/products/{productId}/reviews(productId=${productId})(page=${reviewsByProduct.totalPages - 1}, size=${reviewsByProduct.size})}">>></a>
 												</li>
 											</ul>
 										</nav>

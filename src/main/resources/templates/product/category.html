@@ -35,30 +35,34 @@
   <section class="lattest-product-area pb-40 category-list">
     <div class="row">
       <div th:each="product : ${products}" class="col-md-6 col-lg-4">
-        <div class="card text-center card-product">
+        <div class="card text-center card-product" th:data-product-id = "${product.productId}">
           <div class="card-product__img">
             <!-- 도서 이미지: productImagePaths는 List이므로 첫 번째 이미지를 사용 -->
             <div class="card-img"
                  th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
-              <img th:src="${product.productImagePaths[0].productImagePath}"
-                   alt="대표 이미지"
-                   onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+              <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
+                <img th:src="${product.productImagePaths[0].productImagePath}"
+                     alt="대표 이미지"
+                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+              </a>
               <ul class="card-product__imgOverlay">
-                <li><button><i class="ti-search"></i></button></li>
-                <li><button><i class="ti-shopping-cart"></i></button></li>
+                <li><a th:href="@{/books/{productId}(productId=${product.productId})}" class="search-link">
+                  <button><i class="ti-search"></i></button>
+                </a></li>
+                <li><button class="add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
                 <li><button><i class="ti-heart"></i></button></li>
               </ul>
-              <div>
-              </div>
             </div>
           </div>
         </div>
         <div class="card-body">
           <!-- 도서 제목 -->
-          <h5 th:text="${product.productTitle}" class="card-product__title">도서 제목</h5>
+          <h5 class="card-product__title">
+            <a th:href="@{/books/{productId}(productId=${product.productId})}" th:text="${product.productTitle}" class="title-link">도서 제목</a>
+          </h5>
           <p>출판사: <span th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">출판사</span></p>
           <!-- 판매 가격 -->
-          <span class="card-product__price">판매가: <span th:text="${product.productSalePrice}">0</span>원</span>
+          <span class="card-product__price" th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'">0</span>
         </div>
       </div>
     </div>
@@ -119,6 +123,9 @@
       }
     }
   </script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
 </div>
 </body>
 </html>

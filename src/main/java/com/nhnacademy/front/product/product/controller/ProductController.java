@@ -55,4 +55,26 @@ public class ProductController {
 
 		return "product/category";
 	}
+
+	/**
+	 * 테스트 - 삭제 예정
+	 */
+	@GetMapping("/test/{bookId}")
+	public String getProductTest(@PathVariable Long bookId, Model model) {
+		ResponseProductReadDTO response = productService.getProduct(bookId);
+
+		model.addAttribute("product", response);
+		return "product/product-detail-test";
+	}
+
+	/**
+	 * 테스트 - 삭제 예정
+	 */
+	@GetMapping("/test2/{bookId}")
+	public String getProductTest2(@PathVariable Long bookId, Model model) {
+		ResponseProductReadDTO response = productService.getProduct(bookId);
+
+		model.addAttribute("product", response);
+		return "product/product-detail";
+	}
 }
