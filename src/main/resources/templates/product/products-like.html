@@ -1,0 +1,131 @@
+<!--좋아요 상품 목록-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mypage-layout}">
+
+<head>
+    <style>
+        .fa-heart.liked {
+            color: red;
+        }
+
+        .fa-star.filled {
+            color: gold;
+            transition: color 0.2s ease;
+        }
+    </style>
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <!-- 상품 리스트 출력 -->
+    <section class="lattest-product-area pb-40 category-list">
+        <div class="row">
+            <div th:each="likeProduct : ${likeProducts.content}" class="col-md-6 col-lg-4">
+                <div class="card text-center card-product">
+                    <div class="card-product__img">
+                        <!-- 도서 이미지 -->
+                        <div class="card-img"
+                             th:if="${likeProduct.productThumbnail != null}">
+                            <img th:src="${likeProduct.productThumbnail}"
+                                 alt="대표 이미지"
+                                 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+                            <ul class="card-product__imgOverlay">
+                                <li><button><i class="ti-search"></i></button></li>
+                                <li><button><i class="ti-shopping-cart"></i></button></li>
+                                <li><button class="like-button" data-liked="false" th:data-product-id="${likeProduct.productId}">
+                                    <!--                      <i class="ti-heart"-->
+                                    <!--                                     th:classappend="${product.liked} ? ' liked' : ''"></i>-->
+                                    <i class="ti-heart"></i>
+                                </button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- 도서 제목 -->
+                    <h5 th:text="${likeProduct.productTitle}" class="card-product__title">도서 제목</h5>
+                    <p>출판사: <span th:text="${likeProduct.publisherName != null ? likeProduct.publisherName : '출판사 정보 없음'}">출판사</span></p>
+
+                    <!-- 평점, 리뷰 개수, 좋아요 개수 -->
+                    <div>
+                        <span th:if="${likeProduct.reviewCount != 0}">
+                            <i class="fa fa-star filled"></i>
+                            <span th:text="${likeProduct.avgRating}"></span>
+                            <span th:utext="'(' + ${likeProduct.reviewCount} + ')' + '&nbsp;' + '&nbsp;'"></span>
+                        </span>
+                        <span th:if="${likeProduct.likeCount != null}">
+                            <i class="fa fa-heart liked"></i>
+                            <span th:text="${likeProduct.likeCount}"></span>
+                        </span>
+                    </div>
+
+                    <!-- 판매 가격 -->
+                    <span class="card-product__price">판매가: <span th:text="${likeProduct.productSalePrice}">0</span>원</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 페이징 -->
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <!-- 처음 -->
+                    <li class="page-item" th:classappend="${!likeProducts.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" th:href="@{/products/likes(page=0, size=${likeProducts.size})}"><<</a>
+                    </li>
+
+                    <!-- 페이지 번호 -->
+                    <li class="page-item"
+                        th:each="i : ${#numbers.sequence(0, likeProducts.totalPages - 1)}"
+                        th:classappend="${i == likeProducts.number} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/products/likes(page=${i}, size=${likeProducts.size})}"
+                           th:text="${i + 1}">1</a>
+                    </li>
+
+                    <!-- 끝 -->
+                    <li class="page-item" th:classappend="${!likeProducts.hasNext()} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/products/likes(page=${likeProducts.totalPages - 1}, size=${likeProducts.size})}">>></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 페이지네이션
+     -->
+<!--    <nav th:if="${products.totalPages > 1}">-->
+<!--        <ul class="pagination justify-content-center">-->
+<!--            <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">-->
+<!--                <a class="page-link"-->
+<!--                   th:href="@{/books(query=${param.query}, queryType=${param.queryType}, page=0, size=${products.size})}">처음</a>-->
+<!--            </li>-->
+
+<!--            <li class="page-item"-->
+<!--                th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"-->
+<!--                th:classappend="${i == products.number} ? 'active'">-->
+<!--                <a class="page-link"-->
+<!--                   th:href="@{/books(query=${param.query}, queryType=${param.queryType}, page=${i}, size=${products.size})}"-->
+<!--                   th:text="${i + 1}">1</a>-->
+<!--            </li>-->
+
+<!--            <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">-->
+<!--                <a class="page-link"-->
+<!--                   th:href="@{/books(query=${param.query}, queryType=${param.queryType}, page=${products.totalPages - 1}, size=${products.size})}">마지막</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/like/like-delete.js}"></script>
+</div>
+</body>
+</html>
