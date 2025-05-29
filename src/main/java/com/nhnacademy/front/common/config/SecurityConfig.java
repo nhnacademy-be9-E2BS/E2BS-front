@@ -80,7 +80,6 @@ public class SecurityConfig {
 				.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
 				.successHandler(customAuthenticationPaycoSuccessHandler)
 				.failureHandler(customAuthenticationFailureHandler)
-				.permitAll()
 			)
 			/**
 			 * 로그아웃 기능

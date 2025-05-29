@@ -18,8 +18,9 @@ public class OAuthController {
 
 	private final OAuthService oAuthService;
 
-	@GetMapping("/login/oauth2/code/payco")
+	@GetMapping("/hello")
 	public String paycoLogin(@RequestParam("code") String code) {
+		log.info("paycoLogin()");
 		ResponseProviderPaycoAccessTokenDTO responseProviderPaycoAccessTokenDTO = oAuthService.getPaycoAccessToken(
 			code
 		);
