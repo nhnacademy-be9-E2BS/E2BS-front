@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/user-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <style>
+                .payco-login-container {
+                    max-width: 400px;
+                    margin: 50px auto;
+                    padding: 40px 30px;
+                    background-color: #fff;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+                    text-align: center;
+                    font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+                }
+
+                .payco-logo {
+                    font-size: 36px;
+                    font-weight: bold;
+                    color: #e20000;
+                    margin-bottom: 10px;
+                }
+
+                .payco-subtitle {
+                    font-size: 14px;
+                    color: #555;
+                    margin-bottom: 30px;
+                }
+
+                .form-control {
+                    width: 100%;
+                    padding: 14px;
+                    margin-bottom: 15px;
+                    border: 1px solid #ccc;
+                    border-radius: 10px;
+                    font-size: 14px;
+                    transition: border 0.3s;
+                }
+
+                .form-control:focus {
+                    outline: none;
+                    border-color: #e20000;
+                }
+
+                .login-options {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-size: 13px;
+                    color: #666;
+                    margin-bottom: 20px;
+                }
+
+                .login-button {
+                    width: 100%;
+                    background-color: #e20000;
+                    color: #fff;
+                    border: none;
+                    border-radius: 10px;
+                    padding: 14px 0;
+                    font-size: 16px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                }
+
+                .login-button:hover {
+                    background-color: #c00000;
+                }
+
+                .divider {
+                    margin: 30px 0 20px;
+                    border-top: 1px solid #ddd;
+                    position: relative;
+                }
+
+                .divider::before {
+                    content: '또는';
+                    position: absolute;
+                    top: -11px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: #fff;
+                    padding: 0 12px;
+                    color: #999;
+                    font-size: 12px;
+                }
+
+                .app-login-button {
+                    width: 100%;
+                    padding: 12px 0;
+                    border: 2px solid #e20000;
+                    color: #e20000;
+                    border-radius: 10px;
+                    background-color: #fff;
+                    font-weight: bold;
+                    font-size: 15px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 8px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                }
+
+                .app-login-button:hover {
+                    background-color: #ffecec;
+                }
+
+                .app-icon {
+                    font-size: 18px;
+                }
+
+            </style>
+
+            <div class="payco-login-container">
+                <div class="payco-logo">PAYCO</div>
+                <div class="payco-subtitle">하나의 아이디로 쇼핑부터 혜택까지!</div>
+
+                <form class="login_form" action="/oauth/login" method="post">
+                    <input type="text" class="form-control" id="paycoId" name="paycoId"
+                           placeholder="페이코 아이디 (이메일 또는 휴대폰)" required>
+                    <input type="password" class="form-control" id="paycoPassword" name="paycoPassword"
+                           placeholder="페이코 비밀번호" required>
+
+                    <div class="login-options">
+                        <span>IP 보안 <strong style="color:red;">ON</strong></span>
+                    </div>
+
+                    <button type="submit" class="login-button">로그인</button>
+                </form>
+
+                <div class="divider"></div>
+
+                <a href="/oauth2/authorization/payco" class="app-login-button">
+                    <span class="app-icon">📱</span> 앱으로 로그인
+                </a>
+            </div>
+
+            <script>
+                const urlParams = new URLSearchParams(window.location.search);
+                const errorMessage = urlParams.get('error');
+                if (errorMessage) {
+                    alert(decodeURIComponent(errorMessage));
+                }
+            </script>
+        </div>
+    </section>
+</div>
+</body>
+</html>

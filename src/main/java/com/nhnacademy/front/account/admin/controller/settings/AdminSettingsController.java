@@ -87,7 +87,7 @@ public class AdminSettingsController {
 	 * 관리자 페이지 비회원 관리 뷰
 	 */
 	@JwtTokenCheck
-	@GetMapping("/non-members")
+	@GetMapping("/customers")
 	public String getAdminSettingsNonMembers(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
 		PageResponse<ResponseAdminSettingsNonMembersDTO> response = adminSettingsService.getAdminSettingsNonMembers(
 			pageable);
