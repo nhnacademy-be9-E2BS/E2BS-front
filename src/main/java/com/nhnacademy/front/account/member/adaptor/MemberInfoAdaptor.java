@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberInfoDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 
-@FeignClient(name = "member-info-adaptor", url = "${member.url}")
+@FeignClient(name = "member-info-adaptor", url = "${auth.member.url}")
 public interface MemberInfoAdaptor {
 
 	@GetMapping("/{memberId}")

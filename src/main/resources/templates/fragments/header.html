@@ -15,18 +15,26 @@
                     </button>
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
+                            <!-- 1단계 카테고리 (최상위) -->
                             <li th:each="category : ${headerCategories}" class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+                                <a class="nav-link dropdown-toggle"
+                                   th:href="@{/books/category/{categoryId}(categoryId=${category.categoryId})}"
+                                   id="dropdownMenuLink"
+                                   data-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false"
                                    th:text="${category.categoryName}"></a>
-                                <ul class="dropdown-menu">
-                                    <!-- 2단계 카테고리 -->
+                                <!-- 2단계 카테고리 -->
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                     <li th:each="child : ${category.children}" class="dropdown-submenu">
-                                        <a class="dropdown-item dropdown-toggle" href="#"
+                                        <a class="dropdown-item dropdown-toggle"
+                                           th:href="@{/books/category/{categoryId}(categoryId=${child.categoryId})}"
                                            th:text="${child.categoryName}"></a>
+                                        <!-- 3단계 카테고리 -->
                                         <ul class="dropdown-menu">
-                                            <!-- 3단계 카테고리 -->
                                             <li th:each="grandChild : ${child.children}">
-                                                <a class="dropdown-item" href="#"
+                                                <a class="dropdown-item"
+                                                   th:href="@{/books/category/{categoryId}(categoryId=${grandChild.categoryId})}"
                                                    th:text="${grandChild.categoryName}"></a>
                                             </li>
                                         </ul>
@@ -84,5 +92,12 @@
             </nav>
         </div>
     </header>
+    <script>
+        document.querySelectorAll('.nav-link.dropdown-toggle').forEach(link => {
+            link.addEventListener('click', function (e) {
+                window.location = this.href;
+            });
+        });
+    </script>
 </div>
 </html>

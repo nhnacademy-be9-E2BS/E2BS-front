@@ -15,7 +15,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 
-@FeignClient(name = "customer-cart-adaptor", url = "${member.url}")
+@FeignClient(name = "customer-cart-adaptor", url = "${auth.member.url}")
 public interface MemberCartAdaptor {
 
 	/**
@@ -34,7 +34,8 @@ public interface MemberCartAdaptor {
 	 * 회원 - 장바구니 항목 수량 변경
 	 */
 	@PutMapping("/carts/items/{cartItemsId}")
-	ResponseEntity<Void> updateCartItemForMember(@PathVariable long cartItemsId, @RequestBody RequestUpdateCartItemsDTO requestDto);
+	ResponseEntity<Void> updateCartItemForMember(@PathVariable long cartItemsId,
+		@RequestBody RequestUpdateCartItemsDTO requestDto);
 
 	/**
 	 * 회원 - 장바구니 항목 삭제

@@ -11,15 +11,14 @@ import com.nhnacademy.front.order.wrapper.exception.WrapperGetProcessException;
 import com.nhnacademy.front.order.wrapper.exception.WrapperUpdateProcessException;
 import com.nhnacademy.front.order.wrapper.model.dto.request.RequestModifyWrapperDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.request.RequestRegisterWrapperDTO;
+import com.nhnacademy.front.order.wrapper.model.dto.request.RequestRegisterWrapperMetaDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class WrapperService {
 
 	private final WrapperAdaptor wrapperAdaptor;
@@ -28,7 +27,8 @@ public class WrapperService {
 	 * Wrapper를 back - wrapper table에 저장
 	 */
 	public void createWrapper(RequestRegisterWrapperDTO registerRequest) throws FeignException {
-		ResponseEntity<Void> response = wrapperAdaptor.postCreateWrapper(registerRequest);
+		RequestRegisterWrapperMetaDTO requestMeta = new RequestRegisterWrapperMetaDTO(registerRequest.getWrapperPrice(), registerRequest.getWrapperName(), registerRequest.getWrapperSaleable());
+		ResponseEntity<Void> response = wrapperAdaptor.postCreateWrapper(requestMeta, registerRequest.getWrapperImage());
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new WrapperCreateProcessException("포장지 등록 실패");
@@ -51,9 +51,8 @@ public class WrapperService {
 	 * 모든(판매 여부 상관 없이) Wrapper 리스트를 back에서 조회
 	 */
 	public PageResponse<ResponseWrapperDTO> getWrappers(Pageable pageable) throws FeignException {
-		log.info("포장지 서비스 start");
 		ResponseEntity<PageResponse<ResponseWrapperDTO>> response = wrapperAdaptor.getWrappers(pageable);
-		log.info(response.toString());
+
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new WrapperGetProcessException("모든 포장지 리스트 조회 실패");
 		}

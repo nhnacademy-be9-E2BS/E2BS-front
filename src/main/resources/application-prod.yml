@@ -8,96 +8,10 @@ eureka:
   instance:
     prefer-ip-address: true # 서비스 등록 시 도메인 대신 IP 주소로 등록
 
-home:
-  member:
-    name:
-      url: https://e2bs.shop/api/home
-
-member:
-  url: https://e2bs.shop/api/members
-  login:
-    url: https://e2bs.shop/api/login
-
-  register:
-    url: https://e2bs.shop/api/register
-
-  mypage:
-    url: https://e2bs.shop/api/mypage
-
-admin:
-  settings:
-    url: https://e2bs.shop/api/admin/settings
-
-auth:
-  jwt:
-    create:
-      url: https://e2bs.shop/api/auth
-
-# 쿠폰
-coupon:
-  url: https://e2bs.shop/api/admin/coupons
-  policy:
-    url: https://e2bs.shop/api/admin/couponPolicies
-  member:
-    url: https://e2bs.shop/api/admin/memberCoupons
-  order:
-    url: https://e2bs.shop/api/order
-
-product:
-  url: https://e2bs.shop/api/products
-
-  publisher:
-    url: https://e2bs.shop/api/admin/publishers
-
-  tag:
-    url: https://e2bs.shop/api/admin/tags
-
-  contributor:
-    position:
-      url: https://e2bs.shop/api/admin/positions
-    url: https://e2bs.shop/api/admin/contributors
-
-  category:
-    user:
-      url: https://e2bs.shop/api/categories
-    admin:
-      url: https://e2bs.shop/api/admin/categories
-
-  book:
-    member:
-      url: https://e2bs.shop/api/books
-    admin:
-      url: https://e2bs.shop/api/admin/books
-
 
 order:
-  wrapper:
-    url: https://e2bs.shop/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
-  order:
-    url: https://e2bs.shop/api/order
-  delivery:
-    admin:
-      url: https://e2bs.shop/api/admin/deliveryFee
-    user:
-      url: https://e2bs.shop/api/deliveryFee
-
   toss:
     client-key: test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO
     success-url: https://e2bs.shop/order/success
     fail-url: https://e2bs.shop/order/fail
   admin: https://e2bs.shop/api/admin/orders
-
-customer:
-  url: https://e2bs.shop/api/customers
-guest:
-  url: https://e2bs.shop/api/guests
-
-review:
-  url: https://e2bs.shop/api/reviews
-
-index:
-  url: https://e2bs.shop/api
-
-point:
-  admin:
-    url: http://localhost:10232/api/admin/pointPolicies

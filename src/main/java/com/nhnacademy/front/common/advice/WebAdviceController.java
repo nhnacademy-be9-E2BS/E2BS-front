@@ -1,5 +1,8 @@
 package com.nhnacademy.front.common.advice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,6 +28,7 @@ import com.nhnacademy.front.account.memberrank.exception.NotFoundMemberRankExcep
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.exception.EmptyResponseException;
 import com.nhnacademy.front.common.exception.LoginRedirectException;
+import com.nhnacademy.front.common.exception.ServerErrorException;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 
 @ControllerAdvice
@@ -51,6 +55,14 @@ public class WebAdviceController {
 		NotFoundMemberRankException.class, NotFoundMemberInfoException.class})
 	public ResponseEntity<String> notFoundMemberIdException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	}
+
+	// 500번 대 에러
+	@ExceptionHandler({ServerErrorException.class})
+	public ResponseEntity<Map<String, String>> handleSystemErrorException(Exception ex) {
+		Map<String, String> body = new HashMap<>();
+		body.put("errorMessage", ex.getMessage());
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
 	}
 
 }

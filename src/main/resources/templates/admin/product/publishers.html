@@ -8,18 +8,18 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>Publisher Management</h2>
+            <h2>Company Management</h2>
 
             <!-- 등록 폼 -->
             <div class="row">
                 <div class="col-lg-8">
-                    <h4>Register New Publisher</h4>
-                    <form class="row login_form" action="/admin/settings/publishers" method="post">
+                    <h4>Register New Company</h4>
+                    <form class="row login_form" action="/admin/settings/companies" method="post">
                         <div class="col-md-12 form-group">
                             <input type="text" class="form-control" name="publisherName" placeholder="출판사명" required>
                         </div>
                         <div class="col-md-12 form-group mt-3">
-                            <button type="submit" class="button button-register w-100">Register Publisher</button>
+                            <button type="submit" class="button button-register w-100">Register Company</button>
                         </div>
                     </form>
                 </div>
@@ -28,7 +28,7 @@
             <!-- 조회 영역 -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <h4>Publisher List</h4>
+                    <h4>Company List</h4>
                     <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <thead>
                         <tr>
@@ -70,7 +70,7 @@
                                 <ul class="pagination" th:if="${publishers.totalPages > 0}">
                                     <!-- 처음 버튼 -->
                                     <li class="page-item" th:classappend="${!publishers.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link" th:href="@{'/admin/settings/publishers'(page=0, size=10)}">처음</a>
+                                        <a class="page-link" th:href="@{'/admin/settings/companies'(page=0, size=10)}">처음</a>
                                     </li>
 
                                     <!-- 전체 페이지 번호 출력 -->
@@ -78,14 +78,14 @@
                                         th:each="i : ${#numbers.sequence(0, publishers.totalPages - 1)}"
                                         th:classappend="${i == publishers.number} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/settings/publishers'(page=${i}, size=10)}"
+                                           th:href="@{'/admin/settings/companies'(page=${i}, size=10)}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
                                     <!-- 마지막 버튼 -->
                                     <li class="page-item" th:classappend="${!publishers.hasNext()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/admin/settings/publishers'(page=${publishers.totalPages - 1}, size=10)}">마지막</a>
+                                           th:href="@{'/admin/settings/companies'(page=${publishers.totalPages - 1}, size=10)}">마지막</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -100,7 +100,7 @@
 
     <script>
         function updatePublisher(publisherId) {
-            fetch("/admin/settings/publishers/" + publisherId, {
+            fetch("/admin/settings/companies/" + publisherId, {
                 method:"PUT",
                 headers:{
                     "Content-Type": "application/json",

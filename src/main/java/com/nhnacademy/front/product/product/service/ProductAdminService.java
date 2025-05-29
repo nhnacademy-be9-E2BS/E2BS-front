@@ -41,8 +41,8 @@ public interface ProductAdminService {
 
 	PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable);
 
-	PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi(
-		RequestProductApiSearchByQueryTypeDTO request, Pageable pageable);
+	PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi(RequestProductApiSearchByQueryTypeDTO request, Pageable pageable);
+
 
 	void createProductApi(RequestProductApiCreateDTO request);
 

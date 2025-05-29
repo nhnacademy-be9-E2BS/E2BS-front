@@ -72,6 +72,7 @@ public class ProductAdminController {
 	@GetMapping("/register/{bookId}")
 	public String getProductsById(@PathVariable Long bookId, Model model) {
 		ResponseProductReadDTO response = productService.getProduct(bookId);
+
 		model.addAttribute("product", response);
 		return "admin/product/books/register";
 	}
@@ -82,10 +83,6 @@ public class ProductAdminController {
 	@JwtTokenCheck
 	@GetMapping("/register")
 	public String getRegisterView(Model model) {
-		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
-		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
-		model.addAttribute("tags", tags);
 
 		return "admin/product/books/register";
 	}
@@ -103,7 +100,6 @@ public class ProductAdminController {
 		productAdminService.createProduct(request);
 		return "admin/product/books/register";
 	}
-
 
 	/**
 	 * 관리자가 도서를 수정
@@ -140,7 +136,7 @@ public class ProductAdminController {
 	@JwtTokenCheck
 	@GetMapping("/aladdin/search")
 	public String searchProducts(@ModelAttribute RequestProductApiSearchDTO request,@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
-		PageResponse<ResponseProductsApiSearchDTO> response = productService.getProductsApi(request, pageable);
+		PageResponse<ResponseProductsApiSearchDTO> response = productAdminService.getProductsApi(request, pageable);
 		Page<ResponseProductsApiSearchDTO> products = PageResponseConverter.toPage(response);
 		model.addAttribute("products", products);
 		return "admin/product/books/books-api-search";
@@ -150,7 +146,7 @@ public class ProductAdminController {
 	@GetMapping("/aladdin/list")
 	public String searchProductsByQuery(@ModelAttribute RequestProductApiSearchByQueryTypeDTO request,@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
 
-		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> response = productService.getProductsApi(request, pageable);
+		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> response = productAdminService.getProductsApi(request, pageable);
 		Page<ResponseProductsApiSearchByQueryTypeDTO> products = PageResponseConverter.toPage(response);
 		model.addAttribute("products", products);
 		model.addAttribute("queryType", request.getQueryType());
@@ -174,7 +170,7 @@ public class ProductAdminController {
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
-		return "/admin/product/books/books-api-register";
+		return "admin/product/books/books-api-register";
 	}
 
 	@JwtTokenCheck
@@ -187,21 +183,21 @@ public class ProductAdminController {
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
-		return "/admin/product/books/books-api-register-query";
+		return "admin/product/books/books-api-register-query";
 	}
 
 	@JwtTokenCheck
 	@PostMapping("/aladdin/register/submit/list")
 	public String submitBook(@ModelAttribute RequestProductApiCreateByQueryDTO dto) {
 
-		productService.createProductQueryApi(dto);
+		productAdminService.createProductQueryApi(dto);
 		return "redirect:/admin/settings/books/search";
 	}
 
 	@JwtTokenCheck
 	@PostMapping("/aladdin/register/submit")
 	public String submitBook(@ModelAttribute RequestProductApiCreateDTO dto) {
-		productService.createProductApi(dto);
+		productAdminService.createProductApi(dto);
 		return "redirect:/admin/settings/books/search";
 	}
 
