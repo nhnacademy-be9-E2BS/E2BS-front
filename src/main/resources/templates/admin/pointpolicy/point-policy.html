@@ -10,7 +10,7 @@
         <div class="container">
             <h2>Point Policy Management</h2>
 
-            <a th:href="@{/admin/settings/point-policies/register}">포인트 정책 등록</a>
+            <a th:href="@{/admin/settings/pointPolicies/register}">포인트 정책 등록</a>
 
             <!-- 회원가입 정책 -->
             <div class="row mt-5 mb-5">
@@ -196,7 +196,7 @@
 
         <script>
             function activatePolicy(policyId) {
-                fetch("/admin/settings/point-policies/" + policyId + "/activate", {
+                fetch("/admin/settings/pointPolicies/" + policyId + "/activate", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
@@ -213,7 +213,7 @@
             function updatePointPolicy(policyId) {
                 const figure = document.getElementById("figure-" + policyId).value;
 
-                fetch("/admin/settings/point-policies/" + policyId, {
+                fetch("/admin/settings/pointPolicies/" + policyId, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",

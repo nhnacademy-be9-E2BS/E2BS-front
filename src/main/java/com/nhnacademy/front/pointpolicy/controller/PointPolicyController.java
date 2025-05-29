@@ -34,7 +34,7 @@ public class PointPolicyController {
 	 * 포인트 정책 전체 리스트 조회
 	 */
 	@JwtTokenCheck
-	@GetMapping("/admin/settings/point-policies")
+	@GetMapping("/admin/settings/pointPolicies")
 	public String getPointPolicies(Model model) {
 		List<ResponsePointPolicyDTO> responseRegister = pointPolicyService.getRegisterPointPolicy();
 		List<ResponsePointPolicyDTO> responseReviewImg = pointPolicyService.getReviewImgPointPolicy();
@@ -52,7 +52,7 @@ public class PointPolicyController {
 	 * 포인트 정책 생성 뷰
 	 */
 	@JwtTokenCheck
-	@GetMapping("/admin/settings/point-policies/register")
+	@GetMapping("/admin/settings/pointPolicies/register")
 	public String getPointPoliciesRegisterForm(Model model) {
 
 		model.addAttribute("pointPolicyTypes", PointPolicyType.values());
@@ -63,7 +63,7 @@ public class PointPolicyController {
 	 *  포인트 정책 생성
 	 */
 	@JwtTokenCheck
-	@PostMapping("/admin/settings/point-policies/register")
+	@PostMapping("/admin/settings/pointPolicies/register")
 	public String createPointPolicies(@Validated @ModelAttribute RequestPointPolicyRegisterDTO request, BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
@@ -76,14 +76,14 @@ public class PointPolicyController {
 	 * 포인트 정책 활성여부 수정
 	 */
 	@JwtTokenCheck
-	@PutMapping("/admin/settings/point-policies/{point-policyId}/activate")
-	public ResponseEntity<Void> activatePointPolicy(@PathVariable("point-policyId") Long pointPolicyId) {
+	@PutMapping("/admin/settings/pointPolicies/{pointPolicyId}/activate")
+	public ResponseEntity<Void> activatePointPolicy(@PathVariable("pointPolicyId") Long pointPolicyId) {
 		pointPolicyService.activatePointPolicy(pointPolicyId);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
-	@PutMapping("/admin/settings/point-policies/{point-policyId}")
-	public ResponseEntity<Void> updatePointPolicy(@PathVariable("point-policyId") Long pointPolicyId,
+	@PutMapping("/admin/settings/pointPolicies/{pointPolicyId}")
+	public ResponseEntity<Void> updatePointPolicy(@PathVariable("pointPolicyId") Long pointPolicyId,
 		@Validated @ModelAttribute RequestPointPolicyUpdateDTO request,
 		BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {

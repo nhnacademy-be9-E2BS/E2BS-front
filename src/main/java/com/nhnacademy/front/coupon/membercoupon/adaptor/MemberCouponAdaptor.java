@@ -10,7 +10,7 @@ import com.nhnacademy.front.coupon.membercoupon.model.dto.request.RequestAllMemb
 @FeignClient(name = "member-coupon-service", url = "${coupon.member.url}")
 public interface MemberCouponAdaptor {
 
-	@PostMapping("issue")
+	@PostMapping("/issue")
 	ResponseEntity<Void> postMemberCoupons(@RequestBody RequestAllMemberCouponDTO request);
 
 }

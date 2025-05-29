@@ -20,22 +20,22 @@ public interface PointPolicyAdaptor {
 	@PostMapping("/register")
 	ResponseEntity<Void> createPointPolicy(@RequestBody RequestPointPolicyRegisterDTO request);
 
-	@GetMapping("/register-policy")
+	@GetMapping("/registerPolicy")
 	ResponseEntity<List<ResponsePointPolicyDTO>> getRegisterPointPolicies();
 
-	@GetMapping("/review-img-policy")
+	@GetMapping("/reviewImgPolicy")
 	ResponseEntity<List<ResponsePointPolicyDTO>> getReviewImgPointPolicies();
 
-	@GetMapping("/review-policy")
+	@GetMapping("/reviewPolicy")
 	ResponseEntity<List<ResponsePointPolicyDTO>> getReviewPointPolicies();
 
-	@GetMapping("/book-policy")
+	@GetMapping("/bookPolicy")
 	ResponseEntity<List<ResponsePointPolicyDTO>> getBookPointPolicies();
 
-	@PutMapping("/{point-policyId}/activate")
-	ResponseEntity<Void> activatePointPolicy(@PathVariable("point-policyId") Long pointPolicyId);
+	@PutMapping("/{pointPolicyId}/activate")
+	ResponseEntity<Void> activatePointPolicy(@PathVariable("pointPolicyId") Long pointPolicyId);
 
-	@PutMapping("/{point-policyId}")
-	ResponseEntity<Void> updatePointPolicy(@PathVariable("point-policyId") Long pointPolicyId, @RequestBody RequestPointPolicyUpdateDTO request);
+	@PutMapping("/{pointPolicyId}")
+	ResponseEntity<Void> updatePointPolicy(@PathVariable("pointPolicyId") Long pointPolicyId, @RequestBody RequestPointPolicyUpdateDTO request);
 
 }

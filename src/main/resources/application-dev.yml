@@ -51,7 +51,7 @@ coupon:
   policy:
     url: http://localhost:10232/api/admin/couponPolicies
   member:
-    url: http://localhost:10232/api/admin/member-coupons
+    url: http://localhost:10232/api/admin/memberCoupons
   order:
     url: http://localhost:10232/api/order
 
@@ -111,4 +111,4 @@ index:
 
 point:
   admin:
-    url: http://localhost:10232/api/admin/point-policies
+    url: http://localhost:10232/api/admin/pointPolicies
