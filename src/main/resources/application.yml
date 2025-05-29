@@ -3,6 +3,24 @@ spring:
   application:
     name: FRONT
 
+  security:
+    oauth2:
+      client:
+        registration:
+          payco:
+            client-id: 3RD4qpUi5ZoDO2GNFEnioKX
+            client-secret: kAoXi_Yvk8Po1nxrVqpdNIe0
+            redirect-uri: "https://e2bs.shop/login/oauth2/code/payco"
+            authorization-grant-type: authorization_code
+            scope: profile
+            client-name: PAYCO
+        provider:
+          payco:
+            authorization-uri: https://id.payco.com/oauth2.0/authorize?userLocale=ko_KR&serviceProviderCode=FRIENDS
+            token-uri: https://id.payco.com/oauth2.0/token
+            user-info-uri: https://apis.payco.com/oauth2.0/user/me
+            user-name-attribute: id
+
   mvc:
     hidden method:
       filter:
