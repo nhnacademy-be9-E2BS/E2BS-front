@@ -26,7 +26,7 @@ spring:
           payco:
             client-id: 3RD4qpUi5ZoDO2GNFEnioKX
             client-secret: kAoXi_Yvk8Po1nxrVqpdNIe0
-            redirect-uri: "http://localhost:10238/login/oauth2/code/payco"
+            redirect-uri: "https://e2bs.shop/login/oauth2/code/payco"
             authorization-grant-type: authorization_code
             scope: profile
             client-name: PAYCO
