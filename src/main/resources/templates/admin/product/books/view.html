@@ -72,15 +72,7 @@
         .book-actions a:hover {
             background: #1a5fa3;
         }
-        .pagination {
-            margin-top: 30px;
-            text-align: center;
-        }
-        .pagination a {
-            margin: 0 5px;
-            color: #007bff;
-            text-decoration: none;
-        }
+
     </style>
 </head>
 <body>
@@ -122,14 +114,29 @@
             </li>
         </ul>
         <!-- 페이지네이션 -->
-        <div class="pagination" th:if="${products.totalPages > 1}">
-            <a th:href="@{/admin/settings/books(page=0, size=${products.size})}">처음</a>
-            <span th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}">
-                <a th:href="@{/admin/settings/books(page=${i}, size=${products.size})}"
-                   th:text="${i + 1}"
-                   th:classappend="${products.number == i} ? 'active' : ''"></a>
-            </span>
-            <a th:href="@{/admin/settings/books(page=${products.totalPages - 1}, size=${products.size})}">마지막</a>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <nav aria-label="페이지 이동">
+                    <ul class="pagination pagination-sm" th:if="${products.totalPages > 1}">
+                        <!-- 처음 버튼 -->
+                        <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/admin/settings/books(page=0, size=${products.size})}" th:text="'처음'" tabindex="-1">처음</a>
+                        </li>
+                        <!-- 전체 페이지 번호 출력 -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+                            th:classappend="${i == products.number} ? 'active' : ''">
+                            <a class="page-link"
+                               th:href="@{/admin/settings/books(page=${i}, size=${products.size})}"
+                               th:text="${i + 1}">1</a>
+                        </li>
+                        <!-- 마지막 버튼 -->
+                        <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/admin/settings/books(page=${products.totalPages - 1}, size=${products.size})}" th:text="'마지막'">마지막</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 </div>
