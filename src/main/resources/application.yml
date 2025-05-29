@@ -28,3 +28,110 @@ management:
       exposure:
         include: "*" # Actuator 의 모든 엔드포인트를 웹에서 노출 (운영환경에선 최소화 필요)
 
+member:
+  login:
+    url: http://localhost:10232/api/login
+
+  register:
+    url: http://localhost:10232/api/register
+
+oauth:
+  login:
+    url: http://localhost:10232/api/oauth/login
+
+  register:
+    url: http://localhost:10232/api/oauth/reigster
+
+token:
+  create:
+    url: http://localhost:10232/api/token
+
+# 쿠폰
+coupon:
+  url: http://localhost:10232/api/admin/coupons
+
+  policy:
+    url: http://localhost:10232/api/admin/couponPolicies
+
+  member:
+    url: http://localhost:10232/api/admin/memberCoupons
+
+  order:
+    url: http://localhost:10232/api/order
+
+point:
+  admin:
+    url: http://localhost:10232/api/admin/pointPolicies
+
+# 상품 - 출판사, 기여자 역할
+product:
+  url: http://localhost:10232/api/products
+
+  publisher:
+    url: http://localhost:10232/api/admin/publishers
+
+  contributor:
+    position:
+      url: http://localhost:10232/api/admin/positions
+
+    url: http://localhost:10232/api/admin/contributors
+
+  tag:
+    url: http://localhost:10232/api/admin/tags
+
+  category:
+    user:
+      url: http://localhost:10232/api/categories
+
+    admin:
+      url: http://localhost:10232/api/admin/categories
+
+  book:
+    member:
+      url: http://localhost:10232/api/books
+
+    admin:
+      url: http://localhost:10232/api/admin/books
+
+order:
+  wrapper:
+    url: http://localhost:10232/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
+
+  order:
+    url: http://localhost:10232/api/order
+
+  delivery:
+    admin:
+      url: http://localhost:10232/api/admin/deliveryFee
+
+    user:
+      url: http://localhost:10232/api/deliveryFee
+
+customer:
+  url: http://localhost:10232/api/customers
+
+guest:
+  url: http://localhost:10232/api/guests
+
+review:
+  url: http://localhost:10232/api/reviews
+
+index:
+  url: http://localhost:10232/api
+
+# 인증이 필요한 url
+auth:
+  member:
+    mypage:
+      url: http://localhost:10232/api/auth/mypage
+
+    url: http://localhost:10232/api/auth/members
+
+  home:
+    member:
+      name:
+        url: http://localhost:10232/api/auth/home
+
+  admin:
+    settings:
+      url: http://localhost:10232/api/auth/admin/settings

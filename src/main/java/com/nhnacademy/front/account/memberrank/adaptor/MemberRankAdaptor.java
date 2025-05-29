@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.nhnacademy.front.account.memberrank.model.dto.response.ResponseMemberRankDTO;
 
-@FeignClient(name = "member-rank-adaptor", url = "${member.mypage.url}")
+@FeignClient(name = "member-rank-adaptor", url = "${auth.member.mypage.url}")
 public interface MemberRankAdaptor {
 
 	@GetMapping("/{memberId}/rank")

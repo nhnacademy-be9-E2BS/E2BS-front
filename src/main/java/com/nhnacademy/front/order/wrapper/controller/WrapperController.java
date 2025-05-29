@@ -26,12 +26,10 @@ import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/settings/wrappers")
-@Slf4j
+@RequestMapping("/admin/settings/papers")
 public class WrapperController {
 
 	private final WrapperService wrapperService;
@@ -43,10 +41,7 @@ public class WrapperController {
 	@JwtTokenCheck
 	@GetMapping
 	public String getWrappers(@PageableDefault(page = 0, size = 5) Pageable pageable, Model model) {
-		log.info("포장지 조회 요청 controller start");
 		PageResponse<ResponseWrapperDTO> response = wrapperService.getWrappers(pageable);
-		log.info("service 응답");
-		log.info(response.toString());
 		Page<ResponseWrapperDTO> wrappers = PageResponseConverter.toPage(response);
 
 		model.addAttribute("wrappers", wrappers);
@@ -66,7 +61,7 @@ public class WrapperController {
 
 		wrapperService.createWrapper(requestRegisterWrapperDTO);
 
-		return "redirect:/admin/settings/wrappers";
+		return "redirect:/admin/settings/papers";
 	}
 
 	/**

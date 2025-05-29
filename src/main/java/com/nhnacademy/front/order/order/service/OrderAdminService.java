@@ -9,6 +9,7 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.adaptor.OrderAdminAdaptor;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -16,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderAdminService {
 	private final OrderAdminAdaptor orderAdminAdaptor;
 
-	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable) {
+	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable) throws FeignException {
 		return orderAdminAdaptor.getOrders(pageable);
 	}
 
