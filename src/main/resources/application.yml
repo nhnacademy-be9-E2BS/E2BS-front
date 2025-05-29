@@ -39,6 +39,12 @@ logging:
     org.springframework.transaction.interceptor: trace # 트랜잭션 처리 로그를 trace 로 출력
 
 server:
+  servlet:
+    session:
+      cookie:
+        same-site: None
+        secure: true
+
   shutdown: graceful
 
 management:
