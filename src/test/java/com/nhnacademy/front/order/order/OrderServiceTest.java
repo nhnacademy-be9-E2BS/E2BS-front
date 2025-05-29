@@ -86,20 +86,20 @@ class OrderServiceTest {
 	}
 
 	@Test
-	@DisplayName("cancelOrder - 주문 취소")
-	void testCancelOrder() {
+	@DisplayName("deleteOrder - 주문서 삭제")
+	void testDeleteOrder() {
 		// given
 		String orderId = "TEST-ORDER-CODE";
 		ResponseEntity<Void> expectedResponse = ResponseEntity.ok().build();
 
-		when(orderAdaptor.cancelOrder(orderId)).thenReturn(expectedResponse);
+		when(orderAdaptor.deleteOrder(orderId)).thenReturn(expectedResponse);
 
 		// when
-		ResponseEntity<Void> actualResponse = orderService.cancelOrder(orderId);
+		ResponseEntity<Void> actualResponse = orderService.deleteOrder(orderId);
 
 		// then
 		assertEquals(expectedResponse, actualResponse);
-		verify(orderAdaptor).cancelOrder(orderId);
+		verify(orderAdaptor).deleteOrder(orderId);
 	}
 
 	@Test
@@ -132,5 +132,16 @@ class OrderServiceTest {
 		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderService.getOrdersByMemberId(pageable, memberId);
 		assertEquals(response, actual);
 		verify(orderAdaptor, times(1)).getOrdersByMemberId(pageable, memberId);
+	}
+
+	@Test
+	@DisplayName(("cancelOrder - 회원 주문 취소"))
+	void testCancelOrder() {
+		String orderId = "TEST-ORDER-CODE";
+		ResponseEntity<Void> expectedResponse = ResponseEntity.ok().build();
+		when(orderAdaptor.cancelOrder(orderId)).thenReturn(expectedResponse);
+		ResponseEntity<Void> actualResponse = orderService.cancelOrder(orderId);
+		assertEquals(expectedResponse, actualResponse);
+		verify(orderAdaptor).cancelOrder(orderId);
 	}
 }

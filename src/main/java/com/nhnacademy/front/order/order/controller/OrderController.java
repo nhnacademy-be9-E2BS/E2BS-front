@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,7 +78,7 @@ public class OrderController {
 	}
 
 	/**
-	 * 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 미리 저장하는 기능
+	 * 포인트 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 저장 및 결제 처리 기능
 	 */
 	@JwtTokenCheck
 	@PostMapping("/order/point")
@@ -106,6 +107,8 @@ public class OrderController {
 			return "redirect:/order/confirm";
 		} else {
 			// 결제 실패 창으로 리다이렉트
+			// 외부 API 결제 승인 실패 시 저장된 주문서를 제거하도록 요청
+			orderService.deleteOrder(orderId);
 			return "redirect:/order/fail";
 		}
 	}
@@ -114,7 +117,6 @@ public class OrderController {
 	 * 외부 API의 경우 결제 승인까지 완료
 	 * 포인트라면 결제 완료 시 이동하는 주문 완료 페이지
 	 */
-	@JwtTokenCheck
 	@GetMapping("/order/confirm")
 	public String getConfirmOrder() {
 		// 추후 정보를 더 넣을지는 모름
@@ -124,7 +126,6 @@ public class OrderController {
 	/**
 	 * 주문 실패 시 이동할 페이지
 	 */
-	@JwtTokenCheck
 	@GetMapping("/order/fail")
 	public String getFailOrder() {
 		return "payment/fail";
@@ -135,8 +136,8 @@ public class OrderController {
 	 */
 	@JwtTokenCheck
 	@PostMapping("/order/cancel")
-	public ResponseEntity<Void> cancelOrder(@RequestParam String orderId) {
-		return orderService.cancelOrder(orderId);
+	public ResponseEntity<Void> deleteOrder(@RequestParam String orderId) {
+		return orderService.deleteOrder(orderId);
 	}
 
 	@JwtTokenCheck
@@ -152,6 +153,9 @@ public class OrderController {
 		return "member/mypage/orders";
 	}
 
+	/**
+	 * 회원이 자신의 주문 특정 내역 조회
+	 */
 	@JwtTokenCheck
 	@GetMapping("/mypage/orders/{orderCode}")
 	public String getMemberOrderDetails(Model model, @PathVariable String orderCode) {
@@ -174,5 +178,14 @@ public class OrderController {
 		model.addAttribute("productAmount", productAmount);
 
 		return "member/mypage/orderDetails";
+	}
+
+	/**
+	 * 회원이 배송 시작 전인 특정 주문에 대해 주문을 취소하는 기능
+	 */
+	@JwtTokenCheck
+	@DeleteMapping("/mypage/orders/{orderCode}")
+	public ResponseEntity<Void> cancelOrder(@PathVariable String orderCode) {
+		return orderService.cancelOrder(orderCode);
 	}
 }
