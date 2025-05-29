@@ -10,6 +10,7 @@ import com.nhnacademy.front.account.pointhistory.model.dto.response.ResponsePoin
 import com.nhnacademy.front.account.pointhistory.service.PointHistoryService;
 import com.nhnacademy.front.common.page.PageResponse;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,7 +20,8 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 	private final PointHistoryAdaptor pointHistoryAdaptor;
 
 	@Override
-	public PageResponse<ResponsePointHistoryDTO> getPointHistoryByMemberId(String memberId, Pageable pageable) {
+	public PageResponse<ResponsePointHistoryDTO> getPointHistoryByMemberId(String memberId, Pageable pageable) throws
+		FeignException {
 		ResponseEntity<PageResponse<ResponsePointHistoryDTO>> response = pointHistoryAdaptor.getPointHistoryByMemberId(memberId, pageable);
 		if(!response.getStatusCode().is2xxSuccessful()) {
 			throw new PointHistoryGetException("회원 아이디로 포인트 내역 조회 실패");

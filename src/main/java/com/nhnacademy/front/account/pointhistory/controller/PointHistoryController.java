@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.nhnacademy.front.account.pointhistory.model.dto.response.ResponsePointHistoryDTO;
 import com.nhnacademy.front.account.pointhistory.service.PointHistoryService;
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
@@ -25,6 +26,7 @@ public class PointHistoryController {
 
 	private final PointHistoryService pointHistoryService;
 
+	@JwtTokenCheck
 	@GetMapping("/mypage/pointHistory")
 	public String getPointHistory(HttpServletRequest request, @PageableDefault() Pageable pageable, Model model) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
