@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.deliveryfee.controller.DeliveryFeeController;
 import com.nhnacademy.front.order.deliveryfee.model.dto.request.RequestDeliveryFeeDTO;
@@ -43,9 +44,13 @@ public class DeliveryFeeControllerTest {
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
+	@MockitoBean
+	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
 	@BeforeEach
 	void setUp() throws Exception {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
 
 	@Test

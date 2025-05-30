@@ -8,7 +8,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 
 import com.nhnacademy.front.account.auth.model.dto.request.RequestJwtTokenDTO;
 import com.nhnacademy.front.account.auth.service.AuthService;
-import com.nhnacademy.front.cart.model.dto.request.RequestCartCountDTO;
 import com.nhnacademy.front.cart.service.CartService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,7 +52,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			authService.postAuthCreateJwtToken(requestJwtTokenDTO, response, request);
 
 			HttpSession session = request.getSession();
-			session.setAttribute("cartItemsCounts", cartService.getCartItemsCounts(new RequestCartCountDTO(memberId, "")));
+			// session.setAttribute("cartItemsCounts", cartService.getCartItemsCounts(new RequestCartCountDTO(memberId, "")));
 			session.setAttribute("isMember", true);
 
 			response.sendRedirect(ROOT_URL);

@@ -4,228 +4,246 @@
       layout:decorate="~{layouts/user-layout}">
 
 <head>
-  <style>
-    .ti-heart.liked {
-      color: red;         /* 좋아요 누른 상태 */
-    }
-  </style>
+    <style>
+        .ti-heart.liked {
+            color: red; /* 좋아요 누른 상태 */
+        }
+    </style>
 </head>
 
 <body>
 <div layout:fragment="content">
 
-  <!-- ========== Bestseller Section ========== -->
-  <section class="section-margin calc-60px">
-    <div class="container">
-      <div class="section-intro pb-60px">
-        <p>Popular Item in the market</p>
-        <h2>Bestseller</h2>
-      </div>
-
-        <div class="col-md-6 col-lg-4 col-xl-3"  th:each="product, productStat : ${BestSellerList}" th:if="${productStat.index < 6}">
-          <div class="card text-center card-product">
-            <div class="card-img">
-              <img class="img-fluid rounded"
-                   th:src="@{${product.productImage}}"
-                   alt="도서 이미지"
-                   style="height: 200px; object-fit: cover;" />
-              <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
-              <ul class="card-product__imgOverlay">
-                <li><button><i class="ti-search"></i></button></li>
-
-                <li th:if="${session.isMember}">
-                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-                <li th:if="${session.isMember == null}">
-                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-
-                <li>
-                  <button class="like-button" data-liked="false" th:data-product-id="${product.productId}">
-                    <i class="ti-heart"></i>
-                  </button>
-                </li>
-              </ul>
+    <!-- ========== Bestseller Section ========== -->
+    <section class="section-margin calc-60px">
+        <div class="container">
+            <div class="section-intro pb-60px">
+                <p>Popular Item in the market</p>
+                <h2>Bestseller</h2>
             </div>
-            <div class="card-body">
-              <p th:text="${product.contributorName}">저자</p>
-              <h4 class="card-product__title">
-                <a th:href="@{'/books/' + ${product.productId}}" th:text="${product.productTitle}">제목</a>
-              </h4>
-              <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 col-xl-3" th:each="product, productStat : ${BestSellerList}"
+                     th:if="${productStat.index < 6}">
+                    <div class="card text-center card-product">
+                        <div class="card-img">
+                            <img class="img-fluid rounded"
+                                 th:src="@{${product.productImage}}"
+                                 alt="도서 이미지"
+                                 style="height: 200px; object-fit: cover;"/>
+                            <ul class="card-product__imgOverlay">
+                                <li><a th:href="@{/books/{productId}(productId=${product.productId})}"
+                                       class="search-link">
+                                    <button><i class="ti-search"></i></button>
+                                </a></li>
+
+                                <li th:if="${session.isMember}">
+                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li th:if="${session.isMember == null}">
+                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+
+                                <li>
+                                    <button class="like-button" data-liked="false"
+                                            th:data-product-id="${product.productId}">
+                                        <i class="ti-heart"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p th:text="${product.contributorName}">저자</p>
+                            <h4 class="card-product__title">
+                                <a th:href="@{'/books/' + ${product.productId}}"
+                                   th:text="${product.productTitle}">제목</a>
+                            </h4>
+                            <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-    <div class="text-center mt-4">
-      <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
-        더보기
-      </a>
-    </div>
-  </section>
-
-
-  <!-- ========== Blog Best Section ========== -->
-  <section class="section-margin calc-60px">
-    <div class="container">
-      <div class="section-intro pb-60px">
-        <p>Popular Blog Items</p>
-        <h2>Blog Best</h2>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-lg-4 col-xl-3"  th:each="product, productStat : ${BlogBestList}" th:if="${productStat.index < 6}">
-          <div class="card text-center card-product">
-            <div class="card-product__img">
-              <img class="img-fluid rounded"
-                   th:src="@{${product.productImage}}"
-                   alt="도서 이미지"
-                   style="height: 200px; object-fit: cover;" />
-              <ul class="card-product__imgOverlay">
-                <li><button><i class="ti-search"></i></button></li>
-
-                <li th:if="${session.isMember}">
-                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-                <li th:if="${session.isMember == null}">
-                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-
-                <li>
-                  <button class="like-button" data-liked="false" th:data-product-id="${product.productId}">
-                    <i class="ti-heart"></i>
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div class="card-body">
-              <p th:text="${product.contributorName}">저자</p>
-              <h4 class="card-product__title">
-                <a th:href="@{'/product/' + ${product.productId}}" th:text="${product.productTitle}">제목</a>
-              </h4>
-              <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
-            </div>
-          </div>
+        <div class="text-center mt-4">
+            <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
+                더보기
+            </a>
         </div>
-      </div>
-    </div>
-    <div class="text-center mt-4">
-      <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
-        더보기
-      </a>
-    </div>
-  </section>
+    </section>
 
 
-
-  <!-- ========== New Items Section ========== -->
-  <section class="section-margin calc-60px">
-    <div class="container">
-      <div class="section-intro pb-60px">
-        <p>Newest Arrivals</p>
-        <h2>New Books</h2>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-lg-4 col-xl-3"  th:each="product, productStat : ${ItemNewAllList}" th:if="${productStat.index < 6}">
-          <div class="card text-center card-product">
-            <div class="card-product__img">
-              <img class="img-fluid rounded"
-                   th:src="@{${product.productImage}}"
-                   alt="도서 이미지"
-                   style="height: 200px; object-fit: cover;" />
-              <ul class="card-product__imgOverlay">
-                  <li><a th:href="@{/books/{productId}(productId=${product.productId})}" class="search-link">
-                      <button><i class="ti-search"></i></button>
-                  </a></li>
-
-                <li th:if="${session.isMember}">
-                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-                <li th:if="${session.isMember == null}">
-                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-
-                <li>
-                  <button class="like-button" data-liked="false" th:data-product-id="${product.productId}">
-                    <i class="ti-heart"></i>
-                  </button>
-                </li>
-              </ul>
+    <!-- ========== Blog Best Section ========== -->
+    <section class="section-margin calc-60px">
+        <div class="container">
+            <div class="section-intro pb-60px">
+                <p>Popular Blog Items</p>
+                <h2>Blog Best</h2>
             </div>
-            <div class="card-body">
-              <p th:text="${product.contributorName}">저자</p>
-              <h4 class="card-product__title">
-                <a th:href="@{'/product/' + ${product.productId}}" th:text="${product.productTitle}">제목</a>
-              </h4>
-              <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 col-xl-3" th:each="product, productStat : ${BlogBestList}"
+                     th:if="${productStat.index < 6}">
+                    <div class="card text-center card-product">
+                        <div class="card-product__img">
+                            <img class="img-fluid rounded"
+                                 th:src="@{${product.productImage}}"
+                                 alt="도서 이미지"
+                                 style="height: 200px; object-fit: cover;"/>
+                            <ul class="card-product__imgOverlay">
+                                <li>
+                                    <button><i class="ti-search"></i></button>
+                                </li>
+
+                                <li th:if="${session.isMember}">
+                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li th:if="${session.isMember == null}">
+                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+
+                                <li>
+                                    <button class="like-button" data-liked="false"
+                                            th:data-product-id="${product.productId}">
+                                        <i class="ti-heart"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p th:text="${product.contributorName}">저자</p>
+                            <h4 class="card-product__title">
+                                <a th:href="@{'/product/' + ${product.productId}}"
+                                   th:text="${product.productTitle}">제목</a>
+                            </h4>
+                            <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-    <div class="text-center mt-4">
-      <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
-        더보기
-      </a>
-    </div>
-  </section>
-
-
-  <!-- ========== New Special Items Section ========== -->
-  <section class="section-margin calc-60px">
-    <div class="container">
-      <div class="section-intro pb-60px">
-        <p>Special Limited Deals</p>
-        <h2>New Special Items</h2>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-lg-4 col-xl-3"  th:each="product, productStat : ${NewSpecialItemsList}" th:if="${productStat.index < 6}">
-          <div class="card text-center card-product">
-            <div class="card-product__img">
-              <img class="img-fluid rounded"
-                   th:src="@{${product.productImage}}"
-                   alt="도서 이미지"
-                   style="height: 200px; object-fit: cover;" />
-              <ul class="card-product__imgOverlay">
-                <li><button><i class="ti-search"></i></button></li>
-
-                <li th:if="${session.isMember}">
-                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-                <li th:if="${session.isMember == null}">
-                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-
-                <li>
-                  <button class="like-button" data-liked="false" th:data-product-id="${product.productId}">
-                    <i class="ti-heart"></i>
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div class="card-body">
-              <p th:text="${product.contributorName}">저자</p>
-              <h4 class="card-product__title">
-                <a th:href="@{'/product/' + ${product.productId}}" th:text="${product.productTitle}">제목</a>
-              </h4>
-              <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
-            </div>
-          </div>
+        <div class="text-center mt-4">
+            <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
+                더보기
+            </a>
         </div>
-      </div>
-    </div>
-    <div class="text-center mt-4">
-      <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
-        더보기
-      </a>
-    </div>
-  </section>
+    </section>
 
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script th:src="@{/js/like/like-add-delete.js}"></script>
-  <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
-  <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
+    <!-- ========== New Items Section ========== -->
+    <section class="section-margin calc-60px">
+        <div class="container">
+            <div class="section-intro pb-60px">
+                <p>Newest Arrivals</p>
+                <h2>New Books</h2>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 col-xl-3" th:each="product, productStat : ${ItemNewAllList}"
+                     th:if="${productStat.index < 6}">
+                    <div class="card text-center card-product">
+                        <div class="card-product__img">
+                            <img class="img-fluid rounded"
+                                 th:src="@{${product.productImage}}"
+                                 alt="도서 이미지"
+                                 style="height: 200px; object-fit: cover;"/>
+                            <ul class="card-product__imgOverlay">
+                                <li><a th:href="@{/books/{productId}(productId=${product.productId})}"
+                                       class="search-link">
+                                    <button><i class="ti-search"></i></button>
+                                </a></li>
+
+                                <li th:if="${session.isMember}">
+                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li th:if="${session.isMember == null}">
+                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+
+                                <li>
+                                    <button class="like-button" data-liked="false"
+                                            th:data-product-id="${product.productId}">
+                                        <i class="ti-heart"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p th:text="${product.contributorName}">저자</p>
+                            <h4 class="card-product__title">
+                                <a th:href="@{'/product/' + ${product.productId}}"
+                                   th:text="${product.productTitle}">제목</a>
+                            </h4>
+                            <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
+                더보기
+            </a>
+        </div>
+    </section>
+
+
+    <!-- ========== New Special Items Section ========== -->
+    <section class="section-margin calc-60px">
+        <div class="container">
+            <div class="section-intro pb-60px">
+                <p>Special Limited Deals</p>
+                <h2>New Special Items</h2>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 col-xl-3" th:each="product, productStat : ${NewSpecialItemsList}"
+                     th:if="${productStat.index < 6}">
+                    <div class="card text-center card-product">
+                        <div class="card-product__img">
+                            <img class="img-fluid rounded"
+                                 th:src="@{${product.productImage}}"
+                                 alt="도서 이미지"
+                                 style="height: 200px; object-fit: cover;"/>
+                            <ul class="card-product__imgOverlay">
+                                <li>
+                                    <button><i class="ti-search"></i></button>
+                                </li>
+
+                                <li th:if="${session.isMember}">
+                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li th:if="${session.isMember == null}">
+                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+
+                                <li>
+                                    <button class="like-button" data-liked="false"
+                                            th:data-product-id="${product.productId}">
+                                        <i class="ti-heart"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p th:text="${product.contributorName}">저자</p>
+                            <h4 class="card-product__title">
+                                <a th:href="@{'/product/' + ${product.productId}}"
+                                   th:text="${product.productTitle}">제목</a>
+                            </h4>
+                            <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
+                더보기
+            </a>
+        </div>
+    </section>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/like/like-add-delete.js}"></script>
+    <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
+    <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
 </div>
 </body>
 </html>

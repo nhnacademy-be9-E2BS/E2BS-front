@@ -12,6 +12,8 @@ import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.account.member.service.MemberService;
 import com.nhnacademy.front.account.memberrank.model.dto.response.ResponseMemberRankDTO;
 import com.nhnacademy.front.account.memberrank.service.MemberRankService;
+import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
+import com.nhnacademy.front.home.service.HomeService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,9 +29,15 @@ public class MemberRankController {
 	private final MemberService memberService;
 	private final MemberMypageService memberMypageService;
 	private final MemberRankService memberRankService;
+	private final HomeService homeService;
 
 	@GetMapping
 	public String getMemberRank(HttpServletRequest request, Model model) {
+		ResponseHomeMemberNameDTO responseHomeMemberNameDTO = homeService.getMemberNameFromHome(request);
+
+		model.addAttribute("memberName", responseHomeMemberNameDTO.getMemberName());
+		model.addAttribute("memberRole", responseHomeMemberNameDTO.getMemberRole());
+
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 
 		RequestMemberIdDTO requestMemberIdDTO = new RequestMemberIdDTO(memberId);

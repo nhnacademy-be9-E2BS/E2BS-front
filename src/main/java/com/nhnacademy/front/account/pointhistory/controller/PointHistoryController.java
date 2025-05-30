@@ -14,6 +14,8 @@ import com.nhnacademy.front.account.pointhistory.service.PointHistoryService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
+import com.nhnacademy.front.home.service.HomeService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
 import io.jsonwebtoken.JwtException;
@@ -25,16 +27,23 @@ import lombok.RequiredArgsConstructor;
 public class PointHistoryController {
 
 	private final PointHistoryService pointHistoryService;
+	private final HomeService homeService;
 
 	@JwtTokenCheck
 	@GetMapping("/mypage/pointHistory")
 	public String getPointHistory(HttpServletRequest request, @PageableDefault() Pageable pageable, Model model) {
+		ResponseHomeMemberNameDTO responseHomeMemberNameDTO = homeService.getMemberNameFromHome(request);
+
+		model.addAttribute("memberName", responseHomeMemberNameDTO.getMemberName());
+		model.addAttribute("memberRole", responseHomeMemberNameDTO.getMemberRole());
+
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		if (Objects.isNull(memberId)) {
 			throw new JwtException("JWT token is null");
 		}
 
-		PageResponse<ResponsePointHistoryDTO> response = pointHistoryService.getPointHistoryByMemberId(memberId, pageable);
+		PageResponse<ResponsePointHistoryDTO> response = pointHistoryService.getPointHistoryByMemberId(memberId,
+			pageable);
 		Page<ResponsePointHistoryDTO> pointHistories = PageResponseConverter.toPage(response);
 
 		model.addAttribute("pointHistories", pointHistories);

@@ -1,8 +1,8 @@
 package com.nhnacademy.front.product.like.controller;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.product.like.model.dto.request.RequestCreateLikeDTO;
@@ -50,6 +51,8 @@ class LikeControllerTest {
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
+	@MockitoBean
+	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
 
 	private String memberId;
 	private Long productId;
@@ -60,8 +63,8 @@ class LikeControllerTest {
 		productId = 1L;
 
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
-
 
 	@Test
 	@DisplayName("POST /products/{productId}/likes - 좋아요 추가")
@@ -109,8 +112,10 @@ class LikeControllerTest {
 	void getLikedProductsByCustomer() throws Exception {
 		// given
 		List<ResponseLikedProductDTO> likedProductsList = List.of(
-			new ResponseLikedProductDTO(1L, "ProductA", 20000, "출판사A", "http:localhost:9000/aaa.jpg", 5, 4.5, 3, LocalDateTime.now()),
-			new ResponseLikedProductDTO(2L, "ProductB", 20000, "출판사B", "http:localhost:9000/bbb.jpg", 5, 4.5, 3, LocalDateTime.now())
+			new ResponseLikedProductDTO(1L, "ProductA", 20000, "출판사A", "http:localhost:9000/aaa.jpg", 5, 4.5, 3,
+				LocalDateTime.now()),
+			new ResponseLikedProductDTO(2L, "ProductB", 20000, "출판사B", "http:localhost:9000/bbb.jpg", 5, 4.5, 3,
+				LocalDateTime.now())
 		);
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
