@@ -125,10 +125,10 @@ class MemberCartControllerTest {
 	@DisplayName("PUT /members/carts/items/{cartItemsId} - 회원 장바구니 항목 수량 변경 테스트")
 	void updateCartItemForMember() throws Exception {
 		// given
-		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO(null, 1L, 5);
+		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO(MEMBER_ID, null, 1L, 5);
 		String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
-		doNothing().when(memberCartService).updateCartItemForMember(1L, requestDto);
+		when(memberCartService.updateCartItemForMember(anyInt(), any(RequestUpdateCartItemsDTO.class))).thenReturn(1);
 
 
 		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
@@ -150,6 +150,7 @@ class MemberCartControllerTest {
 	void deleteCartItemForMember() throws Exception {
 		// when & then
 		mockMvc.perform(delete("/members/carts/items/{cartItemsId}", 1L)
+				.sessionAttr("cartItemsCounts", 5)
 				.with(csrf()))
 			.andExpect(status().isNoContent());
 

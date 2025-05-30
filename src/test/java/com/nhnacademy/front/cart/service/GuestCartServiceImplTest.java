@@ -67,7 +67,7 @@ class GuestCartServiceImplTest {
 	void createCartItemForGuest() {
 		// given
 		RequestAddCartItemsDTO requestDto = new RequestAddCartItemsDTO();
-		when(guestCartAdaptor.createCartItemForGuest(requestDto)).thenReturn(ResponseEntity.status(HttpStatus.CREATED).build());
+		when(guestCartAdaptor.createCartItemForGuest(requestDto)).thenReturn(ResponseEntity.status(HttpStatus.CREATED).body(anyInt()));
 
 		// when & then
 		assertThatCode(() -> guestCartService.createCartItemForGuest(requestDto))
@@ -93,7 +93,7 @@ class GuestCartServiceImplTest {
 		// given
 		RequestUpdateCartItemsDTO dto = new RequestUpdateCartItemsDTO();
 		when(guestCartAdaptor.updateCartItemForGuest(dto))
-			.thenReturn(ResponseEntity.noContent().build());
+			.thenReturn(ResponseEntity.ok(anyInt()));
 
 		// when & then
 		assertThatCode(() -> guestCartService.updateCartItemForGuest(dto))

@@ -80,10 +80,23 @@
                             </li>
 
                             <li class="nav-item">
-                                <button>
-                                    <i class="ti-shopping-cart"></i>
-                                    <span class="nav-shop__circle">3</span>
-                                </button>
+                                <form>
+                                    <button th:if="${session.isMember}"
+                                            th:formaction="@{/members/carts}" type="submit">
+                                        <i class="ti-shopping-cart"></i>
+                                        <span class="nav-shop__circle"
+                                              th:if="${session.cartItemsCounts > 0}"
+                                              th:text="${session.cartItemsCounts}">0</span>
+                                    </button>
+
+                                    <button th:if="${session.isMember == null}"
+                                            th:formaction="@{/guests/carts}" type="submit">
+                                        <i class="ti-shopping-cart"></i>
+                                        <span class="nav-shop__circle"
+                                              th:if="${session.cartItemsCounts > 0}"
+                                              th:text="${session.cartItemsCounts}">0</span>
+                                    </button>
+                                </form>
                             </li>
                         </ul>
 

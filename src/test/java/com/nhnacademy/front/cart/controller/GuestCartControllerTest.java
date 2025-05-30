@@ -66,7 +66,7 @@ class GuestCartControllerTest {
 		requestDto.setQuantity(2);
 		String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
-		doNothing().when(guestCartService).createCartItemForGuest(any(RequestAddCartItemsDTO.class));
+		when(guestCartService.createCartItemForGuest(any(RequestAddCartItemsDTO.class))).thenReturn(1);
 
 		// when & then
 		mockMvc.perform(post("/guests/carts/items")
@@ -105,7 +105,7 @@ class GuestCartControllerTest {
 		requestDto.setQuantity(3);
 		String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
-		doNothing().when(guestCartService).updateCartItemForGuest(any(RequestUpdateCartItemsDTO.class));
+		when(guestCartService.updateCartItemForGuest(any(RequestUpdateCartItemsDTO.class))).thenReturn(1);
 
 		// when & then
 		mockMvc.perform(put("/guests/carts/items")
@@ -131,6 +131,7 @@ class GuestCartControllerTest {
 		// when & then
 		mockMvc.perform(delete("/guests/carts/items")
 				.session(session)
+				.sessionAttr("cartItemsCounts", 0)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonRequest)
 				.with(csrf()))

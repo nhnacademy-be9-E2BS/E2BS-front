@@ -28,13 +28,13 @@ public interface MemberCartAdaptor {
 	 * 회원 - 장바구니 항목 추가
 	 */
 	@PostMapping("/carts/items")
-	ResponseEntity<Void> createCartItemForMember(@RequestBody RequestAddCartItemsDTO requestDto);
+	ResponseEntity<Integer> createCartItemForMember(@RequestBody RequestAddCartItemsDTO requestDto);
 
 	/**
 	 * 회원 - 장바구니 항목 수량 변경
 	 */
 	@PutMapping("/carts/items/{cartItemsId}")
-	ResponseEntity<Void> updateCartItemForMember(@PathVariable long cartItemsId,
+	ResponseEntity<Integer> updateCartItemForMember(@PathVariable long cartItemsId,
 		@RequestBody RequestUpdateCartItemsDTO requestDto);
 
 	/**

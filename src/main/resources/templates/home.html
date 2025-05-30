@@ -21,85 +21,6 @@
         <p>Popular Item in the market</p>
         <h2>Bestseller</h2>
       </div>
-      <div class="row">
-        <div class="col-md-6 col-lg-4 col-xl-3">
-          <div class="card text-center card-product">
-            <div class="card-product__img">
-              <img class="card-img" src="../static/img/product/product1.png" alt="">
-              <ul class="card-product__imgOverlay">
-                <li><button><i class="ti-search"></i></button></li>
-                <li><button><i class="ti-shopping-cart"></i></button></li>
-                <li><button class="like-button" data-liked="false" data-product-id="1">
-                  <!--                      <i class="ti-heart"-->
-                  <!--                                     th:classappend="${product.liked} ? ' liked' : ''"></i>-->
-                  <i class="ti-heart"></i>
-                </button></li>
-              </ul>
-            </div>
-            <div class="card-body">
-              <p>Accessories</p>
-              <h4 class="card-product__title"><a href="product/product-detail.html">Quartz Belt Watch</a></h4>
-              <p class="card-product__price">$150.00</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-3">
-          <div class="card text-center card-product">
-            <div class="card-product__img">
-              <img class="card-img" src="../static/img/product/product2.png" alt="">
-              <ul class="card-product__imgOverlay">
-                <li><button><i class="ti-search"></i></button></li>
-                <li><button><i class="ti-shopping-cart"></i></button></li>
-                <li><button class="like-button" data-liked="false" data-product-id="2">
-                  <i class="ti-heart"></i>
-                </button></li>
-              </ul>
-            </div>
-            <div class="card-body">
-              <p>Beauty</p>
-              <h4 class="card-product__title"><a href="product/product-detail.html">Women Freshwash</a></h4>
-              <p class="card-product__price">$150.00</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-3">
-          <div class="card text-center card-product">
-            <div class="card-product__img">
-              <img class="card-img" src="../static/img/product/product3.png" alt="">
-              <ul class="card-product__imgOverlay">
-                <li><button><i class="ti-search"></i></button></li>
-                <li><button><i class="ti-shopping-cart"></i></button></li>
-                <li><button class="like-button" data-liked="false" data-product-id="3">
-                  <i class="ti-heart"></i>
-                </button></li>
-              </ul>
-            </div>
-            <div class="card-body">
-              <p>Decor</p>
-              <h4 class="card-product__title"><a href="product/product-detail.html">Room Flash Light</a></h4>
-              <p class="card-product__price">$150.00</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-3">
-          <div class="card text-center card-product">
-            <div class="card-product__img">
-              <img class="card-img" src="../static/img/product/product4.png" alt="">
-              <ul class="card-product__imgOverlay">
-                <li><button><i class="ti-search"></i></button></li>
-                <li><button><i class="ti-shopping-cart"></i></button></li>
-                <li><button class="like-button" data-liked="false" data-product-id="4">
-                  <i class="ti-heart"></i>
-                </button></li>
-              </ul>
-            </div>
-            <div class="card-body">
-              <p>Decor</p>
-              <h4 class="card-product__title"><a href="product/product-detail.html">Room Flash Light</a></h4>
-              <p class="card-product__price">$150.00</p>
-            </div>
-          </div>
-        </div>
 
         <div class="col-md-6 col-lg-4 col-xl-3"  th:each="product, productStat : ${BestSellerList}" th:if="${productStat.index < 6}">
           <div class="card text-center card-product">
@@ -110,10 +31,19 @@
                    style="height: 200px; object-fit: cover;" />
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
-                <li><button><i class="ti-shopping-cart"></i></button></li>
-                <li><button class="like-button" data-liked="false" data-product-id="1">
-                      <i class="ti-heart"></i>
-                    </button></li>
+
+                <li th:if="${session.isMember}">
+                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+                <li th:if="${session.isMember == null}">
+                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+
+                <li>
+                  <button class="like-button" data-liked="false" th:data-product-id="${product.productId}">
+                    <i class="ti-heart"></i>
+                  </button>
+                </li>
               </ul>
             </div>
             <div class="card-body">
@@ -152,8 +82,19 @@
                    style="height: 200px; object-fit: cover;" />
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
-                <li><button><i class="ti-shopping-cart"></i></button></li>
-                <li><button><i class="ti-heart"></i></button></li>
+
+                <li th:if="${session.isMember}">
+                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+                <li th:if="${session.isMember == null}">
+                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+
+                <li>
+                  <button class="like-button" data-liked="false" th:data-product-id="${product.productId}">
+                    <i class="ti-heart"></i>
+                  </button>
+                </li>
               </ul>
             </div>
             <div class="card-body">
@@ -193,8 +134,19 @@
                    style="height: 200px; object-fit: cover;" />
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
-                <li><button><i class="ti-shopping-cart"></i></button></li>
-                <li><button><i class="ti-heart"></i></button></li>
+
+                <li th:if="${session.isMember}">
+                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+                <li th:if="${session.isMember == null}">
+                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+
+                <li>
+                  <button class="like-button" data-liked="false" th:data-product-id="${product.productId}">
+                    <i class="ti-heart"></i>
+                  </button>
+                </li>
               </ul>
             </div>
             <div class="card-body">
@@ -233,8 +185,19 @@
                    style="height: 200px; object-fit: cover;" />
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
-                <li><button><i class="ti-shopping-cart"></i></button></li>
-                <li><button><i class="ti-heart"></i></button></li>
+
+                <li th:if="${session.isMember}">
+                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+                <li th:if="${session.isMember == null}">
+                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+
+                <li>
+                  <button class="like-button" data-liked="false" th:data-product-id="${product.productId}">
+                    <i class="ti-heart"></i>
+                  </button>
+                </li>
               </ul>
             </div>
             <div class="card-body">
@@ -258,6 +221,8 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script th:src="@{/js/like/like-add-delete.js}"></script>
+  <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
+  <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
 </div>
 </body>
 </html>
