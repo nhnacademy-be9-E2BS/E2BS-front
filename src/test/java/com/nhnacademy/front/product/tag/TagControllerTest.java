@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.tag.controller.TagController;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
@@ -43,9 +44,13 @@ class TagControllerTest {
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
+	@MockitoBean
+	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
 	@BeforeEach
 	void setUp() throws Exception {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
 
 	@Test

@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
@@ -31,7 +32,6 @@ import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 import com.nhnacademy.front.review.service.ReviewService;
-
 
 @WithMockUser(username = "member", roles = "MEMBER")
 @ActiveProfiles("dev")
@@ -50,18 +50,21 @@ class ReviewControllerTest {
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
+	@MockitoBean
+	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
-
 
 	@Test
 	@DisplayName("POST /reviews - 리뷰 작성 테스트")
 	void createReview() throws Exception {
 		// given
-		MockMultipartFile mockFile = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg", "dummy image content".getBytes());
+		MockMultipartFile mockFile = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg",
+			"dummy image content".getBytes());
 		doNothing().when(reviewService).createReview(any(RequestCreateReviewDTO.class));
 
 		// when & then
@@ -82,7 +85,8 @@ class ReviewControllerTest {
 	@DisplayName("PUT /reviews/{reviewId} - 리뷰 수정 테스트")
 	void updateReview() throws Exception {
 		// given
-		MockMultipartFile mockFile = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg", "dummy image content".getBytes());
+		MockMultipartFile mockFile = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg",
+			"dummy image content".getBytes());
 		RequestUpdateReviewDTO requestDto = new RequestUpdateReviewDTO("수정된 내용", mockFile);
 
 		ResponseUpdateReviewDTO responseDto = new ResponseUpdateReviewDTO(requestDto.getReviewContent(), "url");
@@ -110,8 +114,8 @@ class ReviewControllerTest {
 		long productId = 1L;
 
 		List<ResponseReviewPageDTO> reviewPageList = List.of(
-				new ResponseReviewPageDTO(1L, 1L, 1L, "name1", "좋아요", 5, "image1", LocalDateTime.now()),
-				new ResponseReviewPageDTO(2L, 1L, 2L, "name2", "별로에요", 2, "image2", LocalDateTime.now())
+			new ResponseReviewPageDTO(1L, 1L, 1L, "name1", "좋아요", 5, "image1", LocalDateTime.now()),
+			new ResponseReviewPageDTO(2L, 1L, 2L, "name2", "별로에요", 2, "image2", LocalDateTime.now())
 		);
 
 		ResponseReviewInfoDTO reviewInfo = new ResponseReviewInfoDTO(4.5, 2, List.of(0, 1, 0, 0, 1));
@@ -121,7 +125,7 @@ class ReviewControllerTest {
 		PageResponse.PageableInfo pageableInfo = new PageResponse.PageableInfo();
 		PageResponse<ResponseReviewPageDTO> pageResponse =
 			new PageResponse<>(reviewPageList, pageableInfo, true,
-			        2, 1, 10, 0, sortInfo, true, 2, false);
+				2, 1, 10, 0, sortInfo, true, 2, false);
 		when(reviewService.getReviewsByProduct(eq(productId), any(Pageable.class))).thenReturn(pageResponse);
 
 		// when & then

@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.product.category.controller.AdminCategoryController;
 import com.nhnacademy.front.product.category.model.dto.request.RequestCategoryDTO;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
@@ -42,9 +43,13 @@ class AdminCategoryControllerTest {
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
+	@MockitoBean
+	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
 	@BeforeEach
 	void setUp() throws Exception {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
 
 	@Autowired
