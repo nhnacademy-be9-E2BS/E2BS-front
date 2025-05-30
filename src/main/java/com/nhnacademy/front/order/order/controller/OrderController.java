@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAddressDTO;
 import com.nhnacademy.front.account.address.service.AddressService;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
@@ -83,12 +84,14 @@ public class OrderController {
 		List<ResponseWrapperDTO> wrappers = wrapperService.getWrappersBySaleable(Pageable.unpaged()).getContent();
 		ResponseMemberInfoDTO member = memberMypageService.getMemberInfo(request);
 		long memberPoint = memberMypageService.getMemberPoint(new RequestMemberIdDTO(member.getMemberId()));
+		List<ResponseMemberAddressDTO> address = addressService.getMemberAddresses(member.getMemberId());
 
 		model.addAttribute("products", products);
 		model.addAttribute("quantities", quantities);
 		model.addAttribute("wrappers", wrappers);
 		model.addAttribute("member", member);
 		model.addAttribute("memberPoint", memberPoint);
+		model.addAttribute("address", address);
 		// model.addAttribute("productCategories", categories);
 		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
 		model.addAttribute("tossClientKey", tossClientKey);
