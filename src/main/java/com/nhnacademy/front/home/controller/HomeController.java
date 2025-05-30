@@ -5,10 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
 import com.nhnacademy.front.home.service.HomeService;
 import com.nhnacademy.front.index.service.IndexService;
-import com.nhnacademy.front.jwt.parser.JwtHasToken;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +25,6 @@ public class HomeController {
 		model.addAttribute("BlogBestList", indexService.getBlogBestProducts());
 		model.addAttribute("ItemNewAllList", indexService.getNewItemsProducts());
 		model.addAttribute("NewSpecialItemsList", indexService.getNewSpecialItemsProducts());
-
-		if (JwtHasToken.hasToken(request)) {
-			ResponseHomeMemberNameDTO responseHomeMemberNameDTO = homeService.getMemberNameFromHome(request);
-
-			model.addAttribute("memberName", responseHomeMemberNameDTO.getMemberName());
-			model.addAttribute("memberRole", responseHomeMemberNameDTO.getMemberRole());
-		}
 
 		return "home";
 	}
