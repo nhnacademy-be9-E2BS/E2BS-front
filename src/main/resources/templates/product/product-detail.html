@@ -175,6 +175,7 @@
 									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 								장바구니에 추가</button>
 							<button class="buy-now-btn custom-btn"
+									onclick="submitOrder()"
 									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 								바로구매</button>
 						</div>
@@ -357,6 +358,33 @@
 			</div>
 		</div>
 	</section>
+
+	<!--주문 하기 시 DTO 전송-->
+	<script>
+		function submitOrder() {
+
+			const form = document.createElement('form');
+			form.method = 'POST';
+			form.action = '/order';
+
+			const productIds = document.createElement('input');
+			productIds.type = 'hidden';
+			productIds.name = 'productIds';
+			productIds.value = [[${product.productId}]];
+
+			const quantities = document.createElement('input');
+			quantities.type = 'hidden';
+			quantities.name = 'cartQuantities';
+			quantities.value = document.getElementById('quantity').value;
+
+			form.appendChild(productIds);
+			form.appendChild(quantities);
+
+			document.body.appendChild(form);
+			form.submit();
+		}
+	</script>
+
 	<!-- 사진 넘기기 -->
 	<script>
 		let currentSlide = 0;

@@ -28,7 +28,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: '/orders',
+            url: '/order',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({

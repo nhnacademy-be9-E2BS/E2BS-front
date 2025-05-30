@@ -1,5 +1,6 @@
 package com.nhnacademy.front.order.order.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,11 +14,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.account.address.service.AddressService;
+import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
+import com.nhnacademy.front.account.member.service.MemberMypageService;
+import com.nhnacademy.front.account.member.service.MemberService;
+import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -30,6 +38,13 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDT
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
+import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
+import com.nhnacademy.front.order.wrapper.service.WrapperService;
+import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryIdsDTO;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.service.ProductAdminService;
+import com.nhnacademy.front.product.product.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -49,19 +64,52 @@ public class OrderController {
 	private final OrderService orderService;
 	private final DeliveryFeeSevice deliveryFeeSevice;
 
+	private final ProductService productService;
+	private final WrapperService wrapperService;
+	private final MemberMypageService memberMypageService;
+	private final AddressService addressService;
+
+	private final UserCategoryService userCategoryService;
+
 	/**
 	 * 결제 주문서 작성 페이지
 	 */
 	@JwtTokenCheck
+	@PostMapping("/order")
+	public String getCheckOut(Model model, @ModelAttribute RequestCartOrderDTO orderRequest, HttpServletRequest request) {
+		List<Integer> quantities = orderRequest.getCartQuantities();
+		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getProductIds());
+		// List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(orderRequest.getProductIds());
+		List<ResponseWrapperDTO> wrappers = wrapperService.getWrappersBySaleable(Pageable.unpaged()).getContent();
+		ResponseMemberInfoDTO member = memberMypageService.getMemberInfo(request);
+		long memberPoint = memberMypageService.getMemberPoint(new RequestMemberIdDTO(member.getMemberId()));
+
+		model.addAttribute("products", products);
+		model.addAttribute("quantities", quantities);
+		model.addAttribute("wrappers", wrappers);
+		model.addAttribute("member", member);
+		model.addAttribute("memberPoint", memberPoint);
+		// model.addAttribute("productCategories", categories);
+		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
+		model.addAttribute("tossClientKey", tossClientKey);
+		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
+		model.addAttribute("tossFailUrl", tossFailUrl);
+		return "payment/checkout";
+	}
+
+	/**
+	 * 테스트 용 데이터
+	 */
+	@JwtTokenCheck
 	@GetMapping("/order")
-	public String getCheckOut(Model model) {
+	public String getCheckOutTest(Model model) {
 		// 사용자가 주문하려는 상품 정보,쿠폰 내역, 포인트 정보 등을 보내줘야 함
 		// 지금은 임시 값을 넣어 확인
 		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
 		model.addAttribute("tossClientKey", tossClientKey);
 		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
 		model.addAttribute("tossFailUrl", tossFailUrl);
-		return "payment/checkout";
+		return "payment/checkoutTest";
 	}
 
 	/**
