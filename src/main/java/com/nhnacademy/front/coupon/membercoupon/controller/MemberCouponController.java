@@ -58,7 +58,7 @@ public class MemberCouponController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		memberCouponService.issueCouponToAllMember(request);
-		return "redirect:/admin/settings/member-coupons/issue";
+		return "redirect:/admin/settings/memberCoupons/issue";
 	}
 
 	/**

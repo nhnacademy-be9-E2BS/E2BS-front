@@ -10,9 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.nhnacademy.front.account.auth.service.AuthService;
-import com.nhnacademy.front.account.oauth.service.CustomOAuth2UserService;
 import com.nhnacademy.front.common.handler.CustomAuthenticationFailureHandler;
-import com.nhnacademy.front.common.handler.CustomAuthenticationPaycoSuccessHandler;
 import com.nhnacademy.front.common.handler.CustomAuthenticationSuccessHandler;
 import com.nhnacademy.front.common.handler.CustomLogoutHandler;
 
@@ -32,8 +30,7 @@ public class SecurityConfig {
 	private final RedisTemplate<String, String> redisTemplate;
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http,
-		CustomOAuth2UserService customOAuth2UserService) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
 			authService
@@ -42,9 +39,6 @@ public class SecurityConfig {
 			redisTemplate
 		);
 		CustomAuthenticationFailureHandler customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
-		CustomAuthenticationPaycoSuccessHandler customAuthenticationPaycoSuccessHandler = new CustomAuthenticationPaycoSuccessHandler(
-			authService
-		);
 
 		/**
 		 *  CSRF 보호 기능을 비활성화
@@ -69,16 +63,6 @@ public class SecurityConfig {
 				.usernameParameter("memberId")
 				.passwordParameter("customerPassword")
 				.successHandler(customAuthenticationSuccessHandler)
-				.failureHandler(customAuthenticationFailureHandler)
-				.permitAll()
-			)
-			/**
-			 * oauth 로그인 기능
-			 */
-			.oauth2Login(oauth2 -> oauth2
-				.loginPage("/login")
-				.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-				.successHandler(customAuthenticationPaycoSuccessHandler)
 				.failureHandler(customAuthenticationFailureHandler)
 				.permitAll()
 			)
