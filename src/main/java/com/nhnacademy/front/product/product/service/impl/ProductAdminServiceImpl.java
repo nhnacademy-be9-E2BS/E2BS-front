@@ -45,8 +45,9 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 			request.getProductDescription(), request.getProductPublishedAt(), request.getProductIsbn(),
 			request.getProductRegularPrice(), request.getProductSalePrice(), request.isProductPackageable(),
 			request.getProductStock(), request.getTagIds(), request.getCategoryIds(), request.getContributorIds());
+		
 		ResponseEntity<Void> response = productAdminAdaptor.postCreateProduct(requestMeta,
-			request.getProductImagePaths());
+			request.getProductImages());
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductCreateProcessException("도서 등록 실패");
@@ -90,7 +91,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 			request.getProductRegularPrice(), request.getProductSalePrice(), request.isProductPackageable(),
 			request.getProductStock(), request.getTagIds(), request.getCategoryIds(), request.getContributorIds());
 		ResponseEntity<Void> response = productAdminAdaptor.putUpdateProduct(productId, requestMeta,
-			request.getProductImagePaths());
+			request.getProductImages());
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductUpdateProcessException("도서 정보 수정 실패");

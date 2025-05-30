@@ -24,6 +24,8 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.AdminCategoryService;
+import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
+import com.nhnacademy.front.product.contributor.service.ContributorService;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateByQueryDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
@@ -35,6 +37,8 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsA
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
+import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
+import com.nhnacademy.front.product.publisher.service.PublisherService;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
 import com.nhnacademy.front.product.tag.service.TagService;
 
@@ -48,7 +52,9 @@ public class ProductAdminController {
 	private final ProductAdminService productAdminService;
 	private final ProductService productService;
 	private final AdminCategoryService adminCategoryService;
+	private final PublisherService publisherService;
 	private final TagService tagService;
+	private final ContributorService contributorService;
 
 	/**
 	 * 관리자 페이지 -> 전체 도서 리스트 조회
@@ -80,7 +86,16 @@ public class ProductAdminController {
 	 */
 	@JwtTokenCheck
 	@GetMapping("/register")
-	public String getRegisterView(Model model) {
+	public String getRegisterView(Model model, Pageable pageable) {
+		RequestProductApiCreateDTO dto = new RequestProductApiCreateDTO();
+		model.addAttribute("book", dto);
+
+		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(pageable);
+		model.addAttribute("contributors", contributors.getContent());
+
+		PageResponse<ResponsePublisherDTO> publishers = publisherService.getPublishers(pageable);
+		model.addAttribute("publishers", publishers.getContent());
+
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
 		model.addAttribute("categories", categories);
 
@@ -100,7 +115,7 @@ public class ProductAdminController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		productAdminService.createProduct(request);
-		return "admin/product/books/register";
+		return "redirect:/admin/settings/books";
 	}
 
 	/**

@@ -19,10 +19,8 @@ public class RequestProductMetaDTO {
 	 */
 
 	//상품상태
-	@NotNull
 	private Long productStateId;
 	//출판사
-	@NotNull
 	private Long publisherId;
 
 	//제목, 목차, 설명
@@ -58,7 +56,6 @@ public class RequestProductMetaDTO {
 	@NotNull
 	private List<Long> categoryIds;
 	// 기여자 Id
-	@NotNull
 	private List<Long> contributorIds;
 
 }

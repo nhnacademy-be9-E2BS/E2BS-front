@@ -41,8 +41,8 @@ public interface ProductAdminAdaptor {
 	@GetMapping("/register")
 	ResponseEntity<Void> getRegisterView();
 
-	@PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	ResponseEntity<Void> postCreateProduct(@RequestBody @RequestPart("requestMeta") RequestProductMetaDTO requestMeta,
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	ResponseEntity<Void> postCreateProduct(@RequestPart("requestMeta") RequestProductMetaDTO requestMeta,
 		@RequestPart("productImage") List<MultipartFile> productImage);
 
 	@PutMapping(value = "/{bookId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

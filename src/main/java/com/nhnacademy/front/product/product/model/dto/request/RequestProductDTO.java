@@ -21,10 +21,8 @@ public class RequestProductDTO {
 	 */
 
 	//상품상태
-	@NotNull
 	private Long productStateId;
 	//출판사
-	@NotNull
 	private Long publisherId;
 
 	//제목, 목차, 설명
@@ -55,15 +53,13 @@ public class RequestProductDTO {
 	private Integer productStock;
 
 	// 이미지
-	@NotNull
-	private List<MultipartFile> productImagePaths;
+	private List<MultipartFile> productImages;
 	// 태그
 	private List<Long> tagIds;
 	// 카테고리 Id
 	@NotNull
 	private List<Long> categoryIds;
 	// 기여자 Id
-	@NotNull
 	private List<Long> contributorIds;
 
 }

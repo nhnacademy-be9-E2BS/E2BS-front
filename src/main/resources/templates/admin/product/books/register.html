@@ -9,7 +9,8 @@
             <h3>도서 직접 등록</h3>
             <div class="row">
                 <div class="col-lg-8">
-                    <form class="row login_form" action="/admin/settings/books" method="post">
+                    <form class="row login_form" action="/admin/settings/books/register" method="post"
+                          enctype="multipart/form-data">
                         <!-- 도서 이름 -->
                         <div class="col-md-12 form-group">
                             <input type="text" class="form-control" name="productTitle" placeholder="도서 이름" required>
@@ -29,8 +30,17 @@
                             <input type="hidden" name="productDescription" id="productDescription">
                         </div>
 
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" name="contributor" placeholder="기여자" required>
+
+                        <div class="mb-3">
+                            <label class="form-label"기여자 선택</label>
+                            <div class="form-check" th:each=" contributor : ${contributors}">
+                                <input class="form-check-input" type="checkbox"
+                                       th:id="'contributor-' + ${contributor.contributorId}"
+                                       th:name="contributorIds"
+                                       th:value="${contributor.contributorId}"
+                                       th:checked="${book.contributors != null} ? ${book.contributors.contains(contributor.contributorId)} : false">
+                                <label class="form-check-label" th:for="'contributor-' + ${contributor.contributorId}" th:text="${contributor.contributorName + contributor.positionName}">태그명</label>
+                            </div>
                         </div>
 
                         <!-- 출판사 -->
@@ -39,8 +49,8 @@
                             <select name="publisherId" required>
                                 <option value="">출판사 선택</option>
                                 <option th:each="publisher : ${publishers}"
-                                        th:value="${publisher.id}"
-                                        th:text="${publisher.name}">
+                                        th:value="${publisher.publisherId}"
+                                        th:text="${publisher.publisherName}">
                                 </option>
                             </select>
                             <button type="button" onclick="openPopup('publisher')">출판사 추가</button>
@@ -52,22 +62,33 @@
 
                         <!-- 정가 -->
                         <div class="col-md-12 form-group">
-                            <input type="number" class="form-control" name="productRegularPrice" placeholder="정가" required>
+                            <input type="number" class="form-control" name="productRegularPrice" placeholder="정가"
+                                   required>
                         </div>
 
                         <!-- 판매가 -->
                         <div class="col-md-12 form-group">
-                            <input type="number" class="form-control" name="productSalePrice" placeholder="판매가" required>
+                            <input type="number" class="form-control" name="productSalePrice" placeholder="판매가"
+                                   required>
                         </div>
+
+                        <!-- 출판 일시 -->
+                        <div class="col-md-12 form-group">
+                            <input type="date" class="form-control" name="productPublishedAt"
+                                   required>
+                        </div>
+
 
                         <!-- 카테고리 -->
                         <div class="dropdown mb-3">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
                                 카테고리 선택
                             </button>
                             <ul class="dropdown-menu scrollable-category">
                                 <li th:each="category : ${categories}">
-                                    <th:block th:replace="fragments/categoryDropdownCheckboxFragment :: categoryCheckbox(category=${category}, prefix='')" />
+                                    <th:block
+                                            th:replace="fragments/categoryDropdownCheckboxFragment :: categoryCheckbox(category=${category}, prefix='')"/>
                                 </li>
                             </ul>
                             <div class="form-text">최대 10개까지 선택할 수 있습니다.</div>
@@ -79,8 +100,9 @@
                         </div>
                         <!-- 사진 업로드 (여러 장 가능) -->
                         <div class="col-md-12 form-group">
-                            <label for="imagePaths">사진 업로드  (첫 번째 사진이 썸네일입니다)</label>
-                            <input type="file" class="form-control-file" name="imagePaths" id="imagePaths" multiple accept="image/*" required>
+                            <label for="imagePaths">사진 업로드 (첫 번째 사진이 썸네일입니다)</label>
+                            <input type="file" class="form-control-file" name="productImages" id="imagePaths" multiple
+                                   accept="image/*" required>
                         </div>
 
                         <!-- 사진 미리보기 (한 줄에 3개씩) -->
@@ -103,14 +125,22 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12 form-group">
-                            <label>포장 가능 여부</label>
-                            <div>
-                                <select name="packageable">
-                                    <option value="true">가능</option>
-                                    <option value="false">불가능</option>
-                                </select>
+                        <div class="mb-3">
+                            <label class="form-label d-block">포장 여부</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="packageableYes"
+                                       name="productPackageable" value="true"
+                                       th:checked="${book.productPackageable}">
+                                <label class="form-check-label" for="packageableYes">예</label>
                             </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="packageableNo"
+                                       name="productPackageable" value="false"
+                                       th:checked="${!book.productPackageable}">
+                                <label class="form-check-label" for="packageableNo">아니오</label>
+                            </div>
+
                         </div>
 
                         <div class="col-md-12 form-group mt-3">
@@ -146,6 +176,7 @@
             document.querySelector('#productContent').value = editorContent.getHTML();
             document.querySelector('#productDescription').value = editorDescription.getHTML();
         });
+
         function limitCategorySelection(checkbox) {
             const checkedBoxes = document.querySelectorAll('.category-checkbox:checked');
             if (checkedBoxes.length > 10) {
@@ -157,8 +188,9 @@
         function openPopup(type) {
             window.open(`/admin/${type}/create`, `${type}Popup`, "width=600,height=400");
         }
+
         // 사진 미리보기 기능
-        document.getElementById('imagePaths').addEventListener('change', function(event) {
+        document.getElementById('imagePaths').addEventListener('change', function (event) {
             const previewContainer = document.getElementById('previewContainer');
             previewContainer.innerHTML = ''; // 기존 미리보기 초기화
 
@@ -167,7 +199,7 @@
                 const file = files[i];
                 const reader = new FileReader();
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const imgDiv = document.createElement('div');
                     imgDiv.className = 'col-md-4 mb-3'; // 한 줄에 3개씩 (col-md-4는 12/4 = 3개)
                     const img = document.createElement('img');
@@ -183,14 +215,6 @@
             }
         });
     </script>
-
-
-
-
-
-
-
-
 
 
 </div>
