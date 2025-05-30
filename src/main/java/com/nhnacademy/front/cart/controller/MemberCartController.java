@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberCartController {
 
 	private final MemberCartService memberCartService;
+	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
 
 	/**
 	 * 회원 장바구니 항목 추가
@@ -51,7 +52,7 @@ public class MemberCartController {
 		int cartItemsCounts = memberCartService.createCartItemForMember(requestDto);
 
 		HttpSession session = request.getSession();
-		session.setAttribute("cartItemsCounts", cartItemsCounts);
+		session.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -95,7 +96,7 @@ public class MemberCartController {
 		int cartItemsCounts = memberCartService.updateCartItemForMember(cartItemsId, requestDto);
 
 		HttpSession session = request.getSession();
-		session.setAttribute("cartItemsCounts", cartItemsCounts);
+		session.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -110,7 +111,7 @@ public class MemberCartController {
 
 		HttpSession session = request.getSession();
 		Integer cartItemsCounts = (Integer)session.getAttribute("cartItemsCounts");
-		session.setAttribute("cartItemsCounts", cartItemsCounts-1);
+		session.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts-1);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -126,7 +127,7 @@ public class MemberCartController {
 		memberCartService.deleteCartForMember(memberId);
 
 		HttpSession session = request.getSession();
-		session.setAttribute("cartItemsCounts", 0);
+		session.setAttribute(CART_ITEMS_COUNTS, 0);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}

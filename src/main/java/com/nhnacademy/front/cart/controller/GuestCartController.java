@@ -30,6 +30,8 @@ public class GuestCartController {
 
 	private final GuestCartService guestCartService;
 
+	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
+
 
 	/**
 	 * 게스트 장바구니 항목 추가
@@ -44,7 +46,7 @@ public class GuestCartController {
 		requestDto.setSessionId(httpSession.getId());
 
 		int cartItemsCounts = guestCartService.createCartItemForGuest(requestDto);
-		httpSession.setAttribute("cartItemsCounts", cartItemsCounts);
+		httpSession.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -81,7 +83,7 @@ public class GuestCartController {
 		requestDto.setSessionId(httpSession.getId());
 
 		int cartItemsCounts = guestCartService.updateCartItemForGuest(requestDto);
-		httpSession.setAttribute("cartItemsCounts", cartItemsCounts);
+		httpSession.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -100,7 +102,7 @@ public class GuestCartController {
 		guestCartService.deleteCartItemForGuest(requestDto);
 
 		Integer cartItemsCounts = (Integer)httpSession.getAttribute("cartItemsCounts");
-		httpSession.setAttribute("cartItemsCounts", cartItemsCounts-1);
+		httpSession.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts-1);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -113,7 +115,7 @@ public class GuestCartController {
 		String sessionId = httpSession.getId();
 		guestCartService.deleteCartForGuest(sessionId);
 
-		httpSession.setAttribute("cartItemsCounts", 0);
+		httpSession.setAttribute(CART_ITEMS_COUNTS, 0);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
