@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/admin/settings")
 public class AdminSettingsController {
+	private final String REDIRECT_ADMIN_SETTINGS_MEMBERS_PATH = "redirect:/admin/settings/members";
 
 	private final AdminSettingsService adminSettingsService;
 
@@ -64,7 +65,7 @@ public class AdminSettingsController {
 		}
 		adminSettingsService.updateAdminSettingsMemberState(memberId, requestAdminSettingsMemberStateDTO);
 
-		return "redirect:/admin/settings/members";
+		return REDIRECT_ADMIN_SETTINGS_MEMBERS_PATH;
 	}
 
 	@JwtTokenCheck
@@ -72,7 +73,7 @@ public class AdminSettingsController {
 	public String updateAdminSettingsMemberRole(@PathVariable("memberId") String memberId) {
 		adminSettingsService.updateAdminSettingsMemberRole(memberId);
 
-		return "redirect:/admin/settings/members";
+		return REDIRECT_ADMIN_SETTINGS_MEMBERS_PATH;
 	}
 
 	@JwtTokenCheck
@@ -80,7 +81,7 @@ public class AdminSettingsController {
 	public String deleteAdminSettingsMember(@PathVariable("memberId") String memberId) {
 		adminSettingsService.deleteAdminSettingsMember(memberId);
 
-		return "redirect:/admin/settings/members";
+		return REDIRECT_ADMIN_SETTINGS_MEMBERS_PATH;
 	}
 
 	/**
