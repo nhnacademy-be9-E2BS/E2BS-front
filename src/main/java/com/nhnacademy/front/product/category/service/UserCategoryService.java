@@ -12,6 +12,7 @@ import com.nhnacademy.front.product.category.adaptor.UserCategoryAdaptor;
 import com.nhnacademy.front.product.category.exception.CategoryGetProcessException;
 import com.nhnacademy.front.product.category.exception.CategoryNotFoundException;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
+import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryIdsDTO;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,19 @@ public class UserCategoryService {
 			
 		} catch (FeignException e) {
 			throw new CategoryGetProcessException("카테고리 사이드 바 조회 실패");
+		}
+	}
+
+	public List<ResponseCategoryIdsDTO> getCategoriesByProductIds(List<Long> productIds) {
+		try {
+			ResponseEntity<List<ResponseCategoryIdsDTO>> response = userCategoryAdaptor.getCategoriesByProductIds(productIds);
+
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new CategoryGetProcessException("상품 카테고리 조회 실패");
+			}
+			return response.getBody();
+		} catch (FeignException e) {
+			throw new CategoryGetProcessException("상품 카테고리 조회 실패");
 		}
 	}
 

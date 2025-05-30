@@ -70,27 +70,36 @@
 
 
   <!-- 페이지네이션 -->
-  <nav th:if="${products.totalPages > 1}">
-    <ul class="pagination justify-content-center">
-      <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
-        <a class="page-link"
-           th:href="@{/category/{categoryId}(categoryId=${categoryId}, query=${param.query}, queryType=${param.queryType}, page=0, size=${products.size})}">처음</a>
-      </li>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center">
+      <nav>
+        <ul class="pagination" th:if="${products.totalPages > 0}">
+          <!-- 처음 버튼 -->
+          <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/books/category/{categoryId}(categoryId=${categoryId}, page=0, size=9)}"
+               th:text="'처음'">First</a>
+          </li>
 
-      <li class="page-item"
-          th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
-          th:classappend="${i == products.number} ? 'active'">
-        <a class="page-link"
-           th:href="@{/category/{categoryId}(categoryId=${categoryId}, query=${param.query}, queryType=${param.queryType}, page=${i}, size=${products.size})}"
-           th:text="${i + 1}">1</a>
-      </li>
+          <!-- 전체 페이지 번호 출력 -->
+          <li class="page-item"
+              th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+              th:classappend="${i == products.number} ? 'active'">
+            <a class="page-link"
+               th:href="@{/books/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=9)}"
+               th:text="${i + 1}">1</a>
+          </li>
 
-      <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
-        <a class="page-link"
-           th:href="@{/category/{categoryId}(categoryId=${categoryId}, query=${param.query}, queryType=${param.queryType}, page=${products.totalPages - 1}, size=${products.size})}">마지막</a>
-      </li>
-    </ul>
-  </nav>
+          <!-- 마지막 버튼 -->
+          <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/books/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=9)}"
+               th:text="'마지막'">Last</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
