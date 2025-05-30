@@ -24,11 +24,12 @@
 
         <div class="col-md-6 col-lg-4 col-xl-3"  th:each="product, productStat : ${BestSellerList}" th:if="${productStat.index < 6}">
           <div class="card text-center card-product">
-            <div class="card-product__img">
+            <div class="card-img">
               <img class="img-fluid rounded"
                    th:src="@{${product.productImage}}"
                    alt="도서 이미지"
                    style="height: 200px; object-fit: cover;" />
+              <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
 
@@ -49,7 +50,7 @@
             <div class="card-body">
               <p th:text="${product.contributorName}">저자</p>
               <h4 class="card-product__title">
-                <a th:href="@{'/product/' + ${product.productId}}" th:text="${product.productTitle}">제목</a>
+                <a th:href="@{'/books/' + ${product.productId}}" th:text="${product.productTitle}">제목</a>
               </h4>
               <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
             </div>
@@ -133,7 +134,9 @@
                    alt="도서 이미지"
                    style="height: 200px; object-fit: cover;" />
               <ul class="card-product__imgOverlay">
-                <li><button><i class="ti-search"></i></button></li>
+                  <li><a th:href="@{/books/{productId}(productId=${product.productId})}" class="search-link">
+                      <button><i class="ti-search"></i></button>
+                  </a></li>
 
                 <li th:if="${session.isMember}">
                   <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
