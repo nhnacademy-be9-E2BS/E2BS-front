@@ -37,26 +37,28 @@ public class GuestCartServiceImpl implements GuestCartService {
 	}
 
 	@Override
-	public void createCartItemForGuest(RequestAddCartItemsDTO request) {
+	public Integer createCartItemForGuest(RequestAddCartItemsDTO request) {
 		try {
-			ResponseEntity<Void> result = guestCartAdaptor.createCartItemForGuest(request);
+			ResponseEntity<Integer> result = guestCartAdaptor.createCartItemForGuest(request);
 
 			if (!result.getStatusCode().is2xxSuccessful()) {
 				throw new CartProcessException("게스트 장바구니 항목 추가 실패: " + result.getStatusCode());
 			}
+			return result.getBody();
 		} catch (FeignException ex) {
 			throw new CartProcessException("게스트 장바구니 항목 추가 실패: " + ex.getMessage());
 		}
 	}
 
 	@Override
-	public void updateCartItemForGuest(RequestUpdateCartItemsDTO requestDto) {
+	public Integer updateCartItemForGuest(RequestUpdateCartItemsDTO requestDto) {
 		try {
-			ResponseEntity<Void> result = guestCartAdaptor.updateCartItemForGuest(requestDto);
+			ResponseEntity<Integer> result = guestCartAdaptor.updateCartItemForGuest(requestDto);
 
 			if (!result.getStatusCode().is2xxSuccessful()) {
 				throw new CartProcessException("게스트 장바구니 항목 수량 변경 실패: " + result.getStatusCode());
 			}
+			return result.getBody();
 		} catch (FeignException ex) {
 			throw new CartProcessException("게스트 장바구니 항목 수량 변경 실패: " + ex.getMessage());
 		}

@@ -7,58 +7,6 @@
 
 <body>
 <div layout:fragment="content">
-    <div class="row">
-        <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="card text-center card-product" data-product-id="1">
-                <div class="card-product__img">
-                    <img class="card-img" src="/img/product/product1.png" alt="">
-                    <ul class="card-product__imgOverlay">
-                        <li><button><i class="ti-search"></i></button></li>
-                        <li><button class="add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
-                        <li><button><i class="ti-heart"></i></button></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="card text-center card-product" data-product-id="2">
-                <div class="card-product__img">
-                    <img class="card-img" src="/img/product/product1.png" alt="">
-                    <ul class="card-product__imgOverlay">
-                        <li><button><i class="ti-search"></i></button></li>
-                        <li><button class="add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
-                        <li><button><i class="ti-heart"></i></button></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="card text-center card-product" data-product-id="3">
-                <div class="card-product__img">
-                    <img class="card-img" src="/img/product/product1.png" alt="">
-                    <ul class="card-product__imgOverlay">
-                        <li><button><i class="ti-search"></i></button></li>
-                        <li><button class="add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
-                        <li><button><i class="ti-heart"></i></button></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-3">
-            <div class="card text-center card-product" data-product-id="4">
-                <div class="card-product__img">
-                    <img class="card-img" src="/img/product/product1.png" alt="">
-                    <ul class="card-product__imgOverlay">
-                        <li><button><i class="ti-search"></i></button></li>
-                        <li><button class="add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
-                        <li><button><i class="ti-heart"></i></button></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
 
     <!--================Cart Area =================-->
     <section class="cart_area">
@@ -115,7 +63,7 @@
                                       <input type="text"
                                              name="qty"
                                              class="input-text qty"
-                                             th:id="'quant\ity-' + ${cartItem.productId}"
+                                             th:id="'quantity-' + ${cartItem.productId}"
                                              th:value="${cartItem.cartItemsQuantity}"
                                              readonly>
 

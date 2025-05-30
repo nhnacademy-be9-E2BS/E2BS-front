@@ -9,8 +9,8 @@ import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForGuestDTO
 
 public interface GuestCartService {
 	List<ResponseCartItemsForGuestDTO> getCartItemsByGuest(String sessionId);
-	void createCartItemForGuest(RequestAddCartItemsDTO request);
-	void updateCartItemForGuest(RequestUpdateCartItemsDTO request);
+	Integer createCartItemForGuest(RequestAddCartItemsDTO request);
+	Integer updateCartItemForGuest(RequestUpdateCartItemsDTO request);
 	void deleteCartItemForGuest(RequestDeleteCartItemsForGuestDTO request);
 	void deleteCartForGuest(String sessionId);
 }

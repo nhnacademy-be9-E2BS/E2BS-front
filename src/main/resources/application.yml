@@ -117,8 +117,8 @@ order:
     user:
       url: http://localhost:10232/api/deliveryFee
 
-customer:
-  url: http://localhost:10232/api/customers
+cart:
+  url: http://localhost:10232/api/carts
 
 guest:
   url: http://localhost:10232/api/guests

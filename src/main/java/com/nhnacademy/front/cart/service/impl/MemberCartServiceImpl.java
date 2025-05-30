@@ -32,21 +32,23 @@ public class MemberCartServiceImpl implements MemberCartService {
 	}
 
 	@Override
-	public void createCartItemForMember(RequestAddCartItemsDTO requestDto) throws FeignException {
-		ResponseEntity<Void> result = memberCartAdaptor.createCartItemForMember(requestDto);
+	public Integer createCartItemForMember(RequestAddCartItemsDTO requestDto) throws FeignException {
+		ResponseEntity<Integer> result = memberCartAdaptor.createCartItemForMember(requestDto);
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
 			throw new CartProcessException("회원 장바구니 항목 추가 실패: " + result.getStatusCode());
 		}
+		return result.getBody();
 	}
 
 	@Override
-	public void updateCartItemForMember(long cartItemId, RequestUpdateCartItemsDTO requestDto) throws FeignException {
-		ResponseEntity<Void> result = memberCartAdaptor.updateCartItemForMember(cartItemId, requestDto);
+	public Integer updateCartItemForMember(long cartItemId, RequestUpdateCartItemsDTO requestDto) throws FeignException {
+		ResponseEntity<Integer> result = memberCartAdaptor.updateCartItemForMember(cartItemId, requestDto);
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
 			throw new CartProcessException("회원 장바구니 항목 수량 변경 실패: " + result.getStatusCode());
 		}
+		return result.getBody();
 	}
 
 	@Override
