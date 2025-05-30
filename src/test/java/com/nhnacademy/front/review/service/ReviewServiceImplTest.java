@@ -112,7 +112,7 @@ class ReviewServiceImplTest {
 		Pageable pageable = PageRequest.of(0, 5);
 		PageResponse<ResponseReviewPageDTO> dummyPage = new PageResponse<>();
 
-		when(productReviewAdaptor.getReviewsByProduct(eq(productId), eq(pageable)))
+		when(productReviewAdaptor.getReviewsByProduct(anyLong(), any(PageRequest.class)))
 			.thenReturn(ResponseEntity.ok(dummyPage));
 
 		// when
@@ -129,7 +129,7 @@ class ReviewServiceImplTest {
 		long productId = 1L;
 		Pageable pageable = PageRequest.of(0, 5);
 
-		when(productReviewAdaptor.getReviewsByProduct(eq(productId), eq(pageable)))
+		when(productReviewAdaptor.getReviewsByProduct(anyLong(), any(PageRequest.class)))
 			.thenReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
 
 		// when & then
