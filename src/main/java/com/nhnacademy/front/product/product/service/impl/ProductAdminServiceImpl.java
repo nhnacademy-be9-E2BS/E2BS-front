@@ -17,6 +17,7 @@ import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiC
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductMetaDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
@@ -39,7 +40,13 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 */
 	@Override
 	public void createProduct(RequestProductDTO request) throws FeignException {
-		ResponseEntity<Void> response = productAdminAdaptor.postCreateProduct(request);
+		RequestProductMetaDTO requestMeta = new RequestProductMetaDTO(request.getProductStateId(),
+			request.getPublisherId(), request.getProductTitle(), request.getProductContent(),
+			request.getProductDescription(), request.getProductPublishedAt(), request.getProductIsbn(),
+			request.getProductRegularPrice(), request.getProductSalePrice(), request.isProductPackageable(),
+			request.getProductStock(), request.getTagIds(), request.getCategoryIds(), request.getContributorIds());
+		ResponseEntity<Void> response = productAdminAdaptor.postCreateProduct(requestMeta,
+			request.getProductImagePaths());
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductCreateProcessException("도서 등록 실패");
@@ -77,7 +84,13 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 */
 	@Override
 	public void updateProduct(long productId, RequestProductDTO request) throws FeignException {
-		ResponseEntity<Void> response = productAdminAdaptor.putUpdateProduct(productId, request);
+		RequestProductMetaDTO requestMeta = new RequestProductMetaDTO(request.getProductStateId(),
+			request.getPublisherId(), request.getProductTitle(), request.getProductContent(),
+			request.getProductDescription(), request.getProductPublishedAt(), request.getProductIsbn(),
+			request.getProductRegularPrice(), request.getProductSalePrice(), request.isProductPackageable(),
+			request.getProductStock(), request.getTagIds(), request.getCategoryIds(), request.getContributorIds());
+		ResponseEntity<Void> response = productAdminAdaptor.putUpdateProduct(productId, requestMeta,
+			request.getProductImagePaths());
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductUpdateProcessException("도서 정보 수정 실패");
@@ -113,7 +126,8 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 */
 	@Override
 	public PageResponse<ResponseProductCouponDTO> getProductsToCoupon(Pageable pageable) throws FeignException {
-		ResponseEntity<PageResponse<ResponseProductCouponDTO>> response = productAdminAdaptor.getProductsToCoupon(pageable);
+		ResponseEntity<PageResponse<ResponseProductCouponDTO>> response = productAdminAdaptor.getProductsToCoupon(
+			pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("coupon 전용 Sale 상태 도서 리스트 조회 실패");
@@ -125,28 +139,31 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 * 알라딘 api로 검색어, 검색타입에 따른 결과 조회
 	 */
 	@Override
-	public PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable) throws FeignException {
-		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> response = productAdminAdaptor.searchBooksByQuery(request, pageable);
+	public PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request,
+		Pageable pageable) throws FeignException {
+		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> response = productAdminAdaptor.searchBooksByQuery(
+			request, pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("도서 조회 실패");
 		}
 		return response.getBody();
 	}
+
 	/**
 	 * 알라딘 api로 카테고리로 따른 결과 조회
 	 */
 	@Override
-	public PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi (
+	public PageResponse<ResponseProductsApiSearchByQueryTypeDTO> getProductsApi(
 		RequestProductApiSearchByQueryTypeDTO request, Pageable pageable) throws FeignException {
-		ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> response = productAdminAdaptor.listBooksByCategory(request, pageable);
+		ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> response = productAdminAdaptor.listBooksByCategory(
+			request, pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("도서 조회 실패");
 		}
 		return response.getBody();
 	}
-
 
 	/**
 	 * 알라딘 api로 검색어, 검색타입으로 책 등록
@@ -162,6 +179,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 			throw new ProductCreateProcessException("도서 등록 실패");
 		}
 	}
+
 	/**
 	 * 알라딘 api로 카테고리로 따른 책 등록
 	 */

@@ -17,6 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
@@ -25,6 +27,7 @@ import com.nhnacademy.front.product.product.exception.ProductCreateProcessExcept
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
 import com.nhnacademy.front.product.product.exception.ProductUpdateProcessException;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductMetaDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
@@ -45,10 +48,15 @@ class ProductAdminServiceTest {
 	@DisplayName("create product - success")
 	void create_product_success_test() {
 		// given
+		MockMultipartFile mockFile1 = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg",
+			"dummy image content".getBytes());
+		MockMultipartFile mockFile2 = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg",
+			"dummy image content".getBytes());
+
 		RequestProductDTO request = new RequestProductDTO(
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 100,
-			List.of("a.png", "b.png"), List.of(1L), List.of(1L), List.of(1L));
+			List.of(mockFile1, mockFile2), List.of(1L), List.of(1L), List.of(1L));
 		when(productAdminAdaptor.postCreateProduct(request)).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
 
 		// when
@@ -106,7 +114,8 @@ class ProductAdminServiceTest {
 			sortInfo, true, 2, false
 		);
 
-		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = new ResponseEntity<>(pageResponse, HttpStatus.OK);
+		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = new ResponseEntity<>(pageResponse,
+			HttpStatus.OK);
 
 		when(productAdminAdaptor.getProducts(pageable)).thenReturn(response);
 
@@ -123,7 +132,8 @@ class ProductAdminServiceTest {
 	void get_products_fail_test() {
 		// given
 		Pageable pageable = PageRequest.of(0, 9);
-		ResponseEntity<PageResponse<ResponseProductReadDTO>> responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		ResponseEntity<PageResponse<ResponseProductReadDTO>> responseEntity = new ResponseEntity<>(
+			HttpStatus.INTERNAL_SERVER_ERROR);
 		when(productAdminAdaptor.getProducts(pageable)).thenReturn(responseEntity);
 
 		// when & then
@@ -171,7 +181,8 @@ class ProductAdminServiceTest {
 	void get_products_order_fail_test() {
 		// given
 		List<Long> productIds = List.of(1L, 2L, 3L);
-		ResponseEntity<List<ResponseProductReadDTO>> responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		ResponseEntity<List<ResponseProductReadDTO>> responseEntity = new ResponseEntity<>(
+			HttpStatus.INTERNAL_SERVER_ERROR);
 		when(productAdminAdaptor.getProducts(productIds)).thenReturn(responseEntity);
 
 		// when & then
@@ -183,10 +194,15 @@ class ProductAdminServiceTest {
 	@DisplayName("update product - success")
 	void update_product_success_test() {
 		// given
-		RequestProductDTO request = new RequestProductDTO(
+		MockMultipartFile mockFile1 = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg",
+			"dummy image content".getBytes());
+		MockMultipartFile mockFile2 = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg",
+			"dummy image content".getBytes());
+		RequestProductMetaDTO request = new RequestProductMetaDTO(
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 200,
-			List.of("a.png", "b.png"), List.of(1L), List.of(1L), List.of(1L));
+			 List.of(1L), List.of(1L), List.of(1L));
+		List<MultipartFile> = List.of(mockFile1, mockFile2);
 		ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.OK);
 		when(productAdminAdaptor.putUpdateProduct(1L, request)).thenReturn(responseEntity);
 
@@ -201,10 +217,14 @@ class ProductAdminServiceTest {
 	@DisplayName("update product - fail")
 	void update_product_fail_test() {
 		// given
+		MockMultipartFile mockFile1 = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg",
+			"dummy image content".getBytes());
+		MockMultipartFile mockFile2 = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg",
+			"dummy image content".getBytes());
 		RequestProductDTO request = new RequestProductDTO(
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 200,
-			List.of("a.png", "b.png"), List.of(1L), List.of(1L), List.of(1L));
+			List.of(mockFile1, mockFile2), List.of(1L), List.of(1L), List.of(1L));
 		ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		when(productAdminAdaptor.putUpdateProduct(1L, request)).thenReturn(responseEntity);
 
@@ -297,7 +317,8 @@ class ProductAdminServiceTest {
 			sortInfo, true, 2, false
 		);
 
-		ResponseEntity<PageResponse<ResponseProductCouponDTO>> response = new ResponseEntity<>(pageResponse, HttpStatus.OK);
+		ResponseEntity<PageResponse<ResponseProductCouponDTO>> response = new ResponseEntity<>(pageResponse,
+			HttpStatus.OK);
 
 		when(productAdminAdaptor.getProductsToCoupon(pageable)).thenReturn(response);
 
@@ -314,7 +335,8 @@ class ProductAdminServiceTest {
 	void get_products_to_coupon_fail_test() {
 		// given
 		Pageable pageable = PageRequest.of(0, 10);
-		ResponseEntity<PageResponse<ResponseProductCouponDTO>> responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		ResponseEntity<PageResponse<ResponseProductCouponDTO>> responseEntity = new ResponseEntity<>(
+			HttpStatus.INTERNAL_SERVER_ERROR);
 		when(productAdminAdaptor.getProductsToCoupon(pageable)).thenReturn(responseEntity);
 
 		// when & then

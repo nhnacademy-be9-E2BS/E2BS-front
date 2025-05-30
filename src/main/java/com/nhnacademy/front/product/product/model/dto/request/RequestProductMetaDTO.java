@@ -3,8 +3,6 @@ package com.nhnacademy.front.product.product.model.dto.request;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestProductDTO {
+public class RequestProductMetaDTO {
 	/**
 	 * 도서를 생성할 때 필요한 정보
 	 */
@@ -54,9 +52,6 @@ public class RequestProductDTO {
 	@NotNull
 	private Integer productStock;
 
-	// 이미지
-	@NotNull
-	private List<MultipartFile> productImagePaths;
 	// 태그
 	private List<Long> tagIds;
 	// 카테고리 Id
