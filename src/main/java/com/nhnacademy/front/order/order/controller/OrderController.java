@@ -61,6 +61,19 @@ public class OrderController {
 		model.addAttribute("tossClientKey", tossClientKey);
 		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
 		model.addAttribute("tossFailUrl", tossFailUrl);
+
+		/**
+		 * 쿠폰: 주문서에서 담긴 상품에 적용가능한 쿠폰 리스트
+		 * memberId : JWT 토큰에서 꺼내기
+		 * RequestCartOrderDTO : 장바구니-모두구매 or 도서상세페이지-구매하기 누르면 상품 ID 리스트가 여기에 담김
+		 * List<ResponseOrderCouponDTO> response = memberCouponService.getCouponsInOrder(String memberId, RequestCartOrderDTO request);
+		 */
+
+		/**
+		 * 포인트: 사용자가 보유한 포인트 조회
+		 * MemberMyPageService.getMemberPoint() 쓰면 될듯
+		 */
+
 		return "payment/checkout";
 	}
 

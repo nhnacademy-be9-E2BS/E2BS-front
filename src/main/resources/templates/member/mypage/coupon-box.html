@@ -17,7 +17,6 @@
             <!-- 쿠폰 목록 -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <h4>Coupon List</h4>
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -35,18 +34,16 @@
                            <td th:text="${coupon.couponName}">쿠폰명</td>
                            <td th:text="${coupon.couponPolicyName}">정책명</td>
 
-                           <!-- 링크 수정 필요 : 카테고리에 해당하는 도서 목록 페이지로 -->
                            <td>
                                <a th:if="${coupon.categoryName != null}"
-                                  th:href="@{/category/{id}(id=${coupon.categoryId})}"
+                                  th:href="@{/books/category/{id}(id=${coupon.categoryId})}"
                                   th:text="${coupon.categoryName}">카테고리명</a>
                                <span th:unless="${coupon.categoryName != null}">-</span>
                            </td>
 
-                           <!-- 링크 수정 필요 : 상품 구매 페이지로 -->
                            <td>
                                <a th:if="${coupon.productTitle != null}"
-                                  th:href="@{/productDetail/{id}(id=${coupon.productId})}"
+                                  th:href="@{/books/{id}(id=${coupon.productId})}"
                                   th:text="${coupon.productTitle}">도서명</a>
                                <span th:unless="${coupon.productTitle != null}">-</span>
                            </td>
