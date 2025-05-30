@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface CartAdaptor {
 
 	@GetMapping("/counts")
-	ResponseEntity<Integer> getCartItemsCounts(@RequestParam String memberId, @RequestParam String sessionId);
+	ResponseEntity<Integer> getCartItemsCounts(@RequestParam("memberId") String memberId, @RequestParam("sessionId") String sessionId);
 
 }

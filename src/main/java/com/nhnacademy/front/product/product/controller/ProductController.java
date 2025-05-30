@@ -2,6 +2,7 @@ package com.nhnacademy.front.product.product.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,9 @@ import com.nhnacademy.front.product.category.model.dto.response.ResponseCategory
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
+import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
+import com.nhnacademy.front.review.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +31,28 @@ public class ProductController {
 
 	private final ProductService productService;
 	private final UserCategoryService userCategoryService;
+	private final ReviewService reviewService;
 
 	/**
 	 * 사용자 - 도서 상세 페이지 조회
 	 */
 	@GetMapping("/{bookId}")
-	public String getProduct(@PathVariable Long bookId, Model model) {
+	public String getProduct(@PathVariable Long bookId, Model model,
+		                     @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		// 상품 상세
 		ResponseProductReadDTO response = productService.getProduct(bookId);
-
 		model.addAttribute("product", response);
+
+		// 리뷰 상세
+		ResponseReviewInfoDTO reviewInfo = reviewService.getReviewInfo(bookId);
+		PageResponse<ResponseReviewPageDTO> reviewResponse = reviewService.getReviewsByProduct(bookId, pageable);
+		Page<ResponseReviewPageDTO> reviewsByProduct = PageResponseConverter.toPage(reviewResponse);
+
+		model.addAttribute("reviewsByProduct", reviewsByProduct);
+		model.addAttribute("totalGradeAvg", reviewInfo.getTotalGradeAvg());
+		model.addAttribute("totalCount", reviewInfo.getTotalCount());
+		model.addAttribute("starCounts", reviewInfo.getStarCounts());
+
 		return "product/product-detail";
 	}
 

@@ -3,104 +3,118 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{layouts/user-layout}">
 
-<style>
-	.product_count {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-	}
+<head>
+	<style>
+		.product_count {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
 
-	.product_count label {
-		font-weight: bold;
-	}
+		.product_count label {
+			font-weight: bold;
+		}
 
-	.input-text.qty {
-		width: 60px;
-		padding: 5px;
-		text-align: center;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-	}
+		.input-text.qty {
+			width: 60px;
+			padding: 5px;
+			text-align: center;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
 
-	.increase, .reduced {
-		background-color: #f5f5f5;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-		padding: 5px 10px;
-		cursor: pointer;
-	}
+		.increase, .reduced {
+			background-color: #f5f5f5;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			padding: 5px 10px;
+			cursor: pointer;
+		}
 
-	.increase:hover, .reduced:hover {
-		background-color: #e0e0e0;
-	}
+		.increase:hover, .reduced:hover {
+			background-color: #e0e0e0;
+		}
 
-	.increase i, .reduced i {
-		font-size: 14px;
-	}
+		.increase i, .reduced i {
+			font-size: 14px;
+		}
 
-	.image-slider{
-		position: relative;
-		width: 500px !important;
-		height: 680px !important; /* 이미지 세로 크기 */
-		overflow: hidden;
-	}
+		.image-slider{
+			position: relative;
+			width: 500px !important;
+			height: 680px !important; /* 이미지 세로 크기 */
+			overflow: hidden;
+		}
 
-	.slider-container {
-		position: relative;
-		width: 100%;
-		height: 100%;
-	}
+		.slider-container {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
 
-	.slides {
-		position: relative;
-		width: 100%;
-		height: 100%;
-	}
+		.slides {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
 
-	.slide {
-		display: none;
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
+		.slide {
+			display: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 
-	.slide.active {
-		display: block;
-	}
+		.slide.active {
+			display: block;
+		}
 
-	.prev, .next {
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		background-color: rgba(0, 0, 0, 0.5);
-		color: white;
-		border: none;
-		padding: 10px;
-		cursor: pointer;
-		font-size: 18px;
-	}
+		.prev, .next {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: rgba(0, 0, 0, 0.5);
+			color: white;
+			border: none;
+			padding: 10px;
+			cursor: pointer;
+			font-size: 18px;
+		}
 
-	.prev {
-		left: 0;
-	}
+		.prev {
+			left: 0;
+		}
 
-	.next {
-		right: 0;
-	}
+		.next {
+			right: 0;
+		}
 
-	.prev:hover, .next:hover {
-		background-color: rgba(0, 0, 0, 0.8);
-	}
+		.prev:hover, .next:hover {
+			background-color: rgba(0, 0, 0, 0.8);
+		}
 
-	.prev:disabled, .next:disabled {
-		background-color: rgba(0, 0, 0, 0.3);
-		cursor: not-allowed;
-	}
+		.prev:disabled, .next:disabled {
+			background-color: rgba(0, 0, 0, 0.3);
+			cursor: not-allowed;
+		}
 
-</style>
+		.fa-heart.liked {
+			color: red;
+		}
+
+		.fa-star {
+			color: #ccc;
+			transition: color 0.2s ease;
+		}
+		.fa-star.filled {
+			color: gold;
+			transition: color 0.2s ease;
+		}
+	</style>
+</head>
 <body>
 <div layout:fragment="content">
 	<!-- 상품 이미지 및 상세 -->
@@ -171,9 +185,15 @@
 						</div>
 						<div class="button-container">
 							<!-- 장바구니 추가 -->
-							<button class="add-cart-btn"
+							<button th:if="${session.isMember}"
+									class="member-add-cart-btn"
 									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 								장바구니에 추가</button>
+							<button th:if="${session.isMember == null}"
+									class="guest-add-cart-btn"
+									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
+								장바구니에 추가</button>
+
 							<button class="buy-now-btn custom-btn"
 									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 								바로구매</button>
@@ -239,117 +259,161 @@
 							<div class="row total_rate">
 								<div class="col-6">
 									<div class="box_total">
-										<h5>종합</h5>
-										<h4>4.5</h4>
-										<h6>(15,300 리뷰)</h6>
+										<h5>전체 평점</h5>
+										<h4 th:text="${totalGradeAvg}">4.0</h4>
+										<h5 th:text="|(${totalCount})|">(3)</h5>
 									</div>
-									<!-- Thymeleaf로 변경 시 (리뷰 데이터는 별도 DTO로 가정): -->
-									<!-- <div class="box_total"> -->
-									<!--     <h5>종합</h5> -->
-									<!--     <h4 th:text="${reviewSummary.averageRating}"></h4> -->
-									<!--     <h6 th:text="'(' + ${#numbers.formatInteger(reviewSummary.totalReviews, 0, 'COMMA')} + ' 리뷰)'"></h6> -->
-									<!-- </div> -->
 								</div>
-								<div class="col-6">
+
+								<div class="col-4">
 									<div class="rating_list">
-										<h3>15,300 리뷰 기준</h3>
-										<ul class="list">
-											<li><a href="#">5점 <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 10,000</a></li>
-											<li><a href="#">4점 <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 4,000</a></li>
-											<li><a href="#">3점 <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 1,000</a></li>
-											<li><a href="#">2점 <i class="fa fa-star"></i><i class="fa fa-star"></i> 200</a></li>
-											<li><a href="#">1점 <i class="fa fa-star"></i> 100</a></li>
+										<ul class="list p-0 m-0" th:with="stars=${#numbers.sequence(5,1)}">
+											<li th:each="star, iterStat : ${stars}"
+												class="d-flex justify-content-between align-items-center">
+
+												<!-- 별 아이콘 -->
+												<span>
+													<i class="fa fa-star filled"
+													   th:each="i : ${#numbers.sequence(1, star)}"></i>
+												</span>
+
+												<!-- 리뷰 수 -->
+												<span class="count" th:text="|(${starCounts[star - 1]})|">(1)</span>
+											</li>
 										</ul>
 									</div>
-									<!-- Thymeleaf로 변경 시: -->
-									<!-- <div class="rating_list"> -->
-									<!--     <h3 th:text="${#numbers.formatInteger(reviewSummary.totalReviews, 0, 'COMMA')} + ' 리뷰 기준'"></h3> -->
-									<!--     <ul class="list"> -->
-									<!--         <li><a href="#">5점 <i th:each="i : ${#numbers.sequence(1, 5)}" class="fa fa-star"></i> <span th:text="${#numbers.formatInteger(reviewSummary.ratingDistribution[5], 0, 'COMMA')}"></span></a></li> -->
-									<!--         <li><a href="#">4점 <i th:each="i : ${#numbers.sequence(1, 4)}" class="fa fa-star"></i> <span th:text="${#numbers.formatInteger(reviewSummary.ratingDistribution[4], 0, 'COMMA')}"></span></a></li> -->
-									<!--         <li><a href="#">3점 <i th:each="i : ${#numbers.sequence(1, 3)}" class="fa fa-star"></i> <span th:text="${#numbers.formatInteger(reviewSummary.ratingDistribution[3], 0, 'COMMA')}"></span></a></li> -->
-									<!--         <li><a href="#">2점 <i th:each="i : ${#numbers.sequence(1, 2)}" class="fa fa-star"></i> <span th:text="${#numbers.formatInteger(reviewSummary.ratingDistribution[2], 0, 'COMMA')}"></span></a></li> -->
-									<!--         <li><a href="#">1점 <i th:each="i : ${#numbers.sequence(1, 1)}" class="fa fa-star"></i> <span th:text="${#numbers.formatInteger(reviewSummary.ratingDistribution[1], 0, 'COMMA')}"></span></a></li> -->
-									<!--     </ul> -->
-									<!-- </div> -->
 								</div>
 							</div>
+
+							<br>
+
 							<div class="review_list">
-								<!-- 정적 플레이스홀더 -->
-								<div class="review_item">
+								<div class="review_item" th:each="review, stat : ${reviewsByProduct.content}">
 									<div class="media">
-										<div class="d-flex">
-											<img src="/img/product/user.png" alt="사용자">
-										</div>
 										<div class="media-body">
-											<h4>이수진</h4>
-											<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+											<div class="d-flex justify-content-between align-items-center">
+												<h4 class="mb-0" th:text="${review.customerName}">이름</h4>
+												<p class="mb-0 text-muted" th:text="${#temporals.format(review.reviewCreatedAt, 'yy-MM-dd')}">날짜</p>
+
+												<button class="btn btn-primary"
+														th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">
+													<i class="bi bi-pencil-square"></i> 수정
+												</button>
+											</div>
+
+											<div>
+												<i class="fa fa-star filled"
+												   th:each="i : ${#numbers.sequence(1, review.reviewGrade)}"></i>
+											</div>
 										</div>
 									</div>
-									<p>역사와 과학을 융합한 접근 방식이 매우 흥미로웠습니다. 모든 역사 애호가에게 추천합니다!</p>
+
+									<div class="d-flex">
+										<!--<img src="/img/product/product1.png" alt="리뷰 이미지" style="max-width: 150px;">-->
+										<div th:if="${!#strings.isEmpty(review.reviewImage)}"
+											 th:id="${'image-' + stat.index}">
+											<img th:src="${review.reviewImage}" alt="리뷰 이미지" style="max-width: 350px;">
+										</div>
+									</div>
+
+									<p th:id="${'text-' + stat.index}" th:text="${review.reviewContent}">리뷰내용</p>
+									<!-- 리뷰 수정 폼 (기본은 숨김) stat은 타임리프에서 제공하는 현재 반복 상태 정보를 담는 객체 -->
+									<div th:id="${'edit-form-' + stat.index}" style="display: none;">
+										<form th:action="@{/reviews/update}" enctype="multipart/form-data">
+											<input type="hidden" name="reviewId" th:value="${review.reviewId}">
+											<textarea name="reviewContent" class="form-control mb-2" rows="3"
+													  th:text="${review.reviewContent}"></textarea>
+
+											<div class="custom-file">
+												<input type="file" class="custom-file-input" id="updateImage" name="reviewImage">
+												<label class="custom-file-label" for="updateImage">수정할 파일을 선택하세요</label>
+											</div>
+
+											<!-- 이미지 미리보기 영역 -->
+											<div class="preview-container mb-2">
+												<img id="update-imagePreview" src="#" alt="이미지 미리보기" style="display:none; max-width: 350px;" />
+											</div>
+
+											<button type="button" class="btn btn-success btn-sm"
+													th:onclick="|submitReviewUpdate('${review.reviewId}', '${stat.index}')|">
+												저장
+											</button>
+											<button type="button" class="btn btn-secondary btn-sm"
+													th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">취소</button>
+										</form>
+									</div>
 								</div>
-								<!-- Thymeleaf로 변경 시: -->
-								<!-- <div class="review_item" th:each="review : ${reviews}"> -->
-								<!--     <div class="media"> -->
-								<!--         <div class="d-flex"> -->
-								<!--             <img th:src="${review.userImagePath}" th:alt="'사용자'" /> -->
-								<!--         </div> -->
-								<!--         <div class="media-body"> -->
-								<!--             <h4 th:text="${review.userName}"></h4> -->
-								<!--             <i th:each="i : ${#numbers.sequence(1, review.rating)}" class="fa fa-star"></i> -->
-								<!--         </div> -->
-								<!--     </div> -->
-								<!--     <p th:text="${review.content}"></p> -->
-								<!-- </div> -->
+
+								<!-- 페이징 -->
+								<div class="row">
+									<div class="col-12 d-flex justify-content-center">
+										<nav>
+											<ul class="pagination">
+												<!-- 처음 -->
+												<li class="page-item" th:classappend="${!reviewsByProduct.hasPrevious()} ? 'disabled'">
+													<a class="page-link" th:href="@{/products/{productId}/reviews(productId=${productId})(page=0, size=${reviewsByProduct.size})}"><<</a>
+												</li>
+
+												<!-- 페이지 번호 -->
+												<li class="page-item"
+													th:each="i : ${#numbers.sequence(0, reviewsByProduct.totalPages - 1)}"
+													th:classappend="${i == reviewsByProduct.number} ? 'active'">
+													<a class="page-link"
+													   th:href="@{/products/{productId}/reviews(productId=${productId})(page=${i}, size=${reviewsByProduct.size})}"
+													   th:text="${i + 1}">1</a>
+												</li>
+
+												<!-- 끝 -->
+												<li class="page-item" th:classappend="${!reviewsByProduct.hasNext()} ? 'disabled'">
+													<a class="page-link"
+													   th:href="@{/products/{productId}/reviews(productId=${productId})(page=${reviewsByProduct.totalPages - 1}, size=${reviewsByProduct.size})}">>></a>
+												</li>
+											</ul>
+										</nav>
+									</div>
+								</div>
 							</div>
 						</div>
+
 						<div class="col-lg-6">
 							<div class="review_box">
 								<h4>리뷰 작성</h4>
-								<p>평점:</p>
-								<ul class="list">
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-								</ul>
-								<p>훌륭함</p>
-								<form class="contact_form" method="post">
+
+								<form th:action="@{/reviews}" method="POST" enctype="multipart/form-data" class="form-contact form-review mt-3">
+									<input type="hidden" name="productId" value="1" />
+
 									<div class="form-group">
-										<input type="text" class="form-control" name="name" placeholder="성명" required>
+										<p>평점:</p>
+										<ul class="list">
+											<li><a href="#" class="star" data-star-value="1"><i class="fa fa-star"></i></a></li>
+											<li><a href="#" class="star" data-star-value="2"><i class="fa fa-star"></i></a></li>
+											<li><a href="#" class="star" data-star-value="3"><i class="fa fa-star"></i></a></li>
+											<li><a href="#" class="star" data-star-value="4"><i class="fa fa-star"></i></a></li>
+											<li><a href="#" class="star" data-star-value="5"><i class="fa fa-star"></i></a></li>
+										</ul>
+
+										<p id="selectedRating"></p>
+										<input type="hidden" name="reviewGrade" id="ratingInput" value="0" />
 									</div>
+
 									<div class="form-group">
-										<input type="email" class="form-control" name="email" placeholder="이메일 주소" required>
+										<div class="custom-file">
+											<input type="file" class="custom-file-input" id="createImage" name="reviewImage">
+											<label class="custom-file-label" for="createImage">파일을 선택하세요</label>
+										</div>
+
+										<!-- 이미지 미리보기 영역 -->
+										<div class="preview-container mb-2">
+											<img id="create-imagePreview" src="#" alt="이미지 미리보기" style="display:none; max-width: 350px;" />
+										</div>
+
+										<label for="textarea"></label><textarea class="form-control different-control w-100" name="reviewContent" id="textarea" cols="30" rows="5" placeholder="리뷰 내용"></textarea>
 									</div>
-									<div class="form-group">
-										<input type="text" class="form-control" name="phone" placeholder="전화번호">
-									</div>
-									<div class="form-group">
-										<textarea class="form-control" name="review" rows="5" placeholder="리뷰" required></textarea>
-									</div>
-									<div class="form-group">
-										<button type="submit" class="primary-btn">제출</button>
+
+									<div class="form-group text-center text-md-right mt-3">
+										<button type="submit" class="button button--active button-review">제출하기</button>
 									</div>
 								</form>
-								<!-- Thymeleaf로 변경 시: -->
-								<!-- <form class="contact_form" th:action="@{/reviews/add(productId=${product.productId})}" method="post"> -->
-								<!--     <div class="form-group"> -->
-								<!--         <input type="text" class="form-control" name="name" placeholder="성명" required> -->
-								<!--     </div> -->
-								<!--     <div class="form-group"> -->
-								<!--         <input type="email" class="form-control" name="email" placeholder="이메일 주소" required> -->
-								<!--     </div> -->
-								<!--     <div class="form-group"> -->
-								<!--         <input type="text" class="form-control" name="phone" placeholder="전화번호"> -->
-								<!--     </div> -->
-								<!--     <div class="form-group"> -->
-								<!--         <textarea class="form-control" name="review" rows="5" placeholder="리뷰" required></textarea> -->
-								<!--     </div> -->
-								<!--     <div class="form-group"> -->
-								<!--         <button type="submit" class="primary-btn">제출</button> -->
-								<!--     </div> -->
-								<!-- </form> -->
 							</div>
 						</div>
 					</div>
@@ -429,6 +493,9 @@
 		}
 	</script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{/js/review/review-create.js}"></script>
+	<script th:src="@{/js/review/review-update.js}"></script>
+	<script th:src="@{/js/review/star-count.js}"></script>
 	<script th:src="@{/js/cart/member/member-cart-add.js}"></script>
 </div>
 </body>
