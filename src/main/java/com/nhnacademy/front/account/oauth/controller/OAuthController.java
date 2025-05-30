@@ -8,6 +8,8 @@ import com.nhnacademy.front.account.oauth.model.dto.response.ResponsePaycoMember
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponseProviderPaycoAccessTokenDTO;
 import com.nhnacademy.front.account.oauth.service.OAuthService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,29 +20,24 @@ public class OAuthController {
 
 	private final OAuthService oAuthService;
 
-	@GetMapping("/hello")
-	public String paycoLogin(@RequestParam("code") String code) {
-		log.info("paycoLogin()");
+	@GetMapping("/oauth2/authorization/payco")
+	public String getPaycoLogin() {
+		return "redirect:" + oAuthService.getPaycoLogin();
+	}
+
+	@GetMapping("/login/oauth2/code/payco")
+	public String paycoLogin(@RequestParam("code") String code,
+		HttpServletRequest request,
+		HttpServletResponse response) {
+		log.info("paycoLogin code:{}", code);
 		ResponseProviderPaycoAccessTokenDTO responseProviderPaycoAccessTokenDTO = oAuthService.getPaycoAccessToken(
 			code
 		);
 
-		log.info("AccessToken:{}", responseProviderPaycoAccessTokenDTO.getAccessToken());
-		log.info("AccessTokenSecret:{}", responseProviderPaycoAccessTokenDTO.getAccessTokenSecret());
-		log.info("RefreshToken:{}", responseProviderPaycoAccessTokenDTO.getRefreshToken());
-		log.info("ExpireIn:{}", responseProviderPaycoAccessTokenDTO.getExpireIn());
-		log.info("State:{}", responseProviderPaycoAccessTokenDTO.getState());
-
 		ResponsePaycoMemberInfoDTO responsePaycoMemberInfoDTO =
 			oAuthService.getPaycoMemberInfo(responseProviderPaycoAccessTokenDTO.getAccessToken());
 
-		log.info("idNo:{}", responsePaycoMemberInfoDTO.getIdNo());
-		log.info("email:{}", responsePaycoMemberInfoDTO.getEmail());
-		log.info("mobile:{}", responsePaycoMemberInfoDTO.getMobile());
-		log.info("name:{}", responsePaycoMemberInfoDTO.getName());
-		log.info("birthdayMMDD:{}", responsePaycoMemberInfoDTO.getBirthdayMMdd());
-
-		oAuthService.paycoLogin(responsePaycoMemberInfoDTO);
+		oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response);
 
 		return "redirect:/";
 	}
