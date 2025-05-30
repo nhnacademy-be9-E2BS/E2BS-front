@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.review.adaptor.ProductReviewAdaptor;
@@ -47,11 +46,11 @@ class ReviewServiceImplTest {
 	@DisplayName("리뷰 생성 테스트")
 	void createReview() {
 		// given
+		RequestCreateReviewMetaDTO meta = new RequestCreateReviewMetaDTO(1L, null, "memberId", "좋아요", 5);
 		MockMultipartFile mockImage = new MockMultipartFile("image", "image.jpg", "image/jpeg", "data".getBytes());
 		RequestCreateReviewDTO request = new RequestCreateReviewDTO(1L, null, "memberId", "좋아요", 5, mockImage);
-		RequestCreateReviewMetaDTO meta = new RequestCreateReviewMetaDTO(1L, null, "memberId", "좋아요", 5);
 
-		when(reviewAdaptor.createReview(any(RequestCreateReviewMetaDTO.class), any(MultipartFile.class)))
+		when(reviewAdaptor.createReview(meta, mockImage))
 			.thenReturn(ResponseEntity.status(HttpStatus.CREATED).build());
 
 		// when & then
@@ -62,10 +61,11 @@ class ReviewServiceImplTest {
 	@DisplayName("리뷰 생성 실패 - HTTP 오류 반환")
 	void createReview_Fail_ReviewProcessException() {
 		// given
-		MockMultipartFile image = new MockMultipartFile("image", "image.jpg", "image/jpeg", "data".getBytes());
-		RequestCreateReviewDTO request = new RequestCreateReviewDTO(1L, null, "memberId", "좋아요", 5, image);
+		RequestCreateReviewMetaDTO meta = new RequestCreateReviewMetaDTO(1L, null, "memberId", "좋아요", 5);
+		MockMultipartFile mockImage = new MockMultipartFile("image", "image.jpg", "image/jpeg", "data".getBytes());
+		RequestCreateReviewDTO request = new RequestCreateReviewDTO(1L, null, "memberId", "좋아요", 5, mockImage);
 
-		when(reviewAdaptor.createReview(any(RequestCreateReviewMetaDTO.class), any(MultipartFile.class)))
+		when(reviewAdaptor.createReview(meta, mockImage))
 			.thenReturn(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
 
 		// when & then
@@ -111,6 +111,7 @@ class ReviewServiceImplTest {
 		long productId = 1L;
 		Pageable pageable = PageRequest.of(0, 5);
 		PageResponse<ResponseReviewPageDTO> dummyPage = new PageResponse<>();
+
 		when(productReviewAdaptor.getReviewsByProduct(eq(productId), eq(pageable)))
 			.thenReturn(ResponseEntity.ok(dummyPage));
 
@@ -142,7 +143,8 @@ class ReviewServiceImplTest {
 		long productId = 1L;
 		ResponseReviewInfoDTO response = new ResponseReviewInfoDTO(4.5, 20, List.of(1, 2, 3, 4, 5));
 
-		when(productReviewAdaptor.getReviewInfo(productId)).thenReturn(ResponseEntity.ok(response));
+		when(productReviewAdaptor.getReviewInfo(productId))
+			.thenReturn(ResponseEntity.ok(response));
 
 		// when
 		ResponseReviewInfoDTO result = reviewService.getReviewInfo(productId);
@@ -157,7 +159,8 @@ class ReviewServiceImplTest {
 		// given
 		long productId = 1L;
 
-		when(productReviewAdaptor.getReviewInfo(productId)).thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+		when(productReviewAdaptor.getReviewInfo(productId))
+			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
 		assertThrows(ReviewProcessException.class, () -> reviewService.getReviewInfo(productId));
