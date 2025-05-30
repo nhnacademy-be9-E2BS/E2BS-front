@@ -42,14 +42,11 @@ public class SecurityConfig {
 		);
 		CustomAuthenticationFailureHandler customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
 
+		http.csrf(AbstractHttpConfigurer::disable);
 		/**
-		 *  CSRF 보호 기능을 비활성화
+		 *  권한있는 회원만 접근 가능한 URL 설정
 		 */
-		http.csrf(AbstractHttpConfigurer::disable)
-			/**
-			 *  권한있는 회원만 접근 가능한 URL 설정
-			 */
-			.authorizeHttpRequests(auth -> auth
+		http.authorizeHttpRequests(auth -> auth
 				.requestMatchers(LOGIN_URL, ROOT_URL, REGISTER_URL, ADMIN_LOGIN_URL, ACTUATOR_HEALTH).permitAll()
 				.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/scss/**", "/vendors/**",
 					"/Aroma Shop-doc/**").permitAll()

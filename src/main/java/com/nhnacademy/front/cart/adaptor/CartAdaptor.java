@@ -14,7 +14,7 @@ import com.nhnacademy.front.cart.model.dto.MergeCartItemDTO;
 public interface CartAdaptor {
 
 	@GetMapping("/counts")
-	ResponseEntity<Integer> getCartItemsCounts(@RequestParam String memberId, @RequestParam String sessionId);
+	ResponseEntity<Integer> getCartItemsCounts(@RequestParam("memberId") String memberId, @RequestParam("sessionId") String sessionId);
 
 	@GetMapping("/merge")
 	ResponseEntity<Integer> mergeCartItemsToMemberFromGuest(@RequestBody List<MergeCartItemDTO> mergeCartItemDTOS);

@@ -3,104 +3,118 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{layouts/user-layout}">
 
-<style>
-	.product_count {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-	}
+<head>
+	<style>
+		.product_count {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
 
-	.product_count label {
-		font-weight: bold;
-	}
+		.product_count label {
+			font-weight: bold;
+		}
 
-	.input-text.qty {
-		width: 60px;
-		padding: 5px;
-		text-align: center;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-	}
+		.input-text.qty {
+			width: 60px;
+			padding: 5px;
+			text-align: center;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
 
-	.increase, .reduced {
-		background-color: #f5f5f5;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-		padding: 5px 10px;
-		cursor: pointer;
-	}
+		.increase, .reduced {
+			background-color: #f5f5f5;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			padding: 5px 10px;
+			cursor: pointer;
+		}
 
-	.increase:hover, .reduced:hover {
-		background-color: #e0e0e0;
-	}
+		.increase:hover, .reduced:hover {
+			background-color: #e0e0e0;
+		}
 
-	.increase i, .reduced i {
-		font-size: 14px;
-	}
+		.increase i, .reduced i {
+			font-size: 14px;
+		}
 
-	.image-slider{
-		position: relative;
-		width: 500px !important;
-		height: 680px !important; /* 이미지 세로 크기 */
-		overflow: hidden;
-	}
+		.image-slider{
+			position: relative;
+			width: 500px !important;
+			height: 680px !important; /* 이미지 세로 크기 */
+			overflow: hidden;
+		}
 
-	.slider-container {
-		position: relative;
-		width: 100%;
-		height: 100%;
-	}
+		.slider-container {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
 
-	.slides {
-		position: relative;
-		width: 100%;
-		height: 100%;
-	}
+		.slides {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
 
-	.slide {
-		display: none;
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
+		.slide {
+			display: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 
-	.slide.active {
-		display: block;
-	}
+		.slide.active {
+			display: block;
+		}
 
-	.prev, .next {
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		background-color: rgba(0, 0, 0, 0.5);
-		color: white;
-		border: none;
-		padding: 10px;
-		cursor: pointer;
-		font-size: 18px;
-	}
+		.prev, .next {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: rgba(0, 0, 0, 0.5);
+			color: white;
+			border: none;
+			padding: 10px;
+			cursor: pointer;
+			font-size: 18px;
+		}
 
-	.prev {
-		left: 0;
-	}
+		.prev {
+			left: 0;
+		}
 
-	.next {
-		right: 0;
-	}
+		.next {
+			right: 0;
+		}
 
-	.prev:hover, .next:hover {
-		background-color: rgba(0, 0, 0, 0.8);
-	}
+		.prev:hover, .next:hover {
+			background-color: rgba(0, 0, 0, 0.8);
+		}
 
-	.prev:disabled, .next:disabled {
-		background-color: rgba(0, 0, 0, 0.3);
-		cursor: not-allowed;
-	}
+		.prev:disabled, .next:disabled {
+			background-color: rgba(0, 0, 0, 0.3);
+			cursor: not-allowed;
+		}
 
-</style>
+		.fa-heart.liked {
+			color: red;
+		}
+
+		.fa-star {
+			color: #ccc;
+			transition: color 0.2s ease;
+		}
+		.fa-star.filled {
+			color: gold;
+			transition: color 0.2s ease;
+		}
+	</style>
+</head>
 <body>
 <div layout:fragment="content">
 	<!-- 상품 이미지 및 상세 -->
@@ -171,9 +185,15 @@
 						</div>
 						<div class="button-container">
 							<!-- 장바구니 추가 -->
-							<button class="add-cart-btn"
+							<button th:if="${session.isMember}"
+									class="member-add-cart-btn"
 									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 								장바구니에 추가</button>
+							<button th:if="${session.isMember == null}"
+									class="guest-add-cart-btn"
+									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
+								장바구니에 추가</button>
+
 							<button class="buy-now-btn custom-btn"
 									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 								바로구매</button>

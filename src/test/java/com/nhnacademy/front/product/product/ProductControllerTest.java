@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -31,6 +33,9 @@ import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 import com.nhnacademy.front.product.state.model.dto.domain.ProductStateName;
 import com.nhnacademy.front.product.state.model.dto.response.ResponseProductStateDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
+import com.nhnacademy.front.review.service.ReviewService;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = ProductController.class)
@@ -44,6 +49,9 @@ class ProductControllerTest {
 
 	@MockitoBean
 	private UserCategoryService userCategoryService;
+
+	@MockitoBean
+	private ReviewService reviewService;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -70,11 +78,30 @@ class ProductControllerTest {
 
 		Mockito.when(productService.getProduct(1L)).thenReturn(response);
 
+		List<ResponseReviewPageDTO> reviewPageList = List.of(
+			new ResponseReviewPageDTO(1L, 1L, 1L, "name1", "좋아요", 5, "image1", LocalDateTime.now()),
+			new ResponseReviewPageDTO(2L, 1L, 2L, "name2", "별로에요", 2, "image2", LocalDateTime.now())
+		);
+
+		ResponseReviewInfoDTO reviewInfo = new ResponseReviewInfoDTO(4.5, 2, List.of(0, 1, 0, 0, 1));
+		when(reviewService.getReviewInfo(1L)).thenReturn(reviewInfo);
+
+		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
+		PageResponse.PageableInfo pageableInfo = new PageResponse.PageableInfo();
+		PageResponse<ResponseReviewPageDTO> pageResponse =
+			new PageResponse<>(reviewPageList, pageableInfo, true,
+				2, 1, 10, 0, sortInfo, true, 2, false);
+		when(reviewService.getReviewsByProduct(eq(1L), any(Pageable.class))).thenReturn(pageResponse);
+
 		// when & then
 		mockMvc.perform(get("/books/1"))
+			.andExpect(model().attributeExists("product"))
+			.andExpect(model().attributeExists("reviewsByProduct"))
+			.andExpect(model().attributeExists("totalGradeAvg"))
+			.andExpect(model().attributeExists("totalCount"))
+			.andExpect(model().attributeExists("starCounts"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("product/product-detail"))
-			.andExpect(model().attributeExists("product"));
+			.andExpect(view().name("product/product-detail"));
 	}
 
 	@Test
