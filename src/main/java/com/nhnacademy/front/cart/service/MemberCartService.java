@@ -8,8 +8,8 @@ import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDT
 
 public interface MemberCartService {
 	List<ResponseCartItemsForMemberDTO> getCartItemsByMember(String memberId);
-	void createCartItemForMember(RequestAddCartItemsDTO requestDto);
-	void updateCartItemForMember(long cartItemId, RequestUpdateCartItemsDTO requestDto);
+	Integer createCartItemForMember(RequestAddCartItemsDTO requestDto);
+	Integer updateCartItemForMember(long cartItemId, RequestUpdateCartItemsDTO requestDto);
 	void deleteCartItemForMember(long cartItemId);
 	void deleteCartForMember(String memberId);
 }

@@ -54,9 +54,8 @@ class MemberCartServiceImplTest {
 	void createCartItemForCustomer() {
 		// given
 		RequestAddCartItemsDTO requestDto = new RequestAddCartItemsDTO();
-		ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.CREATED);
 
-		when(memberCartAdaptor.createCartItemForMember(requestDto)).thenReturn(responseEntity);
+		when(memberCartAdaptor.createCartItemForMember(requestDto)).thenReturn(ResponseEntity.ok(anyInt()));
 
 		// when & then
 		assertThatCode(() -> memberCartService.createCartItemForMember(requestDto))
@@ -68,7 +67,7 @@ class MemberCartServiceImplTest {
 	void createCartItemForCustomer_Fail_FeignException() {
 		// given
 		RequestAddCartItemsDTO requestDto = new RequestAddCartItemsDTO();
-		ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseEntity<Integer> responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		when(memberCartAdaptor.createCartItemForMember(requestDto)).thenReturn(responseEntity);
 
@@ -84,7 +83,7 @@ class MemberCartServiceImplTest {
 		long cartItemId = 1L;
 		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO();
 
-		when(memberCartAdaptor.updateCartItemForMember(eq(cartItemId), any())).thenReturn(ResponseEntity.noContent().build());
+		when(memberCartAdaptor.updateCartItemForMember(eq(cartItemId), any())).thenReturn(ResponseEntity.ok(1));
 
 		// when then
 		assertThatCode(() -> memberCartService.updateCartItemForMember(cartItemId, requestDto))

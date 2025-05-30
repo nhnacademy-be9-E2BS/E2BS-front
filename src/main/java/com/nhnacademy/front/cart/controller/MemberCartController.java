@@ -24,6 +24,7 @@ import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -37,8 +38,8 @@ public class MemberCartController {
 	 */
 	@JwtTokenCheck
 	@PostMapping("/members/carts/items")
-	public ResponseEntity<Void> memberAddToCart(HttpServletRequest request,
-		@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult) {
+	public ResponseEntity<Void> memberAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult,
+		                                        HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -47,7 +48,10 @@ public class MemberCartController {
 
 		requestDto.setMemberId(memberId);
 
-		memberCartService.createCartItemForMember(requestDto);
+		int cartItemsCounts = memberCartService.createCartItemForMember(requestDto);
+
+		HttpSession session = request.getSession();
+		session.setAttribute("cartItemsCounts", cartItemsCounts);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -79,12 +83,20 @@ public class MemberCartController {
 	@JwtTokenCheck
 	@PutMapping("/members/carts/items/{cartItemsId}")
 	public ResponseEntity<Void> updateCartItemForMember(@PathVariable long cartItemsId,
-		@Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult) {
+		                                                @Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult,
+		                                                HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		memberCartService.updateCartItemForMember(cartItemsId, requestDto);
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+		requestDto.setMemberId(memberId);
+
+		int cartItemsCounts = memberCartService.updateCartItemForMember(cartItemsId, requestDto);
+
+		HttpSession session = request.getSession();
+		session.setAttribute("cartItemsCounts", cartItemsCounts);
+
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
@@ -93,8 +105,13 @@ public class MemberCartController {
 	 */
 	@JwtTokenCheck
 	@DeleteMapping("/members/carts/items/{cartItemsId}")
-	public ResponseEntity<Void> deleteCartItemForMember(@PathVariable long cartItemsId) {
+	public ResponseEntity<Void> deleteCartItemForMember(@PathVariable long cartItemsId, HttpServletRequest request) {
 		memberCartService.deleteCartItemForMember(cartItemsId);
+
+		HttpSession session = request.getSession();
+		Integer cartItemsCounts = (Integer)session.getAttribute("cartItemsCounts");
+		session.setAttribute("cartItemsCounts", cartItemsCounts-1);
+
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
@@ -107,6 +124,10 @@ public class MemberCartController {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 
 		memberCartService.deleteCartForMember(memberId);
+
+		HttpSession session = request.getSession();
+		session.setAttribute("cartItemsCounts", 0);
+
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 

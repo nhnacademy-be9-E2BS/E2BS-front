@@ -35,6 +35,7 @@ public class HomeController {
 			model.addAttribute("memberRole", responseHomeMemberNameDTO.getMemberRole());
 		}
 
+
 		return "home";
 	}
 }

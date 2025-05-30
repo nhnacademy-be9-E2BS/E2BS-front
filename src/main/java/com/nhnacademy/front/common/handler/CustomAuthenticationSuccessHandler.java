@@ -8,9 +8,12 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 
 import com.nhnacademy.front.account.auth.model.dto.request.RequestJwtTokenDTO;
 import com.nhnacademy.front.account.auth.service.AuthService;
+import com.nhnacademy.front.cart.model.dto.request.RequestCartCountDTO;
+import com.nhnacademy.front.cart.service.CartService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -23,6 +26,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 	private static final String ADMIN_LOGIN_URL = "/admin/login";
 
 	private final AuthService authService;
+	private final CartService cartService;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request,
@@ -47,6 +51,10 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		} else {
 			RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(memberId);
 			authService.postAuthCreateJwtToken(requestJwtTokenDTO, response, request);
+
+			HttpSession session = request.getSession();
+			session.setAttribute("cartItemsCounts", cartService.getCartItemsCounts(new RequestCartCountDTO(memberId, "")));
+			session.setAttribute("isMember", true);
 
 			response.sendRedirect(ROOT_URL);
 		}

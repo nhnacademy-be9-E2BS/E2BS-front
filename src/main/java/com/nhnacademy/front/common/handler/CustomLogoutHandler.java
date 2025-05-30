@@ -10,6 +10,7 @@ import com.nhnacademy.front.jwt.rule.JwtRule;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -42,6 +43,8 @@ public class CustomLogoutHandler implements LogoutHandler {
 
 		redisTemplate.delete(refreshKey);
 
+		HttpSession session = request.getSession();
+		session.invalidate();
 	}
 
 }

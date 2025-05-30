@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.nhnacademy.front.account.auth.service.AuthService;
+import com.nhnacademy.front.cart.service.CartService;
 import com.nhnacademy.front.common.handler.CustomAuthenticationFailureHandler;
 import com.nhnacademy.front.common.handler.CustomAuthenticationSuccessHandler;
 import com.nhnacademy.front.common.handler.CustomLogoutHandler;
@@ -27,13 +28,14 @@ public class SecurityConfig {
 	private static final String ACTUATOR_HEALTH = "/actuator/health";
 
 	private final AuthService authService;
+	private final CartService cartService;
 	private final RedisTemplate<String, String> redisTemplate;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
-			authService
+			authService, cartService
 		);
 		CustomLogoutHandler customLogoutHandler = new CustomLogoutHandler(
 			redisTemplate

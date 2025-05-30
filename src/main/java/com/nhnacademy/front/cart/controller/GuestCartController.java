@@ -36,13 +36,15 @@ public class GuestCartController {
 	 */
 	@PostMapping("/guests/carts/items")
 	public ResponseEntity<Void> guestAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult,
-		HttpSession httpSession) {
+		                                       HttpSession httpSession) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		requestDto.setSessionId(httpSession.getId());
-		guestCartService.createCartItemForGuest(requestDto);
+
+		int cartItemsCounts = guestCartService.createCartItemForGuest(requestDto);
+		httpSession.setAttribute("cartItemsCounts", cartItemsCounts);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -71,13 +73,15 @@ public class GuestCartController {
 	 */
 	@PutMapping("/guests/carts/items")
 	public ResponseEntity<Void> updateCartItemForGuest(@Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult,
-													HttpSession httpSession) {
+													   HttpSession httpSession) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		requestDto.setSessionId(httpSession.getId());
-		guestCartService.updateCartItemForGuest(requestDto);
+
+		int cartItemsCounts = guestCartService.updateCartItemForGuest(requestDto);
+		httpSession.setAttribute("cartItemsCounts", cartItemsCounts);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -87,13 +91,16 @@ public class GuestCartController {
 	 */
 	@DeleteMapping("/guests/carts/items")
 	public ResponseEntity<Void> deleteCartItemForGuest(@Validated @RequestBody RequestDeleteCartItemsForGuestDTO requestDto, BindingResult bindingResult,
-													HttpSession httpSession) {
+													   HttpSession httpSession) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		requestDto.setSessionId(httpSession.getId());
 		guestCartService.deleteCartItemForGuest(requestDto);
+
+		Integer cartItemsCounts = (Integer)httpSession.getAttribute("cartItemsCounts");
+		httpSession.setAttribute("cartItemsCounts", cartItemsCounts-1);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -105,6 +112,8 @@ public class GuestCartController {
 	public ResponseEntity<Void> deleteCartForGuest(HttpSession httpSession) {
 		String sessionId = httpSession.getId();
 		guestCartService.deleteCartForGuest(sessionId);
+
+		httpSession.setAttribute("cartItemsCounts", 0);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
