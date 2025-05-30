@@ -63,8 +63,6 @@ public class ProductAdminController {
 		return "admin/product/books/view";
 	}
 
-
-
 	/**
 	 * 관리자 도서 정보 단일 조회
 	 */
@@ -83,7 +81,11 @@ public class ProductAdminController {
 	@JwtTokenCheck
 	@GetMapping("/register")
 	public String getRegisterView(Model model) {
+		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+		model.addAttribute("categories", categories);
 
+		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
+		model.addAttribute("tags", tags);
 		return "admin/product/books/register";
 	}
 
@@ -106,7 +108,7 @@ public class ProductAdminController {
 	 */
 	@JwtTokenCheck
 	@PutMapping("/register/{bookId}")
-	public ResponseEntity<Void> updateProduct(@Validated @RequestBody RequestProductDTO request,
+	public ResponseEntity<Void> updateProduct(@Validated @ModelAttribute RequestProductDTO request,
 		BindingResult bindingResult, @PathVariable Long bookId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
@@ -129,13 +131,13 @@ public class ProductAdminController {
 		return ResponseEntity.ok().build();
 	}
 
-
 	/**
 	 * 관리자가 알라딘 api로 도서 조회
 	 */
 	@JwtTokenCheck
 	@GetMapping("/aladdin/search")
-	public String searchProducts(@ModelAttribute RequestProductApiSearchDTO request,@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
+	public String searchProducts(@ModelAttribute RequestProductApiSearchDTO request,
+		@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
 		PageResponse<ResponseProductsApiSearchDTO> response = productAdminService.getProductsApi(request, pageable);
 		Page<ResponseProductsApiSearchDTO> products = PageResponseConverter.toPage(response);
 		model.addAttribute("products", products);
@@ -144,9 +146,11 @@ public class ProductAdminController {
 
 	@JwtTokenCheck
 	@GetMapping("/aladdin/list")
-	public String searchProductsByQuery(@ModelAttribute RequestProductApiSearchByQueryTypeDTO request,@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
+	public String searchProductsByQuery(@ModelAttribute RequestProductApiSearchByQueryTypeDTO request,
+		@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
 
-		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> response = productAdminService.getProductsApi(request, pageable);
+		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> response = productAdminService.getProductsApi(request,
+			pageable);
 		Page<ResponseProductsApiSearchByQueryTypeDTO> products = PageResponseConverter.toPage(response);
 		model.addAttribute("products", products);
 		model.addAttribute("queryType", request.getQueryType());
