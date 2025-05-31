@@ -1,7 +1,9 @@
 package com.nhnacademy.front.order.order.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,8 @@ import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrderCouponDTO;
+import com.nhnacademy.front.coupon.membercoupon.service.MemberCouponService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
@@ -71,7 +75,7 @@ public class OrderController {
 	private final AddressService addressService;
 
 	private final UserCategoryService userCategoryService;
-
+	private final MemberCouponService memberCouponService;
 	/**
 	 * 결제 주문서 작성 페이지
 	 */
@@ -80,19 +84,28 @@ public class OrderController {
 	public String getCheckOut(Model model, @ModelAttribute RequestCartOrderDTO orderRequest, HttpServletRequest request) {
 		List<Integer> quantities = orderRequest.getCartQuantities();
 		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getProductIds());
-		// List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(orderRequest.getProductIds());
 		List<ResponseWrapperDTO> wrappers = wrapperService.getWrappersBySaleable(Pageable.unpaged()).getContent();
 		ResponseMemberInfoDTO member = memberMypageService.getMemberInfo(request);
 		long memberPoint = memberMypageService.getMemberPoint(new RequestMemberIdDTO(member.getMemberId()));
-		List<ResponseMemberAddressDTO> address = addressService.getMemberAddresses(member.getMemberId());
+		List<ResponseMemberAddressDTO> addresses = addressService.getMemberAddresses(member.getMemberId());
+		ResponseMemberAddressDTO defaultAddress = addresses.stream().filter(addr -> addr.isAddressDefault()).findFirst().orElse(null);
+
+		List<ResponseOrderCouponDTO> coupons = memberCouponService.getCouponsInOrder(member.getMemberId(),orderRequest.getProductIds());
+		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(orderRequest.getProductIds());
+		Map<Long, List<Long>> productCategoryMap = new HashMap<>();
+		for (ResponseCategoryIdsDTO dto : categories) {
+			productCategoryMap.put(dto.getProductId(), dto.getCategoryIds());
+		}
 
 		model.addAttribute("products", products);
 		model.addAttribute("quantities", quantities);
 		model.addAttribute("wrappers", wrappers);
 		model.addAttribute("member", member);
 		model.addAttribute("memberPoint", memberPoint);
-		model.addAttribute("address", address);
-		// model.addAttribute("productCategories", categories);
+		model.addAttribute("addresses", addresses);
+		model.addAttribute("defaultAddress", defaultAddress);
+		model.addAttribute("productCategories", productCategoryMap);
+		model.addAttribute("coupons", coupons);
 		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
 		model.addAttribute("tossClientKey", tossClientKey);
 		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
