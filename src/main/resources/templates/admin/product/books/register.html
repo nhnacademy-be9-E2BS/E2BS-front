@@ -32,14 +32,15 @@
 
 
                         <div class="mb-3">
-                            <label class="form-label"기여자 선택</label>
+                            <label class="form-label" 기여자 선택></label>
                             <div class="form-check" th:each=" contributor : ${contributors}">
                                 <input class="form-check-input" type="checkbox"
                                        th:id="'contributor-' + ${contributor.contributorId}"
                                        th:name="contributorIds"
                                        th:value="${contributor.contributorId}"
                                        th:checked="${book.contributors != null} ? ${book.contributors.contains(contributor.contributorId)} : false">
-                                <label class="form-check-label" th:for="'contributor-' + ${contributor.contributorId}" th:text="${contributor.contributorName + contributor.positionName}">태그명</label>
+                                <label class="form-check-label" th:for="'contributor-' + ${contributor.contributorId}"
+                                       th:text="${contributor.contributorName + ' (' + contributor.positionName + ')'}">태그명</label>
                             </div>
                         </div>
 
@@ -53,7 +54,6 @@
                                         th:text="${publisher.publisherName}">
                                 </option>
                             </select>
-                            <button type="button" onclick="openPopup('publisher')">출판사 추가</button>
                         </div>
                         <!-- ISBN -->
                         <div class="col-md-12 form-group">
@@ -76,6 +76,17 @@
                         <div class="col-md-12 form-group">
                             <input type="date" class="form-control" name="productPublishedAt"
                                    required>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <label>도서 상태</label>
+                            <select name="productStateId" required>
+                                <option value="">도서 상태 선택</option>
+                                <option th:each="state : ${states}"
+                                        th:value="${state.productStateId}"
+                                        th:text="${state.productStateName}">
+                                </option>
+                            </select>
                         </div>
 
 

@@ -112,6 +112,9 @@ product:
     admin:
       url: http://localhost:10232/api/admin/books
 
+  productState:
+    url: http://localhost:10232/api/productState
+
 order:
   wrapper:
     url: http://localhost:10232/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음

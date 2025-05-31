@@ -39,6 +39,8 @@ import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 import com.nhnacademy.front.product.publisher.service.PublisherService;
+import com.nhnacademy.front.product.state.model.dto.response.ResponseProductStateDTO;
+import com.nhnacademy.front.product.state.model.dto.service.ProductStateService;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
 import com.nhnacademy.front.product.tag.service.TagService;
 
@@ -55,6 +57,7 @@ public class ProductAdminController {
 	private final PublisherService publisherService;
 	private final TagService tagService;
 	private final ContributorService contributorService;
+	private final ProductStateService productStateService;
 
 	/**
 	 * 관리자 페이지 -> 전체 도서 리스트 조회
@@ -101,6 +104,9 @@ public class ProductAdminController {
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
+
+		List<ResponseProductStateDTO> states = productStateService.getProductStates();
+		model.addAttribute("states", states);
 		return "admin/product/books/register";
 	}
 
@@ -128,6 +134,7 @@ public class ProductAdminController {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
+
 		productAdminService.updateProduct(bookId, request);
 		return ResponseEntity.ok().build();
 	}
