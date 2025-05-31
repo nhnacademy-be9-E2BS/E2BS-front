@@ -61,15 +61,11 @@ public class MemberCartServiceImpl implements MemberCartService {
 	}
 
 	@Override
-	public void deleteCartForMember(String memberId) {
-		try {
-			ResponseEntity<Void> result = memberCartAdaptor.deleteCartForMember(memberId);
+	public void deleteCartForMember(String memberId) throws FeignException {
+		ResponseEntity<Void> result = memberCartAdaptor.deleteCartForMember(memberId);
 
-			if (!result.getStatusCode().is2xxSuccessful()) {
-				throw new CartProcessException("회원 장바구니 전체 삭제 실패: " + result.getStatusCode());
-			}
-		} catch (FeignException ex) {
-			throw new CartProcessException("회원 장바구니 전체 삭제 실패: " + ex.getMessage());
+		if (!result.getStatusCode().is2xxSuccessful()) {
+			throw new CartProcessException("회원 장바구니 전체 삭제 실패: " + result.getStatusCode());
 		}
 	}
 
