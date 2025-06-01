@@ -114,34 +114,6 @@ public class OrderController {
 	}
 
 	/**
-	 * 테스트 용 데이터
-	 */
-	@JwtTokenCheck
-	@GetMapping("/order")
-	public String getCheckOutTest(Model model) {
-		// 사용자가 주문하려는 상품 정보,쿠폰 내역, 포인트 정보 등을 보내줘야 함
-		// 지금은 임시 값을 넣어 확인
-		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
-		model.addAttribute("tossClientKey", tossClientKey);
-		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
-		model.addAttribute("tossFailUrl", tossFailUrl);
-
-		/**
-		 * 쿠폰: 주문서에서 담긴 상품에 적용가능한 쿠폰 리스트
-		 * memberId : JWT 토큰에서 꺼내기
-		 * RequestCartOrderDTO : 장바구니-모두구매 or 도서상세페이지-구매하기 누르면 상품 ID 리스트가 여기에 담김
-		 * List<ResponseOrderCouponDTO> response = memberCouponService.getCouponsInOrder(String memberId, RequestCartOrderDTO request);
-		 */
-
-		/**
-		 * 포인트: 사용자가 보유한 포인트 조회
-		 * MemberMyPageService.getMemberPoint() 쓰면 될듯
-		 */
-
-		return "payment/checkoutTest";
-	}
-
-	/**
 	 * 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 미리 저장하는 기능
 	 */
 	@JwtTokenCheck
