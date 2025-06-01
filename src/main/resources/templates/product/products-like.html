@@ -16,7 +16,6 @@
             transition: color 0.2s ease;
         }
     </style>
-    </style>
 </head>
 
 <body>
@@ -25,7 +24,7 @@
     <section class="lattest-product-area pb-40 category-list">
         <div class="row">
             <div th:each="likeProduct : ${likeProducts.content}" class="col-md-6 col-lg-4">
-                <div class="card text-center card-product">
+                <div class="card text-center card-product" th:data-product-id = "${likeProduct.productId}">
                     <div class="card-product__img">
                         <!-- 도서 이미지 -->
                         <div class="card-img"
@@ -35,8 +34,15 @@
                                  onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                             <ul class="card-product__imgOverlay">
                                 <li><button><i class="ti-search"></i></button></li>
-                                <li><button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
-                                <li><button class="like-button" data-liked="false" th:data-product-id="${likeProduct.productId}">
+
+                                <li th:if="${session.isMember}">
+                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li th:if="${session.isMember == null}">
+                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+
+                                <li><button class="like-button" data-liked="false">
                                     <!--                      <i class="ti-heart"-->
                                     <!--                                     th:classappend="${product.liked} ? ' liked' : ''"></i>-->
                                     <i class="ti-heart"></i>
@@ -74,7 +80,7 @@
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
             <nav>
-                <ul class="pagination">
+                <ul class="pagination" th:if="${likeProducts.totalPages > 0}">
                     <!-- 처음 -->
                     <li class="page-item" th:classappend="${!likeProducts.hasPrevious()} ? 'disabled'">
                         <a class="page-link" th:href="@{/products/likes(page=0, size=${likeProducts.size})}"><<</a>
@@ -126,6 +132,8 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:src="@{/js/like/like-delete.js}"></script>
+    <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
+    <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
 </div>
 </body>
 </html>

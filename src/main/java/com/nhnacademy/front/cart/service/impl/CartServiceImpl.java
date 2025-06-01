@@ -1,14 +1,11 @@
 package com.nhnacademy.front.cart.service.impl;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.cart.adaptor.CartAdaptor;
 import com.nhnacademy.front.cart.exception.CartProcessException;
-import com.nhnacademy.front.cart.model.dto.MergeCartItemDTO;
-import com.nhnacademy.front.cart.model.dto.request.RequestCartCountDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestMergeCartItemDTO;
 import com.nhnacademy.front.cart.service.CartService;
 
 import feign.FeignException;
@@ -21,10 +18,9 @@ public class CartServiceImpl implements CartService {
 	private final CartAdaptor cartAdaptor;
 
 	@Override
-	public Integer getCartItemsCounts(RequestCartCountDTO request) {
+	public Integer getCartItemsCountsForMember(String memberId) {
 		try {
-			ResponseEntity<Integer>
-				result = cartAdaptor.getCartItemsCounts(request.getMemberId(), request.getSessionId());
+			ResponseEntity<Integer> result = cartAdaptor.getCartItemsCounts(memberId);
 
 			if (!result.getStatusCode().is2xxSuccessful()) {
 				throw new CartProcessException("Cart processing failed");
@@ -37,9 +33,9 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public Integer mergeCartItemsToMemberFromGuest(List<MergeCartItemDTO> cartItemDTO) {
+	public Integer mergeCartItemsToMemberFromGuest(RequestMergeCartItemDTO request) {
 		try {
-			ResponseEntity<Integer> result = cartAdaptor.mergeCartItemsToMemberFromGuest(cartItemDTO);
+			ResponseEntity<Integer> result = cartAdaptor.mergeCartItemsToMemberFromGuest(request.getMemberId(), request.getSessionId());
 
 			if (!result.getStatusCode().is2xxSuccessful()) {
 				throw new CartProcessException("Cart processing failed");

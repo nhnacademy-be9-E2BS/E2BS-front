@@ -26,11 +26,14 @@ import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordEx
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.account.memberrank.exception.NotFoundMemberRankException;
 import com.nhnacademy.front.account.oauth.exception.PaycoProcessingException;
+import com.nhnacademy.front.cart.exception.CartProcessException;
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.exception.EmptyResponseException;
 import com.nhnacademy.front.common.exception.LoginRedirectException;
 import com.nhnacademy.front.common.exception.ServerErrorException;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.product.like.exception.LikeProcessException;
+import com.nhnacademy.front.review.exception.ReviewProcessException;
 
 @ControllerAdvice
 public class WebAdviceController {
@@ -48,7 +51,7 @@ public class WebAdviceController {
 		SaveAddressFailedException.class, DeleteAddressFailedException.class, UpdateAddressFailedException.class,
 		AdminSettingsFailedException.class, AdminSettingsMembersFailedException.class,
 		AdminSettingsMemberUpdateFailedException.class, AdminSettingsMemberDeleteFailedException.class,
-		PaycoProcessingException.class})
+		PaycoProcessingException.class, CartProcessException.class, ReviewProcessException.class, LikeProcessException.class})
 	public ResponseEntity<String> registerNotEqualsPasswordException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}

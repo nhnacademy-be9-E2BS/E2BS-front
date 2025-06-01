@@ -1,7 +1,7 @@
-package com.nhnacademy.front.cart.model.dto;
+package com.nhnacademy.front.cart.model.dto.request;
+
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MergeCartItemDTO {
+public class RequestMergeCartItemDTO {
 
 	@NotBlank
-	private Long productId;
+	private String memberId;
 
-	@NotNull
-	private Integer cartQuantity;
+	@NotBlank
+	private String sessionId;
 
 }
