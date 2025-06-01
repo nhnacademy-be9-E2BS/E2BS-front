@@ -1,6 +1,7 @@
 package com.nhnacademy.front.common.handler;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,7 +9,9 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 
 import com.nhnacademy.front.account.auth.model.dto.request.RequestJwtTokenDTO;
 import com.nhnacademy.front.account.auth.service.AuthService;
+import com.nhnacademy.front.cart.model.dto.request.RequestMergeCartItemDTO;
 import com.nhnacademy.front.cart.service.CartService;
+import com.nhnacademy.front.common.util.GuestCookieUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -63,16 +66,16 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			HttpSession session = request.getSession();
 
 			// 게스트 키가 있으면 장바구니를 꺼내서 병합 후 항목 개수 적용
-			// String guestKey = GuestCookieUtil.getGuestKey(request);
-			// if (Objects.nonNull(guestKey)) {
-			// 	Integer mergedCount = cartService.mergeCartItemsToMemberFromGuest(new RequestMergeCartItemDTO(memberId, guestKey));
-			//
-			// 	session.setAttribute("cartItemsCounts", mergedCount);
-			// 	GuestCookieUtil.clearGuestCookie(response); // 쿠키 삭제
-			// } else {
-			// 	// 없으면 기존 회원 장바구니 항목 개수 적용
-			// 	session.setAttribute("cartItemsCounts", cartService.getCartItemsCountsForMember(memberId));
-			// }
+			String guestKey = GuestCookieUtil.getGuestKey(request);
+			if (Objects.nonNull(guestKey)) {
+				Integer mergedCount = cartService.mergeCartItemsToMemberFromGuest(new RequestMergeCartItemDTO(memberId, guestKey));
+
+				session.setAttribute("cartItemsCounts", mergedCount);
+				GuestCookieUtil.clearGuestCookie(response); // 쿠키 삭제
+			} else {
+				// 없으면 기존 회원 장바구니 항목 개수 적용
+				session.setAttribute("cartItemsCounts", cartService.getCartItemsCountsForMember(memberId));
+			}
 
 			session.setAttribute("isMember", true);
 
