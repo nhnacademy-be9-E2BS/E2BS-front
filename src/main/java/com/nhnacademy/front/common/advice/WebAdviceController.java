@@ -18,6 +18,7 @@ import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberDeleteFai
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
 import com.nhnacademy.front.account.auth.exception.SaveJwtTokenProcessException;
+import com.nhnacademy.front.account.customer.exception.CustomerLoginCheckException;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberIdException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberInfoException;
@@ -45,6 +46,7 @@ public class WebAdviceController {
 		return modelAndView;
 	}
 
+	// 잘못된 요청 에러
 	@ExceptionHandler({RegisterNotEqualsPasswordException.class, GetAddressFailedException.class,
 		SaveJwtTokenProcessException.class, EmptyResponseException.class, RegisterProcessException.class,
 		EmptyRequestException.class, ValidationFailedException.class, LoginProcessException.class,
@@ -56,6 +58,7 @@ public class WebAdviceController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 
+	// 찾지 못한 에러
 	@ExceptionHandler({NotFoundMemberIdException.class, NotFoundMemberRankNameException.class,
 		NotFoundMemberRankException.class, NotFoundMemberInfoException.class})
 	public ResponseEntity<String> notFoundMemberIdException(Exception ex) {
@@ -70,4 +73,10 @@ public class WebAdviceController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
 	}
 
+	// 인증 관련 에러
+	@ExceptionHandler({CustomerLoginCheckException.class})
+	public ResponseEntity<String> authException(Exception ex) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+	}
+	
 }
