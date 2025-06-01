@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,10 +29,17 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.front.account.address.service.AddressService;
+import com.nhnacademy.front.account.customer.model.domain.Customer;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberPointDTO;
+import com.nhnacademy.front.account.member.service.MemberMypageService;
+import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.coupon.membercoupon.service.MemberCouponService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
@@ -43,6 +52,10 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDT
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
+import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
+import com.nhnacademy.front.order.wrapper.service.WrapperService;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
+import com.nhnacademy.front.product.product.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -59,6 +72,24 @@ class OrderControllerTest {
 
 	@MockitoBean
 	private DeliveryFeeSevice deliveryFeeSevice;
+
+	@MockitoBean
+	private ProductService productService;
+
+	@MockitoBean
+	private WrapperService wrapperService;
+
+	@MockitoBean
+	private MemberMypageService memberMypageService;
+
+	@MockitoBean
+	private AddressService addressService;
+
+	@MockitoBean
+	private MemberCouponService memberCouponService;
+
+	@MockitoBean
+	private UserCategoryService userCategoryService;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -103,8 +134,26 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("주문서 페이지 접근 확인")
 	void testGetCheckOut() throws Exception {
+		// given
+		PageResponse<ResponseWrapperDTO> wrappers = mock(PageResponse.class);
+		ResponseMemberInfoDTO member = new ResponseMemberInfoDTO();
+		member.setCustomer(new Customer(1L, "test@email.com", "1234", "test"));
+
+		when(productService.getProducts(any())).thenReturn(new ArrayList<>());
+		when(wrapperService.getWrappersBySaleable(Pageable.unpaged())).thenReturn(wrappers);
+		when(wrappers.getContent()).thenReturn(new ArrayList<>());
+		when(memberMypageService.getMemberInfo(any())).thenReturn(member);
+		when(memberMypageService.getMemberPoint(any())).thenReturn(0L);
+
+
 		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(mock(ResponseDeliveryFeeDTO.class));
-		mockMvc.perform(get("/order"))
+		mockMvc.perform(post("/order")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("cartQuantities[0]", "1")
+				.param("cartQuantities[1]", "2")
+				.param("productIds[0]", "123")
+				.param("productIds[1]", "456"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("payment/checkout"));
 	}
