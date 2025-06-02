@@ -12,6 +12,7 @@ import com.nhnacademy.front.product.like.model.dto.request.RequestCreateLikeDTO;
 import com.nhnacademy.front.product.like.model.dto.response.ResponseLikedProductDTO;
 import com.nhnacademy.front.product.like.service.LikeService;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)
@@ -23,7 +24,7 @@ public class LikeServiceImpl implements LikeService {
 
 
 	@Override
-	public void createLike(long productId, RequestCreateLikeDTO requestDto) {
+	public void createLike(long productId, RequestCreateLikeDTO requestDto) throws FeignException {
 		ResponseEntity<Void> result = likeAdaptor.createLike(productId, requestDto);
 		
 		if (!result.getStatusCode().is2xxSuccessful()) {
@@ -32,7 +33,7 @@ public class LikeServiceImpl implements LikeService {
 	}
 
 	@Override
-	public void deleteLike(long productId, String memberId) {
+	public void deleteLike(long productId, String memberId) throws FeignException {
 		ResponseEntity<Void> result = likeAdaptor.deleteLike(productId, memberId);
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
@@ -41,7 +42,7 @@ public class LikeServiceImpl implements LikeService {
 	}
 
 	@Override
-	public PageResponse<ResponseLikedProductDTO> getLikeProductsByCustomer(String memberId, Pageable pageable) {
+	public PageResponse<ResponseLikedProductDTO> getLikeProductsByCustomer(String memberId, Pageable pageable) throws FeignException {
 		ResponseEntity<PageResponse<ResponseLikedProductDTO>> result = likeAdaptor.getLikedProductsByCustomer(memberId, pageable);
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
@@ -51,7 +52,7 @@ public class LikeServiceImpl implements LikeService {
 	}
 
 	@Override
-	public Long getLikeCount(long productId) {
+	public Long getLikeCount(long productId) throws FeignException {
 		ResponseEntity<Long> result = likeAdaptor.getLikeCounts(productId);
 
 		if (!result.getStatusCode().is2xxSuccessful()) {

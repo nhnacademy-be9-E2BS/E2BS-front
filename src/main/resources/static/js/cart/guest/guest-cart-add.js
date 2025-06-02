@@ -31,7 +31,7 @@ function updateTotalPayment() {
 
 // 고객 상품 장바구니에 추가
 $(document).ready(function () {
-    $('.add-cart-btn').click(function () {
+    $('.guest-add-cart-btn').click(function () {
         const card = $(this).closest('.card-product');
         const productId = card.data('product-id');
         let quantity = card.data('product-quantity');

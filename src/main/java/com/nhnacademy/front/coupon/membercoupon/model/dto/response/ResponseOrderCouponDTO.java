@@ -24,6 +24,8 @@ public class ResponseOrderCouponDTO {
 	private String couponPolicyName;
 	private LocalDateTime memberCouponCreatedAt;
 	private LocalDateTime memberCouponPeriod;
-	private String CategoryName;
+	private Long categoryId;
+	private String categoryName;
+	private Long productId;
 	private String productTitle;
 }

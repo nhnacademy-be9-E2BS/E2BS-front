@@ -25,6 +25,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.service.MemberCartService;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,13 +47,16 @@ class MemberCartControllerTest {
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
+	@MockitoBean
+	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
 	@BeforeEach
 	void setUp() throws Exception {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
 
 	private static final String MEMBER_ID = "id123";
-
 
 	@Test
 	@DisplayName("POST /members/carts/items - 회원 장바구니 항목 추가 테스트")
@@ -125,11 +129,10 @@ class MemberCartControllerTest {
 	@DisplayName("PUT /members/carts/items/{cartItemsId} - 회원 장바구니 항목 수량 변경 테스트")
 	void updateCartItemForMember() throws Exception {
 		// given
-		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO(null, 1L, 5);
+		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO(MEMBER_ID, null, 1L, 5);
 		String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
-		doNothing().when(memberCartService).updateCartItemForMember(1L, requestDto);
-
+		when(memberCartService.updateCartItemForMember(anyInt(), any(RequestUpdateCartItemsDTO.class))).thenReturn(1);
 
 		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
 			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
@@ -150,6 +153,7 @@ class MemberCartControllerTest {
 	void deleteCartItemForMember() throws Exception {
 		// when & then
 		mockMvc.perform(delete("/members/carts/items/{cartItemsId}", 1L)
+				.sessionAttr("cartItemsCounts", 5)
 				.with(csrf()))
 			.andExpect(status().isNoContent());
 
@@ -161,7 +165,7 @@ class MemberCartControllerTest {
 	void deleteCartForMember() throws Exception {
 		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
 			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
-			
+
 			// when & then
 			mockMvc.perform(delete("/members/carts")
 					.with(csrf()))

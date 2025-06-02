@@ -38,10 +38,13 @@ public class ProductController {
 	 */
 	@GetMapping("/{bookId}")
 	public String getProduct(@PathVariable Long bookId, Model model,
-		@PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		                     @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		// 상품 상세
 		ResponseProductReadDTO response = productService.getProduct(bookId);
-		ResponseReviewInfoDTO reviewInfo = reviewService.getReviewInfo(bookId);
+		model.addAttribute("product", response);
 
+		// 리뷰 상세
+		ResponseReviewInfoDTO reviewInfo = reviewService.getReviewInfo(bookId);
 		PageResponse<ResponseReviewPageDTO> reviewResponse = reviewService.getReviewsByProduct(bookId, pageable);
 		Page<ResponseReviewPageDTO> reviewsByProduct = PageResponseConverter.toPage(reviewResponse);
 
@@ -49,7 +52,7 @@ public class ProductController {
 		model.addAttribute("totalGradeAvg", reviewInfo.getTotalGradeAvg());
 		model.addAttribute("totalCount", reviewInfo.getTotalCount());
 		model.addAttribute("starCounts", reviewInfo.getStarCounts());
-		model.addAttribute("product", response);
+
 		return "product/product-detail";
 	}
 

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mypage-layout}">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <h2>포인트 내역</h2>
+
+            <style>
+                th {
+                    white-space: nowrap;
+                }
+            </style>
+
+            <!-- 포인트 목록 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>포인트 수치</th>
+                            <th>변동 사유</th>
+                            <th>변동 일자</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="point : ${pointHistories.content}">
+                            <td th:text="${point.pointAmount > 0} ? '적립' : '차감'">구분</td>
+                            <td th:text="${point.pointAmount}">수치</td>
+                            <td th:text="${point.pointReason}">사유</td>
+                            <td th:text="${#temporals.format(point.pointCreatedAt, 'yyyy-MM-dd HH:mm')}">변동일</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                    <!-- 페이징 -->
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination" th:if="${pointHistories.totalPages > 0}">
+                                    <li class="page-item" th:classappend="${!pointHistories.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/pointHistory'(page=0, size=${pointHistories.size})}">처음</a>
+                                    </li>
+
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, pointHistories.totalPages - 1)}"
+                                        th:classappend="${i == pointHistories.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/pointHistory'(page=${i}, size=${pointHistories.size})}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <li class="page-item" th:classappend="${!pointHistories.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/pointHistory'(page=${pointHistories.totalPages - 1}, size=${pointHistories.size})}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

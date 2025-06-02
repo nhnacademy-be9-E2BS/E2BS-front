@@ -14,9 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class CartOrderController {
-	
-	@PostMapping("/orders")
+public class CartController {
+
+	@PostMapping("/carts/order")
 	public ResponseEntity<Map<String, String>> order(@RequestBody RequestCartOrderDTO requestDto) {
 		log.info("dto: {}", requestDto.toString());
 		return ResponseEntity.ok().body(Map.of("message", "success"));

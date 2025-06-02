@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
@@ -62,9 +63,13 @@ class OrderControllerTest {
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
+	@MockitoBean
+	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
 	@BeforeEach
 	void setUp() throws Exception {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
 
 	@Autowired
@@ -288,7 +293,7 @@ class OrderControllerTest {
 	void testCancelOrder() throws Exception {
 		String orderCode = "TEST-ORDER-CODE";
 		when(orderService.cancelOrder(anyString())).thenReturn(ResponseEntity.ok().build());
-		mockMvc.perform(delete("/mypage/orders/"+orderCode)
+		mockMvc.perform(delete("/mypage/orders/" + orderCode)
 				.with(csrf()))
 			.andExpect(status().isOk());
 	}

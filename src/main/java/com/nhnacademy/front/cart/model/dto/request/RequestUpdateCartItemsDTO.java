@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestUpdateCartItemsDTO {
+	private String memberId;
 	private String sessionId;
 	private Long productId;
 	@NotNull

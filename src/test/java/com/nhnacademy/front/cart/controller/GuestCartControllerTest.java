@@ -26,6 +26,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForGuestDTO;
 import com.nhnacademy.front.cart.service.GuestCartService;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @ActiveProfiles("dev")
@@ -41,9 +42,13 @@ class GuestCartControllerTest {
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
+	@MockitoBean
+	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
 	@BeforeEach
 	void setUp() throws Exception {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
 
 	@Autowired
@@ -66,7 +71,7 @@ class GuestCartControllerTest {
 		requestDto.setQuantity(2);
 		String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
-		doNothing().when(guestCartService).createCartItemForGuest(any(RequestAddCartItemsDTO.class));
+		when(guestCartService.createCartItemForGuest(any(RequestAddCartItemsDTO.class))).thenReturn(1);
 
 		// when & then
 		mockMvc.perform(post("/guests/carts/items")
@@ -105,7 +110,7 @@ class GuestCartControllerTest {
 		requestDto.setQuantity(3);
 		String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
-		doNothing().when(guestCartService).updateCartItemForGuest(any(RequestUpdateCartItemsDTO.class));
+		when(guestCartService.updateCartItemForGuest(any(RequestUpdateCartItemsDTO.class))).thenReturn(1);
 
 		// when & then
 		mockMvc.perform(put("/guests/carts/items")
@@ -131,6 +136,7 @@ class GuestCartControllerTest {
 		// when & then
 		mockMvc.perform(delete("/guests/carts/items")
 				.session(session)
+				.sessionAttr("cartItemsCounts", 0)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonRequest)
 				.with(csrf()))

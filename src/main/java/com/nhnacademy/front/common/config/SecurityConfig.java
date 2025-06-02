@@ -10,9 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.nhnacademy.front.account.auth.service.AuthService;
-import com.nhnacademy.front.account.oauth.service.CustomOAuth2UserService;
+import com.nhnacademy.front.cart.service.CartService;
 import com.nhnacademy.front.common.handler.CustomAuthenticationFailureHandler;
-import com.nhnacademy.front.common.handler.CustomAuthenticationPaycoSuccessHandler;
 import com.nhnacademy.front.common.handler.CustomAuthenticationSuccessHandler;
 import com.nhnacademy.front.common.handler.CustomLogoutHandler;
 
@@ -29,31 +28,25 @@ public class SecurityConfig {
 	private static final String ACTUATOR_HEALTH = "/actuator/health";
 
 	private final AuthService authService;
+	private final CartService cartService;
 	private final RedisTemplate<String, String> redisTemplate;
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http,
-		CustomOAuth2UserService customOAuth2UserService) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
-			authService
+			authService, cartService
 		);
 		CustomLogoutHandler customLogoutHandler = new CustomLogoutHandler(
 			redisTemplate
 		);
 		CustomAuthenticationFailureHandler customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
-		CustomAuthenticationPaycoSuccessHandler customAuthenticationPaycoSuccessHandler = new CustomAuthenticationPaycoSuccessHandler(
-			authService
-		);
 
+		http.csrf(AbstractHttpConfigurer::disable);
 		/**
-		 *  CSRF 보호 기능을 비활성화
+		 *  권한있는 회원만 접근 가능한 URL 설정
 		 */
-		http.csrf(AbstractHttpConfigurer::disable)
-			/**
-			 *  권한있는 회원만 접근 가능한 URL 설정
-			 */
-			.authorizeHttpRequests(auth -> auth
+		http.authorizeHttpRequests(auth -> auth
 				.requestMatchers(LOGIN_URL, ROOT_URL, REGISTER_URL, ADMIN_LOGIN_URL, ACTUATOR_HEALTH).permitAll()
 				.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/scss/**", "/vendors/**",
 					"/Aroma Shop-doc/**").permitAll()
@@ -69,16 +62,6 @@ public class SecurityConfig {
 				.usernameParameter("memberId")
 				.passwordParameter("customerPassword")
 				.successHandler(customAuthenticationSuccessHandler)
-				.failureHandler(customAuthenticationFailureHandler)
-				.permitAll()
-			)
-			/**
-			 * oauth 로그인 기능
-			 */
-			.oauth2Login(oauth2 -> oauth2
-				.loginPage("/login")
-				.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-				.successHandler(customAuthenticationPaycoSuccessHandler)
 				.failureHandler(customAuthenticationFailureHandler)
 				.permitAll()
 			)

@@ -28,13 +28,6 @@ public class HomeController {
 		model.addAttribute("ItemNewAllList", indexService.getNewItemsProducts());
 		model.addAttribute("NewSpecialItemsList", indexService.getNewSpecialItemsProducts());
 
-		if (JwtHasToken.hasToken(request)) {
-			ResponseHomeMemberNameDTO responseHomeMemberNameDTO = homeService.getMemberNameFromHome(request);
-
-			model.addAttribute("memberName", responseHomeMemberNameDTO.getMemberName());
-			model.addAttribute("memberRole", responseHomeMemberNameDTO.getMemberRole());
-		}
-
 		return "home";
 	}
 }

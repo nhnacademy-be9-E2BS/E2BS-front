@@ -23,10 +23,10 @@ public interface GuestCartAdaptor {
 	ResponseEntity<List<ResponseCartItemsForGuestDTO>> getCartItemsByGuest(@PathVariable String sessionId);
 
 	@PostMapping("/carts/items")
-	ResponseEntity<Void> createCartItemForGuest(@RequestBody RequestAddCartItemsDTO requestDto);
+	ResponseEntity<Integer> createCartItemForGuest(@RequestBody RequestAddCartItemsDTO requestDto);
 
 	@PutMapping("/carts/items")
-	ResponseEntity<Void> updateCartItemForGuest(@RequestBody RequestUpdateCartItemsDTO requestDto);
+	ResponseEntity<Integer> updateCartItemForGuest(@RequestBody RequestUpdateCartItemsDTO requestDto);
 
 	@DeleteMapping("/carts/items")
 	ResponseEntity<Void> deleteCartItemForGuest(@RequestBody RequestDeleteCartItemsForGuestDTO requestDto);

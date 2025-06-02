@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<th:block th:fragment="categoryCheckbox(category, prefix)">
+<th:block th:fragment="categoryCheckbox(category, prefix, book)">
+
     <div class="form-check ms-2">
         <th:block th:if="${category.children != null and !category.children.isEmpty()}">
             <!-- 자식이 있는 경우: 체크박스 대신 라벨만 -->
@@ -27,7 +28,7 @@
     <!-- 자식 카테고리 재귀 -->
     <th:block th:if="${category.children != null and !category.children.isEmpty()}">
         <th:block th:each="child : ${category.children}">
-            <th:block th:replace="fragments/categoryDropdownCheckboxFragment :: categoryCheckbox(category=${child}, prefix='  ' + ${prefix})" />
+            <th:block th:replace="fragments/categoryDropdownCheckboxFragment :: categoryCheckbox(category=${child}, prefix='  ' + ${prefix},  book=${book})" />
         </th:block>
     </th:block>
 </th:block>

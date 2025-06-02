@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
+import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	private final ObjectMapper objectMapper;
 	private final CategoryInterceptor categoryInterceptor;
+	private final MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
 
 	/**
 	 * 직렬화를 위해 커스터마이징한 ObjectMapper converter에 추가
@@ -40,6 +42,23 @@ public class WebConfig implements WebMvcConfigurer {
 			.excludePathPatterns("/**/*.png")
 			.excludePathPatterns("/**/*.jpg")
 			.excludePathPatterns("/vendors/**")
+			.excludePathPatterns("/error/**")
+			.excludePathPatterns("/login/oauth2/code/payco");
+
+		registry.addInterceptor(memberNameAndRoleInterceptor)
+			.excludePathPatterns("/login/**")
+			.excludePathPatterns("/register/**")
+			.excludePathPatterns("/admin/login/**")
+			.excludePathPatterns("/payco/login/**")
+
+			.excludePathPatterns("/login/oauth2/code/payco")
+			.excludePathPatterns("/actuator/**")
+			.excludePathPatterns("/**/*.css")
+			.excludePathPatterns("/**/*.js")
+			.excludePathPatterns("/**/*.png")
+			.excludePathPatterns("/**/*.jpg")
+			.excludePathPatterns("/vendors/**")
 			.excludePathPatterns("/error/**");
+
 	}
 }
