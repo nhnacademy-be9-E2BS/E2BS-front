@@ -194,6 +194,12 @@
             </div>
 
             <input type="hidden" name="queryType" th:value="${book.queryType}" />
+
+            <div class="mb-3">
+                <label class="form-label">[디버그] 현재 queryType:</label>
+                <p th:text="${book.queryType}">queryType 값이 없습니다.</p>
+            </div>
+
             <button type="submit" class="btn btn-primary">등록</button>
             <a th:href="@{/admin/settings/books/search}" class="btn btn-secondary">취소</a>
         </form>
