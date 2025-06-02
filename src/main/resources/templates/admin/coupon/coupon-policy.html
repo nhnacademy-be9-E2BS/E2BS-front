@@ -8,31 +8,60 @@
         <div class="container">
             <h2>Coupon Policy Management</h2>
 
-            <!-- 등록 폼 -->
-            <div class="row">
-                <div class="col-lg-8">
-                    <h4>Register New Coupon Policy</h4>
-                    <form class="row login_form" action="/admin/settings/couponPolicies" method="post">
-                        <div class="col-md-6 form-group">
-                            <input type="text" class="form-control" name="couponPolicyName" placeholder="쿠폰정책명" required>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <input type="number" class="form-control" name="couponPolicyMinimum" placeholder="최소주문금액" required>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <input type="number" class="form-control" name="couponPolicyDiscountRate" placeholder="할인률 (%, 선택)">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <input type="number" class="form-control" name="couponPolicySalePrice" placeholder="할인금액 (선택)">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <input type="number" class="form-control" name="couponPolicyMaximumAmount" placeholder="최대할인금액 (선택)">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <input type="datetime-local" class="form-control" name="couponPolicyCreatedAt" placeholder="정책생성일" required>
-                        </div>
-                        <div class="col-md-12 form-group mt-3">
-                            <button type="submit" class="button button-register w-100">Register Policy</button>
+            <!-- 카드로 감싼 폼 영역 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <br>
+                    <form action="/admin/settings/couponPolicies" method="post" id="couponPolicyForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="minimumAmount" class="form-label">최소주문금액</label>
+                                <input type="number" class="form-control" name="couponPolicyMinimum" id="minimumAmount" placeholder="ex) 30000" required>
+                            </div>
+
+                            <!-- 할인 방식 선택 -->
+                            <div class="col-md-12">
+                                <label class="form-label">할인 방식 선택</label>
+                                <div class="form-check form-check-inline ms-2">
+                                    <input class="form-check-input" type="radio" name="discountType" id="rateType" value="rate" checked>
+                                    <label class="form-check-label" for="rateType">정률 (%)</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="discountType" id="amountType" value="amount">
+                                    <label class="form-check-label" for="amountType">정액 (₩)</label>
+                                </div>
+                            </div>
+
+                            <!-- 정률 필드 -->
+                            <div class="col-md-6 rate-group">
+                                <label for="discountRate" class="form-label">할인률 (%)</label>
+                                <input type="number" class="form-control" name="couponPolicyDiscountRate" id="discountRate" placeholder="ex) 10">
+                            </div>
+
+                            <div class="col-md-6 rate-group">
+                                <label for="maximumAmount" class="form-label">최대할인금액</label>
+                                <input type="number" class="form-control" name="couponPolicyMaximumAmount" id="maximumAmount" placeholder="ex) 5000">
+                            </div>
+
+                            <!-- 정액 필드 -->
+                            <div class="col-md-6 amount-group d-none">
+                                <label for="salePrice" class="form-label">할인금액</label>
+                                <input type="number" class="form-control" name="couponPolicySalePrice" id="salePrice" placeholder="ex) 3000">
+                            </div>
+
+                            <!-- 자동 생성된 정책명 -->
+                            <div class="col-md-12">
+                                <label for="couponPolicyName" class="form-label">쿠폰정책명</label>
+                                <input type="text" class="form-control" name="couponPolicyName" id="couponPolicyName" placeholder="자동 생성 버튼을 눌러주세요" required>
+                            </div>
+
+                            <!-- 버튼들 -->
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-outline-secondary w-100" onclick="generatePolicyName()">정책명 자동 생성</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="button button-register w-100">Register Policy</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -101,6 +130,78 @@
             </div>
 
         </div>
+
+        <script th:inline="javascript">
+            function toggleDiscountFields() {
+                const rateFields = document.querySelectorAll('.rate-group');
+                const amountFields = document.querySelectorAll('.amount-group');
+                const selected = document.querySelector('input[name="discountType"]:checked').value;
+
+                if (selected === 'rate') {
+                    rateFields.forEach(f => f.classList.remove('d-none'));
+                    amountFields.forEach(f => f.classList.add('d-none'));
+                } else {
+                    rateFields.forEach(f => f.classList.add('d-none'));
+                    amountFields.forEach(f => f.classList.remove('d-none'));
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('input[name="discountType"]').forEach(radio => {
+                    radio.addEventListener('change', toggleDiscountFields);
+                });
+                toggleDiscountFields(); // 초기화
+            });
+
+            function toggleDiscountFields() {
+                const rateFields = document.querySelectorAll('.rate-group');
+                const amountFields = document.querySelectorAll('.amount-group');
+                const selected = document.querySelector('input[name="discountType"]:checked').value;
+
+                if (selected === 'rate') {
+                    rateFields.forEach(f => f.classList.remove('d-none'));
+                    amountFields.forEach(f => f.classList.add('d-none'));
+                } else {
+                    rateFields.forEach(f => f.classList.add('d-none'));
+                    amountFields.forEach(f => f.classList.remove('d-none'));
+                }
+            }
+
+            // 숫자 포맷 함수 (천 단위 콤마 + 원 단위)
+            const formatCurrency = (number) => {
+                return parseInt(number, 10).toLocaleString('ko-KR');
+            };
+
+            function generatePolicyName() {
+                const discountType = document.querySelector('input[name="discountType"]:checked').value;
+                const minimum = document.getElementById('minimumAmount').value;
+                const rate = document.getElementById('discountRate').value;
+                const max = document.getElementById('maximumAmount').value;
+                const price = document.getElementById('salePrice').value;
+
+                let name = "";
+
+                if (!minimum || (discountType === 'rate' && (!rate || !max)) || (discountType === 'amount' && !price)) {
+                    alert("모든 값을 정확히 입력해 주세요.");
+                    return;
+                }
+
+                if (discountType === 'rate') {
+                    name = `${formatCurrency(minimum)}원 이상 주문 시 ${rate}% 할인 (최대 ${formatCurrency(max)}원)`;
+                } else {
+                    name = `${formatCurrency(minimum)}원 이상 주문 시 ${formatCurrency(price)}원 할인`;
+                }
+
+                document.getElementById('couponPolicyName').value = name;
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('input[name="discountType"]').forEach(radio => {
+                    radio.addEventListener('change', toggleDiscountFields);
+                });
+                toggleDiscountFields();
+            });
+        </script>
     </section>
 </div>
 </body>
