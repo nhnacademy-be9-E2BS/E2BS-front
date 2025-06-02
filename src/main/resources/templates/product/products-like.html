@@ -16,7 +16,6 @@
             transition: color 0.2s ease;
         }
     </style>
-    </style>
 </head>
 
 <body>
@@ -25,7 +24,7 @@
     <section class="lattest-product-area pb-40 category-list">
         <div class="row">
             <div th:each="likeProduct : ${likeProducts.content}" class="col-md-6 col-lg-4">
-                <div class="card text-center card-product">
+                <div class="card text-center card-product" th:data-product-id = "${likeProduct.productId}">
                     <div class="card-product__img">
                         <!-- 도서 이미지 -->
                         <div class="card-img"
@@ -35,8 +34,15 @@
                                  onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                             <ul class="card-product__imgOverlay">
                                 <li><button><i class="ti-search"></i></button></li>
-                                <li><button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button></li>
-                                <li><button class="like-button" data-liked="false" th:data-product-id="${likeProduct.productId}">
+
+                                <li th:if="${session.isMember}">
+                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+                                <li th:if="${session.isMember == null}">
+                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                                </li>
+
+                                <li><button class="like-button" data-liked="false">
                                     <!--                      <i class="ti-heart"-->
                                     <!--                                     th:classappend="${product.liked} ? ' liked' : ''"></i>-->
                                     <i class="ti-heart"></i>
@@ -74,7 +80,7 @@
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
             <nav>
-                <ul class="pagination">
+                <ul class="pagination" th:if="${likeProducts.totalPages > 0}">
                     <!-- 처음 -->
                     <li class="page-item" th:classappend="${!likeProducts.hasPrevious()} ? 'disabled'">
                         <a class="page-link" th:href="@{/products/likes(page=0, size=${likeProducts.size})}"><<</a>
@@ -99,33 +105,31 @@
         </div>
     </div>
 
-    <!-- 페이지네이션
-     -->
-<!--    <nav th:if="${products.totalPages > 1}">-->
-<!--        <ul class="pagination justify-content-center">-->
-<!--            <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">-->
-<!--                <a class="page-link"-->
-<!--                   th:href="@{/books(query=${param.query}, queryType=${param.queryType}, page=0, size=${products.size})}">처음</a>-->
-<!--            </li>-->
+    <!-- 장바구니 이동 모달 -->
+    <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
+                    <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="닫기"></button>
+                </div>
+                <div class="modal-body">
+                    장바구니로 이동하시겠습니까?
+                </div>
 
-<!--            <li class="page-item"-->
-<!--                th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"-->
-<!--                th:classappend="${i == products.number} ? 'active'">-->
-<!--                <a class="page-link"-->
-<!--                   th:href="@{/books(query=${param.query}, queryType=${param.queryType}, page=${i}, size=${products.size})}"-->
-<!--                   th:text="${i + 1}">1</a>-->
-<!--            </li>-->
-
-<!--            <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">-->
-<!--                <a class="page-link"-->
-<!--                   th:href="@{/books(query=${param.query}, queryType=${param.queryType}, page=${products.totalPages - 1}, size=${products.size})}">마지막</a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </nav>-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기</button>
+                    <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:src="@{/js/like/like-delete.js}"></script>
+    <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
+    <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
 </div>
 </body>
 </html>

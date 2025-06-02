@@ -29,8 +29,18 @@ $(document).ready(function () {
                 recalculateTotalPrice();
             },
             error: function (xhr, status, error) {
-                console.error('Ajax Error:', error);
-                alert('장바구니 삭제에 실패했습니다.');
+                console.error('Error:', error);
+                console.error('status:', status);
+                console.error('xhr:', xhr);
+
+                let message = '장바구니 담기에 실패했습니다.';
+                if (xhr.responseJSON) {
+                    message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
+                               `상태 코드: ${xhr.responseJSON.status}\n` +
+                               `발생 시간: ${xhr.responseJSON.timeStamp}`;
+                }
+
+                alert(message);
             }
         });
     });
@@ -76,8 +86,18 @@ $(document).ready(function () {
                 $('.table').append('<tbody><tr><td colspan="5" style="text-align:center;">장바구니가 비어 있습니다.</td></tr></tbody>');
             },
             error: function (xhr, status, error) {
-                console.error('Ajax Error:', error);
-                alert('장바구니 비우기를 실패했습니다.');
+                console.error('Error:', error);
+                console.error('status:', status);
+                console.error('xhr:', xhr);
+
+                let message = '장바구니 비우기를 실패했습니다.';
+                if (xhr.responseJSON) {
+                    message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
+                               `상태 코드: ${xhr.responseJSON.status}\n` +
+                               `발생 시간: ${xhr.responseJSON.timeStamp}`;
+                }
+
+                alert(message);
             }
         });
     });
