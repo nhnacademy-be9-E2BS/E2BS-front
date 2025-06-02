@@ -7,8 +7,8 @@
 
     <!--모달 영역-->
     <div id="addressModal" class="modal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
-     overflow: auto; background-color: rgba(0,0,0,0.5);">
-        <div class="modal-content" style="background-color: #fff; margin: 15% auto; padding: 20px; width: 50%;
+     overflow: hidden; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content" style="background-color: #fff; margin: 15% auto; padding: 20px; width: 50%; max-height: 50vh; overflow-y: auto;
         border-radius: 8px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.25);">
             <span class="close" onclick="closeAddressModal()" style="float: right; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
             <span>등록된 주소</span>
@@ -21,8 +21,8 @@
     </div>
 
     <div id="couponModal" class="modal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
-     overflow: auto; background-color: rgba(0,0,0,0.5);">
-        <div class="modal-content" style="background-color: #fff; margin: 15% auto; padding: 20px; width: 50%;
+     overflow: hidden; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content" style="background-color: #fff; margin: 15% auto; padding: 20px; width: 50%; max-height: 50vh; overflow-y: auto;
         border-radius: 8px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.25);">
             <span class="close" onclick="closeCouponModal()" style="float: right; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
             <span>쿠폰</span>
@@ -69,7 +69,7 @@
     <section class="checkout_area section-margin--small">
         <div class="container">
             <!--주문 상품 리스트-->
-            <h3>주문 상세 내역</h3>
+            <h3>주문/결제</h3>
             <br>
             <div>
                 <table cellpadding="10" width="100%"
@@ -148,7 +148,7 @@
                                     <strong>수령인</strong>
                                 </td>
                                 <td>
-                                    <input type="text" id="receiverName">
+                                    <input type="text" id="receiverName" class="form-control" style="width: 300px;">
                                 </td>
                             </tr>
                             <tr>
@@ -163,7 +163,7 @@
                                             <input type="text" id="sample6_postcode" placeholder="우편번호"
                                                    th:value="${defaultAddress.addressCode}" disabled
                                                    class="form-control" style="max-width: 120px;">
-                                            <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"
+                                            <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"
                                                    class="btn btn-outline-primary" style="padding: 0 12px;">
                                             <button onclick="openAddressModal()" class="btn btn-primary btn-sm"
                                                     style="width: 100%; background-color: white; color: black; border: 1px solid #ddd;
@@ -184,7 +184,7 @@
                                         <div style="display: flex; gap: 8px; margin-bottom: 6px;">
                                             <input type="text" id="sample6_postcode" placeholder="우편번호" disabled
                                                    class="form-control" style="max-width: 120px;">
-                                            <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"
+                                            <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"
                                                    class="btn btn-outline-primary" style="padding: 0 12px;">
                                             <button onclick="openAddressModal()" class="btn btn-primary btn-sm"
                                                     style="width: 100%; background-color: white; color: black; border: 1px solid #ddd;
@@ -209,7 +209,7 @@
                                     <strong>휴대전화 번호</strong>
                                 </td>
                                 <td>
-                                    <input id="receiverPhone" type="tel" placeholder="010-1234-5678" maxlength="13"/>
+                                    <input id="receiverPhone" type="tel" placeholder="010-1234-5678" maxlength="13" class="form-control" style="width: 300px;">
                                 </td>
                             </tr>
 
@@ -218,7 +218,7 @@
                                     <strong>전화번호</strong>
                                 </td>
                                 <td>
-                                    <input id="receiverTel" type="tel" placeholder="010-1234-5678" maxlength="13"/>
+                                    <input id="receiverTel" type="tel" placeholder="010-1234-5678" maxlength="13" class="form-control" style="width: 300px;">
                                 </td>
                             </tr>
 
@@ -227,18 +227,61 @@
                                     <strong>메모</strong>
                                 </td>
                                 <td>
-                                    <textarea id="receiverMemo"></textarea>
+                                    <textarea id="receiverMemo" class="form-control" style="width: 300px; height: 100px;"></textarea>
                                 </td>
                             </tr>
 
                         </table>
+                        <br>
+                        <table cellpadding="10" width="100%"
+                               style="border-collapse: separate; border-spacing: 0; border: 1px solid #ccc; border-radius: 12px;overflow: hidden;">
+                            <tr>
+                                <td style="font-weight: bold;">나의 포인트</td>
+                                <td>
+                                    <span>보유: </span>
+                                    <span th:text="${T(java.lang.String).format('%,d',memberPoint)}" style="font-weight: bold;"></span>
+                                    <span>원</span>
+                                </td>
+                            </tr>
 
-                        <table cellspacing="1" cellpadding="3" width="100%" border="1px solid black">
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <input type="number" id="pointInput" class="form-control"
+                                               style="width: 300px; text-align: right;" th:max="${memberPoint}">
+                                        <button class="btn btn-secondary" onclick="useAllPoint()">전액 사용</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="font-weight: bold;">할인 쿠폰</td>
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        <span class="close" id="couponDelBth" onclick="deleteCoupon()"
+                                              style="display: none; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
+                                        <span id="couponName" data-coupon-id="" style="display: none; margin-left: 8px;"></span>
+
+                                        <!-- 버튼 오른쪽 정렬 -->
+                                        <button class="btn btn-secondary" onclick="openCouponModal()" style="margin-left: auto; margin-right: 115px;">
+                                            쿠폰 사용하기
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+
+                        <table cellpadding="10" width="100%"
+                               style="border-collapse: separate; border-spacing: 0; border: 1px solid #ccc; border-radius: 12px;overflow: hidden;">
+                            <tr>
+                                <th colspan="2" style="border-bottom: 1px solid #ddd;">
+                                    <span><strong>언제 받으시겠어요?</strong></span>
+                                </th>
+                            </tr>
                             <tr>
                                 <td>
-                                    <div>
-                                        <strong>언제 받으시겠어요?</strong>
-                                    </div>
                                     <input type="radio" id="order_receive_date0" name="order_receive_date"
                                            checked="checked" value="">
                                     <label for="order_receive_date0">내일 수령</label>
@@ -246,18 +289,40 @@
                                     <br>
                                     <input type="radio" id="order_receive_date1" name="order_receive_date" value="">
                                     <label for="order_receive_date1">다른 날에 받을게요</label>
-                                    <div id="date_buttons" style="display: none;">
+                                    <div id="date_buttons" style="display: none; gap: 8px;">
                                         <span>주문 시점 7일 이내 선택 가능(주말 제외)</span><br>
                                     </div>
                                 </td>
                             </tr>
                         </table>
 
+                        <br>
+                        <table cellpadding="10" width="100%"
+                               style="border-collapse: separate; border-spacing: 0; border: 1px solid #ccc; border-radius: 12px;overflow: hidden;">
+                            <tr>
+                                <th colspan="2" style="border-bottom: 1px solid #ddd;">
+                                    <span><strong>결제 수단</strong></span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <input type="radio" id="tossPay_payment_method" name="payment_method" value="tossPay">
+                                        <label for="tossPay_payment_method">토스 결제</label>
+                                    </div>
+                                    <span>* 현재는 토스 간편 결제, 포인트로 전액 결제만 지원합니다.</span>
+                                </td>
+                            </tr>
+                        </table>
+
+
+
                     </div>
+                    <br>
 
                     <!--결제 정보 선택 영역-->
                     <div class="col-lg-4">
-                        <div class="order_box">
+                        <div class="order_box card">
                             <h2>주문 내역</h2>
                             <ul class="list list-unstyled">
                                 <li class="d-flex justify-content-between align-items-center py-2">
@@ -298,32 +363,6 @@
                                 </li>
                             </ul>
 
-                            <!--포인트 적용-->
-                            <div class="d-flex justify-content-between align-items-center py-2">
-                                <h6 class="text-start">포인트 사용</h6>
-                                <div class="text-end">
-                                    <input type="number" id="pointInput" th:max="${memberPoint}">
-                                    <span th:text="'/ '+${T(java.lang.String).format('%,d',memberPoint)}"></span>
-                                </div>
-                            </div>
-
-                            <!--쿠폰 적용-->
-                            <div>
-                                <button class="btn-primary" onclick="openCouponModal()">쿠폰 사용하기</button>
-                                <br>
-                                <span class="close" id="couponDelBth" onclick="deleteCoupon()" style="display: none; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
-                                <span id="couponName" data-coupon-id="" style="display: none;"></span>
-                            </div>
-
-                            <!--결제 방식 선택-->
-                            <div>
-                                <h6>결제 수단 선택</h6>
-                                <input type="radio" id="point_payment_method" name="payment_method" value="point">
-                                <label for="point_payment_method">포인트 결제</label>
-                                <input type="radio" id="tossPay_payment_method" name="payment_method" value="tossPay">
-                                <label for="tossPay_payment_method">토스 결제</label>
-                            </div>
-
                             <div class="creat_account">
                                 <input type="checkbox" id="f-option4" name="selector">
                                 <label for="f-option4">다음의 이용약관을 읽었으며 동의합니다.</label>
@@ -331,9 +370,9 @@
                             </div>
 
                             <div class="text-center">
-                                <span>현재 전체 적용 쿠폰만 작동합니다.</span>
-                                <button class="btn primary w-100" id="payment-button"
-                                        style="margin-top: 30px">결제하기
+                                <span>테스트 결제로 실제 돈이 나가지 않습니다.</span>
+                                <button class="btn btn-primary" id="payment-button"
+                                        style="margin-top: 30px; width: 100%;">결제하기
                                 </button>
 
                             </div>
@@ -345,6 +384,14 @@
 
         <!--모달 관련 JS-->
         <script th:inline="javascript">
+            function toggleWrapOptions(id) {
+                const elem = document.getElementById(id);
+                if (elem.style.display === 'none' || elem.style.display === '') {
+                    elem.style.display = 'table-row';
+                } else {
+                    elem.style.display = 'none';
+                }
+            }
             function openAddressModal() {
                 document.getElementById("addressModal").style.display = "block";
             }
@@ -365,6 +412,10 @@
                 const modal = document.getElementById("addressModal");
                 if (event.target === modal) {
                     modal.style.display = "none";
+                }
+                const modal2 = document.getElementById("couponModal");
+                if (event.target === modal2) {
+                    modal2.style.display = "none";
                 }
             }
 
@@ -398,9 +449,11 @@
 
             // ------ 결제 진행 이벤트 ------
             document.getElementById("payment-button").addEventListener("click", async function () {
+
+                const payAmount = parseInt(parseCurrency(document.getElementById("payment_amount").innerText));
                 const selected = document.querySelector('input[name="payment_method"]:checked');
                 const checkbox = document.getElementById('f-option4'); // 이용약관 체크 확인
-                if (!selected) {
+                if (!selected && !(payAmount === 0)) {
                     alert("결제 수단을 선택해주세요.");
                     return;
                 }
@@ -415,9 +468,14 @@
                 }
 
                 // 결제 방식
-                const method = selected.value;
+                let method = "point";
+                if(selected !== null){
+                    method = selected.value;
+                }
 
-                if (method === "tossPay") {
+
+                // 결제 금액이 0원이면 외부 결제로 결제 방지
+                if (method === "tossPay" && !(payAmount === 0)) {
                     // 주문서 저장
                     const response = await saveOrder(method);
 
@@ -428,10 +486,8 @@
                     }
 
                     tossPayWidget(response.orderId, response.amount);
-                } else if (method === "point") {
-
+                } else {
                     // 포인트 결제 로직
-                    const payAmount = parseInt(parseCurrency(document.getElementById("payment_amount").innerText));
                     if (payAmount !== 0) {
                         alert("사용 포인트가 부족합니다.");
                     } else {
@@ -447,8 +503,6 @@
                         }
                     }
 
-                } else {
-                    alert("지원하지 않는 결제 수단입니다.")
                 }
             });
 
@@ -683,6 +737,7 @@
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.innerText = `${current.getMonth() + 1}월 ${current.getDate()}일(${weekdays[day]})`;
+                    btn.classList.add("btn", "btn-secondary");
 
                     const selectedDate = new Date(current);
 
@@ -776,27 +831,6 @@
                         document.getElementById("sample6_detailAddress").focus();
                     }
                 }).open();
-            }
-        </script>
-
-        <!--테이블의 포장지 선택 창, 쿠폰 리스트 토글 JS-->
-        <script>
-            function toggleWrapOptions(id) {
-                const elem = document.getElementById(id);
-                if (elem.style.display === 'none' || elem.style.display === '') {
-                    elem.style.display = 'table-row';
-                } else {
-                    elem.style.display = 'none';
-                }
-            }
-
-            function toggleCouponList() {
-                const elem = document.getElementById("couponList");
-                if (elem.style.display === 'none' || elem.style.display === '') {
-                    elem.style.display = 'block';
-                } else {
-                    elem.style.display = 'none';
-                }
             }
         </script>
 
@@ -1044,6 +1078,11 @@
                 calculateTotal();
             }
 
+            function useAllPoint() {
+                const pointInput = document.getElementById("pointInput");
+                pointInput.value = parseInt(pointInput.max);
+                calculateTotal();
+            }
 
             const phoneInput = document.getElementById('receiverPhone');
             const telInput = document.getElementById('receiverTel');
@@ -1084,6 +1123,7 @@
                 // 포인트를 입력한 후에는 가격 계산 재 실행
                 calculateTotal();
             });
+
 
             // 초기 실행
             calculateTotal();
