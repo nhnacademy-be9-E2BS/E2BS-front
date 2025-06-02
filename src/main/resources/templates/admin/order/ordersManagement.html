@@ -20,8 +20,8 @@
                                 style="display: inline-block; width: 200px;">
                             <option value="">-- 전체 보기 --</option>
                             <option value="5" th:selected="${param.status == '5'}">대기</option>
-                            <option value="3" th:selected="${param.status == '3'}">배송중</option>
-                            <option value="2" th:selected="${param.status == '2'}">완료</option>
+                            <option value="3" th:selected="${param.status == '3'}">배송 중</option>
+                            <option value="2" th:selected="${param.status == '2'}">배송 완료</option>
                             <option value="4" th:selected="${param.status == '4'}">반품</option>
                             <option value="1" th:selected="${param.status == '1'}">주문 취소</option>
                         </select>
@@ -48,9 +48,18 @@
                             <td th:text="${order.receiveDate}"></td>
                             <td th:text="${order.orderCode}"
                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></td>
-                            <td th:text="${order.paymentAmount} + ${order.pointAmount}"></td>
-                            <td th:text="${order.state}"></td>
-                            <td th:text="${order.paid}"></td>
+                            <td th:text="${T(java.lang.String).format('%,d',order.paymentAmount + order.pointAmount)}"></td>
+                            <td th:switch="${order.state}">
+                                <span th:case="'WAIT'">배송 대기</span>
+                                <span th:case="'CANCEL'">주문 취소</span>
+                                <span th:case="'DELIVERY'">배송 중</span>
+                                <span th:case="'RETURN'">반품</span>
+                                <span th:case="'COMPLETE'">배송 완료</span>
+                            </td>
+                            <td th:switch="${order.paid}">
+                                <span th:case="true">결제 완료</span>
+                                <span th:case="false">결제 대기</span>
+                            </td>
                             <td>
                                 <a th:href="'/admin/settings/orders/'+${order.orderCode}">상세 보기</a>
                             </td>

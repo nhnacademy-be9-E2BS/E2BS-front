@@ -23,11 +23,20 @@
                         <th>주문 코드</th>
                         <td th:text="${order.orderCode}">ORD123456</td>
                         <th>주문 상태</th>
-                        <td th:text="${order.state}">배송중</td>
+                        <td th:switch="${order.state}">
+                            <span th:case="'WAIT'">배송 대기</span>
+                            <span th:case="'CANCEL'">주문 취소</span>
+                            <span th:case="'DELIVERY'">배송 중</span>
+                            <span th:case="'RETURN'">반품</span>
+                            <span th:case="'COMPLETE'">배송 완료</span>
+                        </td>
                     </tr>
                     <tr>
                         <th>결제 여부</th>
-                        <td th:text="${order.paid}">결제 완료</td>
+                        <td th:switch="${order.paid}">
+                            <span th:case="true">결제 완료</span>
+                            <span th:case="false">결제 대기</span>
+                        </td>
                         <th>주문 금액</th>
                         <td th:text="${T(java.lang.String).format('%,d',order.paymentAmount + order.pointAmount)}">
                             35000
@@ -87,7 +96,9 @@
                         <th>포장지</th>
                     </tr>
                     <tr th:each="orderDetail:${orderDetails}">
-                        <td th:text="${orderDetail.productName}"></td>
+                        <td>
+                            <a  th:text="${orderDetail.productName}" th:href="'/books/'+${orderDetail.productId}"></a>
+                        </td>
                         <td th:text="${T(java.lang.String).format('%,d',orderDetail.orderDetailPerPrice)}"></td>
                         <td th:text="${orderDetail.orderQuantity}"></td>
                         <td th:if="${orderDetail.wrapperId} == null">포장 없음</td>
