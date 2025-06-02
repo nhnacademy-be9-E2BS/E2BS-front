@@ -6,7 +6,6 @@ import java.util.Objects;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-import com.nhnacademy.front.account.auth.service.AuthService;
 import com.nhnacademy.front.cart.model.dto.request.RequestMergeCartItemDTO;
 import com.nhnacademy.front.cart.service.CartService;
 import com.nhnacademy.front.common.util.GuestCookieUtil;
@@ -23,10 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 	private static final String ROOT_URL = "/";
-	private static final String LOGIN_URL = "/login";
-	private static final String ADMIN_LOGIN_URL = "/admin/login";
 
-	private final AuthService authService;
 	private final CartService cartService;
 
 	@Override
