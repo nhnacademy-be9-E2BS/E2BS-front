@@ -84,9 +84,15 @@
                     <div class="info-value" th:text="${pointAmount} + '원'">1,000원</div>
                 </div>
                 <div class="info-box">
-                    <i class="fas fa-wallet"></i>
-                    <div class="info-title">예치금</div>
-                    <div class="info-value" th:text="${depositAmount} + '원'">0원</div>
+                    <i class="fas fa-user-circle"></i>
+                    <div class="info-title">회원 등급</div>
+                    <div class="info-value" th:switch="${rankName}">
+                        <span th:case="NORMAL" class="badge-normal">일반</span>
+                        <span th:case="ROYAL" class="badge-royal">로얄</span>
+                        <span th:case="GOLD" class="badge-gold">골드</span>
+                        <span th:case="PLATINUM" class="badge-platinum">플래티넘</span>
+                        <span th:case="*">-</span>
+                    </div>
                 </div>
             </div>
         </div>
