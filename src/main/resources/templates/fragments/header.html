@@ -1,10 +1,33 @@
 <!DOCTYPE html>
 <html lang="kor" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <div th:fragment="header">
     <header class="header_area">
         <div class="main_menu">
             <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="container">
+                    <style>
+                        .nav-shop .nav-item {
+                            margin-left: 8px;
+                            margin-right: 8px;
+                        }
+
+                        .nav-shop__circle {
+                            font-size: 12px;
+                            position: relative;
+                            top: -10px;
+                            left: -6px;
+                            color: white;
+                            background: red;
+                            border-radius: 50%;
+                            padding: 2px 6px;
+                        }
+
+                        .nav-shop li {
+                            margin-left: 10px;
+                            margin-right: 10px;
+                        }
+                    </style>
                     <a class="navbar-brand logo_h" href="/"><h1>E2BS</h1></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent"
@@ -55,17 +78,6 @@
                                 <span class="nav-link" th:text="${memberName}">회원명</span>
                             </li>
 
-                            <li class="nav-item dropdown mypage-hover"
-                                th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}">
-                                <a class="nav-link dropdown-toggle" href="/mypage" id="mypageDropdown">마이페이지</a>
-                            </li>
-
-                            <li class="nav-item dropdown mypage-hover"
-                                th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'ADMIN'}">
-                                <a class="nav-link dropdown-toggle" href="/admin/settings" id="settingsDropdown">관리자
-                                    페이지</a>
-                            </li>
-
                             <li class="nav-item" th:if="${memberName != null}">
                                 <form th:action="@{/logout}" method="post">
                                     <button type="submit" class="dropdown-item">Logout</button>
@@ -73,7 +85,23 @@
                             </li>
 
                             <li class="nav-item">
-                                <form>
+                                <form style="margin: 0; padding: 0; display: inline-block;">
+                                    <li class="nav-item dropdown mypage-hover"
+                                        th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}">
+                                        <a class="nav-link dropdown-toggle" href="/mypage" id="mypageDropdown">
+                                            <i class="fas fa-user"></i>
+                                        </a>
+                                    </li>
+
+
+                                    <li class="nav-item dropdown mypage-hover"
+                                        th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'ADMIN'}">
+                                        <a class="nav-link dropdown-toggle" href="/admin/settings"
+                                           id="settingsDropdown">
+                                            <i class="fas fa-user"></i>
+                                        </a>
+                                    </li>
+
                                     <button th:if="${session.isMember}"
                                             th:formaction="@{/members/carts}" type="submit">
                                         <i class="ti-shopping-cart"></i>

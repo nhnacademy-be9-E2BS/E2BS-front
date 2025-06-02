@@ -9,82 +9,131 @@
             <h2>쿠폰함</h2>
 
             <style>
-                th {
-                    white-space: nowrap;
+                h2 {
+                    font-size: 28px;
+                    font-weight: bold;
+                    margin-bottom: 30px;
+                    color: #333;
+                }
+
+                .coupon-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .coupon-box {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    background: linear-gradient(90deg, #e3f2fd, #ede7f6);
+                    border-radius: 16px;
+                    padding: 20px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                    border: 1px solid #ddd;
+                    position: relative;
+                }
+
+                .coupon-header {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #3949ab;
+                    margin-bottom: 8px;
+                }
+
+                .coupon-name {
+                    font-size: 20px;
+                    font-weight: bold;
+                    margin-bottom: 6px;
+                    color: #212121;
+                }
+
+                .coupon-description {
+                    font-size: 14px;
+                    color: #555;
+                    margin-bottom: 10px;
+                }
+
+                .coupon-valid {
+                    font-size: 13px;
+                    color: #333;
+                    margin-top: auto;
+                    font-weight: 500;
+                }
+
+                .coupon-footer {
+                    font-size: 12px;
+                    margin-top: 8px;
+                    color: #777;
+                    background-color: #f1f3f4;
+                    display: inline-block;
+                    padding: 4px 10px;
+                    border-radius: 10px;
+                }
+
+                .pagination {
+                    margin-top: 40px;
+                    justify-content: center;
+                }
+
+                .page-link {
+                    color: #007bff;
+                }
+
+                .page-item.active .page-link {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                    color: white;
+                }
+
+                .page-item.disabled .page-link {
+                    color: #ccc;
+                    pointer-events: none;
                 }
             </style>
 
-            <!-- 쿠폰 목록 -->
-            <div class="row mb-5">
-                <div class="col-12">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>쿠폰명</th>
-                            <th>쿠폰정책</th>
-                            <th>할인 카테고리</th>
-                            <th>할인 도서</th>
-                            <th>발급일</th>
-                            <th>만료일</th>
-                            <th>사용여부</th>
-                        </tr>
-                        </thead>
-                       <tbody>
-                       <tr th:each="coupon : ${memberCoupons.content}">
-                           <td th:text="${coupon.couponName}">쿠폰명</td>
-                           <td th:text="${coupon.couponPolicyName}">정책명</td>
-
-                           <td>
-                               <a th:if="${coupon.categoryName != null}"
-                                  th:href="@{/books/category/{id}(id=${coupon.categoryId})}"
-                                  th:text="${coupon.categoryName}">카테고리명</a>
-                               <span th:unless="${coupon.categoryName != null}">-</span>
-                           </td>
-
-                           <td>
-                               <a th:if="${coupon.productTitle != null}"
-                                  th:href="@{/books/{id}(id=${coupon.productId})}"
-                                  th:text="${coupon.productTitle}">도서명</a>
-                               <span th:unless="${coupon.productTitle != null}">-</span>
-                           </td>
-
-                           <td th:text="${#temporals.format(coupon.memberCouponCreatedAt, 'yyyy-MM-dd HH:mm')}">발급일</td>
-                           <td th:text="${#temporals.format(coupon.memberCouponPeriod, 'yyyy-MM-dd HH:mm')}">만료일</td>
-                           <td th:text="${coupon.memberCouponUsed ? '사용완료' : '미사용'}">사용여부</td>
-                       </tr>
-
-                       </tbody>
-                    </table>
-
-                    <!-- 페이징 -->
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-center">
-                            <nav>
-                                <ul class="pagination" th:if="${memberCoupons.totalPages > 0}">
-                                    <li class="page-item" th:classappend="${!memberCoupons.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link"
-                                           th:href="@{'/mypage/couponBox'(page=0, size=${memberCoupons.size})}">처음</a>
-                                    </li>
-
-                                    <li class="page-item"
-                                        th:each="i : ${#numbers.sequence(0, memberCoupons.totalPages - 1)}"
-                                        th:classappend="${i == memberCoupons.number} ? 'active'">
-                                        <a class="page-link"
-                                           th:href="@{'/mypage/couponBox'(page=${i}, size=${memberCoupons.size})}"
-                                           th:text="${i + 1}">1</a>
-                                    </li>
-
-                                    <li class="page-item" th:classappend="${!memberCoupons.hasNext()} ? 'disabled'">
-                                        <a class="page-link"
-                                           th:href="@{'/mypage/couponBox'(page=${memberCoupons.totalPages - 1}, size=${memberCoupons.size})}">마지막</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
+            <div class="coupon-wrapper">
+                <div class="coupon-box" th:each="coupon : ${memberCoupons.content}">
+                    <div class="coupon-header" th:text="${coupon.couponPolicyName}">T Day 이벤트</div>
+                    <div class="coupon-name" th:text="${coupon.couponName}">5,000원 할인</div>
+                    <div class="coupon-description">
+                        <span th:if="${coupon.categoryName != null}"
+                              th:text="${coupon.categoryName} + ' 카테고리 대상'"></span>
+                        <span th:unless="${coupon.categoryName != null}">해당 카테고리 없음</span>
                     </div>
-
+                    <div class="coupon-valid">
+                        유효기간 : <span th:text="${#temporals.format(coupon.memberCouponCreatedAt, 'yyyy.MM.dd')}"></span>
+                        ~ <span th:text="${#temporals.format(coupon.memberCouponPeriod, 'yyyy.MM.dd')}"></span>
+                    </div>
+                    <div class="coupon-footer" th:text="${coupon.memberCouponUsed ? '사용완료' : '미사용'}">미사용</div>
                 </div>
             </div>
+
+            <!-- 페이징 -->
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination" th:if="${memberCoupons.totalPages > 0}">
+                            <li class="page-item" th:classappend="${!memberCoupons.hasPrevious()} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{'/mypage/couponBox'(page=0, size=${memberCoupons.size})}">처음</a>
+                            </li>
+                            <li class="page-item"
+                                th:each="i : ${#numbers.sequence(0, memberCoupons.totalPages - 1)}"
+                                th:classappend="${i == memberCoupons.number} ? 'active'">
+                                <a class="page-link"
+                                   th:href="@{'/mypage/couponBox'(page=${i}, size=${memberCoupons.size})}"
+                                   th:text="${i + 1}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${!memberCoupons.hasNext()} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{'/mypage/couponBox'(page=${memberCoupons.totalPages - 1}, size=${memberCoupons.size})}">마지막</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
         </div>
     </section>
 </div>
