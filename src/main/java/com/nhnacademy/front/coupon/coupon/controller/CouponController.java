@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
@@ -30,6 +31,8 @@ import com.nhnacademy.front.coupon.couponpolicy.model.dto.response.ResponseCoupo
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.AdminCategoryService;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.service.ProductAdminService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,21 +44,29 @@ public class CouponController {
 	private final CouponService couponServiceImpl;
 	private final CouponPolicyService couponPolicyServiceImpl;
 	private final AdminCategoryService adminCategoryService;
+	private final ProductAdminService productAdminService;
 
 	/**
 	 * 관리자 쿠폰 생성 뷰
 	 */
 	@JwtTokenCheck
 	@GetMapping("/register")
-	public String createCouponForm(Model model) {
-		Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
-		PageResponse<ResponseCouponPolicyDTO> couponPolicyDTO = couponPolicyServiceImpl.getCouponPolicies(pageable);
+	public String createCouponForm(@PageableDefault Pageable pageable,
+		@RequestParam(value = "couponType", required = false) String couponType, Model model) {
+		Pageable pageable_fix = PageRequest.of(0, Integer.MAX_VALUE);
+		PageResponse<ResponseCouponPolicyDTO> couponPolicyDTO = couponPolicyServiceImpl.getCouponPolicies(pageable_fix);
 		Page<ResponseCouponPolicyDTO> couponPolicies = PageResponseConverter.toPage(couponPolicyDTO);
 
-		// 상준; 카테고리, 상품 정보도 받아오기 + coupon-register.html 수정
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
+		PageResponse<ResponseProductReadDTO> productDTO = productAdminService.getProducts(pageable);
+		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(productDTO);
 
+		if (couponType == null) {
+			couponType = "total";
+		}
+		model.addAttribute("couponType", couponType);
+		model.addAttribute("categories", categories);
+		model.addAttribute("products", products);
 		model.addAttribute("couponPolicies", couponPolicies);
 		return "admin/coupon/coupon-register";
 	}
