@@ -1,7 +1,5 @@
 package com.nhnacademy.front.coupon.couponpolicy.model.dto.request;
 
-import java.time.LocalDateTime;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +16,6 @@ public class RequestCouponPolicyDTO {
 	private Long couponPolicyMaximumAmount;
 	private Long couponPolicySalePrice;
 	private Integer couponPolicyDiscountRate;
-	@NotNull
-	private LocalDateTime couponPolicyCreatedAt;
 	@NotNull
 	private String couponPolicyName;
 }
