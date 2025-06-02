@@ -60,19 +60,6 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	}
 
 	/**
-	 * order 전용 - 도서 여러권 리스트 조회
-	 */
-	@Override
-	public List<ResponseProductReadDTO> getProducts(List<Long> productIds) throws FeignException {
-		ResponseEntity<List<ResponseProductReadDTO>> response = productAdminAdaptor.getProducts(productIds);
-
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("order 전용 리스트 조회 실패");
-		}
-		return response.getBody();
-	}
-
-	/**
 	 * 도서 수정
 	 */
 	@Override

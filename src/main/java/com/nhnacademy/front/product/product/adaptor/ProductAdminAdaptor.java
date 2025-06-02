@@ -32,9 +32,6 @@ public interface ProductAdminAdaptor {
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(Pageable pageable);
 
-	@GetMapping("/order")
-	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
-
 	@GetMapping("/register")
 	ResponseEntity<Void> getRegisterView();
 
@@ -68,6 +65,5 @@ public interface ProductAdminAdaptor {
 
 	@PostMapping("/aladdin/register/list")
 	ResponseEntity<Void> postCreateProductQueryByApi(@RequestBody RequestProductApiCreateByQueryDTO request);
-
 
 }

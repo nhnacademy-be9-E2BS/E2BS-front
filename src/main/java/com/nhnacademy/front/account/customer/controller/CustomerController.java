@@ -22,10 +22,39 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/customer")
 public class CustomerController {
 
 	private final CustomerService customerService;
-	
+
+	@GetMapping("/login")
+	public String getCustomerLogin() {
+		return "member/login/customer-login";
+	}
+
+	@PostMapping("/login")
+	public String loginCustomer(@Validated @ModelAttribute RequestCustomerLoginDTO requestCustomerLoginDTO,
+		BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new ValidationFailedException(bindingResult);
+		}
+		Customer customer = customerService.customerLogin(requestCustomerLoginDTO);
+
+		return "redirect:/";
+	}
+
+	@PostMapping("/register")
+	public String registerCustomer(@Validated @ModelAttribute RequestCustomerRegisterDTO requestCustomerRegisterDTO,
+		BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new ValidationFailedException(bindingResult);
+		}
+		Customer customer = customerService.customerRegister(requestCustomerRegisterDTO);
+
+		return "redirect:/";
+	}
+
+
 	// 비회원 주문 전 인증 폼
 	@GetMapping("/customers/orders/auth")
 	public String guestAuthForm() {

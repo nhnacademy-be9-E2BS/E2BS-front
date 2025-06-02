@@ -20,7 +20,7 @@
                 <div class="col-lg-6">
                     <div class="login_form_inner">
                         <h3>E2BS</h3>
-                        <form class="row login_form" action="/login" method="post" id="contactForm">
+                        <form class="row login_form" action="/admin/admin/login" method="post" id="contactForm">
                             <div class="col-md-12 form-group">
                                 <input type="text" class="form-control" id="memberId" name="memberId"
                                        placeholder="아이디 입력하세요" onfocus="this.placeholder = ''"
@@ -49,6 +49,38 @@
                 alert(decodeURIComponent(errorMessage));
             }
         </script>
+
+        <!-- 휴면 상태 알림 모달 -->
+        <div id="dormantModal">
+            <h4>휴면 상태 안내</h4>
+            <p>회원님의 계정은 휴면 상태입니다.<br>휴면 상태를 해제하시겠습니까?</p>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button onclick="closeDormantModal()" class="modal-btn btn-cancel">취소</button>
+                <form action="/member/dormant/restore" method="post">
+                    <button type="submit" class="modal-btn btn-confirm">해제</button>
+                </form>
+            </div>
+        </div>
+        <div id="modalBackdrop"></div>
+
+        <!-- 모달 실행 스크립트 -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const memberState = /*[[${session.memberState}]]*/ null;
+
+            if (memberState === 'DORMANT') {
+                document.getElementById('dormantModal').style.display = 'block';
+                document.getElementById('modalBackdrop').style.display = 'block';
+            }
+
+            function closeDormantModal() {
+                document.getElementById('dormantModal').style.display = 'none';
+                document.getElementById('modalBackdrop').style.display = 'none';
+            }
+
+            /*]]>*/
+        </script>
+
 
     </section>
     <!--================End Login Box Area =================-->

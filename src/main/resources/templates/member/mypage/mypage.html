@@ -1,94 +1,96 @@
 <!DOCTYPE html>
-<html
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{layouts/mypage-layout}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mypage-layout}">
 <body>
 <div layout:fragment="content">
-    <h3>마이페이지</h3>
     <section>
-        <div class="container" style="padding: 20px;">
+        <div class="container" style="padding: 30px 20px;">
             <style>
                 .info-box-container {
                     display: flex;
                     flex-wrap: wrap;
-                    gap: 20px;
-                    margin-top: 20px;
+                    justify-content: space-between;
+                    background-color: #151f53;
+                    border-radius: 12px;
+                    padding: 30px 20px;
+                    color: white;
                 }
 
                 .info-box {
-                    flex: 1 1 200px;
-                    background-color: #f8f9fa;
-                    border-radius: 12px;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    padding: 20px;
+                    flex: 1 1 160px;
                     text-align: center;
+                    min-width: 140px;
+                    padding: 10px;
+                    border-right: 1px solid rgba(255, 255, 255, 0.2);
                 }
 
-                .info-box h3 {
-                    margin: 0;
-                    font-size: 1.2rem;
-                    color: #333;
+                .info-box:last-child {
+                    border-right: none;
                 }
 
-                .info-box p {
-                    margin-top: 10px;
-                    font-size: 1.6rem;
+                .info-box i {
+                    font-size: 28px;
+                    display: block;
+                    margin-bottom: 10px;
+                    color: white;
+                }
+
+                .info-title {
+                    font-size: 0.9rem;
+                    color: #dbe1ff;
+                    margin-bottom: 5px;
+                }
+
+                .info-value {
+                    font-size: 1.4rem;
                     font-weight: bold;
-                    color: #007bff;
+                    color: white;
                 }
 
-                .badge-normal {
-                    color: gray;
-                    background-color: #f0f0f0;
-                    padding: 6px 12px;
-                    border-radius: 8px;
-                }
+                /* Font Awesome 예비 적용 (원하는 아이콘으로 변경 가능) */
+                @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
-                .badge-royal {
-                    color: royalblue;
-                    background-color: #e8f0ff;
-                    padding: 6px 12px;
-                    border-radius: 8px;
-                }
+                @media (max-width: 768px) {
+                    .info-box-container {
+                        flex-direction: column;
+                        gap: 20px;
+                    }
 
-                .badge-gold {
-                    color: goldenrod;
-                    background-color: #fff7d1;
-                    padding: 6px 12px;
-                    border-radius: 8px;
-                }
+                    .info-box {
+                        border-right: none !important;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    }
 
-                .badge-platinum {
-                    color: slateblue;
-                    background-color: #e4e4ff;
-                    padding: 6px 12px;
-                    border-radius: 8px;
+                    .info-box:last-child {
+                        border-bottom: none;
+                    }
                 }
             </style>
 
             <div class="info-box-container">
                 <div class="info-box">
-                    <h3>잔여 포인트</h3>
-                    <p th:text="${pointAmount} + ' P'"></p>
+                    <i class="fas fa-receipt"></i>
+                    <div class="info-title">진행중 주문건</div>
+                    <div class="info-value" th:text="${orderCnt} + '건'">0건</div>
                 </div>
                 <div class="info-box">
-                    <h3>보유 쿠폰</h3>
-                    <p th:text="${couponCnt} + ' 장'"></p>
+                    <i class="fas fa-ticket-alt"></i>
+                    <div class="info-title">쿠폰</div>
+                    <div class="info-value" th:text="${couponCnt} + '장'">0장</div>
                 </div>
                 <div class="info-box">
-                    <h3>회원 등급</h3>
-                    <p th:switch="${rankName}">
-                        <a th:href="@{/mypage/rank}" th:case="NORMAL" th:class="'badge-normal'">일반</a>
-                        <a th:href="@{/mypage/rank}" th:case="ROYAL" th:class="'badge-royal'">로얄</a>
-                        <a th:href="@{/mypage/rank}" th:case="GOLD" th:class="'badge-gold'">골드</a>
-                        <a th:href="@{/mypage/rank}" th:case="PLATINUM" th:class="'badge-platinum'">플래티넘</a>
-                        <span th:case="*">-</span>
-                    </p>
+                    <i class="fas fa-coins"></i>
+                    <div class="info-title">포인트</div>
+                    <div class="info-value" th:text="${pointAmount} + '원'">1,000원</div>
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-wallet"></i>
+                    <div class="info-title">예치금</div>
+                    <div class="info-value" th:text="${depositAmount} + '원'">0원</div>
                 </div>
             </div>
         </div>
     </section>
 </div>
-
 </body>
 </html>

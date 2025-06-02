@@ -45,6 +45,16 @@ member:
   register:
     url: http://localhost:10232/api/register
 
+  state:
+    url: http://localhost:10232/api/members
+
+customer:
+  login:
+    url: http://localhost:10232/api/customer/login
+
+  register:
+    url: http://localhost:10232/api/customer/register
+
 oauth:
   login:
     url: http://localhost:10232/api/oauth/login
