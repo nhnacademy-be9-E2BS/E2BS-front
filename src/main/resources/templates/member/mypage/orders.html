@@ -33,9 +33,18 @@
                             <td th:text="${order.receiveDate}"></td>
                             <td th:text="${order.orderCode}"
                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></td>
-                            <td th:text="${order.paymentAmount} + ${order.pointAmount}"></td>
-                            <td th:text="${order.state}"></td>
-                            <td th:text="${order.paid}"></td>
+                            <td th:text="${T(java.lang.String).format('%,d',order.paymentAmount + order.pointAmount)}">
+                            <td th:switch="${order.state}">
+                                <span th:case="'WAIT'">배송 대기</span>
+                                <span th:case="'CANCEL'">주문 취소</span>
+                                <span th:case="'DELIVERY'">배송 중</span>
+                                <span th:case="'RETURN'">반품</span>
+                                <span th:case="'COMPLETE'">배송 완료</span>
+                            </td>
+                            <td th:switch="${order.paid}">
+                                <span th:case="true">결제 완료</span>
+                                <span th:case="false">결제 대기</span>
+                            </td>
                             <td>
                                 <a th:href="'/mypage/orders/'+${order.orderCode}">상세 보기</a>
                             </td>

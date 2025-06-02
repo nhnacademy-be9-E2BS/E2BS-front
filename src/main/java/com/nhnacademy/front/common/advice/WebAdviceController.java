@@ -22,6 +22,7 @@ import com.nhnacademy.front.account.customer.exception.CustomerLoginProcessingEx
 import com.nhnacademy.front.account.customer.exception.CustomerPasswordCheckException;
 import com.nhnacademy.front.account.customer.exception.CustomerRegisterProcessingException;
 import com.nhnacademy.front.account.member.exception.GetMemberStateFailedException;
+import com.nhnacademy.front.account.customer.exception.CustomerLoginCheckException;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberIdException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberInfoException;
@@ -30,11 +31,14 @@ import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordEx
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.account.memberrank.exception.NotFoundMemberRankException;
 import com.nhnacademy.front.account.oauth.exception.PaycoProcessingException;
+import com.nhnacademy.front.cart.exception.CartProcessException;
 import com.nhnacademy.front.common.exception.EmptyRequestException;
 import com.nhnacademy.front.common.exception.EmptyResponseException;
 import com.nhnacademy.front.common.exception.LoginRedirectException;
 import com.nhnacademy.front.common.exception.ServerErrorException;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.product.like.exception.LikeProcessException;
+import com.nhnacademy.front.review.exception.ReviewProcessException;
 
 @ControllerAdvice
 public class WebAdviceController {
@@ -46,6 +50,7 @@ public class WebAdviceController {
 		return modelAndView;
 	}
 
+	// 잘못된 요청 에러
 	@ExceptionHandler({RegisterNotEqualsPasswordException.class, GetAddressFailedException.class,
 		SaveJwtTokenProcessException.class, EmptyResponseException.class, RegisterProcessException.class,
 		EmptyRequestException.class, ValidationFailedException.class, LoginProcessException.class,
@@ -54,11 +59,13 @@ public class WebAdviceController {
 		AdminSettingsMemberUpdateFailedException.class, AdminSettingsMemberDeleteFailedException.class,
 		PaycoProcessingException.class, CustomerLoginProcessingException.class,
 		CustomerRegisterProcessingException.class,
-		CustomerPasswordCheckException.class, GetMemberStateFailedException.class})
+		CustomerPasswordCheckException.class, GetMemberStateFailedException.class,
+		CartProcessException.class, ReviewProcessException.class, LikeProcessException.class})
 	public ResponseEntity<String> registerNotEqualsPasswordException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 
+	// 찾지 못한 에러
 	@ExceptionHandler({NotFoundMemberIdException.class, NotFoundMemberRankNameException.class,
 		NotFoundMemberRankException.class, NotFoundMemberInfoException.class})
 	public ResponseEntity<String> notFoundMemberIdException(Exception ex) {
@@ -71,6 +78,12 @@ public class WebAdviceController {
 		Map<String, String> body = new HashMap<>();
 		body.put("errorMessage", ex.getMessage());
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+	}
+
+	// 인증 관련 에러
+	@ExceptionHandler({CustomerLoginCheckException.class})
+	public ResponseEntity<String> authException(Exception ex) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
 	}
 
 }

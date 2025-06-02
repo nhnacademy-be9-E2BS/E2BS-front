@@ -24,9 +24,6 @@ public interface ProductAdminService {
 	//관리자 - 전체 도서 페이지로 조회
 	PageResponse<ResponseProductReadDTO> getProducts(Pageable pageable);
 
-	//Order전용 - 도서 여러권 리스트로 조회
-	List<ResponseProductReadDTO> getProducts(List<Long> productIds);
-
 	//관리자 - 도서 수정
 	void updateProduct(long productId, RequestProductDTO request);
 

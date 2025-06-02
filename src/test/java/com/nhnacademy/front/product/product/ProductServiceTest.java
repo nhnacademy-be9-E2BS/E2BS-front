@@ -155,4 +155,52 @@ class ProductServiceTest {
 		assertThatThrownBy(() -> productService.getProductsByCategoryId(pageable, 1L))
 			.isInstanceOf(ProductGetProcessException.class);
 	}
+
+	@Test
+	@DisplayName("get products order - success")
+	void get_products_order_success_test() {
+		// given
+		ResponseProductStateDTO productStateDTO = new ResponseProductStateDTO(1L, ProductStateName.SALE.name());
+		ResponsePublisherDTO publisherDTO = new ResponsePublisherDTO(1L, "publisher");
+		ResponseCategoryDTO categoryADTO = new ResponseCategoryDTO(1L, "category A", null);
+		ResponseCategoryDTO categoryBDTO = new ResponseCategoryDTO(2L, "category B", null);
+		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
+			"content A", "description A",
+			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
+			List.of(categoryADTO), new ArrayList<>());
+		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
+			"content B", "description B",
+			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
+			List.of(categoryADTO), new ArrayList<>());
+		ResponseProductReadDTO responseC = new ResponseProductReadDTO(3L, productStateDTO, publisherDTO, "title C",
+			"content C", "description C",
+			LocalDate.now(), "978-89-12345-01-3", 6000, 5000, true, 700, new ArrayList<>(), new ArrayList<>(),
+			List.of(categoryBDTO), new ArrayList<>());
+		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB, responseC);
+
+		List<Long> productIds = List.of(1L, 2L, 3L);
+		ResponseEntity<List<ResponseProductReadDTO>> response = new ResponseEntity<>(dtos, HttpStatus.OK);
+
+		when(productAdaptor.getProducts(productIds)).thenReturn(response);
+
+		// when
+		List<ResponseProductReadDTO> result = productService.getProducts(productIds);
+
+		// then
+		assertThat(result).isEqualTo(dtos);
+		verify(productAdaptor, times(1)).getProducts(productIds);
+	}
+
+	@Test
+	@DisplayName("get products order - fail")
+	void get_products_order_fail_test() {
+		// given
+		List<Long> productIds = List.of(1L, 2L, 3L);
+		ResponseEntity<List<ResponseProductReadDTO>> responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		when(productAdaptor.getProducts(productIds)).thenReturn(responseEntity);
+
+		// when & then
+		assertThatThrownBy(() -> productService.getProducts(productIds))
+			.isInstanceOf(ProductGetProcessException.class);
+	}
 }
