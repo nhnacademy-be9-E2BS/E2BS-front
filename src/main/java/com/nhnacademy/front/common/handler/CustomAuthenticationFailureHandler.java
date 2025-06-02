@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 	private static final String ADMIN_LOGIN_URL = "/admin/login";
+	private static final String CUSTOMER_URL = "/customer/login";
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request,
@@ -27,9 +28,13 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
 		if (url.contains(ADMIN_LOGIN_URL)) {
 			response.sendRedirect("/admin/login?error=" + URLEncoder.encode(loginErrorMessage, StandardCharsets.UTF_8));
+		} else if (url.contains(CUSTOMER_URL)) {
+			response.sendRedirect(
+				"/customer/login?error=" + URLEncoder.encode(loginErrorMessage, StandardCharsets.UTF_8));
 		} else {
 			response.sendRedirect("/login?error=" + URLEncoder.encode(loginErrorMessage, StandardCharsets.UTF_8));
 		}
+
 	}
 
 }

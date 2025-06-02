@@ -79,13 +79,68 @@
 
 
 <div class="col-xl-3 col-lg-4 col-md-5" th:fragment="mypage-sidebar">
+    <style>
+        .sidebar-filter {
+            background-color: #fff;
+            border: 1px solid;
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
 
-    <div class="profile-box" style="text-align: center; margin-bottom: 20px;">
-        <div style="margin-top: 10px; font-weight: bold;" th:text="${memberName}"> 님</div>
-    </div>
+        .top-filter-head {
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .common-filter {
+            border-top: 1px solid #eee;
+            padding: 16px 18px 12px;
+        }
+
+        .common-filter .head {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .common-filter ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .filter-list {
+            margin-bottom: 4px;
+        }
+
+        .filter-list a {
+            font-size: 14px;
+            color: #444;
+            padding: 6px 8px;
+            display: block;
+            border-radius: 6px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .filter-list a:hover {
+            background-color: #f0f4ff;
+        }
+
+        .filter-list a.active {
+            background-color: #e2eaff;
+            color: #1a237e;
+            font-weight: 600;
+        }
+
+    </style>
 
     <div class="sidebar-filter">
-        <div class="top-filter-head">Member</div>
+        <div class="top-filter-head">마이페이지</div>
         <div class="common-filter">
             <div class="head">주문 내역</div>
             <ul>

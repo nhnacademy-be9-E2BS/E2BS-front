@@ -2,9 +2,14 @@ package com.nhnacademy.front.common.config;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -61,4 +66,22 @@ public class WebConfig implements WebMvcConfigurer {
 			.excludePathPatterns("/error/**");
 
 	}
+
+	/**
+	 * password 암호화를 위한 빈 객체 추가
+	 */
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	/**
+	 * JwtAuthenticationFilter 에서 사용할 AuthenticationManager
+	 */
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+		throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
+
 }

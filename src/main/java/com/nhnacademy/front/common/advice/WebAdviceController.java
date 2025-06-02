@@ -18,6 +18,10 @@ import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberDeleteFai
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
 import com.nhnacademy.front.account.auth.exception.SaveJwtTokenProcessException;
+import com.nhnacademy.front.account.customer.exception.CustomerLoginProcessingException;
+import com.nhnacademy.front.account.customer.exception.CustomerPasswordCheckException;
+import com.nhnacademy.front.account.customer.exception.CustomerRegisterProcessingException;
+import com.nhnacademy.front.account.member.exception.GetMemberStateFailedException;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberIdException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberInfoException;
@@ -48,7 +52,9 @@ public class WebAdviceController {
 		SaveAddressFailedException.class, DeleteAddressFailedException.class, UpdateAddressFailedException.class,
 		AdminSettingsFailedException.class, AdminSettingsMembersFailedException.class,
 		AdminSettingsMemberUpdateFailedException.class, AdminSettingsMemberDeleteFailedException.class,
-		PaycoProcessingException.class})
+		PaycoProcessingException.class, CustomerLoginProcessingException.class,
+		CustomerRegisterProcessingException.class,
+		CustomerPasswordCheckException.class, GetMemberStateFailedException.class})
 	public ResponseEntity<String> registerNotEqualsPasswordException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
