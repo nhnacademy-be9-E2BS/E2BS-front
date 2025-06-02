@@ -58,13 +58,6 @@
                             <li class="nav-item dropdown mypage-hover"
                                 th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}">
                                 <a class="nav-link dropdown-toggle" href="/mypage" id="mypageDropdown">마이페이지</a>
-                                <ul class="dropdown-menu mypage-dropdown" aria-labelledby="mypageDropdown">
-                                    <li><a class="dropdown-item" href="/mypage">나의 계정</a></li>
-                                    <li><a class="dropdown-item" href="/mypage/orders">주문/배송조회</a></li>
-                                    <li><a class="dropdown-item" href="#">보관함</a></li>
-                                    <li><a class="dropdown-item" href="#">구매함</a></li>
-                                    <li><a class="dropdown-item" href="#">나의 서재</a></li>
-                                </ul>
                             </li>
 
                             <li class="nav-item dropdown mypage-hover"

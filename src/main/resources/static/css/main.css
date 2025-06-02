@@ -99,12 +99,12 @@ a {
 }
 
 .section-margin--small {
-    margin: 35px 0
+    margin: 2% 0
 }
 
 @media (min-width: 1000px) {
     .section-margin--small {
-        margin: 98px 0
+        margin: 2% 0
     }
 }
 
@@ -2604,7 +2604,7 @@ a {
 .sidebar-filter .top-filter-head {
     font-family: 'Oswald', sans-serif;
     line-height: 50px;
-    background: #384aeb;
+    background: #f8f9fa;
     padding: 0 30px;
     font-size: 18px;
     font-weight: 400;

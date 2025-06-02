@@ -8,10 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.account.member.adaptor.MemberInfoAdaptor;
 import com.nhnacademy.front.account.member.adaptor.MemberRegisterAdaptor;
+import com.nhnacademy.front.account.member.adaptor.MemberStateAdaptor;
+import com.nhnacademy.front.account.member.exception.GetMemberStateFailedException;
 import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordException;
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.account.member.model.dto.request.RequestRegisterMemberDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberStateDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseRegisterMemberDTO;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
@@ -28,6 +31,7 @@ public class MemberService {
 	private final MemberRegisterAdaptor memberRegisterAdaptor;
 	private final PasswordEncoder passwordEncoder;
 	private final MemberInfoAdaptor memberInfoAdaptor;
+	private final MemberStateAdaptor memberStateAdaptor;
 
 	/**
 	 * 회원가입 정보를 back 레파지토리 member 테이블에 저장하기 위한 메소드
@@ -77,6 +81,19 @@ public class MemberService {
 		}
 
 		return memberInfoDTO.getBody().getCustomer().getCustomerName();
+	}
+
+	public String getMemberState(String memberId) {
+		try {
+			ResponseEntity<ResponseMemberStateDTO> response = memberStateAdaptor.getMemberState(memberId);
+			if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
+				throw new GetMemberStateFailedException("회원 상태를 가져오지 못했습니다.");
+			}
+
+			return response.getBody().getMemberstate();
+		} catch (FeignException ex) {
+			throw new GetMemberStateFailedException("회원 상태를 가져오지 못했습니다.");
+		}
 	}
 
 }
