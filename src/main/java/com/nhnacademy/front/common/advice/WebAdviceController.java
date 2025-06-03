@@ -19,6 +19,13 @@ import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFai
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
 import com.nhnacademy.front.account.auth.exception.SaveJwtTokenProcessException;
 import com.nhnacademy.front.account.customer.exception.CustomerLoginCheckException;
+import com.nhnacademy.front.account.customer.exception.CustomerLoginProcessingException;
+import com.nhnacademy.front.account.customer.exception.CustomerPasswordCheckException;
+import com.nhnacademy.front.account.customer.exception.CustomerRegisterProcessingException;
+import com.nhnacademy.front.account.member.exception.DormantDoorayNotMatchedNumberException;
+import com.nhnacademy.front.account.member.exception.DormantEmailNotMatchedNumberException;
+import com.nhnacademy.front.account.member.exception.DormantProcessingException;
+import com.nhnacademy.front.account.member.exception.GetMemberStateFailedException;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberIdException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberInfoException;
@@ -53,7 +60,12 @@ public class WebAdviceController {
 		SaveAddressFailedException.class, DeleteAddressFailedException.class, UpdateAddressFailedException.class,
 		AdminSettingsFailedException.class, AdminSettingsMembersFailedException.class,
 		AdminSettingsMemberUpdateFailedException.class, AdminSettingsMemberDeleteFailedException.class,
-		PaycoProcessingException.class, CartProcessException.class, ReviewProcessException.class, LikeProcessException.class})
+		PaycoProcessingException.class, CustomerLoginProcessingException.class,
+		CustomerRegisterProcessingException.class,
+		CustomerPasswordCheckException.class, GetMemberStateFailedException.class,
+		CartProcessException.class, ReviewProcessException.class, LikeProcessException.class,
+		DormantProcessingException.class, DormantDoorayNotMatchedNumberException.class,
+		DormantEmailNotMatchedNumberException.class})
 	public ResponseEntity<String> registerNotEqualsPasswordException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
@@ -78,5 +90,5 @@ public class WebAdviceController {
 	public ResponseEntity<String> authException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
 	}
-	
+
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.adaptor.OrderAdminAdaptor;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -29,4 +30,7 @@ public class OrderAdminService {
 		return orderAdminAdaptor.startDelivery(orderCode);
 	}
 
+	public ResponseEntity<PageResponse<ResponseOrderReturnDTO>> getReturnOrders(Pageable pageable){
+		return orderAdminAdaptor.getReturnOrders(pageable);
+	}
 }

@@ -9,8 +9,86 @@
             <h2>쿠폰함</h2>
 
             <style>
-                th {
-                    white-space: nowrap;
+                h2 {
+                    font-size: 28px;
+                    font-weight: bold;
+                    margin-bottom: 30px;
+                    color: #333;
+                }
+
+                .coupon-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .coupon-box {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    background: linear-gradient(90deg, #e3f2fd, #ede7f6);
+                    border-radius: 16px;
+                    padding: 20px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                    border: 1px solid #ddd;
+                    position: relative;
+                }
+
+                .coupon-header {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #3949ab;
+                    margin-bottom: 8px;
+                }
+
+                .coupon-name {
+                    font-size: 20px;
+                    font-weight: bold;
+                    margin-bottom: 6px;
+                    color: #212121;
+                }
+
+                .coupon-description {
+                    font-size: 14px;
+                    color: #555;
+                    margin-bottom: 10px;
+                }
+
+                .coupon-valid {
+                    font-size: 13px;
+                    color: #333;
+                    margin-top: auto;
+                    font-weight: 500;
+                }
+
+                .coupon-footer {
+                    font-size: 12px;
+                    margin-top: 8px;
+                    color: #777;
+                    background-color: #f1f3f4;
+                    display: inline-block;
+                    padding: 4px 10px;
+                    border-radius: 10px;
+                }
+
+                .pagination {
+                    margin-top: 40px;
+                    justify-content: center;
+                }
+
+                .page-link {
+                    color: #007bff;
+                }
+
+                .page-item.active .page-link {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                    color: white;
+                }
+
+                .page-item.disabled .page-link {
+                    color: #ccc;
+                    pointer-events: none;
                 }
             </style>
 
@@ -67,6 +145,22 @@
                        </tr>
                        </tbody>
                     </table>
+                    <div class="coupon-wrapper">
+                        <div class="coupon-box" th:each="coupon : ${memberCoupons.content}">
+                            <div class="coupon-header" th:text="${coupon.couponPolicyName}">T Day 이벤트</div>
+                            <div class="coupon-name" th:text="${coupon.couponName}">5,000원 할인</div>
+                            <div class="coupon-description">
+                                <span th:if="${coupon.categoryName != null}"
+                                      th:text="${coupon.categoryName} + ' 카테고리 대상'"></span>
+                                <span th:unless="${coupon.categoryName != null}">해당 카테고리 없음</span>
+                            </div>
+                            <div class="coupon-valid">
+                                유효기간 : <span th:text="${#temporals.format(coupon.memberCouponCreatedAt, 'yyyy.MM.dd')}"></span>
+                                ~ <span th:text="${#temporals.format(coupon.memberCouponPeriod, 'yyyy.MM.dd')}"></span>
+                            </div>
+                            <div class="coupon-footer" th:text="${coupon.memberCouponUsed ? '사용완료' : '미사용'}">미사용</div>
+                        </div>
+                    </div>
 
                     <!-- 페이징 -->
                     <div class="row">
@@ -97,6 +191,7 @@
 
                 </div>
             </div>
+
         </div>
     </section>
 </div>
