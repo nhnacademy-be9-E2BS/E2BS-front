@@ -69,7 +69,7 @@ public class PointPolicyController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		pointPolicyService.createPointPolicy(request);
-		return "redirect:/admin/settings/point-policies";
+		return "redirect:/admin/settings/pointPolicies";
 	}
 
 	/**

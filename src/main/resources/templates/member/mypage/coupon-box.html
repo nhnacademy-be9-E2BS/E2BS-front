@@ -17,13 +17,25 @@
             <!-- 쿠폰 목록 -->
             <div class="row mb-5">
                 <div class="col-12">
+                    <!-- 상태 선택 필터 폼 -->
+                    <form method="get" action="/mypage/couponBox" style="margin-bottom: 1rem;">
+                        <label for="status">쿠폰 상태:</label>
+                        <select id="status" name="status" class="form-select"
+                                style="display: inline-block; width: 200px;">
+                            <option value="">-- 전체 보기 --</option>
+                            <option value="1" th:selected="${param.status == '1'}">전체</option>
+                            <option value="2" th:selected="${param.status == '2'}">사용가능</option>
+                            <option value="3" th:selected="${param.status == '3'}">사용불가</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm">필터 적용</button>
+                    </form>
+
                     <table class="table table-bordered">
                         <thead>
                         <tr>
                             <th>쿠폰명</th>
                             <th>쿠폰정책</th>
-                            <th>할인 카테고리</th>
-                            <th>할인 도서</th>
+                            <th>할인 대상</th>
                             <th>발급일</th>
                             <th>만료일</th>
                             <th>사용여부</th>
@@ -37,22 +49,22 @@
                            <td>
                                <a th:if="${coupon.categoryName != null}"
                                   th:href="@{/books/category/{id}(id=${coupon.categoryId})}"
-                                  th:text="${coupon.categoryName}">카테고리명</a>
-                               <span th:unless="${coupon.categoryName != null}">-</span>
-                           </td>
-
-                           <td>
+                                  th:text="'카테고리: ' + ${coupon.categoryName}">카테고리명</a>
+                               <span th:unless="${coupon.categoryName != null}"></span>
                                <a th:if="${coupon.productTitle != null}"
                                   th:href="@{/books/{id}(id=${coupon.productId})}"
-                                  th:text="${coupon.productTitle}">도서명</a>
-                               <span th:unless="${coupon.productTitle != null}">-</span>
+                                  th:text="'도서: ' + ${coupon.productTitle}">도서명</a>
+                               <span th:unless="${coupon.productTitle != null}"></span>
                            </td>
 
                            <td th:text="${#temporals.format(coupon.memberCouponCreatedAt, 'yyyy-MM-dd HH:mm')}">발급일</td>
                            <td th:text="${#temporals.format(coupon.memberCouponPeriod, 'yyyy-MM-dd HH:mm')}">만료일</td>
-                           <td th:text="${coupon.memberCouponUsed ? '사용완료' : '미사용'}">사용여부</td>
+                           <td>
+                               <span th:if="${coupon.memberCouponUsed}">사용완료</span>
+                               <span th:if="${!coupon.memberCouponUsed and coupon.memberCouponPeriod.isBefore(T(java.time.LocalDateTime).now())}">만료</span>
+                               <span th:if="${!coupon.memberCouponUsed and !coupon.memberCouponPeriod.isBefore(T(java.time.LocalDateTime).now())}">미사용</span>
+                           </td>
                        </tr>
-
                        </tbody>
                     </table>
 
@@ -63,20 +75,20 @@
                                 <ul class="pagination" th:if="${memberCoupons.totalPages > 0}">
                                     <li class="page-item" th:classappend="${!memberCoupons.hasPrevious()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/mypage/couponBox'(page=0, size=${memberCoupons.size})}">처음</a>
+                                           th:href="@{'/mypage/couponBox'(page=0, size=${memberCoupons.size}, status=${status})}">처음</a>
                                     </li>
 
                                     <li class="page-item"
                                         th:each="i : ${#numbers.sequence(0, memberCoupons.totalPages - 1)}"
                                         th:classappend="${i == memberCoupons.number} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{'/mypage/couponBox'(page=${i}, size=${memberCoupons.size})}"
+                                           th:href="@{'/mypage/couponBox'(page=${i}, size=${memberCoupons.size}, status=${status})}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
                                     <li class="page-item" th:classappend="${!memberCoupons.hasNext()} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{'/mypage/couponBox'(page=${memberCoupons.totalPages - 1}, size=${memberCoupons.size})}">마지막</a>
+                                           th:href="@{'/mypage/couponBox'(page=${memberCoupons.totalPages - 1}, size=${memberCoupons.size}, status=${status})}">마지막</a>
                                     </li>
                                 </ul>
                             </nav>
