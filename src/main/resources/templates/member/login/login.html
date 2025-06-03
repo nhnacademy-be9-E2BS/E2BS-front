@@ -134,7 +134,7 @@
             <p>회원님의 계정은 휴면 상태입니다.<br>휴면 상태를 해제하시겠습니까?</p>
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button onclick="closeDormantModal()" class="modal-btn btn-cancel">취소</button>
-                <form action="/member/dormant/restore" method="post">
+                <form action="/member/login/dormant" method="get">
                     <button type="submit" class="modal-btn btn-confirm">해제</button>
                 </form>
             </div>
@@ -145,8 +145,9 @@
         <script th:inline="javascript">
             /*<![CDATA[*/
             const memberState = /*[[${session.memberState}]]*/ null;
+            const dormantCnt = /*[[${session.dormantCnt}]]*/ null;
 
-            if (memberState === 'DORMANT') {
+            if (memberState === 'DORMANT' && dormantCnt === 1) {
                 document.getElementById('dormantModal').style.display = 'block';
                 document.getElementById('modalBackdrop').style.display = 'block';
             }
