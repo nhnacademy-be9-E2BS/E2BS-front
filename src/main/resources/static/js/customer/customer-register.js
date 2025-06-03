@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 // 가입 성공 시 주문서로 이동 요청
                 // form 생성해서 responseData 전송
                 const form = $('<form>', {
-                    action: '/guests/orders',
+                    action: '/customers/order',
                     method: 'POST'
                 });
 

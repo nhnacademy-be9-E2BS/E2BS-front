@@ -1,9 +1,13 @@
 package com.nhnacademy.front.order.order.controller;
 
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -22,12 +26,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAddressDTO;
 import com.nhnacademy.front.account.address.service.AddressService;
+import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerRegisterDTO;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
-import com.nhnacademy.front.account.member.service.MemberService;
 import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
@@ -50,9 +56,9 @@ import com.nhnacademy.front.order.wrapper.service.WrapperService;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryIdsDTO;
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
-import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -78,8 +84,11 @@ public class OrderController {
 
 	private final UserCategoryService userCategoryService;
 	private final MemberCouponService memberCouponService;
+
+	private final ObjectMapper objectMapper;
+
 	/**
-	 * 결제 주문서 작성 페이지
+	 * 회원 상태에서 결제 주문서 작성 페이지
 	 */
 	@JwtTokenCheck
 	@PostMapping("/order")
@@ -115,8 +124,67 @@ public class OrderController {
 		return "payment/checkout";
 	}
 
-	@PostMapping("/guests/orders")
-	public String getCheckOutGuest(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest, HttpServletRequest request) {
+	/**
+	 * 로그인 성공시의 선택한 장바구니 항목들에 대한 회원 결제 주문서 작성 페이지
+	 */
+	@JwtTokenCheck
+	@GetMapping("/members/carts/order")
+	public String getCheckOutMemberCart(Model model, HttpServletRequest request) throws JsonProcessingException {
+		Cookie[] cookies = request.getCookies();
+		if (Objects.isNull(cookies)) {
+			throw new IllegalArgumentException("Cookie is null");
+		}
+
+		String encodedCart = null;
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals("orderCart")) {
+				System.out.println("orderCart: " + cookie.getValue());
+
+				encodedCart = cookie.getValue();
+				break;
+			}
+		}
+
+		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
+		RequestCartOrderDTO orderRequest = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
+
+		List<Integer> quantities = orderRequest.getCartQuantities();
+		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getProductIds());
+		List<ResponseWrapperDTO> wrappers = wrapperService.getWrappersBySaleable(Pageable.unpaged()).getContent();
+		ResponseMemberInfoDTO member = memberMypageService.getMemberInfo(request);
+		long memberPoint = memberMypageService.getMemberPoint(new RequestMemberIdDTO(member.getMemberId()));
+		List<ResponseMemberAddressDTO> addresses = addressService.getMemberAddresses(member.getMemberId());
+		ResponseMemberAddressDTO defaultAddress = addresses.stream().filter(addr -> addr.isAddressDefault()).findFirst().orElse(null);
+
+		List<ResponseOrderCouponDTO> coupons = memberCouponService.getCouponsInOrder(member.getMemberId(),orderRequest.getProductIds());
+		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(orderRequest.getProductIds());
+		Map<Long, List<Long>> productCategoryMap = new HashMap<>();
+		for (ResponseCategoryIdsDTO dto : categories) {
+			productCategoryMap.put(dto.getProductId(), dto.getCategoryIds());
+		}
+
+		model.addAttribute("products", products);
+		model.addAttribute("quantities", quantities);
+		model.addAttribute("wrappers", wrappers);
+		model.addAttribute("member", member);
+		model.addAttribute("memberPoint", memberPoint);
+		model.addAttribute("addresses", addresses);
+		model.addAttribute("defaultAddress", defaultAddress);
+		model.addAttribute("productCategories", productCategoryMap);
+		model.addAttribute("coupons", coupons);
+		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
+		model.addAttribute("tossClientKey", tossClientKey);
+		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
+		model.addAttribute("tossFailUrl", tossFailUrl);
+
+		return "payment/checkout";
+	}
+
+	/**
+	 * 비회원 가입 또는 로그인시 선택한 장바구니 항목들에 대한 결제 주문서 작성 페이지
+	 */
+	@PostMapping("/customers/order")
+	public String getCheckOutCustomerCart(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest, HttpServletRequest request) {
 		System.out.println("orderRequest = " + orderRequest);
 
 		return "payment/checkout";

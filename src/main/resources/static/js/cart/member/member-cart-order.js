@@ -1,12 +1,30 @@
-// 항목 체크에 대한 메소드
+// 항목 체크에 대한 이벤트 처리
 $(document).ready(function () {
-    // 체크박스가 변경될 때마다 총액 재계산
+    // 개별 체크 시 총액 계산
     $('.cart-item-checkbox').change(function () {
+        updateTotalPayment();
+
+        // 개별 체크 해제 시 전체 선택 체크박스도 해제
+        if (!$(this).is(':checked')) {
+            $('#select-all').prop('checked', false);
+        } else {
+            // 모든 항목이 체크되었는지 확인
+            const allChecked = $('.cart-item-checkbox').length === $('.cart-item-checkbox:checked').length;
+            $('#select-all').prop('checked', allChecked);
+        }
+    });
+
+    // 전체 선택 체크박스 동작
+    $('#select-all').change(function () {
+        const isChecked = $(this).is(':checked');
+        $('.cart-item-checkbox').prop('checked', isChecked);
         updateTotalPayment();
     });
 
+    // 초기 총액 계산
     updateTotalPayment();
 });
+
 function updateTotalPayment() {
     let total = 0;
 

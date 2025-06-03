@@ -17,8 +17,8 @@
             text-decoration: underline;
         }
         .product-title-wrapper {
-            font-weight: 5;
-            color: black;
+            font-weight: 500;          /* 글씨 진하게 */
+            color: #333;               /* 진한 색상으로 */
             width: 150px;              /* 원하는 고정 너비 설정 */
             white-space: nowrap;       /* 텍스트 줄바꿈 방지 */
             overflow: hidden;          /* 넘치는 텍스트 숨김 */
@@ -47,12 +47,14 @@
                   <table class="table" id="cart-container" style="text-align: center;">
                       <thead>
                           <tr>
-                              <th scope="col">상품명</th>
-                              <th scope="col">판매가</th>
-                              <th scope="col">수량</th>
-                              <th scope="col">합계</th>
-                              <th scope="col">삭제</th>
-                              <th scope="col">선택</th>
+                              <th>상품명</th>
+                              <th>판매가</th>
+                              <th>수량</th>
+                              <th>합계</th>
+                              <th>삭제</th>
+                              <th>
+                                  <input type="checkbox" id="select-all" checked />
+                              </th>
                           </tr>
                       </thead>
                       <tbody>
@@ -117,23 +119,14 @@
                           </tr>
 
                           <tr th:if="${not #lists.isEmpty(cartItemsByMember)}">
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td><h5>결졔 예정 금액</h5></td>
-                              <td><h5 class="total-payment-price" id="totalPaymentAmount"
-                                      th:text="${#numbers.formatInteger(totalPaymentAmount, 3, 'COMMA')} + '원'">30,000원</h5></td>
+                              <td colspan="4" style="text-align: right"><h5>결제 예정 금액</h5></td>
+                              <td colspan="2" ><h5 class="total-payment-price" id="totalPaymentAmount"
+                                                   th:text="${#numbers.formatInteger(totalPaymentAmount, 3, 'COMMA')} + '원'">30,000원</h5></td>
                           </tr>
 
                           <tr th:if="${not #lists.isEmpty(cartItemsByMember)}" class="out_button_area">
-                              <td class="d-none-l"></td>
-                              <td class=""></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td>
-                                  <div class="checkout_btn_inner d-flex align-items-center">
+                              <td colspan="6" style="text-align: right">
+                                  <div class="checkout_btn_inner">
                                       <button id="order-btn" type="button" class="primary-btn">주문하기</button>
                                   </div>
                               </td>
