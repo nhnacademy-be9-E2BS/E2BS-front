@@ -1,6 +1,5 @@
 package com.nhnacademy.front.order.order.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAddressDTO;
 import com.nhnacademy.front.account.address.service.AddressService;
+import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerRegisterDTO;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
-import com.nhnacademy.front.account.member.service.MemberService;
 import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
@@ -48,7 +47,6 @@ import com.nhnacademy.front.order.wrapper.service.WrapperService;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryIdsDTO;
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
-import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -110,6 +108,13 @@ public class OrderController {
 		model.addAttribute("tossClientKey", tossClientKey);
 		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
 		model.addAttribute("tossFailUrl", tossFailUrl);
+		return "payment/checkout";
+	}
+
+	@PostMapping("/guests/orders")
+	public String getCheckOutGuest(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest, HttpServletRequest request) {
+		System.out.println("orderRequest = " + orderRequest);
+
 		return "payment/checkout";
 	}
 

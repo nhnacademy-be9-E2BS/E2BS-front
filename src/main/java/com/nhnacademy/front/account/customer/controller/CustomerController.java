@@ -1,6 +1,8 @@
 package com.nhnacademy.front.account.customer.controller;
 
-import org.springframework.http.HttpStatus;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -9,95 +11,112 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.nhnacademy.front.account.customer.exception.CustomerLoginCheckException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.account.customer.model.dto.request.RequestCustomerLoginDTO;
 import com.nhnacademy.front.account.customer.model.dto.request.RequestCustomerRegisterDTO;
+import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerRegisterDTO;
 import com.nhnacademy.front.account.customer.service.CustomerService;
 import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/customer")
 public class CustomerController {
 
 	private final CustomerService customerService;
+	private final ObjectMapper objectMapper;
 
-	@GetMapping("/login")
+	@GetMapping("/customers/login")
 	public String getCustomerLogin() {
 		return "member/login/customer-login";
 	}
 
-	@PostMapping("/login")
-	public String loginCustomer(@Validated @ModelAttribute RequestCustomerLoginDTO requestCustomerLoginDTO,
-		BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			throw new ValidationFailedException(bindingResult);
-		}
-		Customer customer = customerService.customerLogin(requestCustomerLoginDTO);
 
-		return "redirect:/";
-	}
-
-	@PostMapping("/register")
-	public String registerCustomer(@Validated @ModelAttribute RequestCustomerRegisterDTO requestCustomerRegisterDTO,
-		BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			throw new ValidationFailedException(bindingResult);
-		}
-		Customer customer = customerService.customerRegister(requestCustomerRegisterDTO);
-
-		return "redirect:/";
-	}
-
-
-	// 비회원 주문 전 인증 폼
+	/// 비회원 주문 전 인증 폼
 	@GetMapping("/customers/orders/auth")
 	public String guestAuthForm() {
-		return "cart/guest-cart-auth";
+		return "customer/auth";
 	}
 
-	// 비회원 인증 폼으로 이동 전에 세션에 주문할 장바구니 항목을 저장하기 위한 요청
+	/// 비회원 인증 폼으로 이동 전에 세션에 주문할 장바구니 항목을 저장하기 위한 요청
 	@PostMapping("/customers/orders/carts/auth")
-	public ResponseEntity<Void> redirectGuestAuth(@RequestBody RequestCartOrderDTO requestCartOrderDTO, BindingResult bindingResult, HttpServletRequest request) {
+	public ResponseEntity<Void> redirectGuestAuth(@RequestBody RequestCartOrderDTO requestCartOrderDTO, BindingResult bindingResult,
+		                                          HttpServletResponse response) throws JsonProcessingException {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		// 세션에 주문할 장바구니 항목들을 저장한 후 리다이렉트
-		HttpSession session = request.getSession();
-		session.setAttribute("orderCart", requestCartOrderDTO);
+		// 세션에 주문할 장바구니 항목들을 저장
+		// 객체 → JSON 문자열 직렬화
+		String cartJson = objectMapper.writeValueAsString(requestCartOrderDTO);
+
+		// JSON → Base64 (한글 깨짐 방지 및 안전한 전송)
+		String encodedCart = Base64.getEncoder().encodeToString(cartJson.getBytes(StandardCharsets.UTF_8));
+
+		// 쿠키 생성
+		Cookie cartCookie = new Cookie("orderCart", encodedCart);
+		cartCookie.setPath("/");                  // 모든 경로에서 접근 가능하게
+		cartCookie.setHttpOnly(true);             // JS 접근 방지 (보안)
+		cartCookie.setMaxAge(60 * 30);            // 30분
+		response.addCookie(cartCookie);
 
 		return ResponseEntity.ok().build();
 	}
 
-	// 비회원 가입 요청
+	/// 비회원 가입 요청
 	@PostMapping("/customers/register")
-	public ResponseEntity<Void> register(@Validated @RequestBody RequestCustomerRegisterDTO requestCustomerRegisterDTO, BindingResult bindingResult) {
+	public ResponseEntity<ResponseCustomerRegisterDTO> register(@Validated @RequestBody RequestCustomerRegisterDTO requestCustomerRegisterDTO, BindingResult bindingResult,
+		                                 HttpServletRequest request) throws JsonProcessingException {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		customerService.createCustomer(requestCustomerRegisterDTO);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		Long customerId = customerService.customerRegister(requestCustomerRegisterDTO);
+
+		String encodedCart = null;
+		Cookie[] cookies = request.getCookies();
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals("orderCart")) {
+				encodedCart = cookie.getValue();
+				break;
+			}
+		}
+		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
+		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
+
+		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customerId, requestCartOrderDTO);
+		return ResponseEntity.ok(response);
 	}
 
-	// 비회원 로그인 요청
+	/// 비회원 로그인 요청
 	@PostMapping("/customers/login")
-	public ResponseEntity<Boolean> login(@Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO, BindingResult bindingResult) {
+	public ResponseEntity<ResponseCustomerRegisterDTO> login(@Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO, BindingResult bindingResult,
+		                                 HttpServletRequest request) throws JsonProcessingException {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		boolean isLogin = customerService.loginCustomer(requestCustomerLoginDTO);
-		if (isLogin) {
-			return ResponseEntity.ok(true);
-		}
+		Long customerId = customerService.customerLogin(requestCustomerLoginDTO);
 
-		throw new CustomerLoginCheckException();
+		String encodedCart = null;
+		Cookie[] cookies = request.getCookies();
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals("orderCart")) {
+				encodedCart = cookie.getValue();
+				break;
+			}
+		}
+		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
+		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
+
+		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customerId, requestCartOrderDTO);
+		return ResponseEntity.ok(response);
 	}
+
 }

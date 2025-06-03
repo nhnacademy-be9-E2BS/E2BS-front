@@ -1,53 +1,192 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/user-layout}">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>비회원 주문/가입</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .container {
+      max-width: 1000px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .col-half {
+      flex: 1;
+      min-width: 400px;
+      border: 1px solid #eee;
+      padding: 30px;
+      background-color: #fafafa;
+      border-radius: 10px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .btn-main {
+      background-color: #d81b60;
+      border: none;
+      color: white;
+      font-weight: bold;
+      padding: 12px;
+      border-radius: 6px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .tab-box {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      font-weight: bold;
+    }
+
+    .tab.active {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .form-panel {
+      display: none;
+    }
+
+    .form-panel.active {
+      display: block;
+    }
+
+    .sns-icons img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .payco-button {
+      display: inline-block;
+      background-color: #e20000;
+      color: #fff;
+      font-weight: bold;
+      padding: 12px 0;
+      width: 100%;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .payco-button:hover {
+      background-color: #c00000;
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
-<div class="max-w-4xl mx-auto mt-12 p-6 bg-white rounded-xl shadow-md">
-  <h2 class="text-2xl font-bold mb-6 text-center">비회원 주문</h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <!-- 비회원 주문 로그인 입력 -->
-    <div>
-      <h3 class="text-xl font-semibold mb-4">비회원 주문 로그인</h3>
+<body>
+  <div layout:fragment="content">
+    <section class="login_box_area section-margin">
+      <div class="container">
 
-      <form action="/guests/login" method="post" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700">이메일</label>
-          <input type="email" name="email" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        <div class="row">
+          <!-- 회원 로그인 -->
+          <div class="col-half">
+            <div class="tab-box">
+              <div class="tab">회원 로그인</div>
+            </div>
+            <form action="/login" method="post">
+              <input type="text" class="form-control" name="memberId" placeholder="아이디를 입력하세요" required>
+              <input type="password" class="form-control" name="customerPassword" placeholder="비밀번호를 입력하세요." required>
+
+              <button type="submit" class="btn-main">로그인</button>
+
+              <a href="/oauth2/authorization/payco" class="payco-button">
+                PAYCO로 로그인
+              </a>
+
+            </form>
+          </div>
+
+
+          <!-- 비회원 주문 -->
+          <div class="col-half">
+            <div class="tab-box">
+              <div class="tab active" onclick="showTab('guestLoginForm')">비회원 재주문</div>
+              <div class="tab" onclick="showTab('guestRegisterForm')">비회원 첫주문</div>
+            </div>
+
+            <!-- 재주문 -->
+            <form id="guestLoginForm" class="form-panel active">
+                <input type="email" class="form-control" name="customerEmail" placeholder="E-mail 주소를 입력하세요"
+                       required>
+                <input type="password" class="form-control" name="customerPassword"
+                       placeholder="비밀번호를 입력하세요"
+                       required>
+                <button type="submit" class="btn-main">비회원 재주문</button>
+            </form>
+
+            <!-- 첫 주문 -->
+            <form id="guestRegisterForm" class="form-panel">
+                <div class="d-flex gap-2">
+                  <input type="email" class="form-control" name="customerEmail" id="customerEmail"
+                         placeholder="E-mail 주소를 입력하세요*"
+                         required>
+                  <button type="button" class="btn btn-outline-secondary"
+                          onclick="checkIdDuplicate()">중복 확인
+                  </button>
+                </div>
+                <small id="idCheckMessage" class="text-muted mt-1 d-block"></small>
+                <input type="text" class="form-control" name="customerName" placeholder="이름을 입력하세요*" required>
+                <input type="password" class="form-control" name="customerPassword"
+                       placeholder="비밀번호를 입력하세요*"
+                       required>
+                <input type="password" class="form-control" name="customerPasswordCheck"
+                       placeholder="비밀번호 다시 입력하세요*"
+                       required>
+
+                <button type="submit" class="btn-main">비회원 첫주문</button>
+            </form>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700">비밀번호</label>
-          <input type="password" name="password" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-        </div>
+    <script>
+      function showTab(tab) {
+        // 비회원 주문 탭 영역에서만 active 제어
+        const tabs = document.querySelectorAll('.col-half:nth-child(2) .tab-box .tab');
+        const panels = document.querySelectorAll('.col-half:nth-child(2) .form-panel');
 
-        <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">로그인</button>
-      </form>
-    </div>
+        tabs.forEach(t => t.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
 
-    <!-- 비회원 가입 입력 -->
-    <div>
-      <h3 class="text-xl font-semibold mb-4">비회원 가입</h3>
+        document.getElementById(tab).classList.add('active');
 
-      <form action="/guests/register" method="post" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700">이메일</label>
-          <input type="email" name="email" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-        </div>
+        if (tab === 'guestLoginForm') {
+          tabs[0].classList.add('active');
+        } else if (tab === 'guestRegisterForm') {
+          tabs[1].classList.add('active');
+        }
+      }
+    </script>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700">비밀번호</label>
-          <input type="password" name="password" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-        </div>
-        <button type="submit" class="w-full py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700">정보 입력 후 계속</button>
-      </form>
-    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/customer/customer-check.js}"></script>
+    <script th:src="@{/js/customer/customer-login.js}"></script>
+    <script th:src="@{/js/customer/customer-register.js}"></script>
   </div>
-</div>
 </body>
 </html>

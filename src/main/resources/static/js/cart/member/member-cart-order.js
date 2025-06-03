@@ -1,4 +1,34 @@
-// 체크할 때마다 체크된 상품의 총합으로 최신화
+// 항목 체크에 대한 메소드
+$(document).ready(function () {
+    // 체크박스가 변경될 때마다 총액 재계산
+    $('.cart-item-checkbox').change(function () {
+        updateTotalPayment();
+    });
+
+    updateTotalPayment();
+});
+function updateTotalPayment() {
+    let total = 0;
+
+    $('.cart-item-checkbox:checked').each(function () {
+        const productId = $(this).data('product-id');
+
+        // 단가 가져오기
+        const row = $(this).closest('tr');
+        const priceText = row.find('.unit-price').text().replace(/[^0-9]/g, '');
+        const unitPrice = parseInt(priceText, 10) || 0;
+
+        // 수량 input 가져오기
+        const quantity = parseInt($('#quantity-' + productId).val(), 10) || 1;
+
+        total += unitPrice * quantity;
+    });
+
+    // 총 결제 금액 영역에 반영
+    $('#totalPaymentAmount').text(total.toLocaleString('ko-KR') + '원');
+}
+
+// 체크된 상품 주문
 $(document).ready(function () {
     $('#order-btn').click(function (e) {
         e.preventDefault();
