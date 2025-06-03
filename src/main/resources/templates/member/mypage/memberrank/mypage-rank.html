@@ -1,54 +1,61 @@
 <!DOCTYPE html>
-<html
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{layouts/mypage-layout}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mypage-layout}">
 <body>
 <div layout:fragment="content">
-    <h3>회원 등급</h3>
     <section>
-        <div class="container" style="padding: 20px;">
+        <div class="container" style="max-width: 800px; padding: 40px 20px;">
             <style>
+                h3 {
+                    font-weight: bold;
+                    font-size: 28px;
+                    margin-bottom: 24px;
+                }
+
                 .grade-banner {
-                    background-color: #e8f5e9;
-                    border-left: 6px solid #66bb6a;
-                    padding: 20px;
-                    border-radius: 8px;
-                    margin-bottom: 20px;
+                    background-color: #f3f7ff;
+                    border: 1px solid #c8dffc;
+                    border-radius: 16px;
+                    padding: 28px 32px;
+                    margin-bottom: 32px;
                 }
 
                 .grade-banner strong {
-                    color: #2e7d32;
+                    font-size: 18px;
+                    color: #1a237e;
                 }
 
                 .progress-bar {
-                    background-color: #c8e6c9;
-                    height: 8px;
-                    border-radius: 4px;
-                    margin-top: 10px;
-                    position: relative;
+                    background-color: #e0e0e0;
+                    height: 12px;
+                    border-radius: 6px;
+                    margin-top: 12px;
+                    overflow: hidden;
                 }
 
                 .progress-fill {
-                    background-color: #66bb6a;
+                    background-color: #3f51b5;
                     height: 100%;
-                    width: 40%; /* 동적으로 설정 가능 */
-                    border-radius: 4px;
+                    width: 60%;
+                    transition: width 0.4s ease;
                 }
 
                 .grade-table {
                     width: 100%;
                     border-collapse: collapse;
-                    margin-top: 30px;
+                    margin-top: 20px;
+                    font-size: 15px;
                 }
 
                 .grade-table th, .grade-table td {
                     border: 1px solid #dee2e6;
-                    padding: 15px;
+                    padding: 16px;
                     text-align: center;
                 }
 
                 .grade-table th {
-                    background-color: #f8f9fa;
+                    background-color: #f1f3f5;
+                    font-weight: 600;
                 }
 
                 .badge-normal {
@@ -62,7 +69,7 @@
                 }
 
                 .badge-gold {
-                    color: #f9a825;
+                    color: #fbc02d;
                     font-weight: bold;
                 }
 
@@ -72,27 +79,26 @@
                 }
             </style>
 
-            <!-- 등급 배너 -->
+            <h3>회원 등급</h3>
+
+            <!-- 등급 안내 배너 -->
             <div class="grade-banner">
                 <p>
                     <strong th:text="${memberName} + ' 님의 등급은 '"></strong>
                     <span th:switch="${rankName}">
-                        <strong th:case="NORMAL" class="'badge-normal'">일반</strong>
-                        <strong th:case="ROYAL" class="'badge-royal'">로얄</strong>
-                        <strong th:case="GOLD" class="'badge-gold'">골드</strong>
-                        <strong th:case="PLATINUM" class="'badge-platinum'">플래티넘</strong>
+                        <strong th:case="NORMAL" class="badge-normal">일반</strong>
+                        <strong th:case="ROYAL" class="badge-royal">로얄</strong>
+                        <strong th:case="GOLD" class="badge-gold">골드</strong>
+                        <strong th:case="PLATINUM" class="badge-platinum">플래티넘</strong>
                     </span>
                     입니다.
                 </p>
-                <p>
-                    <!--                    <span th:text="${remainingAmount} + '원만 더 구매하면 실버 달성!'"></span>-->
-                </p>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 60%;"></div> <!-- 구매 누적률에 따라 조정 -->
+                    <div class="progress-fill" style="width: 60%;"></div>
                 </div>
             </div>
 
-            <!-- 등급 테이블 -->
+            <!-- 등급별 혜택 테이블 -->
             <table class="grade-table">
                 <thead>
                 <tr>
@@ -104,10 +110,10 @@
                 <tbody>
                 <tr th:each="rank : ${memberRanks}">
                     <td th:switch="${rank.rankName.name()}">
-                        <span th:case="NORMAL" class="'badge-normal'">일반<br>(N)</span>
-                        <span th:case="ROYAL" class="'badge-royal'">로얄<br>(R)</span>
-                        <span th:case="GOLD" class="'badge-gold'">골드<br>(G)</span>
-                        <span th:case="PLATINUM" class="'badge-platinum'">플래티넘<br>(P)</span>
+                        <span th:case="NORMAL" class="badge-normal">일반<br>(N)</span>
+                        <span th:case="ROYAL" class="badge-royal">로얄<br>(R)</span>
+                        <span th:case="GOLD" class="badge-gold">골드<br>(G)</span>
+                        <span th:case="PLATINUM" class="badge-platinum">플래티넘<br>(P)</span>
                     </td>
                     <td th:text="${#numbers.formatInteger(rank.memberRankRequireAmount, 0, 'COMMA')} + '원 이상'"></td>
                     <td>
@@ -117,7 +123,6 @@
                 </tr>
                 </tbody>
             </table>
-
         </div>
     </section>
 </div>

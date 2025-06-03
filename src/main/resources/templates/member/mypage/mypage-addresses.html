@@ -3,137 +3,230 @@
       layout:decorate="~{layouts/mypage-layout}">
 <body>
 <div layout:fragment="content">
-    <h3>배송지 목록</h3>
     <section>
-        <div class="container" style="padding: 20px;">
+        <div class="container" style="max-width: 800px; padding: 40px 20px;">
             <style>
-                .info-box h3 {
-                    margin: 0;
-                    font-size: 1.2rem;
-                    color: #333;
-                }
-
-                .info-box p {
-                    margin-top: 10px;
-                    font-size: 1.6rem;
+                h3 {
                     font-weight: bold;
-                    color: #007bff;
+                    font-size: 28px;
+                    margin-bottom: 24px;
                 }
 
-                .address-box-container {
-                    margin-top: 40px;
-                }
-
-                .address-header {
+                .address-info-box {
+                    background-color: #f7f8f9;
+                    border: 1px solid #ddd;
+                    border-radius: 16px;
+                    padding: 28px 32px;
+                    margin-bottom: 32px;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                 }
 
-                .address-box {
-                    border: 1px solid #ccc;
-                    border-radius: 10px;
-                    padding: 16px;
-                    margin-top: 12px;
-                    position: relative;
-                }
-
-                .address-actions {
-                    position: absolute;
-                    right: 16px;
-                    top: 16px;
+                .address-info {
                     display: flex;
+                    flex-direction: column;
                     gap: 8px;
+                    font-size: 17px;
+                    font-weight: 500;
                 }
 
-                .address-tag {
+                .default-tag {
+                    background-color: #e6f0fd;
+                    color: #007bff;
+                    font-size: 13px;
+                    font-weight: 500;
+                    padding: 4px 10px;
+                    border-radius: 12px;
+                    margin-left: 8px;
+                }
+
+                .address-edit-btn {
+                    border: 1px solid #ccc;
+                    background-color: white;
+                    border-radius: 10px;
+                    padding: 10px 20px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    transition: 0.2s;
+                }
+
+                .address-edit-btn:hover {
                     background-color: #007bff;
+                    border-color: #007bff;
                     color: white;
-                    border-radius: 6px;
-                    padding: 2px 8px;
-                    font-size: 0.8rem;
-                    margin-right: 8px;
+                }
+
+                .info-text {
+                    font-size: 14px;
+                    color: #555;
+                    margin-bottom: 28px;
+                    line-height: 1.6;
+                }
+
+                .address-list-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 16px;
+                }
+
+                .address-count {
+                    font-weight: bold;
+                    color: green;
+                    font-size: 16px;
+                }
+
+                .address-note {
+                    font-size: 13px;
+                    color: #777;
                 }
 
                 .btn-add-address {
-                    margin-top: 20px;
-                    padding: 10px 20px;
-                    font-size: 1rem;
-                    background-color: #28a745;
-                    color: white;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                }
-
-                .btn-add-address:disabled {
-                    background-color: #ccc;
-                    cursor: not-allowed;
-                }
-
-                .btn-action {
-                    background: none;
-                    border: none;
+                    border: 1px solid #007bff;
+                    background-color: white;
                     color: #007bff;
+                    font-weight: 500;
+                    border-radius: 6px;
+                    padding: 8px 16px;
+                    font-size: 14px;
                     cursor: pointer;
-                    font-size: 0.9rem;
-                    padding: 4px 8px;
                 }
 
-                .btn-action:hover {
-                    text-decoration: underline;
+                .btn-add-address:hover {
+                    background-color: #007bff;
+                    color: white;
+                }
+
+                .address-select-box {
+                    border-top: 1px solid #ccc;
+                    padding-top: 20px;
+                }
+
+                .address-item {
+                    padding: 16px 0;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                }
+
+                .address-left {
+                    display: flex;
+                    gap: 12px;
+                }
+
+                .address-details {
+                    font-size: 15px;
+                    color: #333;
+                }
+
+                .address-actions {
+                    display: flex;
+                    gap: 10px;
+                }
+
+                .btn-edit, .btn-delete {
+                    border: 1px solid #ccc;
+                    background-color: white;
+                    padding: 6px 12px;
+                    border-radius: 8px;
+                    font-size: 13px;
+                    cursor: pointer;
+                }
+
+                .btn-edit:hover {
+                    background-color: #007bff;
+                    color: white;
+                    border-color: #007bff;
+                }
+
+                .btn-delete {
+                    color: #dc3545;
+                    border-color: #dc3545;
+                }
+
+                .btn-delete:hover {
+                    background-color: #dc3545;
+                    color: white;
+                }
+
+                .submit-btn {
+                    display: block;
+                    margin: 40px auto 0;
+                    background-color: #cfd8f2;
+                    color: #333;
+                    padding: 14px 40px;
+                    border-radius: 8px;
+                    border: none;
+                    font-size: 15px;
+                    cursor: pointer;
                 }
             </style>
 
-            <div class="address-box-container">
-                <div class="address-header">
-                    <button class="btn-add-address"
-                            th:disabled="${#lists.size(addresses) >= 10}"
-                            th:onclick="|location.href='@{/mypage/addresses/save}'|">
-                        배송지 추가
-                    </button>
+            <h3>배송주소록</h3>
 
+            <div class="address-info-box">
+                <div class="address-info">
+                    <div><span>집</span><span class="default-tag">기본배송지</span></div>
+                    <div><strong>김도윤 / 010-9140-6307</strong></div>
+                    <div>[05571] 서울특별시 송파구 올림픽로4길 42 (잠실동, 우성아파트) 7동 1207호</div>
                 </div>
+                <button class="address-edit-btn">수정</button>
+            </div>
 
-                <div th:each="address : ${addresses}" class="address-box">
+            <div class="info-text">
+                <ul>
+                    <li>기본배송지 기준으로 배송일자가 안내됩니다.</li>
+                    <li>기본배송지는 삭제 불가합니다.</li>
+                </ul>
+            </div>
+
+            <div class="address-list-header">
+                <span class="address-count" th:text="${#lists.size(addresses)} + '개'">0개</span>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <span class="address-note">* 배송지는 최대 10개까지 등록 가능합니다.</span>
+                    <button class="btn-add-address" th:disabled="${#lists.size(addresses) >= 10}"
+                            th:onclick="|location.href='@{/mypage/addresses/save}'|">+ 새 배송지 등록
+                    </button>
+                </div>
+            </div>
+
+            <div class="address-select-box">
+                <div th:each="address : ${addresses}" class="address-item">
+                    <div class="address-left">
+                        <input type="radio" name="defaultAddress" th:value="${address.addressId}"
+                               th:checked="${address.addressDefault}"/>
+                        <div class="address-details">
+                            <div>
+                                <span th:text="${address.addressAlias != null ? address.addressAlias : '배송지'}">배송지</span>
+                                <span th:if="${address.addressDefault}" class="default-tag">기본배송지</span>
+                                <div><strong>김도윤 / 010-9140-6307</strong></div>
+                            </div>
+                            <div>
+                    <span th:text="'[' + ${address.addressCode} + '] ' + ${address.addressInfo} + ' ' + ${address.addressDetail}">
+                        [00000] 서울시 강남구 테헤란로 123 10층
+                    </span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="address-actions">
-                        <a th:href="@{/mypage/addresses/{addressId}(addressId=${address.addressId})}"
-                           class="btn-action">수정</a>
-                        <form th:action="@{/mypage/addresses/{addressId}(addressId=${address.addressId})}"
+                        <a th:href="@{/mypage/addresses/{id}(id=${address.addressId})}" class="btn-edit"
+                           th:classappend="${address.addressDefault} ? '' : 'btn-blue'">수정</a>
+
+                        <form th:if="${!address.addressDefault}"
+                              th:action="@{/mypage/addresses/{id}(id=${address.addressId})}"
                               method="post"
                               onsubmit="return confirm('정말 삭제하시겠습니까?')">
                             <input type="hidden" name="_method" value="delete"/>
-                            <button type="submit" class="btn-action" style="color: red;">삭제</button>
+                            <button type="submit" class="btn-delete">삭제</button>
                         </form>
-                    </div>
-
-                    <div>
-                        <strong th:text="${address.addressAlias != null ? address.addressAlias : '배송지'}">배송지</strong>
-                        <span th:if="${address.addressDefault}" class="address-tag"
-                              style="background-color: gold; color: black;">⭐ 기본 배송지</span>
-                    </div>
-
-                    <div>
-                        <strong>우편번호:</strong>
-                        <span th:text="${address.addressCode}"></span>
-                    </div>
-
-                    <div>
-                        <strong>주소:</strong>
-                        <span th:text="${address.addressInfo}"></span>
-                    </div>
-
-                    <div th:if="${address.addressDetail}">
-                        <strong>상세주소:</strong>
-                        <span th:text="${address.addressDetail}"></span>
-                    </div>
-
-                    <div>
-                        <strong>참고항목:</strong>
-                        <span th:text="${address.addressExtra}"></span>
                     </div>
                 </div>
             </div>
+
+
+            <button class="submit-btn">기본 배송지로 설정</button>
         </div>
     </section>
 </div>

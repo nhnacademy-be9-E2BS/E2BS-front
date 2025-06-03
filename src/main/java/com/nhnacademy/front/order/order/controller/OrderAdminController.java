@@ -16,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderAdminService;
 import com.nhnacademy.front.order.order.service.OrderService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -74,5 +77,26 @@ public class OrderAdminController {
 		model.addAttribute("productAmount", productAmount);
 
 		return "admin/order/orderDetailsManagement";
+	}
+
+
+	@GetMapping("/admin/settings/return")
+	public String getReturnOrders(Model model, Pageable pageable) {
+
+		ResponseEntity<PageResponse<ResponseOrderReturnDTO>> response =
+			orderAdminService.getReturnOrders(pageable);
+		Page<ResponseOrderReturnDTO> returns = PageResponseConverter.toPage(response.getBody());
+		model.addAttribute("returns", returns);
+
+		return "admin/order/orderReturns";
+	}
+
+
+	@GetMapping("/admin/settings/return/{orderCode}")
+	public String getReturnOrderDetails(Model model, @PathVariable String orderCode) {
+
+		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
+		model.addAttribute("returnDTO", returnDTO);
+		return "admin/order/orderReturnDetail";
 	}
 }

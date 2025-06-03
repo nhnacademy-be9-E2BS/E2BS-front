@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 
 @FeignClient(name = "order-admin-service", url = "${order.admin}")
 public interface OrderAdminAdaptor {
@@ -22,4 +23,7 @@ public interface OrderAdminAdaptor {
 
 	@PostMapping("/{orderCode}")
 	ResponseEntity<Void> startDelivery(@PathVariable String orderCode);
+
+	@GetMapping("/return")
+	ResponseEntity<PageResponse<ResponseOrderReturnDTO>> getReturnOrders(Pageable pageable);
 }

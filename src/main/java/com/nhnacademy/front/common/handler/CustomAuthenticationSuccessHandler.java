@@ -41,6 +41,15 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 		 * 그래서 로그인 전은 쿠키에 저장한 세션아이디를 꺼내서 적용함
 		 */
 		HttpSession session = request.getSession();
+
+		if (session.getAttribute("dormantMemberId") != null) {
+			session.removeAttribute("dormantMemberId");
+		}
+
+		if (session.getAttribute("memberState") != null) {
+			session.removeAttribute("memberState");
+		}
+
 		// 게스트 키가 있으면 장바구니를 꺼내서 병합 후 항목 개수 적용
 		String guestKey = GuestCookieUtil.getGuestKey(request);
 		if (Objects.nonNull(guestKey)) {

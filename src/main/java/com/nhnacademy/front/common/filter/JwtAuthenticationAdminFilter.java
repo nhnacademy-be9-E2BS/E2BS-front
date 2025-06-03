@@ -80,6 +80,8 @@ public class JwtAuthenticationAdminFilter extends UsernamePasswordAuthentication
 		String memberState = memberService.getMemberState(memberId);
 		if (memberState.equals("DORMANT")) {
 			SecurityContextHolder.clearContext();
+			request.getSession().setAttribute("dormantMemberId", memberId);
+			request.getSession().setAttribute("dormantCnt", 0);
 			request.getSession().setAttribute("memberState", memberState);
 			response.sendRedirect("/admin/login");
 			return;

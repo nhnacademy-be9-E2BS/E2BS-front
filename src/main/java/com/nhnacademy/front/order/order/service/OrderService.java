@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
+import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 
 import feign.FeignException;
@@ -73,5 +75,17 @@ public class OrderService {
 	 */
 	public ResponseEntity<Void> cancelOrder(String orderCode) throws FeignException {
 		return orderAdaptor.cancelOrder(orderCode);
+	}
+
+	public ResponseEntity<Void> returnOrder(RequestOrderReturnDTO returnDTO) throws FeignException {
+		return orderAdaptor.returnOrder(returnDTO);
+	}
+
+	public ResponseEntity<PageResponse<ResponseOrderReturnDTO>> getReturnOrdersByMemberId(Pageable pageable, String memberId){
+		return orderAdaptor.getReturnOrdersByMemberId(pageable, memberId);
+	}
+
+	public ResponseEntity<ResponseOrderReturnDTO> getReturnOrderByOrderCode(String orderCode){
+		return orderAdaptor.getReturnOrder(orderCode);
 	}
 }

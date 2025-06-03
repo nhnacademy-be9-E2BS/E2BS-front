@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Dooray 인증</title>
+    <style>
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 22px;
+            color: #333;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 0;
+            font-size: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-send {
+            background-color: #e20000;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .btn-send:hover {
+            background-color: #bb0000;
+        }
+
+        .btn-submit {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056d2;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Dooray 인증</h2>
+    <p class="instruction">
+        회원님의 Dooray 계정으로 인증번호가 전송됩니다.<br>
+        전송된 코드를 입력하여 계정을 활성화해 주세요.
+    </p>
+
+    <form th:action="@{/member/dormant/dooray/{memberId}(memberId=${memberId})}" method="post" class="form-group">
+        <button id="sendCodeButton" type="submit" class="btn btn-send">인증번호 전송</button>
+    </form>
+    <p id="timerText" style="display:none;">남은 시간: <span id="countdown">0</span>초</p>
+
+    <form th:action="@{/member/dormant/dooray}" method="post">
+        <div class="form-group">
+            <label for="authCode" class="form-label">인증번호 입력</label>
+            <input type="text" id="authCode" name="dormantDoorayNumber" class="form-input" placeholder="숫자 6자리 인증번호 입력"
+                   required>
+        </div>
+        <button type="submit" class="btn btn-submit">인증 확인</button>
+    </form>
+
+    <a href="/login" class="back-link">← 로그인 화면으로 돌아가기</a>
+</div>
+
+<script th:inline="javascript">
+    let remainingSeconds = [[${remainingSeconds} != null ? ${remainingSeconds} : 0]];
+
+    if (remainingSeconds > 0) {
+        const button = document.getElementById("sendCodeButton");
+        const timerText = document.getElementById("timerText");
+        const countdown = document.getElementById("countdown");
+
+        // 버튼 비활성화 대신 색상과 클릭 방지 스타일만 적용
+        button.style.backgroundColor = "#ccc";
+        button.style.pointerEvents = "none"; // 클릭 막기
+        timerText.style.display = "block";
+        countdown.textContent = remainingSeconds;
+
+        const timer = setInterval(() => {
+            remainingSeconds--;
+            countdown.textContent = remainingSeconds;
+            if (remainingSeconds <= 0) {
+                clearInterval(timer);
+                button.style.backgroundColor = "#28a745"; // 원래 색상
+                button.style.pointerEvents = "auto";     // 클릭 가능
+                button.textContent = "인증번호 재전송";
+                timerText.style.display = "none";
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
