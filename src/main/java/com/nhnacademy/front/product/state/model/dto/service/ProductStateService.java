@@ -22,7 +22,7 @@ public class ProductStateService {
 	public List<ResponseProductStateDTO> getProductStates() {
 		ResponseEntity<List<ResponseProductStateDTO>> response = productStateAdaptor.getProductStates();
 
-		if (response.getStatusCode().is2xxSuccessful()) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductStateNotFoundException("product state not found");
 		}
 		return response.getBody();

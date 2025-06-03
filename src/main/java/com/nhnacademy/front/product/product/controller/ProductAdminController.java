@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -77,8 +76,26 @@ public class ProductAdminController {
 	 */
 	@JwtTokenCheck
 	@GetMapping("/register/{bookId}")
-	public String getProductsById(@PathVariable Long bookId, Model model) {
+	public String getProductsById(@PathVariable Long bookId, Model model, Pageable pageable) {
+		model.addAttribute("bookId", bookId);
+
 		ResponseProductReadDTO response = productService.getProduct(bookId);
+		model.addAttribute("product", response);
+
+		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(pageable);
+		model.addAttribute("contributors", contributors.getContent());
+
+		PageResponse<ResponsePublisherDTO> publishers = publisherService.getPublishers(pageable);
+		model.addAttribute("publishers", publishers.getContent());
+
+		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+		model.addAttribute("categories", categories);
+
+		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
+		model.addAttribute("tags", tags);
+
+		List<ResponseProductStateDTO> states = productStateService.getProductStates();
+		model.addAttribute("states", states);
 
 		model.addAttribute("product", response);
 		return "admin/product/books/register";
@@ -90,8 +107,8 @@ public class ProductAdminController {
 	@JwtTokenCheck
 	@GetMapping("/register")
 	public String getRegisterView(Model model, Pageable pageable) {
-		RequestProductApiCreateDTO dto = new RequestProductApiCreateDTO();
-		model.addAttribute("book", dto);
+		ResponseProductReadDTO response = new ResponseProductReadDTO();
+		model.addAttribute("product", response);
 
 		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(pageable);
 		model.addAttribute("contributors", contributors.getContent());
@@ -129,14 +146,14 @@ public class ProductAdminController {
 	 */
 	@JwtTokenCheck
 	@PutMapping("/register/{bookId}")
-	public ResponseEntity<Void> updateProduct(@Validated @ModelAttribute RequestProductDTO request,
+	public String updateProduct(@Validated @ModelAttribute RequestProductDTO request,
 		BindingResult bindingResult, @PathVariable Long bookId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		productAdminService.updateProduct(bookId, request);
-		return ResponseEntity.ok().build();
+		return "redirect:/admin/settings/books";
 	}
 
 	/**
@@ -144,13 +161,13 @@ public class ProductAdminController {
 	 */
 	@JwtTokenCheck
 	@PutMapping("/{bookId}/salePrice")
-	public ResponseEntity<Void> updateProduct(@Validated @RequestBody RequestProductSalePriceUpdateDTO request,
+	public String updateProduct(@Validated @RequestBody RequestProductSalePriceUpdateDTO request,
 		BindingResult bindingResult, @PathVariable Long bookId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		productAdminService.updateProductSalePrice(bookId, request);
-		return ResponseEntity.ok().build();
+		return "redirect:/admin/settings/books";
 	}
 
 	/**

@@ -9,11 +9,15 @@
             <h3>도서 직접 등록</h3>
             <div class="row">
                 <div class="col-lg-8">
-                    <form class="row login_form" action="/admin/settings/books/register" method="post"
+                    <form th:action="${bookId != null} ? '/admin/settings/books/register/' + ${bookId} : '/admin/settings/books/register'"
+                          th:method="post"
                           enctype="multipart/form-data">
+                        <input type="hidden" name="_method" th:value="${bookId != null} ? 'PUT' : 'POST'"/>
                         <!-- 도서 이름 -->
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" name="productTitle" placeholder="도서 이름" required>
+                            <label>도서 제목</label>
+                            <input type="text" class="form-control" name="productTitle" placeholder="도서 이름"
+                                   th:value="${product?.productTitle ?: ''}" required>
                         </div>
 
                         <!-- 목차 (위즈윅 에디터) -->
@@ -30,17 +34,53 @@
                             <input type="hidden" name="productDescription" id="productDescription">
                         </div>
 
-
+                        <!-- 저자 선택 버튼 및 표시 영역 -->
                         <div class="mb-3">
-                            <label class="form-label" 기여자 선택></label>
-                            <div class="form-check" th:each=" contributor : ${contributors}">
-                                <input class="form-check-input" type="checkbox"
-                                       th:id="'contributor-' + ${contributor.contributorId}"
-                                       th:name="contributorIds"
-                                       th:value="${contributor.contributorId}"
-                                       th:checked="${book.contributors != null} ? ${book.contributors.contains(contributor.contributorId)} : false">
-                                <label class="form-check-label" th:for="'contributor-' + ${contributor.contributorId}"
-                                       th:text="${contributor.contributorName + ' (' + contributor.positionName + ')'}">태그명</label>
+                            <label class="form-label d-block">저자 선택</label>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                    data-bs-target="#contributorModal">
+                                저자 선택
+                            </button>
+                            <div id="selectedContributorList" class="form-text mt-1">선택된 저자 없음</div>
+                        </div>
+
+
+                        <!-- 저자 모달 -->
+                        <div class="modal fade" id="contributorModal" tabindex="-1"
+                             aria-labelledby="contributorModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-sm modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="contributorModalLabel">저자 선택</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="닫기"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-unstyled">
+                                            <li th:each="contributor : ${contributors}">
+                                                <div class="form-check">
+                                                    <input class="form-check-input modal-contributor-checkbox"
+                                                           type="checkbox"
+                                                           th:id="'contributor-' + ${contributor.contributorId}"
+                                                           th:name="contributorIds"
+                                                           th:value="${contributor.contributorId}"
+                                                           th:data-name="${contributor.contributorName + ' (' + contributor.positionName + ')'}"
+                                                           th:checked="${product?.contributors?.contains(contributor.contributorId)}">
+                                                    <label class="form-check-label"
+                                                           th:for="'contributor-' + ${contributor.contributorId}"
+                                                           th:text="${contributor.contributorName + ' (' + contributor.positionName + ')'}">저자명(역할)</label>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="applySelectedContributors()"
+                                                data-bs-dismiss="modal">적용
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -51,31 +91,33 @@
                                 <option value="">출판사 선택</option>
                                 <option th:each="publisher : ${publishers}"
                                         th:value="${publisher.publisherId}"
-                                        th:text="${publisher.publisherName}">
+                                        th:text="${publisher.publisherName}"
+                                        th:selected="${product?.publisher?.publisherId == publisher.publisherId}">
                                 </option>
                             </select>
                         </div>
                         <!-- ISBN -->
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" name="productIsbn" placeholder="ISBN" required>
+                            <input type="text" class="form-control" name="productIsbn" placeholder="ISBN"
+                                   th:value="${product?.productIsbn ?: ''}" required>
                         </div>
 
                         <!-- 정가 -->
                         <div class="col-md-12 form-group">
                             <input type="number" class="form-control" name="productRegularPrice" placeholder="정가"
-                                   required>
+                                   th:value="${product?.productRegularPrice ?: ''}" required>
                         </div>
 
                         <!-- 판매가 -->
                         <div class="col-md-12 form-group">
                             <input type="number" class="form-control" name="productSalePrice" placeholder="판매가"
-                                   required>
+                                   th:value="${product?.productSalePrice ?: ''}" required>
                         </div>
 
                         <!-- 출판 일시 -->
                         <div class="col-md-12 form-group">
                             <input type="date" class="form-control" name="productPublishedAt"
-                                   required>
+                                   th:value="${product?.productPublishedAt ?: ''}" required>
                         </div>
 
                         <div class="col-md-12 form-group">
@@ -84,30 +126,56 @@
                                 <option value="">도서 상태 선택</option>
                                 <option th:each="state : ${states}"
                                         th:value="${state.productStateId}"
-                                        th:text="${state.productStateName}">
+                                        th:text="${state.productStateName}"
+                                        th:selected="${product?.productState?.productStateId == state.productStateId}">
                                 </option>
                             </select>
                         </div>
 
 
-                        <!-- 카테고리 -->
-                        <div class="dropdown mb-3">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
+                        <!-- 카테고리 선택 버튼 및 표시 영역 -->
+                        <div class="mb-3">
+                            <label class="form-label d-block">카테고리 선택</label>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                    data-bs-target="#categoryModal">
                                 카테고리 선택
                             </button>
-                            <ul class="dropdown-menu scrollable-category">
-                                <li th:each="category : ${categories}">
-                                    <th:block
-                                            th:replace="fragments/categoryDropdownCheckboxFragment :: categoryCheckbox(category=${category}, prefix='')"/>
-                                </li>
-                            </ul>
-                            <div class="form-text">최대 10개까지 선택할 수 있습니다.</div>
+                            <div id="selectedCategoryList" class="form-text mt-1">선택된 카테고리 없음</div>
+                        </div>
+
+                        <!-- 카테고리 모달 -->
+                        <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-sm modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="categoryModalLabel">카테고리 선택</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="닫기"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-unstyled">
+                                            <li th:each="category : ${categories}">
+                                                <th:block
+                                                        th:replace="fragments/product-category-check-box :: productCategoryCheckbox(category=${category}, prefix='', product=${product})"/>
+                                            </li>
+                                        </ul>
+                                        <div class="form-text mt-2">최대 10개까지 선택할 수 있습니다.</div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="applySelectedCategories()"
+                                                data-bs-dismiss="modal">적용
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- 재고 -->
                         <div class="col-md-12 form-group">
-                            <input type="number" class="form-control" name="productStock" placeholder="재고" required>
+                            <input type="number" class="form-control" name="productStock" placeholder="재고"
+                                   th:value="${product?.productStock ?: ''}" required>
                         </div>
                         <!-- 사진 업로드 (여러 장 가능) -->
                         <div class="col-md-12 form-group">
@@ -124,15 +192,50 @@
                             </div>
                         </div>
 
+
+                        <!-- 태그 선택 및 선택한 태그 보이기-->
                         <div class="mb-3">
-                            <label class="form-label">태그 선택</label>
-                            <div class="form-check" th:each="tag : ${tags}">
-                                <input class="form-check-input" type="checkbox"
-                                       th:id="'tag-' + ${tag.tagId}"
-                                       th:name="tagIds"
-                                       th:value="${tag.tagId}"
-                                       th:checked="${book.tagIds != null} ? ${book.tagIds.contains(tag.tagId)} : false">
-                                <label class="form-check-label" th:for="'tag-' + ${tag.tagId}" th:text="${tag.tagName}">태그명</label>
+                            <label class="form-label d-block">태그 선택</label>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                    data-bs-target="#tagModal">
+                                태그 선택
+                            </button>
+                            <div id="selectedTagList" class="form-text mt-1">선택된 태그 없음</div>
+                        </div>
+
+                        <div class="modal fade" id="tagModal" tabindex="-1" aria-labelledby="tagModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-sm modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="tagModalLabel">태그 선택</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="닫기"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-unstyled">
+                                            <li th:each="tag : ${tags}">
+                                                <div class="form-check">
+                                                    <input class="form-check-input modal-tag-checkbox"
+                                                           type="checkbox"
+                                                           name="tagIds"
+                                                           th:id="'modal-tag-' + ${tag.tagId}"
+                                                           th:data-name="${tag.tagName}"
+                                                           th:value="${tag.tagId}"
+                                                           th:checked="${product?.tags?.contains(tag.tagId)}">
+                                                    <label class="form-check-label"
+                                                           th:for="'modal-tag-' + ${tag.tagId}"
+                                                           th:text="${tag.tagName}">태그명</label>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" onclick="applySelectedTags()"
+                                                data-bs-dismiss="modal">적용
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -141,21 +244,21 @@
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" id="packageableYes"
                                        name="productPackageable" value="true"
-                                       th:checked="${book.productPackageable}">
+                                       th:checked="${product?.productPackageable == true}">
                                 <label class="form-check-label" for="packageableYes">예</label>
                             </div>
 
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" id="packageableNo"
                                        name="productPackageable" value="false"
-                                       th:checked="${!book.productPackageable}">
+                                       th:checked="${product?.productPackageable == false}">
                                 <label class="form-check-label" for="packageableNo">아니오</label>
                             </div>
 
                         </div>
 
                         <div class="col-md-12 form-group mt-3">
-                            <button type="submit" class="button button-register w-100">도서 등록</button>
+                            <button type="submit" class="button button-register w-100" id="submitBtn">도서 등록</button>
                         </div>
                     </form>
                 </div>
@@ -168,36 +271,61 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-    <script>
+    <script th:inline="javascript">
+        // 서버에서 전달된 데이터를 JavaScript 변수로 저장
+        const getProductContent = /*[[${product?.productContent ?: ''}]]*/ '';
+        const getProductDescription = /*[[${product?.productDescription ?: ''}]]*/ '';
+
         const editorContent = new toastui.Editor({
             el: document.querySelector('#editorContent'),
             height: '200px',
             initialEditType: 'wysiwyg',
-            previewStyle: 'vertical'
+            previewStyle: 'vertical',
+            initialValue: getProductContent
         });
 
         const editorDescription = new toastui.Editor({
             el: document.querySelector('#editorDescription'),
             height: '400px',
             initialEditType: 'wysiwyg',
-            previewStyle: 'vertical'
+            previewStyle: 'vertical',
+            initialValue: getProductDescription
         });
 
-        document.querySelector('form').addEventListener('submit', function () {
+        document.getElementById("submitBtn").addEventListener('click', function () {
             document.querySelector('#productContent').value = editorContent.getHTML();
             document.querySelector('#productDescription').value = editorDescription.getHTML();
         });
 
-        function limitCategorySelection(checkbox) {
-            const checkedBoxes = document.querySelectorAll('.category-checkbox:checked');
-            if (checkedBoxes.length > 10) {
-                checkbox.checked = false;
-                alert("카테고리는 최대 10개까지만 선택할 수 있습니다.");
-            }
+        // 선택된 저자 보기
+        function applySelectedContributors() {
+            const checkboxes = document.querySelectorAll('.modal-contributor-checkbox:checked');
+            const selectedNames = Array.from(checkboxes).map(cb => cb.dataset.name || '이름 없음');
+            document.getElementById('selectedContributorList').innerText =
+                selectedNames.length > 0 ? selectedNames.join(', ') : '선택된 저자 없음';
         }
 
-        function openPopup(type) {
-            window.open(`/admin/${type}/create`, `${type}Popup`, "width=600,height=400");
+        // 카테고리 10개 제한 및 선택된 카테고리 표시
+        function applySelectedCategories() {
+            const checkboxes = document.querySelectorAll('.category-checkbox:checked');
+            if (checkboxes.length > 10) {
+                alert("카테고리는 최대 10개까지만 선택할 수 있습니다.");
+                return;
+            }
+            const selectedNames = Array.from(checkboxes).map(cb => {
+                const label = document.querySelector(`label[for="${cb.id}"]`);
+                return label ? label.innerText.trim() : '';
+            });
+            document.getElementById('selectedCategoryList').innerText =
+                selectedNames.length > 0 ? selectedNames.join(', ') : '선택된 카테고리 없음';
+        }
+
+        // 선택된 태그 보기
+        function applySelectedTags() {
+            const checkboxes = document.querySelectorAll('.modal-tag-checkbox:checked');
+            const selectedNames = Array.from(checkboxes).map(cb => cb.dataset.name);
+            document.getElementById('selectedTagList').innerText =
+                selectedNames.length > 0 ? selectedNames.join(', ') : '선택된 태그 없음';
         }
 
         // 사진 미리보기 기능
