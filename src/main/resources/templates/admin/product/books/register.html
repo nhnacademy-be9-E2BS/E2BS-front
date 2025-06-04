@@ -185,7 +185,7 @@
                         <div class="col-md-12 form-group">
                             <label for="imagePaths">사진 업로드 (첫 번째 사진이 썸네일입니다)</label>
                             <input type="file" class="form-control-file" name="productImages" id="imagePaths" multiple
-                                   accept="image/*" required>
+                                   accept="image/*">
                         </div>
 
                         <!-- 사진 미리보기 (한 줄에 3개씩) -->
@@ -489,6 +489,16 @@
                 });
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // bookId가 없으면 신규 등록이므로 required 적용
+            const isCreate = /*[[${bookId == null}]]*/ true;
+            if (isCreate) {
+                document.getElementById('imagePaths').required = true;
+            } else {
+                document.getElementById('imagePaths').required = false;
+            }
+        });
 
         // 파일 선택 시 새로 미리보기
         document.getElementById('imagePaths').addEventListener('change', function (event) {
