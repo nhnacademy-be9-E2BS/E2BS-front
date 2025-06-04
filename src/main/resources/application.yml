@@ -9,6 +9,11 @@ spring:
   application:
     name: FRONT
 
+  profiles:
+    active: prod
+  config:
+    import: optional:configserver:http://localhost:10240 # config 서버 연결
+
   mvc:
     hidden method:
       filter:
