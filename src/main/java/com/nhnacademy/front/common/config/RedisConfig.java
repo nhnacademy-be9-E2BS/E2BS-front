@@ -12,6 +12,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Configuration
 public class RedisConfig {
 
+	// @Value("${spring.data.redis.host}")
+	// private String host;
+	//
+	// @Value("${spring.data.redis.port}")
+	// private int port;
+	//
+	// @Value("${spring.data.redis.password}")
+	// private String password;
+	//
+	// @Value("${spring.data.redis.database}")
+	// private int database;
+	//
+	// @Bean
+	// public RedisConnectionFactory redisConnectionFactory() {
+	// 	RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+	// 	redisStandaloneConfiguration.setHostName(host);
+	// 	redisStandaloneConfiguration.setPort(port);
+	// 	redisStandaloneConfiguration.setPassword(password);
+	// 	redisStandaloneConfiguration.setDatabase(database);
+	// 	return new LettuceConnectionFactory(redisStandaloneConfiguration);
+	// }
+
 	@Bean
 	public ObjectMapper redisObjectMapper() {
 		return new ObjectMapper();
