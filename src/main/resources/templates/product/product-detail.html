@@ -131,7 +131,7 @@
 										 th:src="${image.productImagePath}"
 										 th:alt="${product.productTitle} + ' 이미지 ' + ${iterStat.count}"
 										 class="slide" th:classappend="${iterStat.first} ? 'active' : ''"
-										 onerror="this.src='https://via.placeholder.com/110x150?text=No+Image'"
+										 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'"
 										 style="width: 300px; height: auto;">
 
 									<button class="prev" onclick="changeSlide(-1)" th:disabled="${product.productImagePaths.size() <= 1}">❮</button>
@@ -276,16 +276,14 @@
 			<div class="tab-content" id="myTabContent">
 				<!-- 설명 -->
 				<div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-					<!-- Thymeleaf로 변경 시 (목차는 productContent로 가정): -->
-					<h4>목차</h4>
-					<ul>
-						<li th:utext="${product.productContent}"></li>
-					</ul>
-
-					<!--					*총균쇠*는 인류 문명의 발달 차이를 설명하는 획기적인 저서로, 지리적·환경적 요인이 문명의 성공과 패배를 결정했다고 주장합니다. 유라시아의 농업 혁명, 병균 저항력, 기술 발전이 어떻게 다른 대륙을 압도했는지 탐구하며, 인종적 우월성 이론을 반박합니다. 퓰리처상을 수상한 이 책은 역사, 인류학, 생물학을 융합한 대중 과학의 걸작입니다.-->
-					<!-- Thymeleaf로 변경 시: -->
-					<h4 class="mt-4">상품 설명</h4>
-					<p th:utext="${product.productDescription}"></p>
+					<!-- 목차 -->
+					 <h4>목차</h4>
+					 <ul>
+					     <li th:utext="${product.productContent}"></li>
+					 </ul>
+					<!-- 상품 설명 -->
+					 <h4 class="mt-4">상품 설명</h4>
+					 <p th:utext="${product.productDescription}"></p>
 				</div>
 
 				<!-- 리뷰 -->

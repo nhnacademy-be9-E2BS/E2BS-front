@@ -11,11 +11,8 @@ import com.nhnacademy.front.account.customer.adaptor.CustomerRegisterAdaptor;
 import com.nhnacademy.front.account.customer.exception.CustomerLoginProcessingException;
 import com.nhnacademy.front.account.customer.exception.CustomerPasswordCheckException;
 import com.nhnacademy.front.account.customer.exception.CustomerRegisterProcessingException;
-import com.nhnacademy.front.account.customer.model.domain.Customer;
 import com.nhnacademy.front.account.customer.model.dto.request.RequestCustomerLoginDTO;
 import com.nhnacademy.front.account.customer.model.dto.request.RequestCustomerRegisterDTO;
-import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerLoginDTO;
-import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerRegisterDTO;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -29,22 +26,21 @@ public class CustomerService {
 
 	private final PasswordEncoder passwordEncoder;
 
-	public Customer customerLogin(RequestCustomerLoginDTO requestCustomerLoginDTO) {
+	public Long customerLogin(RequestCustomerLoginDTO requestCustomerLoginDTO) {
 		try {
-			ResponseEntity<ResponseCustomerLoginDTO> response = customerLoginAdaptor.customerLogin(
-				requestCustomerLoginDTO);
+			ResponseEntity<Long> response = customerLoginAdaptor.customerLogin(requestCustomerLoginDTO);
 			if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
 				throw new CustomerLoginProcessingException("비회원 로그인 실패했습니다.");
 			}
 
-			return response.getBody().getCustomer();
+			return response.getBody();
 
 		} catch (FeignException ex) {
 			throw new CustomerLoginProcessingException("비회원 로그인 실패했습니다.");
 		}
 	}
 
-	public Customer customerRegister(RequestCustomerRegisterDTO requestCustomerRegisterDTO) {
+	public Long customerRegister(RequestCustomerRegisterDTO requestCustomerRegisterDTO) {
 		try {
 			if (!requestCustomerRegisterDTO.getCustomerPassword()
 				.equals(requestCustomerRegisterDTO.getCustomerPasswordCheck())) {
@@ -55,13 +51,12 @@ public class CustomerService {
 			requestCustomerRegisterDTO.setCustomerPassword(customerPassword);
 			requestCustomerRegisterDTO.setCustomerPasswordCheck(customerPassword);
 
-			ResponseEntity<ResponseCustomerRegisterDTO> response = customerRegisterAdaptor.customerRegister(
-				requestCustomerRegisterDTO);
+			ResponseEntity<Long> response = customerRegisterAdaptor.customerRegister(requestCustomerRegisterDTO);
 			if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
 				throw new CustomerRegisterProcessingException("비회원 첫주문 실패했습니다.");
 			}
 
-			return response.getBody().getCustomer();
+			return response.getBody();
 		} catch (FeignException ex) {
 			throw new CustomerRegisterProcessingException("비회원 첫주문 실패했습니다.");
 		}

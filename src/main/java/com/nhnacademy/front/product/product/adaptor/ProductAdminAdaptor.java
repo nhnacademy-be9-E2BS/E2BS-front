@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,13 +13,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateByQueryDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductMetaDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
@@ -35,33 +38,38 @@ public interface ProductAdminAdaptor {
 	@GetMapping("/register")
 	ResponseEntity<Void> getRegisterView();
 
-	@PostMapping("/register")
-	ResponseEntity<Void> postCreateProduct(@RequestBody RequestProductDTO request);
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	ResponseEntity<Void> postCreateProduct(@RequestPart("requestMeta") RequestProductMetaDTO requestMeta,
+		@RequestPart("productImage") List<MultipartFile> productImage);
 
-	@PutMapping("/{bookId}")
-	ResponseEntity<Void> putUpdateProduct(@PathVariable Long bookId, @RequestBody RequestProductDTO request);
+	@PutMapping(value = "/{bookId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	ResponseEntity<Void> putUpdateProduct(@PathVariable Long bookId,
+		@RequestPart("product") RequestProductMetaDTO requestMeta,
+		@RequestPart("productImage") List<MultipartFile> productImage);
 
 	@PutMapping("/{bookId}/stock")
-	ResponseEntity<Void> putUpdateProductStock(@PathVariable Long bookId, @RequestBody RequestProductStockUpdateDTO request);
+	ResponseEntity<Void> putUpdateProductStock(@PathVariable Long bookId,
+		@RequestBody RequestProductStockUpdateDTO request);
 
 	@PutMapping("/{bookId}/salePrice")
-	ResponseEntity<Void> putUpdateProductSalePrice(@PathVariable Long bookId, @RequestBody RequestProductSalePriceUpdateDTO request);
+	ResponseEntity<Void> putUpdateProductSalePrice(@PathVariable Long bookId,
+		@RequestBody RequestProductSalePriceUpdateDTO request);
 
 	@GetMapping("/states/sale")
 	ResponseEntity<PageResponse<ResponseProductCouponDTO>> getProductsToCoupon(Pageable pageable);
 
 	// 일반 검색 (query + queryType)
 	@GetMapping("/aladdin/search")
-	ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> searchBooksByQuery(@SpringQueryMap RequestProductApiSearchDTO request, Pageable pageable);
+	ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> searchBooksByQuery(
+		@SpringQueryMap RequestProductApiSearchDTO request, Pageable pageable);
 
 	// 리스트 검색 (query 없음, Bestseller, NewBook 등)
 	@GetMapping("/aladdin/search")
-	ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> listBooksByCategory(@SpringQueryMap RequestProductApiSearchByQueryTypeDTO request, Pageable pageable);
-
+	ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> listBooksByCategory(
+		@SpringQueryMap RequestProductApiSearchByQueryTypeDTO request, Pageable pageable);
 
 	@PostMapping("/aladdin/register")
 	ResponseEntity<Void> postCreateProductByApi(@RequestBody RequestProductApiCreateDTO request);
-
 
 	@PostMapping("/aladdin/register/list")
 	ResponseEntity<Void> postCreateProductQueryByApi(@RequestBody RequestProductApiCreateByQueryDTO request);

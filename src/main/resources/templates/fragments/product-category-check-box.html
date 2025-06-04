@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<th:block th:fragment="categoryCheckbox(category, prefix, book)">
+<th:block th:fragment="productCategoryCheckbox(category, prefix, product)">
 
     <div class="form-check ms-2">
         <th:block th:if="${category.children != null and !category.children.isEmpty()}">
@@ -17,7 +17,7 @@
                    th:name="categoryIds"
                    th:value="${category.categoryId}"
                    onchange="limitCategorySelection(this)"
-                   th:checked="${book.categoryIds != null} ? ${book.categoryIds.contains(category.categoryId)} : false">
+                   th:checked="${product.categories != null and product.categories.contains(category)}">
             <label class="form-check-label"
                    th:for="'cat-' + ${category.categoryId}"
                    th:text="${prefix + category.categoryName}">
@@ -28,7 +28,8 @@
     <!-- 자식 카테고리 재귀 -->
     <th:block th:if="${category.children != null and !category.children.isEmpty()}">
         <th:block th:each="child : ${category.children}">
-            <th:block th:replace="fragments/categoryDropdownCheckboxFragment :: categoryCheckbox(category=${child}, prefix='  ' + ${prefix},  book=${book})" />
+            <th:block
+                    th:replace="fragments/product-category-check-box :: productCategoryCheckbox(category=${child}, prefix='  ' + ${prefix},  product=${product})"/>
         </th:block>
     </th:block>
 </th:block>
