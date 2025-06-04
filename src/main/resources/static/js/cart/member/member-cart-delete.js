@@ -55,13 +55,13 @@ function recalculateTotalPrice() {
         total += price;
     });
 
-    $('#totalPaymentAmount').text(total.toString() + '원');
+    $('#totalPaymentAmount').text(total.toLocaleString('ko-KR') + '원');
 
     if ($('tbody .delete-item-btn').length === 0) {
         $('.total-payment-price').closest('tr').hide();  // 총 결제 금액
         $('.out_button_area').hide();                            // 주문 버튼
 
-        $('tbody').append('<tr><td colspan="4" style="text-align:center;">장바구니가 비어 있습니다.</td></tr>');
+        $('tbody').append('<tr><td colspan="6" style="text-align:center;">장바구니가 비어 있습니다.</td></tr>');
     }
 }
 
@@ -83,7 +83,7 @@ $(document).ready(function () {
             success: function (response) {
                 alert('장바구니를 비웠습니다!');
                 $('#cart-container').hide();
-                $('.table').append('<tbody><tr><td colspan="5" style="text-align:center;">장바구니가 비어 있습니다.</td></tr></tbody>');
+                $('.table').append('<tbody><tr><td colspan="6" style="text-align:center;">장바구니가 비어 있습니다.</td></tr></tbody>');
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);

@@ -1,6 +1,6 @@
 package com.nhnacademy.front.account.customer.model.dto.response;
 
-import com.nhnacademy.front.account.customer.model.domain.Customer;
+import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseCustomerRegisterDTO {
 
-	private Customer customer;
+	private long customerId;
+
+	private RequestCartOrderDTO requestCartOrder;
 
 }

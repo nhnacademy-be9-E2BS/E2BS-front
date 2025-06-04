@@ -1,4 +1,52 @@
-// 체크할 때마다 체크된 상품의 총합으로 최신화
+// 항목 체크에 대한 이벤트 처리
+$(document).ready(function () {
+    // 개별 체크 시 총액 계산
+    $('.cart-item-checkbox').change(function () {
+        updateTotalPayment();
+
+        // 개별 체크 해제 시 전체 선택 체크박스도 해제
+        if (!$(this).is(':checked')) {
+            $('#select-all').prop('checked', false);
+        } else {
+            // 모든 항목이 체크되었는지 확인
+            const allChecked = $('.cart-item-checkbox').length === $('.cart-item-checkbox:checked').length;
+            $('#select-all').prop('checked', allChecked);
+        }
+    });
+
+    // 전체 선택 체크박스 동작
+    $('#select-all').change(function () {
+        const isChecked = $(this).is(':checked');
+        $('.cart-item-checkbox').prop('checked', isChecked);
+        updateTotalPayment();
+    });
+
+    // 초기 총액 계산
+    updateTotalPayment();
+});
+
+function updateTotalPayment() {
+    let total = 0;
+
+    $('.cart-item-checkbox:checked').each(function () {
+        const productId = $(this).data('product-id');
+
+        // 단가 가져오기
+        const row = $(this).closest('tr');
+        const priceText = row.find('.unit-price').text().replace(/[^0-9]/g, '');
+        const unitPrice = parseInt(priceText, 10) || 0;
+
+        // 수량 input 가져오기
+        const quantity = parseInt($('#quantity-' + productId).val(), 10) || 1;
+
+        total += unitPrice * quantity;
+    });
+
+    // 총 결제 금액 영역에 반영
+    $('#totalPaymentAmount').text(total.toLocaleString('ko-KR') + '원');
+}
+
+// 체크된 상품 주문
 $(document).ready(function () {
     $('#order-btn').click(function (e) {
         e.preventDefault();
@@ -27,27 +75,20 @@ $(document).ready(function () {
             return;
         }
 
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/order';
-        form.style.display = 'none';
+        // 주문 정보 객체 생성
+        const cartOrder = {
+            productIds: selectedProductIds,
+            cartQuantities: selectedCartQuantities
+        };
 
-        selectedProductIds.forEach(id => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'productIds';
-            input.value = id;
-            form.appendChild(input);
-        });
-        selectedCartQuantities.forEach(qty => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'cartQuantities';
-            input.value = qty;
-            form.appendChild(input);
-        });
+        // 직렬화 → Base64 인코딩
+        const jsonStr = JSON.stringify(cartOrder);
+        const encoded = btoa(unescape(encodeURIComponent(jsonStr)));  // 한글깨짐 방지
 
-        document.body.appendChild(form);
-        form.submit();
+        // 쿠키 저장
+        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; httponly; secure; samesite=strict`;
+
+        // 주문서 페이지로 GET 이동
+        window.location.href = '/members/carts/order';
     });
 });

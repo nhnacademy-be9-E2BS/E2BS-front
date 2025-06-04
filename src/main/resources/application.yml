@@ -62,10 +62,10 @@ member:
 
 customer:
   login:
-    url: http://localhost:10232/api/customer/login
+    url: http://localhost:10232/api/customers/login
 
   register:
-    url: http://localhost:10232/api/customer/register
+    url: http://localhost:10232/api/customers/register
 
 oauth:
   login:

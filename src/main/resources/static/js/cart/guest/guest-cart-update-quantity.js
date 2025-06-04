@@ -4,11 +4,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const decreaseButtons = document.querySelectorAll('.reduced.items-count');
 
     increaseButtons.forEach(button => {
-        button.addEventListener('click', () => updateQuantity(button.dataset.id, 1));
+        button.addEventListener('click', () => updateQuantity(button.dataset.productid, 1));
     });
 
     decreaseButtons.forEach(button => {
-        button.addEventListener('click', () => updateQuantity(button.dataset.id, -1));
+        button.addEventListener('click', () => updateQuantity(button.dataset.productid, -1));
     });
 
     function updateQuantity(productId, change) {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const unitPrice = parseInt(unitPriceText.replace(/[^\d]/g, ''));
             const totalPrice = unitPrice * quantity;
             const totalPriceElement = row.querySelector('.total-price');
-            totalPriceElement.textContent = totalPrice;
+            totalPriceElement.textContent = totalPrice.toLocaleString('ko-KR') + '원'
         }
 
         updateTotalPaymentAmount();
@@ -55,7 +55,7 @@ function updateTotalPaymentAmount() {
 
     const totalPayment = document.getElementById('totalPaymentAmount');
     if (totalPayment) {
-        totalPayment.textContent = total;
+        totalPayment.textContent = total.toLocaleString('ko-KR') + '원'
     }
 }
 
