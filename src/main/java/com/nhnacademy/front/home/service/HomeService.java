@@ -20,22 +20,18 @@ public class HomeService {
 
 	private final HomeAdaptor homeAdaptor;
 
-	public ResponseHomeMemberNameDTO getMemberNameFromHome(HttpServletRequest request) {
-		try {
-			String memberId = JwtGetMemberId.jwtGetMemberId(request);
-			if (Objects.isNull(memberId)) {
-				return null;
-			}
-
-			ResponseEntity<ResponseHomeMemberNameDTO> response = homeAdaptor.getHomeMemberName(memberId);
-			if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-				throw new EmptyResponseException("회원 이름을 가져오지 못했습니다.");
-			}
-
-			return response.getBody();
-		} catch (FeignException ex) {
+	public ResponseHomeMemberNameDTO getMemberNameFromHome(HttpServletRequest request) throws FeignException {
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+		if (Objects.isNull(memberId)) {
 			return null;
 		}
+
+		ResponseEntity<ResponseHomeMemberNameDTO> response = homeAdaptor.getHomeMemberName(memberId);
+		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
+			throw new EmptyResponseException("회원 이름을 가져오지 못했습니다.");
+		}
+
+		return response.getBody();
 	}
 
 }

@@ -2604,11 +2604,11 @@ a {
 .sidebar-filter .top-filter-head {
     font-family: 'Oswald', sans-serif;
     line-height: 50px;
-    background: #f8f9fa;
+    background: #ffffff;
     padding: 0 30px;
     font-size: 18px;
     font-weight: 400;
-    color: #fff
+    color: #333
 }
 
 .sidebar-filter .head {
@@ -2621,7 +2621,7 @@ a {
 }
 
 .sidebar-filter .common-filter {
-    background: #f1f6f7;
+    background: #ffffff;
     border-bottom: 1px solid #eee;
     padding-bottom: 25px
 }

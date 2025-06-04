@@ -1,6 +1,9 @@
 package com.nhnacademy.front.order.order.controller;
 
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,12 +26,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAddressDTO;
 import com.nhnacademy.front.account.address.service.AddressService;
+import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerRegisterDTO;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
-import com.nhnacademy.front.account.member.service.MemberService;
 import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
@@ -37,10 +43,12 @@ import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrder
 import com.nhnacademy.front.coupon.membercoupon.service.MemberCouponService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
+import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
@@ -48,7 +56,6 @@ import com.nhnacademy.front.order.wrapper.service.WrapperService;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryIdsDTO;
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
-import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -76,12 +83,19 @@ public class OrderController {
 
 	private final UserCategoryService userCategoryService;
 	private final MemberCouponService memberCouponService;
+
+	private final ObjectMapper objectMapper;
+
 	/**
-	 * 결제 주문서 작성 페이지
+	 * 회원 결제 주문서 작성 페이지
 	 */
 	@JwtTokenCheck
-	@PostMapping("/order")
-	public String getCheckOut(Model model, @ModelAttribute RequestCartOrderDTO orderRequest, HttpServletRequest request) {
+	@GetMapping("/members/order")
+	public String getCheckOut(Model model, @CookieValue(name = "orderCart") String encodedCart, HttpServletRequest request) throws JsonProcessingException {
+		// Base64 디코딩 → JSON → DTO 역직렬화
+		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
+		RequestCartOrderDTO orderRequest = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
+
 		List<Integer> quantities = orderRequest.getCartQuantities();
 		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getProductIds());
 		List<ResponseWrapperDTO> wrappers = wrapperService.getWrappersBySaleable(Pageable.unpaged()).getContent();
@@ -110,7 +124,35 @@ public class OrderController {
 		model.addAttribute("tossClientKey", tossClientKey);
 		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
 		model.addAttribute("tossFailUrl", tossFailUrl);
-		return "payment/checkout";
+		return "payment/member-checkout";
+	}
+
+	/**
+	 * 비회원 가입 또는 로그인시 선택한 장바구니 항목들에 대한 결제 주문서 작성 페이지
+	 */
+	@PostMapping("/customers/order")
+	public String getCheckOutCustomerCart(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest) {
+		// 회원 결제에서 쿠폰, 포인트, 주소만 제외
+		List<Integer> quantities = orderRequest.getRequestCartOrder().getCartQuantities();
+		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getRequestCartOrder().getProductIds());
+		List<ResponseWrapperDTO> wrappers = wrapperService.getWrappersBySaleable(Pageable.unpaged()).getContent();
+		
+		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(orderRequest.getRequestCartOrder().getProductIds());
+		Map<Long, List<Long>> productCategoryMap = new HashMap<>();
+		for (ResponseCategoryIdsDTO dto : categories) {
+			productCategoryMap.put(dto.getProductId(), dto.getCategoryIds());
+		}
+
+		model.addAttribute("products", products);
+		model.addAttribute("quantities", quantities);
+		model.addAttribute("wrappers", wrappers);
+		model.addAttribute("customerId", orderRequest.getCustomerId());
+		model.addAttribute("productCategories", productCategoryMap);
+		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
+		model.addAttribute("tossClientKey", tossClientKey);
+		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
+		model.addAttribute("tossFailUrl", tossFailUrl);
+		return "payment/customer-checkout";
 	}
 
 	/**
@@ -221,7 +263,19 @@ public class OrderController {
 				productAmount += orderDetail.getWrapperPrice() * orderDetail.getOrderQuantity();
 			}
 		}
+		LocalDate shipmentDate = order.getShipmentDate();
+		LocalDate now = LocalDate.now();
 
+		boolean isReturnAvailable = false;
+		boolean isChangeOfMindReturnAvailable = false;
+		if (shipmentDate != null) {
+			long daysBetween = ChronoUnit.DAYS.between(shipmentDate, now);
+			isReturnAvailable = daysBetween <= 30;
+			isChangeOfMindReturnAvailable = daysBetween <= 10;
+		}
+
+		model.addAttribute("isReturnAvailable", isReturnAvailable);
+		model.addAttribute("isChangeOfMindReturnAvailable", isChangeOfMindReturnAvailable);
 		model.addAttribute("order", order);
 		model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("productAmount", productAmount);
@@ -236,5 +290,33 @@ public class OrderController {
 	@DeleteMapping("/mypage/orders/{orderCode}")
 	public ResponseEntity<Void> cancelOrder(@PathVariable String orderCode) {
 		return orderService.cancelOrder(orderCode);
+	}
+
+	/**
+	 * 회원의 반품 요청
+	 */
+	@PostMapping("/order/return")
+	public ResponseEntity<Void> returnOrder(@RequestBody RequestOrderReturnDTO returnDTO) {
+		return orderService.returnOrder(returnDTO);
+	}
+
+	@GetMapping("/mypage/return")
+	public String getReturnOrders(Model model, HttpServletRequest request ,Pageable pageable) {
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+
+		ResponseEntity<PageResponse<ResponseOrderReturnDTO>> response =
+			orderService.getReturnOrdersByMemberId(pageable, memberId);
+		Page<ResponseOrderReturnDTO> returns = PageResponseConverter.toPage(response.getBody());
+		model.addAttribute("returns", returns);
+
+		return "member/mypage/orderReturns";
+	}
+
+	@GetMapping("/mypage/return/{orderCode}")
+	public String getReturnOrderDetails(Model model, @PathVariable String orderCode) {
+
+		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
+		model.addAttribute("returnDTO", returnDTO);
+		return "member/mypage/orderReturnDetail";
 	}
 }

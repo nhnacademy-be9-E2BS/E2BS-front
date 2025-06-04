@@ -2,6 +2,7 @@ package com.nhnacademy.front.common.interceptor;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
 import com.nhnacademy.front.home.service.HomeService;
 import com.nhnacademy.front.jwt.parser.JwtHasToken;
@@ -15,6 +16,7 @@ public class MemberNameAndRoleInterceptor implements HandlerInterceptor {
 
 	private final HomeService homeService;
 
+	@JwtTokenCheck
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 		throws Exception {

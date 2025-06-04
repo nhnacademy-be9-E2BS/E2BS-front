@@ -8,12 +8,30 @@ spring:
       filter:
         enabled: true
 
+#  session:
+#    store-type: redis          # 저장 타입을 redis로 선언
+##    timeout: 3600s             # 세션 만료 시간 (초 단위)
+#    redis:
+#      namespace: e2bs:sessions # Redis 키 prefix 커스터마이징
+
   data:
     redis:
       host: s4.java21.net
       port: 6379
       password: "*N2vya7H@muDTwdNMR!"
       database: 294
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: e2bsshop
+    password: szuxvsakflliulcx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 logging:
   level:
@@ -45,12 +63,15 @@ member:
   state:
     url: http://localhost:10232/api/members
 
+  dormant:
+    url: http://localhost:10232/api/dormant
+
 customer:
   login:
-    url: http://localhost:10232/api/customer/login
+    url: http://localhost:10232/api/customers/login
 
   register:
-    url: http://localhost:10232/api/customer/register
+    url: http://localhost:10232/api/customers/register
 
 oauth:
   login:
@@ -110,6 +131,9 @@ product:
     admin:
       url: http://localhost:10232/api/admin/books
 
+  productState:
+    url: http://localhost:10232/api/productState
+
 search:
   product:
     url: http://localhost:10232/api/books/elasticsearch
@@ -159,3 +183,8 @@ auth:
   admin:
     settings:
       url: http://localhost:10232/api/auth/admin/settings
+
+
+dooray:
+  authentication:
+    url: https://nhnacademy.dooray.com/services

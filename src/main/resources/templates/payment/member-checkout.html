@@ -574,13 +574,11 @@
                     pointAmountData = "0";
                 }
 
-                // 순수 금액 계산, 상품 금액 - 쿠폰 적용 금액 - 배송비 (포인트, 포장지 금액 제외)
+                // 순수 금액 계산, 상품 금액 - 쿠폰 적용 금액
                 let pureAmount = 0;
 
                 const productAmountSpan = document.querySelector(".list_2 li:nth-child(1) span:nth-child(2)");
                 pureAmount = parseCurrency(productAmountSpan.textContent);
-                const deliveryFeeSpan = document.querySelector(".list_2 li:nth-child(2) span:nth-child(2)");
-                pureAmount -= parseCurrency(deliveryFeeSpan.textContent);
                 const couponSpan = document.querySelector(".list_2 li:nth-child(4) span:nth-child(2)");
                 pureAmount -= parseCurrency(couponSpan.textContent);
 
