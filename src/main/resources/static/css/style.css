@@ -1190,12 +1190,12 @@ a {
 
 .button {
     display: inline-block;
-    border: 1px solid #384aeb;
+    border: 1px solid #3f51b5;
     border-radius: 30px;
     color: #222;
     font-weight: 500;
     padding: 12px 50px;
-    background: #384aeb;
+    background: #3f51b5;
     color: #fff;
     transition: all .4s ease
 }
@@ -2605,7 +2605,7 @@ a {
 .sidebar-filter .top-filter-head {
     font-family: 'Oswald', sans-serif;
     line-height: 50px;
-    background: #384aeb;
+    background: #3f51b5;
     padding: 0 30px;
     font-size: 18px;
     font-weight: 400;
@@ -3647,7 +3647,7 @@ a {
     height: 100%;
     width: 100%;
     content: "";
-    background: #384aeb;
+    background: #3f51b5;
     opacity: .9
 }
 
