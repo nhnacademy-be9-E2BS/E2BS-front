@@ -6,6 +6,40 @@
         layout:decorate="~{layouts/mypage-layout}">
 <body>
 <div layout:fragment="content">
+
+    <!--모달 영역-->
+    <div id="returnModal" class="modal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
+     overflow: hidden; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content" style="background-color: #fff; margin: 15% auto; padding: 20px; width: 50%; max-height: 50vh; overflow-y: auto;
+        border-radius: 8px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.25);">
+            <span class="close" onclick="closeReturnModal()" style="float: right; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
+            <span>반품 사유</span>
+
+            <input type="hidden"  id="orderCode" th:value="${order.orderCode}">
+
+            <!-- 반품 구분 드롭다운 -->
+            <div style="margin-top: 20px; text-align: left;">
+                <label for="returnType" style="font-weight: bold;">반품 구분</label>
+                <select id="returnType" class="form-control" style="width: 100%; margin-top: 6px;" required>
+                    <option value="CHANGE_MIND" th:if="${isChangeOfMindReturnAvailable}">단순 변심</option>
+                    <option value="BREAK">파손</option>
+                </select>
+            </div>
+
+            <!-- 반품 사유 입력 -->
+            <div style="margin-top: 20px; text-align: left;">
+                <label for="returnReason" style="font-weight: bold;">반품 사유 상세</label>
+                <textarea id="returnReason" class="form-control" rows="4" placeholder="반품 사유를 입력하세요."
+                          style="width: 100%; margin-top: 6px; resize: none;"></textarea>
+            </div>
+
+            <span>※ 단순 변심으로 인한 반품은 배송일로부터 10일 이내에만 가능하며, 배송비를 차감한 금액을 포인트로 돌려드립니다.</span>
+            <span>단순 변심으로 인한 반품은 주문 시 배송비, 포장지, 쿠폰 할인 금액이 제외하고 환불됩니다.</span>
+
+            <button class="btn btn-outline-primary" style="width: 100%; margin-top: 15px;" onclick="returnOrder()">반품 신청</button>
+        </div>
+    </div>
+
     <section>
         <div class="container">
             <h2>주문 조회</h2>
@@ -13,6 +47,10 @@
             <button class="btn-primary" th:if="${order.state.equals('WAIT')} and ${order.paid}"
                     th:attr="data-code=${order.orderCode}"
                     onclick="cancelOrder(this.dataset.code)">주문 취소
+            </button>
+            <button class="btn-primary" th:if="${order.state.equals('COMPLETE')} and ${isReturnAvailable}"
+                    th:attr="data-code=${order.orderCode}"
+                    onclick="openReturnModal()">반품 신청
             </button>
             <!-- 조회 영역 -->
             <div class="card p-4">
@@ -23,11 +61,20 @@
                         <th>주문 코드</th>
                         <td th:text="${order.orderCode}">ORD123456</td>
                         <th>주문 상태</th>
-                        <td th:text="${order.state}">배송중</td>
+                        <td th:switch="${order.state}">
+                            <span th:case="'WAIT'">배송 대기</span>
+                            <span th:case="'CANCEL'">주문 취소</span>
+                            <span th:case="'DELIVERY'">배송 중</span>
+                            <span th:case="'RETURN'">반품</span>
+                            <span th:case="'COMPLETE'">배송 완료</span>
+                        </td>
                     </tr>
                     <tr>
                         <th>결제 여부</th>
-                        <td th:text="${order.paid}">결제 완료</td>
+                        <td th:switch="${order.paid}">
+                            <span th:case="true">결제 완료</span>
+                            <span th:case="false">결제 대기</span>
+                        </td>
                         <th>주문 금액</th>
                         <td th:text="${T(java.lang.String).format('%,d',order.paymentAmount + order.pointAmount)}">
                             35000
@@ -87,7 +134,9 @@
                         <th>포장지</th>
                     </tr>
                     <tr th:each="orderDetail:${orderDetails}">
-                        <td th:text="${orderDetail.productName}"></td>
+                        <td>
+                            <a  th:text="${orderDetail.productName}" th:href="'/books/'+${orderDetail.productId}"></a>
+                        </td>
                         <td th:text="${T(java.lang.String).format('%,d',orderDetail.orderDetailPerPrice)}"></td>
                         <td th:text="${orderDetail.orderQuantity}"></td>
                         <td th:if="${orderDetail.wrapperId} == null">포장 없음</td>
@@ -153,6 +202,55 @@
                         alert("주문 취소에 실패했습니다.");
                     }
                 })
+            }
+
+            async function returnOrder(){
+                const reason = document.getElementById("returnReason").value.trim();
+                if (!reason) {
+                    alert("반품 사유를 입력해주세요.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch("/order/return", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            orderCode: document.getElementById("orderCode").value,
+                            orderReturnReason: document.getElementById("returnReason").value,
+                            returnCategory: document.getElementById("returnType").value
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert("정상 반품 처리되었습니다.");
+                        window.location.reload();
+                    } else {
+                        const errText = await response.text();
+                        console.error("반품 실패 응답:", errText);
+                        alert("반품 처리 중 문제가 발생했습니다.");
+                    }
+                } catch (err) {
+                    console.error("요청 에러 발생:", err);
+                    alert("서버 통신에 실패했습니다.");
+                }
+            }
+
+            function openReturnModal() {
+                // 환불 모달 띄우기
+                document.getElementById("returnModal").style.display = "block";
+            }
+
+            function closeReturnModal() {
+                document.getElementById("returnModal").style.display = "none";
+            }
+
+            // 바깥 클릭 시 닫기
+            window.onclick = function(event) {
+                const modal = document.getElementById("returnModal");
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
             }
         </script>
     </section>

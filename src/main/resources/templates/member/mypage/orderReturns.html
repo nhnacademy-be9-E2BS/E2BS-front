@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/mypage-layout}">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <h2>반품 조회</h2>
+
+            <!-- 조회 영역 -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h4>반품 목록</h4>
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                        <thead>
+                        <tr>
+                            <th style="width: 20%;">반품 일시</th>
+                            <th style="width: 35%;">주문 코드</th>
+                            <th style="width: 10%;">반품 구분</th>
+                            <th style="width: 25%;">환불 금액</th>
+                            <th style="width: 10%;">액션</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="return : ${returns}">
+                            <td>
+                                <span th:text="${#temporals.format(return.orderReturnCreatedAt, 'yyyy-MM-dd')}"></span>
+                                <span th:text="${#temporals.format(return.orderReturnCreatedAt, 'HH:mm:ss')}"></span>
+                            </td>
+                            <td th:text="${return.orderCode}"
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></td>
+                            <td th:switch="${return.returnCategory}">
+                                <span th:case="'CHANGE_MIND'">단순 변심</span>
+                                <span th:case="'BREAK'">파손</span>
+                            </td>
+                            <td th:text="${T(java.lang.String).format('%,d',return.orderReturnAmount)}">
+
+                            <td>
+                                <a th:href="'/mypage/return/'+${return.orderCode}">상세 보기</a>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <nav>
+                                <ul class="pagination" th:if="${returns.totalPages > 0}">
+                                    <!-- 처음 버튼 -->
+                                    <li class="page-item" th:classappend="${!returns.hasPrevious()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/return'(page=0, size=${returns.size})}">처음</a>
+                                    </li>
+
+                                    <!-- 전체 페이지 번호 출력 -->
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, returns.totalPages - 1)}"
+                                        th:classappend="${i == returns.number} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/return'(page=${i}, size=${returns.size})}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <!-- 마지막 버튼 -->
+                                    <li class="page-item" th:classappend="${!returns.hasNext()} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{'/mypage/return'(page=${returns.totalPages - 1}, size=${returns.size})}">마지막</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+
+        </script>
+    </section>
+</div>
+
+</body>
+</html>

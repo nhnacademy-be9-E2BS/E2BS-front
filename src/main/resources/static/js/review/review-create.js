@@ -23,8 +23,19 @@ $(document).ready(function () {
                 alert("리뷰가 등록되었습니다.");
                 location.reload();
             },
-            error: function (xhr) {
-                alert("리뷰 등록에 실패했습니다.\n상태 코드: " + xhr.status);
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                console.error('status:', status);
+                console.error('xhr:', xhr);
+
+                let message = '리뷰 등록에 실패했습니다.';
+                if (xhr.responseJSON) {
+                    message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
+                               `상태 코드: ${xhr.responseJSON.status}\n` +
+                               `발생 시간: ${xhr.responseJSON.timeStamp}`;
+                }
+
+                alert(message);
             }
         });
     });

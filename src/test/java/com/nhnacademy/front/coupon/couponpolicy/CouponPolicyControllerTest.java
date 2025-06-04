@@ -91,7 +91,6 @@ class CouponPolicyControllerTest {
 				.param("couponPolicyDiscountRate", "10")
 				.param("couponPolicySalePrice", "500")
 				.param("couponPolicyMaximumAmount", "10000")
-				.param("couponPolicyCreatedAt", "2025-05-12T15:00")
 				.with(csrf()))
 			.andExpect(status().is3xxRedirection())
 			.andExpect(redirectedUrl("/admin/settings/couponPolicies"));

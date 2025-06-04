@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/user-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <style>
+                .container {
+                    max-width: 1000px;
+                }
+
+                .row {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 20px;
+                }
+
+                .col-half {
+                    flex: 1;
+                    min-width: 400px;
+                    border: 1px solid #eee;
+                    padding: 30px;
+                    background-color: #fafafa;
+                    border-radius: 10px;
+                }
+
+                .form-control {
+                    width: 100%;
+                    padding: 10px;
+                    margin-bottom: 15px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+
+                .btn-main {
+                    background-color: #d81b60;
+                    border: none;
+                    color: white;
+                    font-weight: bold;
+                    padding: 12px;
+                    border-radius: 6px;
+                    width: 100%;
+                    cursor: pointer;
+                }
+
+                .tab-box {
+                    display: flex;
+                    margin-bottom: 20px;
+                }
+
+                .tab {
+                    flex: 1;
+                    text-align: center;
+                    padding: 10px;
+                    cursor: pointer;
+                    background: #f9f9f9;
+                    border: 1px solid #ccc;
+                    border-bottom: none;
+                    font-weight: bold;
+                }
+
+                .tab.active {
+                    background-color: #007bff;
+                    color: white;
+                }
+
+                .form-panel {
+                    display: none;
+                }
+
+                .form-panel.active {
+                    display: block;
+                }
+
+                .sns-icons img {
+                    width: 40px;
+                    height: 40px;
+                }
+
+                .payco-button {
+                    display: inline-block;
+                    background-color: #e20000;
+                    color: #fff;
+                    font-weight: bold;
+                    padding: 12px 0;
+                    width: 100%;
+                    border-radius: 6px;
+                    text-decoration: none;
+                    transition: background-color 0.3s ease;
+                    text-align: center;
+                    margin-top: 15px;
+                }
+
+                .payco-button:hover {
+                    background-color: #c00000;
+                }
+            </style>
+
+            <div class="row">
+                <!-- 회원 로그인 -->
+                <div class="col-half">
+                    <div class="tab-box">
+                        <div class="tab">회원 로그인</div>
+                    </div>
+                    <form action="/login" method="post">
+                        <input type="text" class="form-control" name="memberId" placeholder="아이디를 입력하세요" required>
+                        <input type="password" class="form-control" name="customerPassword" placeholder="비밀번호를 입력하세요."
+                               required>
+
+                        <button type="submit" class="btn-main">로그인</button>
+
+                        <a href="/oauth2/authorization/payco" class="payco-button">
+                            PAYCO로 로그인
+                        </a>
+
+                    </form>
+                </div>
+
+                <!-- 비회원 주문 -->
+                <div class="col-half">
+                    <div class="tab-box">
+                        <div class="tab active" onclick="showTab('reorder')">비회원 재주문</div>
+                        <div class="tab" onclick="showTab('neworder')">비회원 첫주문</div>
+                    </div>
+
+                    <!-- 재주문 -->
+                    <div id="reorder" class="form-panel active">
+                        <form action="/customer/login" method="post">
+                            <input type="email" class="form-control" name="customerEmail" placeholder="E-mail 주소를 입력하세요"
+                                   required>
+                            <input type="password" class="form-control" name="customerPassword"
+                                   placeholder="비밀번호를 입력하세요"
+                                   required>
+                            <button type="submit" class="btn-main">비회원 재주문</button>
+                        </form>
+                    </div>
+
+                    <!-- 첫 주문 -->
+                    <div id="neworder" class="form-panel">
+                        <form action="/customer/register" method="post">
+                            <div class="d-flex gap-2">
+                                <input type="email" class="form-control" name="customerEmail" id="customerEmail"
+                                       placeholder="E-mail 주소를 입력하세요*"
+                                       required>
+                                <button type="button" class="btn btn-outline-secondary"
+                                        onclick="checkIdDuplicate()">중복 확인
+                                </button>
+                            </div>
+                            <small id="idCheckMessage" class="text-muted mt-1 d-block"></small>
+                            <input type="text" class="form-control" name="memberName" placeholder="이름을 입력하세요*" required>
+                            <input type="password" class="form-control" name="customerPassword"
+                                   placeholder="비밀번호를 입력하세요*"
+                                   required>
+                            <input type="password" class="form-control" name="customerPasswordCheck"
+                                   placeholder="비밀번호 다시 입력하세요*"
+                                   required>
+
+                            <button type="submit" class="btn-main">비회원 첫주문</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function showTab(tab) {
+                    // 비회원 주문 탭 영역에서만 active 제어
+                    const tabs = document.querySelectorAll('.col-half:nth-child(2) .tab-box .tab');
+                    const panels = document.querySelectorAll('.col-half:nth-child(2) .form-panel');
+
+                    tabs.forEach(t => t.classList.remove('active'));
+                    panels.forEach(p => p.classList.remove('active'));
+
+                    document.getElementById(tab).classList.add('active');
+
+                    if (tab === 'reorder') {
+                        tabs[0].classList.add('active');
+                    } else if (tab === 'neworder') {
+                        tabs[1].classList.add('active');
+                    }
+                }
+            </script>
+            <script>
+                function getApiBaseUrl() {
+                    const origin = window.location.origin;
+
+                    if (origin.includes("localhost:10238")) {
+                        return "http://localhost:10232"; // 개발 환경
+                    }
+
+                    if (origin.includes("e2bs.shop")) {
+                        return "https://e2bs.shop"; // 운영 환경
+                    }
+                    return "http://localhost:10232";
+                }
+
+                function checkIdDuplicate() {
+                    const customerEmail = document.getElementById('customerEmail').value.trim();
+                    const messageElement = document.getElementById('idCheckMessage');
+
+                    if (!customerEmail) {
+                        messageElement.textContent = 'E-mail 주소를 입력해주세요.';
+                        messageElement.className = 'text-danger mt-1 d-block';
+                        return;
+                    }
+
+                    const apiBaseUrl = getApiBaseUrl();
+
+                    fetch(`${apiBaseUrl}/api/customer/register/customers/${encodeURIComponent(customerEmail)}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`서버 오류: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.available) {
+                                messageElement.textContent = '사용 가능한 E-mail 주소입니다.';
+                                messageElement.className = 'text-success';
+                            } else {
+                                messageElement.textContent = '이미 사용 중인 E-mail 주소입니다.';
+                                messageElement.className = 'text-danger';
+                            }
+                        })
+                        .catch(error => {
+                            messageElement.textContent = '서버 오류가 발생했습니다.';
+                            messageElement.className = 'text-danger';
+                        });
+                }
+            </script>
+        </div>
+    </section>
+</div>
+</body>
+</html>

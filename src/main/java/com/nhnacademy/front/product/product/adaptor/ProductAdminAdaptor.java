@@ -35,9 +35,6 @@ public interface ProductAdminAdaptor {
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(Pageable pageable);
 
-	@GetMapping("/order")
-	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
-
 	@GetMapping("/register")
 	ResponseEntity<Void> getRegisterView();
 

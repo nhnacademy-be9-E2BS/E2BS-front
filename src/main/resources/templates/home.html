@@ -65,6 +65,9 @@
                      th:each="product, productStat : ${BestSellerList}"
                      th:if="${productStat.index < 8}">
                     <div class="card text-center card-product h-100">
+                <div class="col-md-6 col-lg-4 col-xl-3" th:each="product, productStat : ${BestSellerList}"
+                     th:if="${productStat.index < 6}">
+                    <div class="card text-center card-product" th:data-product-id = "${product.productId}">
                         <div class="card-img">
                             <img class="img-fluid rounded"
                                  th:src="@{${product.productImage}}"
@@ -280,6 +283,26 @@
             </a>
         </div>
     </section>
+
+    <!-- 장바구니 이동 모달 -->
+    <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
+                    <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="닫기"></button>
+                </div>
+                <div class="modal-body">
+                    장바구니로 이동하시겠습니까?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기</button>
+                    <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

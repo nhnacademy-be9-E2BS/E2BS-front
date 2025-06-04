@@ -77,8 +77,18 @@ function sendCartUpdate(productId, cartItemsId, quantity) {
             console.log('장바구니 수량 업데이트 성공:', response.message);
         },
         error: function (xhr, status, error) {
-            console.error('장바구니 수량 업데이트 실패:', xhr.responseText);
-            alert('장바구니 수량 업데이트 중 오류가 발생했습니다.');
+            console.error('Error:', error);
+            console.error('status:', status);
+            console.error('xhr:', xhr);
+
+            let message = '장바구니 수량 업데이트에 실패했습니다.';
+            if (xhr.responseJSON) {
+                message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
+                           `상태 코드: ${xhr.responseJSON.status}\n` +
+                           `발생 시간: ${xhr.responseJSON.timeStamp}`;
+            }
+
+            alert(message);
         }
     });
 }
