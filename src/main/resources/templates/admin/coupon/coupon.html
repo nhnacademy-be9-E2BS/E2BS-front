@@ -6,88 +6,132 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>Coupon Management</h2>
+            <!-- Header -->
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 24px; margin-bottom: 32px;">
+                <h3 style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">
+                    쿠폰 관리 <span style="font-size: 14px; color: #888; font-weight: normal;">| 쿠폰을 등록하고 관리할 수 있습니다.</span>
+                </h3>
+                <a th:href="@{/admin/settings/coupons/register}"
+                   style="display: inline-block; background: #666; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 14px; text-decoration: none;">
+                    쿠폰 등록
+                </a>
+            </div>
 
-            <a th:href="@{/admin/settings/coupons/register}">쿠폰 등록</a>
-
-            <!-- 스타일 추가 -->
+            <!-- Table Style -->
             <style>
-                th {
-                    white-space: nowrap;
+                .table th, .table td {
+                    text-align: center;
+                    vertical-align: middle;
+                    color: #333;
+                    font-size: 15px;
+                }
+
+                .table thead th {
+                    font-weight: 600;
+                    background: #fafafa;
+                    border-top: 2px solid #666;
+                }
+
+                .coupon-section {
+                    border: 1px solid #eee;
+                    padding: 20px;
+                    border-radius: 6px;
+                    background-color: #fff;
+                }
+
+                .pagination .page-link {
+                    color: #333;
+                }
+
+                .pagination .page-item.active .page-link {
+                    background-color: #666;
+                    border-color: #666;
+                    color: #fff;
+                }
+
+                /* 링크 스타일 제거 */
+                a.coupon-link {
+                    color: #333 !important;
+                    text-decoration: none;
+                }
+
+                a.coupon-link:hover {
+                    text-decoration: underline;
                 }
             </style>
 
-            <!-- 쿠폰 목록 -->
-            <div class="row mb-5">
-                <div class="col-12">
-                    <h4>Coupon List</h4>
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>쿠폰명</th>
-                            <th>쿠폰정책</th>
-                            <th>할인 카테고리</th>
-                            <th>할인 도서</th>
-                            <th>활성여부</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="coupon : ${coupons}">
-                            <td>
-                                <a th:href="@{/admin/settings/coupons/{id}(id=${coupon.couponId})}"
-                                   th:text="${coupon.couponName}">쿠폰상세보기</a>
-                            </td>
-                            <td>
-                                <a th:href="@{/admin/settings/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
-                                   th:text="${coupon.couponPolicyName}">1</a>
-                            </td>
-                            <td th:text="${coupon.categoryId != null ? coupon.categoryName : '-'}">-</td>
-                            <td th:text="${coupon.productId != null ? coupon.productTitle : '-'}">-</td>
-                            <td>
-                                <button class="btn btn-sm"
-                                        th:attr="data-id=${coupon.couponId}"
-                                        th:text="${coupon.couponIsActive ? '활성' : '비활성'}"
-                                        th:classappend="${coupon.couponIsActive ? 'btn-success' : 'btn-danger'}"
-                                        onclick="toggleCouponStatus(this)">
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+            <!-- Coupon List Table -->
+            <div class="coupon-section">
+                <h4 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">쿠폰 목록</h4>
 
-                    <!-- 페이징 -->
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-center">
-                            <nav>
-                                <ul class="pagination" th:if="${coupons.totalPages > 0}">
-                                    <!-- 처음 -->
-                                    <li class="page-item" th:classappend="${!coupons.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link" th:href="@{'/admin/settings/coupons'(page=0, size=${coupons.size})}">처음</a>
-                                    </li>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>쿠폰명</th>
+                        <th>쿠폰정책</th>
+                        <th>할인 카테고리</th>
+                        <th>할인 도서</th>
+                        <th>활성여부</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="coupon : ${coupons}">
+                        <td>
+                            <a th:href="@{/admin/settings/coupons/{id}(id=${coupon.couponId})}"
+                               th:text="${coupon.couponName}"
+                               class="coupon-link">쿠폰상세</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/settings/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
+                               th:text="${coupon.couponPolicyName}"
+                               class="coupon-link">정책</a>
+                        </td>
+                        <td th:text="${coupon.categoryId != null ? coupon.categoryName : ''}">-</td>
+                        <td th:text="${coupon.productId != null ? coupon.productTitle : ''}">-</td>
+                        <td>
+                            <button class="btn btn-sm"
+                                    th:attr="data-id=${coupon.couponId}"
+                                    th:text="${coupon.couponIsActive ? '활성' : '비활성'}"
+                                    th:classappend="${coupon.couponIsActive ? 'btn-success' : 'btn-secondary'}"
+                                    onclick="toggleCouponStatus(this)">
+                            </button>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(coupons.content)}">
+                        <td colspan="5" style="padding: 40px 0; color: #777;">등록된 쿠폰이 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
 
-                                    <!-- 페이지 번호 -->
-                                    <li class="page-item"
-                                        th:each="i : ${#numbers.sequence(0, coupons.totalPages - 1)}"
-                                        th:classappend="${i == coupons.number} ? 'active'">
-                                        <a class="page-link"
-                                           th:href="@{'/admin/settings/coupons'(page=${i}, size=${coupons.size})}"
-                                           th:text="${i + 1}">1</a>
-                                    </li>
+                <!-- Paging -->
+                <div class="row mt-4">
+                    <div class="col-12 d-flex justify-content-center">
+                        <nav>
+                            <ul class="pagination" th:if="${coupons.totalPages > 0}">
+                                <li class="page-item" th:classappend="${!coupons.hasPrevious()} ? 'disabled'">
+                                    <a class="page-link" th:href="@{'/admin/settings/coupons'(page=0, size=${coupons.size})}">처음</a>
+                                </li>
 
-                                    <!-- 마지막 -->
-                                    <li class="page-item" th:classappend="${!coupons.hasNext()} ? 'disabled'">
-                                        <a class="page-link"
-                                           th:href="@{'/admin/settings/coupons'(page=${coupons.totalPages - 1}, size=${coupons.size})}">마지막</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, coupons.totalPages - 1)}"
+                                    th:classappend="${i == coupons.number} ? 'active'">
+                                    <a class="page-link"
+                                       th:href="@{'/admin/settings/coupons'(page=${i}, size=${coupons.size})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+
+                                <li class="page-item" th:classappend="${!coupons.hasNext()} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{'/admin/settings/coupons'(page=${coupons.totalPages - 1}, size=${coupons.size})}">마지막</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
-
                 </div>
             </div>
         </div>
 
+        <!-- Toggle Script -->
         <script>
             function toggleCouponStatus(button) {
                 const couponId = button.getAttribute('data-id');
@@ -96,18 +140,16 @@
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
-                    },
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('상태 변경 실패');
-                        }else{
-                            window.location.reload();
-                        }
-                    })
-                    .catch(error => {
-                        alert("에러 발생: " + error.message);
-                    });
+                    }
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('상태 변경 실패');
+                    } else {
+                        window.location.reload();
+                    }
+                }).catch(error => {
+                    alert("에러 발생: " + error.message);
+                });
             }
         </script>
     </section>

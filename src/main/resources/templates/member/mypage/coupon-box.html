@@ -6,7 +6,14 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>쿠폰함</h2>
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 20px; margin-bottom: 20px">
+                <h3 style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">
+                    쿠폰함 <span style="font-size: 14px; color: #888; font-weight: normal;">| 고객님께서 보유하고 계신 쿠폰 내역입니다.</span>
+                </h3>
+                <div style="font-size: 18px;">
+                    <span>사용가능한 쿠폰 : <strong><span th:text="${usableCouponCount} + '장'">5개</span></strong></span>
+                </div>
+            </div>
 
             <style>
                 h2 {
@@ -17,9 +24,10 @@
                 }
 
                 .coupon-wrapper {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 20px;
+                    display: grid;
+                    margin-top: 20px;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 16px;
                 }
 
                 .coupon-box {
@@ -27,48 +35,50 @@
                     flex-direction: column;
                     justify-content: space-between;
                     background: linear-gradient(90deg, #e3f2fd, #ede7f6);
-                    border-radius: 16px;
-                    padding: 20px;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                    border-radius: 12px;
+                    padding: 16px;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
                     border: 1px solid #ddd;
                     position: relative;
+                    aspect-ratio: 1 / 1;
+                    min-height: 200px;
                 }
 
                 .coupon-header {
-                    font-size: 14px;
+                    font-size: 12px;
                     font-weight: 600;
                     color: #3949ab;
-                    margin-bottom: 8px;
+                    margin-bottom: 6px;
                 }
 
                 .coupon-name {
-                    font-size: 20px;
+                    font-size: 16px;
                     font-weight: bold;
                     margin-bottom: 6px;
                     color: #212121;
                 }
 
                 .coupon-description {
-                    font-size: 14px;
+                    font-size: 13px;
                     color: #555;
-                    margin-bottom: 10px;
+                    margin-bottom: 8px;
                 }
 
                 .coupon-valid {
-                    font-size: 13px;
+                    font-size: 12px;
                     color: #333;
                     margin-top: auto;
                     font-weight: 500;
                 }
 
                 .coupon-footer {
-                    font-size: 12px;
-                    margin-top: 8px;
+                    font-size: 11px;
+                    margin-top: 6px;
                     color: #777;
                     background-color: #f1f3f4;
                     display: inline-block;
-                    padding: 4px 10px;
-                    border-radius: 10px;
+                    padding: 4px 8px;
+                    border-radius: 8px;
                 }
 
                 .pagination {
@@ -90,75 +100,74 @@
                     color: #ccc;
                     pointer-events: none;
                 }
+
+                /* 반응형: 태블릿에서 3개, 모바일에서 1~2개 */
+                @media (max-width: 1200px) {
+                    .coupon-wrapper {
+                        grid-template-columns: repeat(4, 1fr);
+                    }
+                }
+
+                @media (max-width: 992px) {
+                    .coupon-wrapper {
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .coupon-wrapper {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .coupon-wrapper {
+                        grid-template-columns: 1fr;
+                    }
+                }
             </style>
 
+            <!-- 상태 선택 필터 폼 -->
+            <form id="couponFilterForm" method="get" action="/mypage/couponBox"
+                  style="margin-bottom: 2rem; text-align: right;">
+                <select id="status" name="status" class="form-select"
+                        style="display: inline-block; width: 110px !important; font-size: 14px;"
+                        onchange="submitForm()">
+                    <option value="1" th:selected="${status == 1}">전체쿠폰</option>
+                    <option value="2" th:selected="${status == 2}">사용가능쿠폰</option>
+                    <option value="3" th:selected="${status == 3}">사용불가쿠폰</option>
+                </select>
+            </form>
+
+
+            <br>
             <!-- 쿠폰 목록 -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <!-- 상태 선택 필터 폼 -->
-                    <form method="get" action="/mypage/couponBox" style="margin-bottom: 1rem;">
-                        <label for="status">쿠폰 상태:</label>
-                        <select id="status" name="status" class="form-select"
-                                style="display: inline-block; width: 200px;">
-                            <option value="">-- 전체 보기 --</option>
-                            <option value="1" th:selected="${param.status == '1'}">전체</option>
-                            <option value="2" th:selected="${param.status == '2'}">사용가능</option>
-                            <option value="3" th:selected="${param.status == '3'}">사용불가</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary btn-sm">필터 적용</button>
-                    </form>
-
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>쿠폰명</th>
-                            <th>쿠폰정책</th>
-                            <th>할인 대상</th>
-                            <th>발급일</th>
-                            <th>만료일</th>
-                            <th>사용여부</th>
-                        </tr>
-                        </thead>
-                       <tbody>
-                       <tr th:each="coupon : ${memberCoupons.content}">
-                           <td th:text="${coupon.couponName}">쿠폰명</td>
-                           <td th:text="${coupon.couponPolicyName}">정책명</td>
-
-                           <td>
-                               <a th:if="${coupon.categoryName != null}"
-                                  th:href="@{/books/category/{id}(id=${coupon.categoryId})}"
-                                  th:text="'카테고리: ' + ${coupon.categoryName}">카테고리명</a>
-                               <span th:unless="${coupon.categoryName != null}"></span>
-                               <a th:if="${coupon.productTitle != null}"
-                                  th:href="@{/books/{id}(id=${coupon.productId})}"
-                                  th:text="'도서: ' + ${coupon.productTitle}">도서명</a>
-                               <span th:unless="${coupon.productTitle != null}"></span>
-                           </td>
-
-                           <td th:text="${#temporals.format(coupon.memberCouponCreatedAt, 'yyyy-MM-dd HH:mm')}">발급일</td>
-                           <td th:text="${#temporals.format(coupon.memberCouponPeriod, 'yyyy-MM-dd HH:mm')}">만료일</td>
-                           <td>
-                               <span th:if="${coupon.memberCouponUsed}">사용완료</span>
-                               <span th:if="${!coupon.memberCouponUsed and coupon.memberCouponPeriod.isBefore(T(java.time.LocalDateTime).now())}">만료</span>
-                               <span th:if="${!coupon.memberCouponUsed and !coupon.memberCouponPeriod.isBefore(T(java.time.LocalDateTime).now())}">미사용</span>
-                           </td>
-                       </tr>
-                       </tbody>
-                    </table>
                     <div class="coupon-wrapper">
                         <div class="coupon-box" th:each="coupon : ${memberCoupons.content}">
                             <div class="coupon-header" th:text="${coupon.couponPolicyName}">T Day 이벤트</div>
                             <div class="coupon-name" th:text="${coupon.couponName}">5,000원 할인</div>
                             <div class="coupon-description">
-                                <span th:if="${coupon.categoryName != null}"
-                                      th:text="${coupon.categoryName} + ' 카테고리 대상'"></span>
-                                <span th:unless="${coupon.categoryName != null}">해당 카테고리 없음</span>
+                                <div class="coupon-description">
+                                    <span>할인 대상 : </span>
+                                    <a th:if="${coupon.categoryName != null}"
+                                          th:text="${coupon.categoryName} + ' (카테고리)'"
+                                          th:href="@{/books/category/{id}(id=${coupon.categoryId})}"></a>
+                                    <a th:if="${coupon.categoryName == null and coupon.productTitle != null}"
+                                          th:href="@{/books/{id}(id=${coupon.productId})}"
+                                          th:text="${coupon.productTitle} + ' (도서)'"></a>
+                                    <span th:if="${coupon.categoryName == null and coupon.productTitle == null}">전체</span>
+                                </div>
                             </div>
                             <div class="coupon-valid">
-                                유효기간 : <span th:text="${#temporals.format(coupon.memberCouponCreatedAt, 'yyyy.MM.dd')}"></span>
-                                ~ <span th:text="${#temporals.format(coupon.memberCouponPeriod, 'yyyy.MM.dd')}"></span>
+                                발급일 : <span th:text="${#temporals.format(coupon.memberCouponCreatedAt, 'yyyy.MM.dd')}"></span><br>
+                                만료일 : <span th:text="${#temporals.format(coupon.memberCouponPeriod, 'yyyy.MM.dd')}"></span>
                             </div>
-                            <div class="coupon-footer" th:text="${coupon.memberCouponUsed ? '사용완료' : '미사용'}">미사용</div>
+                            <div class="coupon-footer" th:if="${coupon.memberCouponUsed}">사용완료</div>
+                            <div class="coupon-footer" th:if="${!coupon.memberCouponUsed and coupon.memberCouponPeriod.isBefore(T(java.time.LocalDateTime).now())}">기간만료</div>
+                            <div class="coupon-footer" th:if="${!coupon.memberCouponUsed and !coupon.memberCouponPeriod.isBefore(T(java.time.LocalDateTime).now())}">미사용</div>
+
                         </div>
                     </div>
 
@@ -193,6 +202,12 @@
             </div>
 
         </div>
+
+        <script>
+            function submitForm() {
+                document.getElementById("couponFilterForm").submit();
+            }
+        </script>
     </section>
 </div>
 </body>

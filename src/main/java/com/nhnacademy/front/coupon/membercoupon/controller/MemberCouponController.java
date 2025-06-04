@@ -64,11 +64,12 @@ public class MemberCouponController {
 	 */
 	@JwtTokenCheck
 	@GetMapping("/mypage/couponBox")
-	public String getMemberCouponBox(HttpServletRequest request, @PageableDefault Pageable pageable, Model model, @RequestParam(required = false) Long status) {
+	public String getMemberCouponBox(HttpServletRequest request, @PageableDefault(size = 8) Pageable pageable, Model model, @RequestParam(required = false) Long status) {
 		// JWT 토큰에서 Long ld 추출
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 
-		PageResponse<ResponseMemberCouponDTO> response;
+		PageResponse<ResponseMemberCouponDTO> response = memberCouponService.getUsableMemberCouponsByMemberId(memberId, pageable);
+		Long usableCouponCount = response.getTotalElements();
 
 		if (status == null || status == 1) {
 			response = memberCouponService.getMemberCouponsByMemberId(memberId, pageable);
@@ -83,6 +84,7 @@ public class MemberCouponController {
 		Page<ResponseMemberCouponDTO> memberCoupons = PageResponseConverter.toPage(response);
 
 		model.addAttribute("memberCoupons", memberCoupons);
+		model.addAttribute("usableCouponCount", usableCouponCount);
 		model.addAttribute("status", status);
 		return "member/mypage/coupon-box";
 	}

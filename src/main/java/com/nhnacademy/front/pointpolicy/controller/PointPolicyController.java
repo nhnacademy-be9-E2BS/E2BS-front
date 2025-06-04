@@ -1,6 +1,8 @@
 package com.nhnacademy.front.pointpolicy.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,10 +43,26 @@ public class PointPolicyController {
 		List<ResponsePointPolicyDTO> responseReview = pointPolicyService.getReviewPointPolicy();
 		List<ResponsePointPolicyDTO> responseBook = pointPolicyService.getBookPointPolicy();
 
-		model.addAttribute("pointPolicies_register", responseRegister);
-		model.addAttribute("pointPolicies_review_img", responseReviewImg);
-		model.addAttribute("pointPolicies_review", responseReview);
-		model.addAttribute("pointPolicies_book", responseBook);
+		List<Map<String, Object>> sections = new ArrayList<>();
+
+		sections.add(Map.of(
+			"title", "회원가입 정책",
+			"policies", responseRegister
+		));
+		sections.add(Map.of(
+			"title", "이미지 리뷰 정책",
+			"policies", responseReviewImg
+		));
+		sections.add(Map.of(
+			"title", "일반 리뷰 정책",
+			"policies", responseReview
+		));
+		sections.add(Map.of(
+			"title", "기본 적립률(%) 정책",
+			"policies", responseBook
+		));
+
+		model.addAttribute("policySections", sections);
 		return "admin/pointpolicy/point-policy";
 	}
 

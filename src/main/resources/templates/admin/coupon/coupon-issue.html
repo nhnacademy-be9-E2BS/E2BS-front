@@ -6,132 +6,173 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>Issue Coupon</h2>
+            <h2>쿠폰 발급</h2>
 
-            <!-- 스타일 추가 -->
+            <!-- Table Style -->
             <style>
-                th { white-space: nowrap; }
+                .table th, .table td {
+                    text-align: center;
+                    vertical-align: middle;
+                    color: #333;
+                    font-size: 15px;
+                }
+
+                .table thead th {
+                    font-weight: 600;
+                    background: #fafafa;
+                    border-top: 2px solid #666;
+                }
+
+                .coupon-section {
+                    border: 1px solid #eee;
+                    padding: 20px;
+                    border-radius: 6px;
+                    background-color: #fff;
+                }
+
+                .pagination .page-link {
+                    color: #333;
+                }
+
+                .pagination .page-item.active .page-link {
+                    background-color: #666;
+                    border-color: #666;
+                    color: #fff;
+                }
+
+                /* 링크 스타일 제거 */
+                a.coupon-link {
+                    color: #333 !important;
+                    text-decoration: none;
+                }
+
+                a.coupon-link:hover {
+                    text-decoration: underline;
+                }
             </style>
 
             <!-- 활성 쿠폰 목록 -->
-            <div class="row mb-3">
-                <div class="col-12">
-                    <h4>Coupon List</h4>
-                    <table class="table table-bordered fixed-table">
-                        <thead>
-                        <tr>
-                            <th>쿠폰명</th>
-                            <th>쿠폰정책</th>
-                            <th>할인 카테고리</th>
-                            <th>할인 도서</th>
-                            <th>선택</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="coupon : ${couponsIsActive}">
-                            <td>
-                                <a th:href="@{/admin/settings/coupons/{id}(id=${coupon.couponId})}"
-                                   th:text="${coupon.couponName}">쿠폰명</a>
-                            </td>
-                            <td>
-                                <a th:href="@{/admin/settings/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
-                                   th:text="${coupon.couponPolicyName}">정책명</a>
-                            </td>
-                            <td th:text="${coupon.categoryId != null ? coupon.categoryName : '-'}">-</td>
-                            <td th:text="${coupon.productId != null ? coupon.productTitle : '-'}">-</td>
-                            <td>
-                                <button
-                                        type="button"
-                                        class="btn btn-sm btn-outline-primary"
-                                        th:attr="data-id=${coupon.couponId}"
-                                        th:attrappend=" data-name=${coupon.couponName}"
-                                        onclick="selectCoupon(this)">
-                                    선택
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+            <div class="coupon-section">
+                <h4 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">쿠폰 목록
+                    <span style="font-size: 14px; color: #888; font-weight: normal;">| 현재 활성화되어 있는 쿠폰만 조회할 수 있습니다.</span></h4>
 
-                    <!-- 페이징 -->
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-center">
-                            <nav>
-                                <ul class="pagination" th:if="${couponsIsActive.totalPages > 0}">
-                                    <!-- 처음 -->
-                                    <li class="page-item" th:classappend="${!couponsIsActive.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link" th:href="@{'/admin/settings/memberCoupons/issue'(page=0, size=${couponsIsActive.size})}">처음</a>
-                                    </li>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>쿠폰명</th>
+                        <th>쿠폰정책</th>
+                        <th>할인 카테고리</th>
+                        <th>할인 도서</th>
+                        <th>선택</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="coupon : ${couponsIsActive}">
+                        <td>
+                            <a th:href="@{/admin/settings/coupons/{id}(id=${coupon.couponId})}"
+                               th:text="${coupon.couponName}"
+                               class="coupon-link">쿠폰명</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/settings/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
+                               th:text="${coupon.couponPolicyName}"
+                               class="coupon-link">정책명</a>
+                        </td>
+                        <td th:text="${coupon.categoryId != null ? coupon.categoryName : ''}">-</td>
+                        <td th:text="${coupon.productId != null ? coupon.productTitle : ''}">-</td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-sm"
+                                    style="background-color: #666; color: #fff; border: none; padding: 4px 12px; font-weight: 500;"
+                                    th:attr="data-id=${coupon.couponId}"
+                                    th:attrappend=" data-name=${coupon.couponName}"
+                                    onclick="selectCoupon(this)">
+                                선택
+                            </button>
+                        </td>
 
-                                    <!-- 페이지 번호 -->
-                                    <li class="page-item"
-                                        th:each="i : ${#numbers.sequence(0, couponsIsActive.totalPages - 1)}"
-                                        th:classappend="${i == couponsIsActive.number} ? 'active'">
-                                        <a class="page-link"
-                                           th:href="@{'/admin/settings/memberCoupons/issue'(page=${i}, size=${couponsIsActive.size})}"
-                                           th:text="${i + 1}">1</a>
-                                    </li>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(couponsIsActive.content)}">
+                        <td colspan="5" style="padding: 40px 0; color: #777;">활성화된 쿠폰이 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
 
-                                    <!-- 마지막 -->
-                                    <li class="page-item" th:classappend="${!couponsIsActive.hasNext()} ? 'disabled'">
-                                        <a class="page-link"
-                                           th:href="@{'/admin/settings/memberCoupons/issue'(page=${couponsIsActive.totalPages - 1}, size=${couponsIsActive.size})}">마지막</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
+                <!-- 페이징 -->
+                <div class="row mt-4">
+                    <div class="col-12 d-flex justify-content-center">
+                        <nav>
+                            <ul class="pagination" th:if="${couponsIsActive.totalPages > 0}">
+                                <li class="page-item" th:classappend="${!couponsIsActive.hasPrevious()} ? 'disabled'">
+                                    <a class="page-link" th:href="@{'/admin/settings/memberCoupons/issue'(page=0, size=${couponsIsActive.size})}">처음</a>
+                                </li>
+
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, couponsIsActive.totalPages - 1)}"
+                                    th:classappend="${i == couponsIsActive.number} ? 'active'">
+                                    <a class="page-link"
+                                       th:href="@{'/admin/settings/memberCoupons/issue'(page=${i}, size=${couponsIsActive.size})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+
+                                <li class="page-item" th:classappend="${!couponsIsActive.hasNext()} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{'/admin/settings/memberCoupons/issue'(page=${couponsIsActive.totalPages - 1}, size=${couponsIsActive.size})}">마지막</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 쿠폰 발급 영역 -->
+            <div class="coupon-section mt-5">
+                <h4 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">쿠폰 발급
+                    <span style="font-size: 14px; color: #888; font-weight: normal;">| 전체 회원에게 쿠폰이 일괄적으로 발급됩니다. (※ 휴면 회원 제외)</span></h4>
+
+                <form class="row align-items-center g-2" action="/admin/settings/memberCoupons/issue" method="post">
+                    <!-- hidden으로 couponId 전송 -->
+                    <input type="hidden" name="couponId" id="selectedCouponId">
+
+                    <!-- 선택된 쿠폰 -->
+                    <div class="col-md-5">
+                        <label for="selectedCouponName" class="form-label fw-bold">선택된 쿠폰</label>
+                        <input
+                                type="text"
+                                id="selectedCouponName"
+                                name="couponName"
+                                class="form-control"
+                                placeholder="쿠폰을 선택하세요"
+                                readonly
+                                required>
                     </div>
 
-                </div>
+                    <!-- 쿠폰 만료일 -->
+                    <div class="col-md-5">
+                        <label for="memberCouponPeriod" class="form-label fw-bold">쿠폰 만료일</label>
+                        <input
+                                type="datetime-local"
+                                id="memberCouponPeriod"
+                                name="memberCouponPeriod"
+                                class="form-control"
+                                required>
+                    </div>
+
+                    <!-- 발급 버튼 -->
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-sm w-100"
+                                style="background-color: #666; color: #fff; font-weight: 600; margin-top: 30px">
+                            발급하기
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-12">
-                    <!-- 쿠폰 발급 폼 -->
-                    <form class="row login_form" action="/admin/settings/memberCoupons/issue" method="post">
-                        <!-- hidden으로 couponId 전송 -->
-                        <input type="hidden" name="couponId" id="selectedCouponId">
-
-                        <table class="table table-bordered fixed-table">
-                            <tbody>
-                            <tr>
-                                <th style="width: 150px;">선택된 쿠폰</th>
-                                <td>
-                                    <input
-                                            type="text"
-                                            id="selectedCouponName"
-                                            name="couponName"
-                                            class="form-control"
-                                            placeholder="쿠폰을 선택하세요"
-                                            readonly
-                                            required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>쿠폰 만료일</th>
-                                <td>
-                                    <input
-                                            type="datetime-local"
-                                            id="memberCouponPeriod"
-                                            name="memberCouponPeriod"
-                                            class="form-control"
-                                            required>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                        <!-- 제출 버튼 -->
-                        <div class="text-center mt-4">
-                            <button type="submit" class="button button-register w-100">ISSUE COUPON</button>
-                        </div>
-                    </form>
-                </div>
-                </div>
-            </div>
+        </div>
 
 
-        <!-- 스크립트 -->
+            <!-- 스크립트 -->
         <script>
             function selectCoupon(btn) {
                 const couponId = btn.getAttribute('data-id');
