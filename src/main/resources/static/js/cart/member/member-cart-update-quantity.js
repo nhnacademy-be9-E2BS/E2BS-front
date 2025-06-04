@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const unitPrice = parseInt(unitPriceText.replace(/[^\d]/g, ''));
             const totalPrice = unitPrice * quantity;
             const totalPriceElement = row.querySelector('.total-price');
-            totalPriceElement.textContent = totalPrice;
+            totalPriceElement.textContent = totalPrice.toLocaleString('ko-KR') + '원'
         }
 
         updateTotalPaymentAmount();
@@ -59,7 +59,7 @@ function updateTotalPaymentAmount() {
 
     const totalPayment = document.getElementById('totalPaymentAmount');
     if (totalPayment) {
-        totalPayment.textContent = total.toString() + '원';
+        totalPayment.textContent = total.toLocaleString('ko-KR') + '원'
     }
 }
 
