@@ -42,8 +42,26 @@ spring:
             user-info-uri: https://apis.payco.com/oauth2.0/user/me
             user-name-attribute: id
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: e2bsshop
+    password: szuxvsakflliulcx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 order:
   toss:
     client-key: test_ck_pP2YxJ4K87B750wR2XP2rRGZwXLO
     success-url: http://localhost:10238/order/success
     fail-url: http://localhost:10238/order/fail
+
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace # SQL 파라미터 바인딩 로그를 trace 레벨로 출력
+    org.springframework.transaction.interceptor: trace # 트랜잭션 처리 로그를 trace 로 출력

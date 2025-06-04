@@ -16,8 +16,8 @@
                    th:id="'cat-' + ${category.categoryId}"
                    th:name="categoryIds"
                    th:value="${category.categoryId}"
-                   onchange="limitCategorySelection(this)"
-                   th:checked="${product.categories != null and product.categories.contains(category)}">
+                   th:data-name="${category.categoryName}"
+                   onchange="limitCategorySelection(this)">
             <label class="form-check-label"
                    th:for="'cat-' + ${category.categoryId}"
                    th:text="${prefix + category.categoryName}">
