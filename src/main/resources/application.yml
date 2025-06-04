@@ -15,6 +15,18 @@ spring:
       password: "*N2vya7H@muDTwdNMR!"
       database: 294
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: e2bsshop
+    password: szuxvsakflliulcx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace # SQL 파라미터 바인딩 로그를 trace 레벨로 출력
@@ -41,6 +53,19 @@ member:
 
   register:
     url: http://localhost:10232/api/register
+
+  state:
+    url: http://localhost:10232/api/members
+
+  dormant:
+    url: http://localhost:10232/api/dormant
+
+customer:
+  login:
+    url: http://localhost:10232/api/customer/login
+
+  register:
+    url: http://localhost:10232/api/customer/register
 
 oauth:
   login:
@@ -100,6 +125,9 @@ product:
     admin:
       url: http://localhost:10232/api/admin/books
 
+  productState:
+    url: http://localhost:10232/api/productState
+
 order:
   wrapper:
     url: http://localhost:10232/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
@@ -145,3 +173,8 @@ auth:
   admin:
     settings:
       url: http://localhost:10232/api/auth/admin/settings
+
+
+dooray:
+  authentication:
+    url: https://nhnacademy.dooray.com/services

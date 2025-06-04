@@ -6,18 +6,75 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>포인트 내역</h2>
+            <!-- 상단 적립금 정보 및 필터 UI -->
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 20px; margin-bottom: 24px;">
+                <h3 style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">
+                    포인트 내역 <span style="font-size: 14px; color: #888; font-weight: normal;">| 상품 구매 및 각종 활동 참여 시 적립금이 지급됩니다.</span>
+                </h3>
+                <div style="font-size: 18px; margin-bottom: 20px;">
+                    <span>사용 가능한 적립금 : <span style="color: red; font-weight: bold;" th:text="${usablePoint} + '원'">1,000원</span></span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span>소멸 예정 적립금 (90일 이내) : <span style="color: #555; font-weight: bold;"
+                                                     th:text="${expireSoonPoint} + '원'">0원</span></span>
+                    &nbsp;&nbsp;<button
+                        style="background: #999; color: white; padding: 4px 10px; border: none; border-radius: 4px; font-size: 13px;">
+                    자세히보기
+                </button>
+                </div>
+
+                <div style="border: 1px solid #eee; padding: 20px; border-radius: 6px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                        <select style="padding: 4px 10px; border-radius: 6px;">
+                            <option>2024</option>
+                        </select>
+                        <select style="padding: 4px 10px; border-radius: 6px;">
+                            <option>6</option>
+                        </select>
+                        <select style="padding: 4px 10px; border-radius: 6px;">
+                            <option>2</option>
+                        </select>
+
+                        <span style="font-weight: bold; font-size: 16px;">-</span>
+
+                        <select style="padding: 4px 10px; border-radius: 6px;">
+                            <option>2025</option>
+                        </select>
+                        <select style="padding: 4px 10px; border-radius: 6px;">
+                            <option>6</option>
+                        </select>
+                        <select style="padding: 4px 10px; border-radius: 6px;">
+                            <option>2</option>
+                        </select>
+
+                        <button style="background: #8e7b7b; color: white; padding: 6px 18px; border-radius: 6px; font-size: 14px; border: none;">
+                            조회
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <h5>포인트 내역</h5>
 
             <style>
-                th {
-                    white-space: nowrap;
+                .table th, .table td {
+                    text-align: center;
+                    vertical-align: middle;
+                    color: #333;
+                    font-size: 15px;
+                }
+
+                .table thead th {
+                    font-weight: 600;
+                    background: #fafafa;
+                    border-top: 2px solid #666;
                 }
             </style>
 
             <!-- 포인트 목록 -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <table class="table table-bordered">
+                    <table class="table">
                         <thead>
                         <tr>
                             <th>구분</th>
@@ -33,7 +90,9 @@
                             <td th:text="${point.pointReason}">사유</td>
                             <td th:text="${#temporals.format(point.pointCreatedAt, 'yyyy-MM-dd HH:mm')}">변동일</td>
                         </tr>
-
+                        <tr th:if="${#lists.isEmpty(pointHistories.content)}">
+                            <td colspan="5" style="padding: 40px 0; color: #777;">조회 결과가 없습니다.</td>
+                        </tr>
                         </tbody>
                     </table>
 
@@ -42,7 +101,8 @@
                         <div class="col-12 d-flex justify-content-center">
                             <nav>
                                 <ul class="pagination" th:if="${pointHistories.totalPages > 0}">
-                                    <li class="page-item" th:classappend="${!pointHistories.hasPrevious()} ? 'disabled'">
+                                    <li class="page-item"
+                                        th:classappend="${!pointHistories.hasPrevious()} ? 'disabled'">
                                         <a class="page-link"
                                            th:href="@{'/mypage/pointHistory'(page=0, size=${pointHistories.size})}">처음</a>
                                     </li>

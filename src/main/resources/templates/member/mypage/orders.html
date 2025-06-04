@@ -1,78 +1,177 @@
 <!DOCTYPE html>
-<html
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{layouts/mypage-layout}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mypage-layout}">
 <body>
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>주문 조회</h2>
+            <style>
+                .custom-slim-btn {
+                    padding: 6px 18px;
+                    font-size: 15px;
+                    background-color: #8e7b7b;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                }
 
-            <!-- 조회 영역 -->
-            <div class="row mb-5">
-                <div class="col-12">
-                    <h4>주문 목록</h4>
-                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
-                        <thead>
-                        <tr>
-                            <th style="width: 15%;">주문 일시</th>
-                            <th style="width: 15%;">희망 수령일</th>
-                            <th style="width: 20%;">주문 코드</th>
-                            <th style="width: 10%;">주문 금액</th>
-                            <th style="width: 10%;">상태</th>
-                            <th style="width: 10%;">결제 여부</th>
-                            <th style="width: 10%;">액션</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="order : ${orders}">
-                            <td>
-                                <span th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd')}"></span>
-                                <span th:text="${#temporals.format(order.createdAt, 'HH:mm:ss')}"></span>
-                            </td>
-                            <td th:text="${order.receiveDate}"></td>
-                            <td th:text="${order.orderCode}"
-                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></td>
-                            <td th:text="${order.paymentAmount} + ${order.pointAmount}"></td>
-                            <td th:text="${order.state}"></td>
-                            <td th:text="${order.paid}"></td>
-                            <td>
-                                <a th:href="'/mypage/orders/'+${order.orderCode}">상세 보기</a>
-                            </td>
+                .custom-slim-btn:hover {
+                    background-color: #7c6a6a;
+                }
 
-                        </tr>
-                        </tbody>
-                    </table>
+                .custom-date-btn {
+                    padding: 6px 14px;
+                    font-size: 14px;
+                    border-radius: 6px;
+                    background: white;
+                    border: 1px solid #ccc;
+                    color: #333;
+                }
 
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-center">
-                            <nav>
-                                <ul class="pagination" th:if="${orders.totalPages > 0}">
-                                    <!-- 처음 버튼 -->
-                                    <li class="page-item" th:classappend="${!orders.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link"
-                                           th:href="@{'/mypage/orders'(page=0, size=${orders.size})}">처음</a>
-                                    </li>
+                .custom-date-btn:hover {
+                    background-color: #f0f0f0;
+                }
 
-                                    <!-- 전체 페이지 번호 출력 -->
-                                    <li class="page-item"
-                                        th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}"
-                                        th:classappend="${i == orders.number} ? 'active'">
-                                        <a class="page-link"
-                                           th:href="@{'/mypage/orders'(page=${i}, size=${orders.size})}"
-                                           th:text="${i + 1}">1</a>
-                                    </li>
+                .form-select {
+                    padding: 4px 10px !important;
+                    font-size: 14px;
+                    height: auto;
+                }
 
-                                    <!-- 마지막 버튼 -->
-                                    <li class="page-item" th:classappend="${!orders.hasNext()} ? 'disabled'">
-                                        <a class="page-link"
-                                           th:href="@{'/mypage/orders'(page=${orders.totalPages - 1}, size=${orders.size})}">마지막</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
+                .date-range-selectors {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                    margin-bottom: 10px;
+                }
 
+                .date-range-selectors select {
+                    width: 100px;
+                    padding: 6px 10px;
+                    font-size: 14px;
+                }
+
+                .date-range-selectors .dash {
+                    margin: 0 4px;
+                    font-weight: bold;
+                    font-size: 16px;
+                }
+            </style>
+
+            <h2>주문/배송조회</h2>
+
+            <!-- 조회 영역 (기간 및 상품명) -->
+            <div style="border: 1px solid #aaa; border-radius: 24px; padding: 24px; margin-bottom: 40px;">
+                <div style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">기간별 조회</div>
+                <div class="date-range-selectors">
+                    <select>
+                        <option>2025</option>
+                    </select>
+                    <select>
+                        <option>5</option>
+                    </select>
+                    <select>
+                        <option>2</option>
+                    </select>
+
+                    <span class="dash">-</span>
+
+                    <select>
+                        <option>2025</option>
+                    </select>
+                    <select>
+                        <option>6</option>
+                    </select>
+                    <select>
+                        <option>2</option>
+                    </select>
+
+                    <button class="custom-slim-btn">조회</button>
+                </div>
+
+                <div style="font-weight: bold; font-size: 20px; margin-bottom: 10px;">주문코드 조회</div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="text" class="form-control" style="max-width: 320px;"/>
+                    <button class="btn btn-outline-secondary">조회</button>
+                    <span style="color: #888; font-size: 14px;">주문코드 검색</span>
+                </div>
+
+                <div style="font-size: 14px; color: #666; margin-top: 14px;">
+                    <i class="fas fa-square" style="font-size: 8px; color: #bcae9e; margin-right: 6px;"></i>
+                    조회기간은 최대 1년 단위로 설정하실 수 있으며, 주문번호를 클릭하시면 주문에 대한 상세정보를 보실 수 있습니다.
+                </div>
+            </div>
+
+            <!-- 기존 주문 목록 테이블 -->
+            <h4 class="mb-4" style="font-weight: bold;">주문 목록</h4>
+            <table class="table" style="width: 100%; border-top: 2px solid #666; font-size: 15px;">
+                <thead>
+                <tr style="background-color: #fff;">
+                    <th style="text-align: center; font-weight: 600;">주문 일시</th>
+                    <th style="text-align: center; font-weight: 600;">희망 수령일</th>
+                    <th style="text-align: center; font-weight: 600;">주문 코드</th>
+                    <th style="text-align: center; font-weight: 600;">주문 금액</th>
+                    <th style="text-align: center; font-weight: 600;">상태</th>
+                    <th style="text-align: center; font-weight: 600;">결제 여부</th>
+                    <th style="text-align: center; font-weight: 600;">액션</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td style="text-align: center;">
+                        <span th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd')}"></span><br/>
+                        <span th:text="${#temporals.format(order.createdAt, 'HH:mm:ss')}"></span>
+                    </td>
+                    <td style="text-align: center;" th:text="${order.receiveDate}"></td>
+                    <td style="text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                        th:text="${order.orderCode}"></td>
+                    <td style="text-align: center;"
+                        th:text="${T(java.lang.String).format('%,d',order.paymentAmount + order.pointAmount)}"></td>
+                    <td style="text-align: center;" th:switch="${order.state}">
+                        <span th:case="'WAIT'">배송 대기</span>
+                        <span th:case="'CANCEL'">주문 취소</span>
+                        <span th:case="'DELIVERY'">배송 중</span>
+                        <span th:case="'RETURN'">반품</span>
+                        <span th:case="'COMPLETE'">배송 완료</span>
+                    </td>
+                    <td style="text-align: center;" th:switch="${order.paid}">
+                        <span th:case="true">결제 완료</span>
+                        <span th:case="false">결제 대기</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <a th:href="'/mypage/orders/'+${order.orderCode}">상세 보기</a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(orders)}">
+                    <td colspan="7" style="text-align: center; padding: 40px 0; color: #777;">
+                        검색 결과가 없습니다.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination" th:if="${orders.totalPages > 0}">
+                            <li class="page-item" th:classappend="${!orders.hasPrevious()} ? 'disabled'">
+                                <a class="page-link" th:href="@{'/mypage/orders'(page=0, size=${orders.size})}">처음</a>
+                            </li>
+                            <li class="page-item"
+                                th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}"
+                                th:classappend="${i == orders.number} ? 'active'">
+                                <a class="page-link" th:href="@{'/mypage/orders'(page=${i}, size=${orders.size})}"
+                                   th:text="${i + 1}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${!orders.hasNext()} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{'/mypage/orders'(page=${orders.totalPages - 1}, size=${orders.size})}">마지막</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
 
@@ -83,6 +182,5 @@
         </script>
     </section>
 </div>
-
 </body>
 </html>

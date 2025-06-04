@@ -27,19 +27,27 @@ $(document).ready(function () {
             return;
         }
 
-        $.ajax({
-            url: '/orders',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                productIds: selectedProductIds,
-                cartQuantities: selectedCartQuantities
-            }),
-            success: function () {
-            },
-            error: function () {
-                alert("주문 요청 중 오류가 발생했습니다.");
-            }
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/order';
+        form.style.display = 'none';
+
+        selectedProductIds.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'productIds';
+            input.value = id;
+            form.appendChild(input);
         });
+        selectedCartQuantities.forEach(qty => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'cartQuantities';
+            input.value = qty;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
     });
 });

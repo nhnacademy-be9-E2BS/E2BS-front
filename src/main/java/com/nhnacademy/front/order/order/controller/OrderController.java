@@ -1,6 +1,11 @@
 package com.nhnacademy.front.order.order.controller;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -13,23 +18,42 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAddressDTO;
+import com.nhnacademy.front.account.address.service.AddressService;
+import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
+import com.nhnacademy.front.account.member.service.MemberMypageService;
+import com.nhnacademy.front.account.member.service.MemberService;
+import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrderCouponDTO;
+import com.nhnacademy.front.coupon.membercoupon.service.MemberCouponService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
+import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
+import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
+import com.nhnacademy.front.order.wrapper.service.WrapperService;
+import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryIdsDTO;
+import com.nhnacademy.front.product.category.service.UserCategoryService;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.service.ProductAdminService;
+import com.nhnacademy.front.product.product.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -49,31 +73,47 @@ public class OrderController {
 	private final OrderService orderService;
 	private final DeliveryFeeSevice deliveryFeeSevice;
 
+	private final ProductService productService;
+	private final WrapperService wrapperService;
+	private final MemberMypageService memberMypageService;
+	private final AddressService addressService;
+
+	private final UserCategoryService userCategoryService;
+	private final MemberCouponService memberCouponService;
 	/**
 	 * 결제 주문서 작성 페이지
 	 */
 	@JwtTokenCheck
-	@GetMapping("/order")
-	public String getCheckOut(Model model) {
-		// 사용자가 주문하려는 상품 정보,쿠폰 내역, 포인트 정보 등을 보내줘야 함
-		// 지금은 임시 값을 넣어 확인
+	@PostMapping("/order")
+	public String getCheckOut(Model model, @ModelAttribute RequestCartOrderDTO orderRequest, HttpServletRequest request) {
+		List<Integer> quantities = orderRequest.getCartQuantities();
+		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getProductIds());
+		List<ResponseWrapperDTO> wrappers = wrapperService.getWrappersBySaleable(Pageable.unpaged()).getContent();
+		ResponseMemberInfoDTO member = memberMypageService.getMemberInfo(request);
+		long memberPoint = memberMypageService.getMemberPoint(new RequestMemberIdDTO(member.getMemberId()));
+		List<ResponseMemberAddressDTO> addresses = addressService.getMemberAddresses(member.getMemberId());
+		ResponseMemberAddressDTO defaultAddress = addresses.stream().filter(addr -> addr.isAddressDefault()).findFirst().orElse(null);
+
+		List<ResponseOrderCouponDTO> coupons = memberCouponService.getCouponsInOrder(member.getMemberId(),orderRequest.getProductIds());
+		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(orderRequest.getProductIds());
+		Map<Long, List<Long>> productCategoryMap = new HashMap<>();
+		for (ResponseCategoryIdsDTO dto : categories) {
+			productCategoryMap.put(dto.getProductId(), dto.getCategoryIds());
+		}
+
+		model.addAttribute("products", products);
+		model.addAttribute("quantities", quantities);
+		model.addAttribute("wrappers", wrappers);
+		model.addAttribute("member", member);
+		model.addAttribute("memberPoint", memberPoint);
+		model.addAttribute("addresses", addresses);
+		model.addAttribute("defaultAddress", defaultAddress);
+		model.addAttribute("productCategories", productCategoryMap);
+		model.addAttribute("coupons", coupons);
 		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
 		model.addAttribute("tossClientKey", tossClientKey);
 		model.addAttribute("tossSuccessUrl", tossSuccessUrl);
 		model.addAttribute("tossFailUrl", tossFailUrl);
-
-		/**
-		 * 쿠폰: 주문서에서 담긴 상품에 적용가능한 쿠폰 리스트
-		 * memberId : JWT 토큰에서 꺼내기
-		 * RequestCartOrderDTO : 장바구니-모두구매 or 도서상세페이지-구매하기 누르면 상품 ID 리스트가 여기에 담김
-		 * List<ResponseOrderCouponDTO> response = memberCouponService.getCouponsInOrder(String memberId, RequestCartOrderDTO request);
-		 */
-
-		/**
-		 * 포인트: 사용자가 보유한 포인트 조회
-		 * MemberMyPageService.getMemberPoint() 쓰면 될듯
-		 */
-
 		return "payment/checkout";
 	}
 
@@ -185,7 +225,19 @@ public class OrderController {
 				productAmount += orderDetail.getWrapperPrice() * orderDetail.getOrderQuantity();
 			}
 		}
+		LocalDate shipmentDate = order.getShipmentDate();
+		LocalDate now = LocalDate.now();
 
+		boolean isReturnAvailable = false;
+		boolean isChangeOfMindReturnAvailable = false;
+		if (shipmentDate != null) {
+			long daysBetween = ChronoUnit.DAYS.between(shipmentDate, now);
+			isReturnAvailable = daysBetween <= 30;
+			isChangeOfMindReturnAvailable = daysBetween <= 10;
+		}
+
+		model.addAttribute("isReturnAvailable", isReturnAvailable);
+		model.addAttribute("isChangeOfMindReturnAvailable", isChangeOfMindReturnAvailable);
 		model.addAttribute("order", order);
 		model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("productAmount", productAmount);
@@ -200,5 +252,33 @@ public class OrderController {
 	@DeleteMapping("/mypage/orders/{orderCode}")
 	public ResponseEntity<Void> cancelOrder(@PathVariable String orderCode) {
 		return orderService.cancelOrder(orderCode);
+	}
+
+	/**
+	 * 회원의 반품 요청
+	 */
+	@PostMapping("/order/return")
+	public ResponseEntity<Void> returnOrder(@RequestBody RequestOrderReturnDTO returnDTO) {
+		return orderService.returnOrder(returnDTO);
+	}
+
+	@GetMapping("/mypage/return")
+	public String getReturnOrders(Model model, HttpServletRequest request ,Pageable pageable) {
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+
+		ResponseEntity<PageResponse<ResponseOrderReturnDTO>> response =
+			orderService.getReturnOrdersByMemberId(pageable, memberId);
+		Page<ResponseOrderReturnDTO> returns = PageResponseConverter.toPage(response.getBody());
+		model.addAttribute("returns", returns);
+
+		return "member/mypage/orderReturns";
+	}
+
+	@GetMapping("/mypage/return/{orderCode}")
+	public String getReturnOrderDetails(Model model, @PathVariable String orderCode) {
+
+		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
+		model.addAttribute("returnDTO", returnDTO);
+		return "member/mypage/orderReturnDetail";
 	}
 }

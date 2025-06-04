@@ -7,19 +7,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 목록</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .content { width: 100%; }
-        .book-list { list-style: none; padding: 0; margin: 0; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .content {
+            width: 100%;
+        }
+
+        .book-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
         .book-card {
             display: flex;
             align-items: stretch;
             background: #e6f0fa;
             border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
             margin-bottom: 24px;
             padding: 20px 28px;
             min-height: 150px;
         }
+
         .book-image {
             width: 110px;
             min-width: 110px;
@@ -28,6 +41,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .book-image img {
             width: 100%;
             height: auto;
@@ -35,6 +49,7 @@
             border: 1px solid #d3e0f0;
             background: #fff;
         }
+
         .book-info {
             flex: 1;
             display: flex;
@@ -42,12 +57,14 @@
             justify-content: center;
             gap: 8px;
         }
+
         .book-title {
             font-size: 1.2em;
             font-weight: bold;
             margin-bottom: 8px;
             color: #235;
         }
+
         .book-meta {
             display: flex;
             flex-wrap: wrap;
@@ -55,11 +72,13 @@
             font-size: 1em;
             color: #444;
         }
+
         .book-actions {
             display: flex;
             align-items: flex-start;
             margin-left: 30px;
         }
+
         .book-actions a {
             background: #2582e6;
             color: #fff;
@@ -69,6 +88,7 @@
             font-size: 1em;
             transition: background 0.2s;
         }
+
         .book-actions a:hover {
             background: #1a5fa3;
         }
@@ -84,20 +104,18 @@
                 <!-- 이미지 -->
                 <div class="book-image"
                      th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
-                    <img th:src="${product.productImagePaths[0].productImagePath}"
-                         th:alt="${product.productTitle} + ' 표지 이미지'"
-                         onerror="this.src='https://via.placeholder.com/110x150?text=No+Image'">
-                </div>
-                <div class="book-image"
-                     th:if="${product.productImagePaths == null or #lists.isEmpty(product.productImagePaths)}">
-                    <img src="https://via.placeholder.com/110x150?text=No+Image"
-                         th:alt="${product.productTitle} + ' 표지 이미지'">
+                    <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
+                        <img th:src="${product.productImagePaths[0].productImagePath}"
+                             th:alt="${product.productTitle} + ' 표지 이미지'"
+                             onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+                    </a>
                 </div>
                 <!-- 정보 -->
                 <div class="book-info">
                     <div class="book-title" th:text="${product.productTitle}">도서 제목</div>
                     <div class="book-meta">
-                        <span>출판사: <span th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">출판사</span></span>
+                        <span>출판사: <span
+                                th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">출판사</span></span>
                     </div>
                     <div class="book-meta">
                         <span>정가: <span th:text="${product.productRegularPrice}">0</span>원</span>
@@ -117,10 +135,11 @@
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
                 <nav aria-label="페이지 이동">
-                    <ul class="pagination pagination-sm" th:if="${products.totalPages > 1}">
+                    <ul class="pagination pagination-sm" th:if="${products.totalPages > 0}">
                         <!-- 처음 버튼 -->
                         <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/admin/settings/books(page=0, size=${products.size})}" th:text="'처음'" tabindex="-1">처음</a>
+                            <a class="page-link" th:href="@{/admin/settings/books(page=0, size=${products.size})}"
+                               th:text="'처음'" tabindex="-1">처음</a>
                         </li>
                         <!-- 전체 페이지 번호 출력 -->
                         <li class="page-item"
@@ -132,7 +151,9 @@
                         </li>
                         <!-- 마지막 버튼 -->
                         <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{/admin/settings/books(page=${products.totalPages - 1}, size=${products.size})}" th:text="'마지막'">마지막</a>
+                            <a class="page-link"
+                               th:href="@{/admin/settings/books(page=${products.totalPages - 1}, size=${products.size})}"
+                               th:text="'마지막'">마지막</a>
                         </li>
                     </ul>
                 </nav>

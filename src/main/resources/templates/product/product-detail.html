@@ -131,7 +131,7 @@
 										 th:src="${image.productImagePath}"
 										 th:alt="${product.productTitle} + ' 이미지 ' + ${iterStat.count}"
 										 class="slide" th:classappend="${iterStat.first} ? 'active' : ''"
-										 onerror="this.src='https://via.placeholder.com/110x150?text=No+Image'"
+										 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'"
 										 style="width: 500px; height: 680px;">
 								</div>
 								<button class="prev" onclick="changeSlide(-1)" th:disabled="${product.productImagePaths.size() <= 1}">❮</button>
@@ -149,7 +149,7 @@
 				<div class="col-lg-5 offset-lg-1">
 					<div class="s_product_text card-product" th:data-product-id = "${product.productId}">
 						<!--상품 제목-->
-						 <h3 th:text="${product.productTitle}"></h3>
+						<h3 th:text="${product.productTitle}"></h3>
 						<!-- 출판사, 가여자(역할) -->
 						<div>
 							<h6>
@@ -177,7 +177,7 @@
 								   th:value="${product.productStock > 0 ? 1 : 0}"
 								   title="수량"
 								   class="input-text qty"
-								   min="0"
+								   min="1"
 								   th:max="${product.productStock}"
 								   oninput="validateQuantity()" />
 							<button type="button" class="increase" onclick="adjustQuantity(1)"><i class="lnr lnr-chevron-up"></i></button>
@@ -195,31 +195,33 @@
 								장바구니에 추가</button>
 
 							<button class="buy-now-btn custom-btn"
+									onclick="submitOrder()"
 									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 								바로구매</button>
 						</div>
+
 						<div class="product_meta mt-3">
-<!--							<p><strong>ISBN:</strong> 9780393317558</p>-->
+							<!--							<p><strong>ISBN:</strong> 9780393317558</p>-->
 							<!-- Thymeleaf로 변경 시: -->
-							 <p><strong>ISBN:</strong> <span th:text="${product.productIsbn}"></span></p>
+							<p><strong>ISBN:</strong> <span th:text="${product.productIsbn}"></span></p>
 
-<!--							<p><strong>출판사:</strong> W. W. Norton & Company</p>-->
+							<!--							<p><strong>출판사:</strong> W. W. Norton & Company</p>-->
 							<!-- Thymeleaf로 변경 시: -->
-<!--							 <p><strong>출판사:</strong> <span th:text="${product.publisherName}"></span></p>-->
+							<!--							 <p><strong>출판사:</strong> <span th:text="${product.publisherName}"></span></p>-->
 
-<!--							<p><strong>기여자:</strong> Jared Diamond</p>-->
+							<!--							<p><strong>기여자:</strong> Jared Diamond</p>-->
 							<!-- Thymeleaf로 변경 시: -->
 							<!-- <p><strong>기여자:</strong> -->
 							<!--     <span th:unless="${product.contributorNames.isEmpty()}" th:text="${#strings.join(product.contributorNames, ', ')}"></span> -->
 							<!--     <span th:if="${product.contributorNames.isEmpty()}">미지정</span> -->
 							<!-- </p> -->
 
-<!--							<p><strong>태그:</strong> 퓰리처상, 지리적 결정론, 문명사</p>-->
+							<!--							<p><strong>태그:</strong> 퓰리처상, 지리적 결정론, 문명사</p>-->
 							<!-- Thymeleaf로 변경 시: -->
-<!--							 <p><strong>태그:</strong>-->
-<!--							     <span th:unless="${product.tagNames.isEmpty()}" th:text="${#strings.join(product.tagNames, ', ')}"></span>-->
-<!--							     <span th:if="${product.tagNames.isEmpty()}">미지정</span>-->
-							 </p>
+							<!--							 <p><strong>태그:</strong>-->
+							<!--							     <span th:unless="${product.tagNames.isEmpty()}" th:text="${#strings.join(product.tagNames, ', ')}"></span>-->
+							<!--							     <span th:if="${product.tagNames.isEmpty()}">미지정</span>-->
+							</p>
 						</div>
 					</div>
 				</div>
@@ -240,14 +242,12 @@
 			<div class="tab-content" id="myTabContent">
 				<!-- 설명 -->
 				<div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-					<!-- Thymeleaf로 변경 시 (목차는 productContent로 가정): -->
+					<!-- 목차 -->
 					 <h4>목차</h4>
 					 <ul>
 					     <li th:utext="${product.productContent}"></li>
 					 </ul>
-
-<!--					*총균쇠*는 인류 문명의 발달 차이를 설명하는 획기적인 저서로, 지리적·환경적 요인이 문명의 성공과 패배를 결정했다고 주장합니다. 유라시아의 농업 혁명, 병균 저항력, 기술 발전이 어떻게 다른 대륙을 압도했는지 탐구하며, 인종적 우월성 이론을 반박합니다. 퓰리처상을 수상한 이 책은 역사, 인류학, 생물학을 융합한 대중 과학의 걸작입니다.-->
-					<!-- Thymeleaf로 변경 시: -->
+					<!-- 상품 설명 -->
 					 <h4 class="mt-4">상품 설명</h4>
 					 <p th:utext="${product.productDescription}"></p>
 				</div>
@@ -348,10 +348,10 @@
 								<div class="row">
 									<div class="col-12 d-flex justify-content-center">
 										<nav>
-											<ul class="pagination">
+											<ul class="pagination" th:if="${reviewsByProduct.totalPages > 0}">
 												<!-- 처음 -->
 												<li class="page-item" th:classappend="${!reviewsByProduct.hasPrevious()} ? 'disabled'">
-													<a class="page-link" th:href="@{/products/{productId}/reviews(productId=${productId})(page=0, size=${reviewsByProduct.size})}"><<</a>
+													<a class="page-link" th:href="@{/books/{productId}(productId=${product.productId}, page=0, size=${reviewsByProduct.size})}"><<</a>
 												</li>
 
 												<!-- 페이지 번호 -->
@@ -359,14 +359,14 @@
 													th:each="i : ${#numbers.sequence(0, reviewsByProduct.totalPages - 1)}"
 													th:classappend="${i == reviewsByProduct.number} ? 'active'">
 													<a class="page-link"
-													   th:href="@{/products/{productId}/reviews(productId=${productId})(page=${i}, size=${reviewsByProduct.size})}"
+													   th:href="@{/books/{productId}(productId=${product.productId}, page=${i}, size=${reviewsByProduct.size})}"
 													   th:text="${i + 1}">1</a>
 												</li>
 
 												<!-- 끝 -->
 												<li class="page-item" th:classappend="${!reviewsByProduct.hasNext()} ? 'disabled'">
 													<a class="page-link"
-													   th:href="@{/products/{productId}/reviews(productId=${productId})(page=${reviewsByProduct.totalPages - 1}, size=${reviewsByProduct.size})}">>></a>
+													   th:href="@{/books/{productId}(productId=${product.productId}, page=${reviewsByProduct.totalPages - 1}, size=${reviewsByProduct.size})}">>></a>
 												</li>
 											</ul>
 										</nav>
@@ -421,6 +421,54 @@
 			</div>
 		</div>
 	</section>
+
+	<!-- 장바구니 이동 모달 -->
+	<div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
+					<button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="닫기"></button>
+				</div>
+				<div class="modal-body">
+					장바구니로 이동하시겠습니까?
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기</button>
+					<button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!--주문 하기 시 DTO 전송-->
+	<script>
+		function submitOrder() {
+
+			const form = document.createElement('form');
+			form.method = 'POST';
+			form.action = '/order';
+
+			const productIds = document.createElement('input');
+			productIds.type = 'hidden';
+			productIds.name = 'productIds';
+			productIds.value = [[${product.productId}]];
+
+			const quantities = document.createElement('input');
+			quantities.type = 'hidden';
+			quantities.name = 'cartQuantities';
+			quantities.value = document.getElementById('quantity').value;
+
+			form.appendChild(productIds);
+			form.appendChild(quantities);
+
+			document.body.appendChild(form);
+			form.submit();
+		}
+	</script>
+
 	<!-- 사진 넘기기 -->
 	<script>
 		let currentSlide = 0;
@@ -497,7 +545,7 @@
 	<script th:src="@{/js/review/review-update.js}"></script>
 	<script th:src="@{/js/review/star-count.js}"></script>
 	<script th:src="@{/js/cart/member/member-cart-add.js}"></script>
+	<script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
 </div>
 </body>
 </html>
-

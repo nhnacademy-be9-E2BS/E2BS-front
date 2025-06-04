@@ -34,11 +34,6 @@
                       </thead>
                       <tbody>
                           <tr th:each="cartItem : ${cartItemsByMember}">
-                              <!-- 카테고리 id 를 공백으로 구분하여 하나의 문자열로 결합하고, hidden 속성에 넣음 -->
-                              <span id="categoryIds"
-                                    th:attr="hidden=${true}"
-                                    th:text="${#strings.arrayJoin(cartItem?.categoryIds, ',')}">Categories</span>
-
                               <span id="productId" hidden th:text="${cartItem.productId}"></span>
 
                               <td>
@@ -63,7 +58,7 @@
                                       <input type="text"
                                              name="qty"
                                              class="input-text qty"
-                                             th:id="'quantity-' + ${cartItem.productId}"
+                                             th:id="'quant\ity-' + ${cartItem.productId}"
                                              th:value="${cartItem.cartItemsQuantity}"
                                              readonly>
 
