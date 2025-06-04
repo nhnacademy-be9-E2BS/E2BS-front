@@ -1,12 +1,28 @@
+servlet:
+  session:
+    cookie:
+      same-site: none
+      secure: true
+
 # 공통 설정
 spring:
   application:
     name: FRONT
 
+  profiles:
+    active: prod
+  config:
+    import: optional:configserver:http://localhost:10240 # config 서버 연결
+
   mvc:
     hidden method:
       filter:
         enabled: true
+
+  session:
+    timeout: 3600s             # 세션 만료 시간 (초 단위)
+    redis:
+      namespace: e2bs:sessions # Redis 키 prefix 커스터마이징
 
   data:
     redis:
@@ -62,10 +78,10 @@ member:
 
 customer:
   login:
-    url: http://localhost:10232/api/customer/login
+    url: http://localhost:10232/api/customers/login
 
   register:
-    url: http://localhost:10232/api/customer/register
+    url: http://localhost:10232/api/customers/register
 
 oauth:
   login:
@@ -124,6 +140,13 @@ product:
 
     admin:
       url: http://localhost:10232/api/admin/books
+
+  productState:
+    url: http://localhost:10232/api/productState
+
+search:
+  product:
+    url: http://localhost:10232/api/books/elasticsearch
 
 order:
   wrapper:

@@ -5,6 +5,28 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/user-layout}">
 
+<head>
+    <style>
+        .product-link {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .product-link:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .product-title-wrapper {
+            font-weight: 500;          /* 글씨 진하게 */
+            color: #333;               /* 진한 색상으로 */
+            width: 150px;              /* 원하는 고정 너비 설정 */
+            white-space: nowrap;       /* 텍스트 줄바꿈 방지 */
+            overflow: hidden;          /* 넘치는 텍스트 숨김 */
+            text-overflow: ellipsis;   /* 넘치는 텍스트 생략 (...) 처리 */
+        }
+    </style>
+</head>
+
 <body>
 <div layout:fragment="content">
 
@@ -18,60 +40,70 @@
                       <button type="button"
                               class="btn btn-danger btn-sm"
                               id="clear-cart-btn">
-                          <i class="ti-trash"></i> 전체 비우기
+                          <i class="ti-trash"></i> 비우기
                       </button>
                   </div>
 
-                  <table class="table" id="cart-container">
+                  <table class="table" id="cart-container" style="text-align: center;">
                       <thead>
                           <tr>
-                              <th scope="col">선택</th>
-                              <th scope="col">상품</th>
-                              <th scope="col">판매가</th>
-                              <th scope="col">수량</th>
-                              <th scope="col">결제 금액</th>
+                              <th>상품명</th>
+                              <th>판매가</th>
+                              <th>수량</th>
+                              <th>합계</th>
+                              <th>삭제</th>
+                              <th>
+                                  <input type="checkbox" id="select-all" checked />
+                              </th>
                           </tr>
                       </thead>
                       <tbody>
                           <tr th:each="cartItem : ${cartItemsByMember}">
-                              <span id="productId" hidden th:text="${cartItem.productId}"></span>
-
-                              <td>
-                                  <input type="checkbox" class="cart-item-checkbox" checked
-                                         th:data-product-id="${cartItem.productId}" />
-                              </td>
                               <td>
                                   <div class="media">
                                       <div class="d-flex">
-                                          <img th:src="@{${cartItem.productImagePath}}" src="/img/cart/cart2.png" alt="">
+                                          <img th:src="@{${cartItem.productImagePath}}" src="/img/cart/cart2.png" alt="" style="width: 100px; height: 150px;">
                                       </div>
-                                      <div class="media-body" th:text="${cartItem.productTitle}">
-                                          <p>상품명1</p>
+                                      <div class="media-body product-title-wrapper">
+                                          <a th:href="@{/books/{productId}(productId=${cartItem.productId})}" class="product-link">
+                                              <p th:text="${cartItem.productTitle}">상품명1</p>
+                                          </a>
                                       </div>
                                   </div>
                               </td>
+
                               <td>
-                                  <h5 class="unit-price" th:text="${cartItem.productSalePrice}">30000</h5>
+                                  <h5 class="unit-price" th:text="${#numbers.formatInteger(cartItem.productSalePrice, 3, 'COMMA')} + '원'">30000</h5>
                               </td>
+
                               <td>
                                   <div class="product_count">
                                       <input type="text"
-                                             name="qty"
-                                             class="input-text qty"
+                                             name="qty" class="input-text qty"
                                              th:id="'quantity-' + ${cartItem.productId}"
-                                             th:value="${cartItem.cartItemsQuantity}"
-                                             readonly>
+                                             th:value="${cartItem.cartItemsQuantity}" readonly>
 
                                       <button type="button"
                                               class="increase items-count"
                                               th:data-productid="${cartItem.productId}"
-                                              th:data-cartitemsid="${cartItem.cartItemsId}">+</button>
+                                              th:data-cartitemsid="${cartItem.cartItemsId}">
+                                          <i class="fas fa-plus"></i>
+                                      </button>
 
                                       <button type="button"
                                               class="reduced items-count"
                                               th:data-productid="${cartItem.productId}"
-                                              th:data-cartitemsid="${cartItem.cartItemsId}">-</button>
+                                              th:data-cartitemsid="${cartItem.cartItemsId}">
+                                          <i class="fas fa-minus"></i>
+                                      </button>
                                   </div>
+                              </td>
+
+                              <td>
+                                  <h5 class="total-price" th:text="${#numbers.formatInteger(cartItem.productTotalPrice, 3, 'COMMA')} + '원'">30,000원</h5>
+                              </td>
+
+                              <td>
                                   <button type="button"
                                           class="delete-item-btn"
                                           th:data-cartitemsid="${cartItem.cartItemsId}"
@@ -79,33 +111,30 @@
                                       <i class="ti-trash" style="color: #dc3545;"></i>
                                   </button>
                               </td>
+
                               <td>
-                                  <h5 class="total-price" th:text="${cartItem.productTotalPrice}">30000원</h5>
+                                  <input type="checkbox" class="cart-item-checkbox" checked
+                                         th:data-product-id="${cartItem.productId}" />
+                              </td>
+                          </tr>
+
+                          <tr th:if="${not #lists.isEmpty(cartItemsByMember)}">
+                              <td colspan="4" style="text-align: right"><h5>결제 예정 금액</h5></td>
+                              <td colspan="2" ><h5 class="total-payment-price" id="totalPaymentAmount"
+                                                   th:text="${#numbers.formatInteger(totalPaymentAmount, 3, 'COMMA')} + '원'">30,000원</h5></td>
+                          </tr>
+
+                          <tr th:if="${not #lists.isEmpty(cartItemsByMember)}" class="out_button_area">
+                              <td colspan="6" style="text-align: right">
+                                  <div class="checkout_btn_inner">
+                                      <button id="order-btn" type="button" class="primary-btn">주문하기</button>
+                                  </div>
                               </td>
                           </tr>
 
                           <tr th:if="${#lists.isEmpty(cartItemsByMember)}">
-                              <td colspan="5" style="text-align:center;">
+                              <td colspan="6" style="text-align:center;">
                                   장바구니가 비어 있습니다.
-                              </td>
-                          </tr>
-                          <tr th:if="${not #lists.isEmpty(cartItemsByMember)}">
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td><h5>최종 결제 금액</h5></td>
-                              <td><h5 class="total-payment-price" id="totalPaymentAmount" th:text="${totalPaymentAmount} + '원'">30000원</h5></td>
-                          </tr>
-                          <tr th:if="${not #lists.isEmpty(cartItemsByMember)}" class="out_button_area">
-                              <td class="d-none-l"></td>
-                              <td class=""></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td>
-                                  <div class="checkout_btn_inner d-flex align-items-center">
-                                      <button id="order-btn" type="button" class="primary-btn">주문하기</button>
-                                  </div>
                               </td>
                           </tr>
                       </tbody>
