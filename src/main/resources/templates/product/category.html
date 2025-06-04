@@ -18,23 +18,18 @@
   <!-- Start Filter Bar -->
   <div class="filter-bar d-flex flex-wrap align-items-center">
     <div class="sorting">
-      <label>
-        <select>
-          <option value="1">Default sorting</option>
-          <option value="1">Default sorting</option>
-          <option value="1">Default sorting</option>
+      <form method="get" th:action="@{'/books/search/category/' + ${rootCategory.categoryId}}">
+      <label for="sort-select"></label>
+        <select id="sort-select" name="sort" onchange="this.form.submit()">
+          <option th:value="NO_SORT" th:selected="${sort == 'NO_SORT'}">정렬안함</option>
+          <option th:value="LATEST" th:selected="${sort == 'LATEST'}">최신순</option>
+          <option th:value="POPULARITY" th:selected="${sort == 'POPULARITY'}">인기순</option>
+          <option th:value="LOW_PRICE" th:selected="${sort == 'LOW_PRICE'}">낮은가격순</option>
+          <option th:value="HIGH_PRICE" th:selected="${sort == 'HIGH_PRICE'}">높은가격순</option>
+          <option th:value="RATING" th:selected="${sort == 'RATING'}">평점순</option>
+          <option th:value="REVIEW_COUNT" th:selected="${sort == 'REVIEW_COUNT'}">리뷰순</option>
         </select>
-      </label>
-    </div>
-    <div class="sorting mr-auto">
-    </div>
-    <div>
-      <div class="input-group filter-bar-search">
-        <input type="text" placeholder="Search">
-        <div class="input-group-append">
-          <button type="button"><i class="ti-search"></i></button>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
   <!-- End Filter Bar -->
@@ -97,7 +92,7 @@
           <!-- 처음 버튼 -->
           <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
             <a class="page-link"
-               th:href="@{/books/category/{categoryId}(categoryId=${categoryId}, page=0, size=9)}"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=0, size=9)}"
                th:text="'처음'">First</a>
           </li>
 
@@ -106,14 +101,14 @@
               th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
               th:classappend="${i == products.number} ? 'active'">
             <a class="page-link"
-               th:href="@{/books/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=9)}"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=9)}"
                th:text="${i + 1}">1</a>
           </li>
 
           <!-- 마지막 버튼 -->
           <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
             <a class="page-link"
-               th:href="@{/books/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=9)}"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=9)}"
                th:text="'마지막'">Last</a>
           </li>
         </ul>
