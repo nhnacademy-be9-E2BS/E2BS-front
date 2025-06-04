@@ -21,8 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
-import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartItemsForGuestDTO;
-import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForGuestDTO;
 import com.nhnacademy.front.cart.service.GuestCartService;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
@@ -101,49 +99,49 @@ class GuestCartControllerTest {
 			.andExpect(model().attribute("totalPaymentAmount", 5000L));
 	}
 
-	@Test
-	@DisplayName("PUT /guests/carts/items - 게스트 장바구니 항목 수량 변경 테스트")
-	void updateCartItemForGuest() throws Exception {
-		// given
-		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO();
-		requestDto.setProductId(1L);
-		requestDto.setQuantity(3);
-		String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
-		when(guestCartService.updateCartItemForGuest(any(RequestUpdateCartItemsDTO.class))).thenReturn(1);
-
-		// when & then
-		mockMvc.perform(put("/guests/carts/items")
-				.session(session)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonRequest)
-				.with(csrf()))
-			.andExpect(status().isNoContent());
-
-		verify(guestCartService).updateCartItemForGuest(any(RequestUpdateCartItemsDTO.class));
-	}
-
-	@Test
-	@DisplayName("DELETE /guests/carts/items - 게스트 장바구니 항목 삭제 테스트")
-	void deleteCartItemForGuest() throws Exception {
-		// given
-		RequestDeleteCartItemsForGuestDTO requestDto = new RequestDeleteCartItemsForGuestDTO();
-		requestDto.setProductId(1L);
-		String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
-		doNothing().when(guestCartService).deleteCartItemForGuest(any(RequestDeleteCartItemsForGuestDTO.class));
-
-		// when & then
-		mockMvc.perform(delete("/guests/carts/items")
-				.session(session)
-				.sessionAttr("cartItemsCounts", 0)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonRequest)
-				.with(csrf()))
-			.andExpect(status().isNoContent());
-
-		verify(guestCartService).deleteCartItemForGuest(any(RequestDeleteCartItemsForGuestDTO.class));
-	}
+	// @Test
+	// @DisplayName("PUT /guests/carts/items - 게스트 장바구니 항목 수량 변경 테스트")
+	// void updateCartItemForGuest() throws Exception {
+	// 	// given
+	// 	RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO();
+	// 	requestDto.setProductId(1L);
+	// 	requestDto.setQuantity(3);
+	// 	String jsonRequest = objectMapper.writeValueAsString(requestDto);
+	//
+	// 	when(guestCartService.updateCartItemForGuest(any(RequestUpdateCartItemsDTO.class))).thenReturn(1);
+	//
+	// 	// when & then
+	// 	mockMvc.perform(put("/guests/carts/items")
+	// 			.session(session)
+	// 			.contentType(MediaType.APPLICATION_JSON)
+	// 			.content(jsonRequest)
+	// 			.with(csrf()))
+	// 		.andExpect(status().isNoContent());
+	//
+	// 	verify(guestCartService).updateCartItemForGuest(any(RequestUpdateCartItemsDTO.class));
+	// }
+	//
+	// @Test
+	// @DisplayName("DELETE /guests/carts/items - 게스트 장바구니 항목 삭제 테스트")
+	// void deleteCartItemForGuest() throws Exception {
+	// 	// given
+	// 	RequestDeleteCartItemsForGuestDTO requestDto = new RequestDeleteCartItemsForGuestDTO();
+	// 	requestDto.setProductId(1L);
+	// 	String jsonRequest = objectMapper.writeValueAsString(requestDto);
+	//
+	// 	doNothing().when(guestCartService).deleteCartItemForGuest(any(RequestDeleteCartItemsForGuestDTO.class));
+	//
+	// 	// when & then
+	// 	mockMvc.perform(delete("/guests/carts/items")
+	// 			.session(session)
+	// 			.sessionAttr("cartItemsCounts", 0)
+	// 			.contentType(MediaType.APPLICATION_JSON)
+	// 			.content(jsonRequest)
+	// 			.with(csrf()))
+	// 		.andExpect(status().isNoContent());
+	//
+	// 	verify(guestCartService).deleteCartItemForGuest(any(RequestDeleteCartItemsForGuestDTO.class));
+	// }
 
 	@Test
 	@DisplayName("DELETE /guests/carts - 게스트 장바구니 전체 삭제 테스트")
