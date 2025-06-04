@@ -3,34 +3,15 @@ spring:
   application:
     name: FRONT
 
+  profiles:
+    active: prod
+  config:
+    import: optional:configserver:http://localhost:10240 # config 서버 연결
+
   mvc:
     hidden method:
       filter:
         enabled: true
-
-  data:
-    redis:
-      host: s4.java21.net
-      port: 6379
-      password: "*N2vya7H@muDTwdNMR!"
-      database: 294
-
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: e2bsshop
-    password: szuxvsakflliulcx
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-
-logging:
-  level:
-    org.hibernate.orm.jdbc.bind: trace # SQL 파라미터 바인딩 로그를 trace 레벨로 출력
-    org.springframework.transaction.interceptor: trace # 트랜잭션 처리 로그를 trace 로 출력
 
 server:
   servlet:
