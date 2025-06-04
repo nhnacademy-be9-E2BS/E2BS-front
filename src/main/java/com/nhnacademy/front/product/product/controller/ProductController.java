@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
@@ -32,6 +34,7 @@ public class ProductController {
 	private final ProductService productService;
 	private final UserCategoryService userCategoryService;
 	private final ReviewService reviewService;
+	private final DeliveryFeeSevice deliveryFeeSevice;
 
 	/**
 	 * 사용자 - 도서 상세 페이지 조회
@@ -48,10 +51,18 @@ public class ProductController {
 		PageResponse<ResponseReviewPageDTO> reviewResponse = reviewService.getReviewsByProduct(bookId, pageable);
 		Page<ResponseReviewPageDTO> reviewsByProduct = PageResponseConverter.toPage(reviewResponse);
 
+		// 현재 적용 중인 배송비 정책
+		ResponseDeliveryFeeDTO deliveryFee = deliveryFeeSevice.getCurrentDeliveryFee();
+
+		// 적용 중인 할인률 계산
+		long discountRate = (long)(((double)(response.getProductRegularPrice() - response.getProductSalePrice()) / response.getProductRegularPrice()) * 100);
+
 		model.addAttribute("reviewsByProduct", reviewsByProduct);
 		model.addAttribute("totalGradeAvg", reviewInfo.getTotalGradeAvg());
 		model.addAttribute("totalCount", reviewInfo.getTotalCount());
 		model.addAttribute("starCounts", reviewInfo.getStarCounts());
+		model.addAttribute("deliveryFee", deliveryFee);
+		model.addAttribute("discountRate", discountRate);
 
 		return "product/product-detail";
 	}
