@@ -123,6 +123,34 @@
                 </tbody>
             </table>
 
+            <!-- 페이징 -->
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination" th:if="${members.totalPages > 0}">
+                            <li class="page-item"
+                                th:classappend="${!members.hasPrevious()} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{'/mypage/pointHistory'(page=0, size=${members.size})}">처음</a>
+                            </li>
+
+                            <li class="page-item"
+                                th:each="i : ${#numbers.sequence(0, members.totalPages - 1)}"
+                                th:classappend="${i == members.number} ? 'active'">
+                                <a class="page-link"
+                                   th:href="@{'/mypage/pointHistory'(page=${i}, size=${members.size})}"
+                                   th:text="${i + 1}">1</a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${!members.hasNext()} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{'/mypage/pointHistory'(page=${members.totalPages - 1}, size=${members.size})}">마지막</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
         </div>
     </section>
 </div>

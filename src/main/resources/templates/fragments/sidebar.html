@@ -1,15 +1,86 @@
 <!--index, mypage, adminpage,-->
-
 <div class="col-xl-3 col-lg-4 col-md-5" th:fragment="admin-sidebar">
+    <style>
+        .sidebar-filter {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            font-size: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            border-radius: 10px;
+        }
+
+        .top-filter-head {
+            color: #fff;
+            background-color: #3f51b5;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 14px;
+            text-align: center;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .common-filter {
+            border-top: 1px solid #eee;
+            padding: 14px 18px 10px;
+        }
+
+        .common-filter .head {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .common-filter ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .filter-list {
+            margin-bottom: 4px;
+        }
+
+        .filter-list a {
+            font-size: 15px;
+            color: #333;
+            padding: 5px 6px;
+            display: block;
+            border-radius: 6px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .filter-list a:hover {
+            background-color: #f0f4ff;
+        }
+
+        .filter-list a.active {
+            background-color: #e2eaff;
+            color: #1a237e;
+            font-weight: 600;
+        }
+
+        .profile-box {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .profile-box div {
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
     <div class="sidebar-filter">
-        <div class="top-filter-head">Admin</div>
+        <div class="top-filter-head">관리자 페이지</div>
         <div class="common-filter">
             <div class="head">도서 관리</div>
             <ul>
                 <li class="filter-list"><a href="/admin/settings/books/register">도서 등록</a></li>
                 <li class="filter-list"><a href="/admin/settings/books/search">도서 API 검색</a></li>
                 <li class="filter-list"><a href="/admin/settings/books">도서 조회</a></li>
-
                 <li class="filter-list"><a href="/admin/settings/tags">태그</a></li>
                 <li class="filter-list"><a href="/admin/settings/categories">카테고리</a></li>
                 <li class="filter-list"><a href="/admin/settings/companies">출판사</a></li>
@@ -152,7 +223,6 @@
             color: #333;
         }
     </style>
-
     <div class="sidebar-filter">
         <div class="top-filter-head">마이페이지</div>
         <div class="common-filter">
