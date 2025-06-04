@@ -75,27 +75,20 @@ $(document).ready(function () {
             return;
         }
 
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/order';
-        form.style.display = 'none';
+        // 주문 정보 객체 생성
+        const cartOrder = {
+            productIds: selectedProductIds,
+            cartQuantities: selectedCartQuantities
+        };
 
-        selectedProductIds.forEach(id => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'productIds';
-            input.value = id;
-            form.appendChild(input);
-        });
-        selectedCartQuantities.forEach(qty => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'cartQuantities';
-            input.value = qty;
-            form.appendChild(input);
-        });
+        // 직렬화 → Base64 인코딩
+        const jsonStr = JSON.stringify(cartOrder);
+        const encoded = btoa(unescape(encodeURIComponent(jsonStr)));  // 한글깨짐 방지
 
-        document.body.appendChild(form);
-        form.submit();
+        // 쿠키 저장
+        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; httponly; secure; samesite=strict`;
+
+        // 주문서 페이지로 GET 이동
+        window.location.href = '/members/carts/order';
     });
 });

@@ -2,12 +2,12 @@ package com.nhnacademy.front.account.customer.controller;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +22,6 @@ import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -40,13 +39,13 @@ public class CustomerController {
 
 
 	/// 비회원 주문 전 인증 폼
-	@GetMapping("/customers/order/auth")
+	@GetMapping("/order/auth")
 	public String guestAuthForm() {
 		return "customer/auth";
 	}
 
 	/// 비회원 인증 폼으로 이동 전에 세션에 주문할 장바구니 항목을 저장하기 위한 요청
-	@PostMapping("/customers/order/auth")
+	@PostMapping("/order/auth")
 	public ResponseEntity<Void> redirectGuestAuth(@RequestBody RequestCartOrderDTO requestCartOrderDTO, BindingResult bindingResult,
 		                                          HttpServletResponse response) throws JsonProcessingException {
 		if (bindingResult.hasErrors()) {
@@ -72,24 +71,13 @@ public class CustomerController {
 
 	/// 비회원 가입 요청
 	@PostMapping("/customers/register")
-	public ResponseEntity<ResponseCustomerRegisterDTO> register(@Validated @RequestBody RequestCustomerRegisterDTO requestCustomerRegisterDTO, BindingResult bindingResult,
-		                                                        HttpServletRequest request) throws JsonProcessingException {
+	public ResponseEntity<ResponseCustomerRegisterDTO> register(@CookieValue(name = "orderCart") String encodedCart,
+		                                                        @Validated @RequestBody RequestCustomerRegisterDTO requestCustomerRegisterDTO, BindingResult bindingResult) throws JsonProcessingException {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		Long customerId = customerService.customerRegister(requestCustomerRegisterDTO);
-
-		String encodedCart = null;
-		Cookie[] cookies = request.getCookies();
-		if (Objects.nonNull(cookies)) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("orderCart")) {
-					encodedCart = cookie.getValue();
-					break;
-				}
-			}
-		}
 
 		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
 		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
@@ -100,24 +88,13 @@ public class CustomerController {
 
 	/// 비회원 로그인 요청
 	@PostMapping("/customers/login")
-	public ResponseEntity<ResponseCustomerRegisterDTO> login(@Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO, BindingResult bindingResult,
-		                                                     HttpServletRequest request) throws JsonProcessingException {
+	public ResponseEntity<ResponseCustomerRegisterDTO> login(@CookieValue(name = "orderCart") String encodedCart,
+		                                                     @Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO, BindingResult bindingResult) throws JsonProcessingException {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		Long customerId = customerService.customerLogin(requestCustomerLoginDTO);
-
-		String encodedCart = null;
-		Cookie[] cookies = request.getCookies();
-		if (Objects.nonNull(cookies)) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("orderCart")) {
-					encodedCart = cookie.getValue();
-					break;
-				}
-			}
-		}
 
 		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
 		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);

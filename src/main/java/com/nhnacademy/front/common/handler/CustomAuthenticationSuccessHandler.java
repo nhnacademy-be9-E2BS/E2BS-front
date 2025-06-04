@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 	private static final String ROOT_URL = "/";
-	private static final String CART_ORDER_URL = "/members/carts/order";
+	private static final String CART_ORDER_URL = "/members/order";
 
 	private final CartService cartService;
 

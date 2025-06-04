@@ -76,7 +76,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: '/customers/order/auth',
+            url: '/order/auth',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -84,7 +84,7 @@ $(document).ready(function () {
                 cartQuantities: selectedCartQuantities
             }),
             success: function () {
-                window.location.href = '/customers/order/auth';
+                window.location.href = '/order/auth';
             },
             error: function () {
                 alert("주문 요청 중 오류가 발생했습니다.");
