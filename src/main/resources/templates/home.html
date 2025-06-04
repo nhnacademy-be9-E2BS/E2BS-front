@@ -4,288 +4,274 @@
       layout:decorate="~{layouts/user-layout}">
 
 <head>
+    <title>E2BS</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="/css/style.css">
     <style>
-        .ti-heart.liked {
-            color: red; /* 좋아요 누른 상태 */
-        }
-        .card-img img {
-            width: 100%;
-            height: 230px; /* 기존 200 → 더 크게 */
-            object-fit: cover;
-            border-radius: 8px;
+        .today-book-section {
+            background: #f4f3f7;
+            padding: 60px 10%;
         }
 
-        .card-product {
-            height: 100%;
+        .section-title {
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            display: inline-block;
+            font-size: 40px;
+            font-weight: 700;
+            margin-right: 16px;
+        }
+
+        .section-title span {
+            color: #888;
+            font-size: 16px;
+        }
+
+        .today-book-container {
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+        }
+
+        .main-book {
+            display: flex;
+            gap: 30px;
+            flex: 1.5;
+        }
+
+        .main-book-img {
+            width: 220px;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .main-book-info {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            max-width: 400px;
         }
 
-        .card-product__imgOverlay {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+        .book-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .book-meta {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .book-meta .dot {
+            margin: 0 8px;
+        }
+
+        .book-desc {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .book-price {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sub-books {
             display: flex;
-            gap: 6px;
+            flex: 1;
+            gap: 24px;
+            justify-content: flex-end;
         }
 
-        .card-product__imgOverlay li button {
-            background: white;
-            border: none;
-            border-radius: 50%;
-            padding: 6px;
-            box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+        .sub-book {
+            text-align: center;
+            width: 180px;
         }
 
-        .card-body p,
-        .card-body h4 {
-            margin: 0;
-            padding: 0.25rem 0;
+        .sub-book img {
+            width: 100%;
+            border-radius: 6px;
+            background: #eee;
         }
+
+        .sub-title {
+            font-size: 14px;
+            margin-top: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+
     </style>
+
+
 </head>
+
 
 <body>
 <div layout:fragment="content">
+    <section class="today-book-section">
+        <div class="section-title">
+            <h2>오늘의 책</h2>
+            <span>오늘 함께할 책을 만나보세요.</span>
+        </div>
 
-    <!-- Bestseller Section -->
-    <section class="section-margin calc-60px">
-        <div class="container">
-            <div class="section-intro pb-60px text-center">
-                <p>이주의 가장 인기 있는 도서를 만나보세요</p>
-                <h2>베스트셀러</h2>
-            </div>
-            <div class="row">
-                <div class="col-6 col-md-4 col-lg-3 mb-4"
-                     th:each="product, productStat : ${BestSellerList}"
-                     th:if="${productStat.index < 8}">
-                    <div class="card text-center card-product h-100">
-                        <div class="card-img">
-                            <img class="img-fluid rounded"
-                                 th:src="@{${product.productImage}}"
-                                 alt="도서 이미지" />
-                            <ul class="card-product__imgOverlay">
-                                <li>
-                                    <a th:href="@{/books/{productId}(productId=${product.productId})}">
-                                        <button><i class="ti-search"></i></button>
-                                    </a>
-                                </li>
-                                <li th:if="${session.isMember}">
-                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                                </li>
-                                <li th:if="${session.isMember == null}">
-                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                                </li>
-                                <li>
-                                    <button class="like-button" data-liked="false"
-                                            th:data-product-id="${product.productId}">
-                                        <i class="ti-heart"></i>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <p th:text="${product.contributorName}">저자</p>
-                            <h4 class="card-product__title">
-                                <a th:href="@{'/books/' + ${product.productId}}"
-                                   th:text="${product.productTitle}">도서 제목</a>
-                            </h4>
-                            <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
-                        </div>
-                    </div>
+        <div class="today-book-container" th:if="${BestSellerList.size() > 0}">
+            <!-- 대표 도서 -->
+            <div class="main-book">
+                <img class="main-book-img" th:src="@{${BestSellerList[0].productImage}}" alt="대표도서 이미지">
+                <div class="main-book-info">
+                    <h3 class="book-title" th:text="${BestSellerList[0].productTitle}">도서 제목</h3>
+                    <p class="book-meta">
+                        <span th:text="${BestSellerList[0].contributorName}">저자</span>
+                        <span class="dot">·</span>
+                        <span>창비</span> <!-- 출판사 정보가 없다면 하드코딩 -->
+                    </p>
+                    <p class="book-desc">
+                        작품마다 치밀한 취재와 정교한 구성을 바탕으로 한 개성적인 캐릭터와 강렬하고도 서늘한 서사로
+                        평단과 독자의 주목을 고루 받으며 새로운 세대의 리얼리즘을 열어가고 있다 평가받는 작가 성해나가
+                        두번째 소설집 『혼모노』를 선보인다.
+                    </p>
+                    <p class="book-price" th:text="'₩' + ${#numbers.formatInteger(BestSellerList[0].productSalePrice, 3, 'COMMA')}">가격</p>
                 </div>
             </div>
 
-            <div class="text-center mt-4">
-                <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
-                    더보기
-                </a>
+            <!-- 서브 도서들 -->
+            <div class="sub-books">
+                <div class="sub-book"
+                     th:each="book, stat : ${BestSellerList}"
+                     th:if="${stat.index >= 1 and stat.index <= 4}">
+                    <img th:src="@{${book.productImage}}" alt="서브 도서 이미지">
+                    <p class="sub-title" th:text="${book.productTitle}">서브 제목</p>
+                </div>
             </div>
         </div>
     </section>
 
 
 
-
-
-    <!-- ========== Blog Best Section ========== -->
-    <section class="section-margin calc-60px">
-        <div class="container">
-            <div class="section-intro pb-60px">
-                <p>Popular Blog Items</p>
-                <h2>Blog Best</h2>
+    <div class="main_best">
+        <section class="bestseller">
+            <div class="title_best">
+                <h3 class="title_h3" style="margin-bottom: 60px;">
+                    <a href="/books/category/1" class="title-link">베스트셀러</a>
+                    <span> 이주의 가장 인기 있는 도서를 만나보세요.</span>
+                </h3>
             </div>
-            <div class="row">
-                <div class="col-md-6 col-lg-4 col-xl-3" th:each="product, productStat : ${BlogBestList}"
-                     th:if="${productStat.index < 6}">
-                    <div class="card text-center card-product">
-                        <div class="card-product__img">
-                            <img class="img-fluid rounded"
-                                 th:src="@{${product.productImage}}"
-                                 alt="도서 이미지"
-                                 style="height: 200px; object-fit: cover;"/>
-                            <ul class="card-product__imgOverlay">
-                                <li>
-                                    <button><i class="ti-search"></i></button>
-                                </li>
 
-                                <li th:if="${session.isMember}">
-                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                                </li>
-                                <li th:if="${session.isMember == null}">
-                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                                </li>
-
-                                <li>
-                                    <button class="like-button" data-liked="false"
-                                            th:data-product-id="${product.productId}">
-                                        <i class="ti-heart"></i>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <p th:text="${product.contributorName}">저자</p>
-                            <h4 class="card-product__title">
-                                <a th:href="@{'/product/' + ${product.productId}}"
-                                   th:text="${product.productTitle}">제목</a>
-                            </h4>
-                            <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
-                        </div>
+            <div id="best_book_list_1" class="bestBookArea">
+                <div class="aw_type_box">
+                    <div class="arrow_left_best">
+                        <button class="aw_l" id="bestBnLt_1" onclick="leftBestSeller()">
+                            <span class="ns">이전</span>
+                            <span class="aw_count"></span>
+                        </button>
+                    </div>
+                    <div class="arrow_right_best">
+                        <button class="aw_r" id="bestBnRt_1">
+                            <span class="ns">다음</span>
+                            <span class="aw_count"></span>
+                        </button>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="text-center mt-4">
-            <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
-                더보기
-            </a>
-        </div>
-    </section>
-
-
-    <!-- ========== New Items Section ========== -->
-    <section class="section-margin calc-60px">
-        <div class="container">
-            <div class="section-intro pb-60px">
-                <p>Newest Arrivals</p>
-                <h2>New Books</h2>
-            </div>
-            <div class="row">
-                <div class="col-md-6 col-lg-4 col-xl-3" th:each="product, productStat : ${ItemNewAllList}"
-                     th:if="${productStat.index < 6}">
-                    <div class="card text-center card-product">
-                        <div class="card-product__img">
-                            <img class="img-fluid rounded"
-                                 th:src="@{${product.productImage}}"
-                                 alt="도서 이미지"
-                                 style="height: 200px; object-fit: cover;"/>
-                            <ul class="card-product__imgOverlay">
-                                <li><a th:href="@{/books/{productId}(productId=${product.productId})}"
-                                       class="search-link">
-                                    <button><i class="ti-search"></i></button>
-                                </a></li>
-
-                                <li th:if="${session.isMember}">
-                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                                </li>
-                                <li th:if="${session.isMember == null}">
-                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                                </li>
-
-                                <li>
-                                    <button class="like-button" data-liked="false"
-                                            th:data-product-id="${product.productId}">
-                                        <i class="ti-heart"></i>
-                                    </button>
+                <div class="swiper-container" id="bestList_1">
+                    <ul class="swiper-wrapper">
+                        <li class="swiper-slide best_book_list">
+                            <ul class="ranking_list" data-book-index="0" id="bestSellerList">
+                                <li th:each="product, chunkStat : ${BestSellerList}" th:if="${chunkStat.index} <= 3">
+                                    <div class="books">
+                                        <a th:href="@{'/books/' + ${product.productId}}" class="r_book">
+                                            <div class="book_img">
+<!--                                                <div class="lank_num"-->
+<!--                                                     th:text="${chunkStat.index * 4 + stat.index + 1}">1-->
+<!--                                                </div>-->
+                                                <img th:src="@{${product.productImage}}" alt="도서 이미지">
+                                            </div>
+                                            <p class="best_book_list_title mt15" th:text="${product.productTitle}">
+                                                도서
+                                                제목</p>
+                                            <p class="best_book_list_title"
+                                               th:text="'₩' + ${product.productSalePrice}">
+                                                가격</p>
+                                        </a>
+                                    </div>
                                 </li>
                             </ul>
-                        </div>
-                        <div class="card-body">
-                            <p th:text="${product.contributorName}">저자</p>
-                            <h4 class="card-product__title">
-                                <a th:href="@{'/product/' + ${product.productId}}"
-                                   th:text="${product.productTitle}">제목</a>
-                            </h4>
-                            <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
+                    <div class="pagination"></div>
                 </div>
             </div>
-        </div>
-        <div class="text-center mt-4">
-            <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
-                더보기
-            </a>
-        </div>
     </section>
+</div>
 
+<script type="text/javascript" th:inline="javascript">
 
-    <!-- ========== New Special Items Section ========== -->
-    <section class="section-margin calc-60px">
-        <div class="container">
-            <div class="section-intro pb-60px">
-                <p>Special Limited Deals</p>
-                <h2>New Special Items</h2>
-            </div>
-            <div class="row">
-                <div class="col-md-6 col-lg-4 col-xl-3" th:each="product, productStat : ${NewSpecialItemsList}"
-                     th:if="${productStat.index < 6}">
-                    <div class="card text-center card-product">
-                        <div class="card-product__img">
-                            <img class="img-fluid rounded"
-                                 th:src="@{${product.productImage}}"
-                                 alt="도서 이미지"
-                                 style="height: 200px; object-fit: cover;"/>
-                            <ul class="card-product__imgOverlay">
-                                <li>
-                                    <button><i class="ti-search"></i></button>
-                                </li>
+    const bestList = /*[[${BestSellerList}]]*/ [];
+    function leftBestSeller() {
+        let list = document.getElementById("bestSellerList");
+        let bookIndex = parseInt(list.dataset.bookIndex) - 1; //도서 각각 인덱스
 
-                                <li th:if="${session.isMember}">
-                                    <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                                </li>
-                                <li th:if="${session.isMember == null}">
-                                    <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                                </li>
+        const lastIndex = Math.floor((bestList.length - 1) / 4);
 
-                                <li>
-                                    <button class="like-button" data-liked="false"
-                                            th:data-product-id="${product.productId}">
-                                        <i class="ti-heart"></i>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <p th:text="${product.contributorName}">저자</p>
-                            <h4 class="card-product__title">
-                                <a th:href="@{'/product/' + ${product.productId}}"
-                                   th:text="${product.productTitle}">제목</a>
-                            </h4>
-                            <p class="card-product__price" th:text="'₩' + ${product.productSalePrice}">가격</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="text-center mt-4">
-            <a th:href="@{'/product/list?category=Bestseller'}" class="btn btn-outline-primary">
-                더보기
-            </a>
-        </div>
-    </section>
+        if(bookIndex < 0){
+            // 마지막 인덱스로 초기화
+            bookIndex = lastIndex;
+        }
+        list.innerHTML = "";
 
+        let book = document.createElement('li');
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/like/like-add-delete.js}"></script>
-    <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
-    <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
+        for(let i = bookIndex * 4; i < bookIndex * 4 + 4 ; i++){
+            if (i >= bestList.length) break;
+
+            let product = bestList[i];
+
+            let booksDiv = document.createElement('div');
+            booksDiv.classList.add('books');
+
+            let link = document.createElement('a');
+            link.classList.add('r_book');
+            link.href = '/books/${product.productId}}'
+
+            let imgDiv = document.createElement('div');
+            imgDiv.classList.add('book_img');
+
+            let img = document.createElement('img');
+            img.src = product.productImage;
+            img.alt = "도서 이미지";
+
+            imgDiv.appendChild(img);
+            link.appendChild(imgDiv);
+
+            let titleP = document.createElement('p');
+            titleP.classList.add('best_book_list_title', 'mt15');
+            titleP.textContent = product.productTitle;
+
+            let priceP = document.createElement('p');
+            titleP.classList.add('best_book_list_title');
+            titleP.textContent = product.productSalePrice;
+
+            link.appendChild(titleP);
+            link.appendChild(priceP);
+
+            booksDiv.appendChild(link);
+            book.appendChild(booksDiv);
+        }
+
+    }
+
+</script>
+
 </div>
 </body>
 </html>
