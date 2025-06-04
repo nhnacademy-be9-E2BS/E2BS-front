@@ -25,6 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.controller.ProductController;
@@ -54,6 +56,9 @@ class ProductControllerTest {
 	private ReviewService reviewService;
 
 	@MockitoBean
+	private DeliveryFeeSevice deliveryFeeSevice;
+
+	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 	@MockitoBean
 	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
@@ -77,6 +82,7 @@ class ProductControllerTest {
 			List.of(categoryDTO), new ArrayList<>());
 
 		Mockito.when(productService.getProduct(1L)).thenReturn(response);
+		Mockito.when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(new ResponseDeliveryFeeDTO(1L, 3000L, 30000L, LocalDateTime.now()));
 
 		List<ResponseReviewPageDTO> reviewPageList = List.of(
 			new ResponseReviewPageDTO(1L, 1L, 1L, "name1", "좋아요", 5, "image1", LocalDateTime.now()),
