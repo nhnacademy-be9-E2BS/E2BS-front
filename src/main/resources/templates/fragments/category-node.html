@@ -3,7 +3,7 @@
         <div class="category-left d-flex align-items-center">
             <span class="toggle me-2" style="cursor: pointer;" onclick="toggleClick(this)">📁</span>
             <a class="text-decoration-none"
-               th:href="@{/books/category/{categoryId}(categoryId=${category.categoryId})}"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${category.categoryId})}"
                th:text="${category.categoryName}">
             </a>
         </div>

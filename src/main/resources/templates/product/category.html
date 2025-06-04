@@ -92,7 +92,7 @@
           <!-- 처음 버튼 -->
           <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
             <a class="page-link"
-               th:href="@{/books/category/{categoryId}(categoryId=${categoryId}, page=0, size=9)}"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=0, size=9)}"
                th:text="'처음'">First</a>
           </li>
 
@@ -101,14 +101,14 @@
               th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
               th:classappend="${i == products.number} ? 'active'">
             <a class="page-link"
-               th:href="@{/books/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=9)}"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=9)}"
                th:text="${i + 1}">1</a>
           </li>
 
           <!-- 마지막 버튼 -->
           <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
             <a class="page-link"
-               th:href="@{/books/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=9)}"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=9)}"
                th:text="'마지막'">Last</a>
           </li>
         </ul>
