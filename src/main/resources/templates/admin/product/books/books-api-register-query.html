@@ -200,7 +200,7 @@
                 <p th:text="${book.queryType}">queryType 값이 없습니다.</p>
             </div>
 
-            <button type="submit" class="btn btn-primary">등록</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">등록</button>
             <a th:href="@{/admin/settings/books/search}" class="btn btn-secondary">취소</a>
         </form>
     </section>
@@ -223,10 +223,11 @@
             initialValue: document.getElementById('productDescription').value
         });
 
-        document.querySelector('form').addEventListener('submit', function () {
+        document.getElementById("submitBtn").addEventListener('click', function () {
             document.querySelector('#productContent').value = editorContent.getHTML();
             document.querySelector('#productDescription').value = editorDescription.getHTML();
         });
+
 
         function limitCategorySelection(checkbox) {
             const checkedBoxes = document.querySelectorAll('.category-checkbox:checked');
