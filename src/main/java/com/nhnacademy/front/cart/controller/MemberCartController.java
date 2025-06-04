@@ -39,7 +39,7 @@ public class MemberCartController {
 	 */
 	@JwtTokenCheck
 	@PostMapping("/members/carts/items")
-	public ResponseEntity<Void> memberAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult,
+	public ResponseEntity<Integer> memberAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult,
 		                                        HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
@@ -54,7 +54,7 @@ public class MemberCartController {
 		HttpSession session = request.getSession();
 		session.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
 
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return ResponseEntity.status(HttpStatus.CREATED).body(cartItemsCounts);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class MemberCartController {
 	 */
 	@JwtTokenCheck
 	@PutMapping("/members/carts/items/{cartItemsId}")
-	public ResponseEntity<Void> updateCartItemForMember(@PathVariable long cartItemsId,
+	public ResponseEntity<Integer> updateCartItemForMember(@PathVariable long cartItemsId,
 		                                                @Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult,
 		                                                HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
@@ -98,7 +98,7 @@ public class MemberCartController {
 		HttpSession session = request.getSession();
 		session.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		return ResponseEntity.ok(cartItemsCounts);
 	}
 
 	/**
@@ -106,14 +106,14 @@ public class MemberCartController {
 	 */
 	@JwtTokenCheck
 	@DeleteMapping("/members/carts/items/{cartItemsId}")
-	public ResponseEntity<Void> deleteCartItemForMember(@PathVariable long cartItemsId, HttpServletRequest request) {
+	public ResponseEntity<Integer> deleteCartItemForMember(@PathVariable long cartItemsId, HttpServletRequest request) {
 		memberCartService.deleteCartItemForMember(cartItemsId);
 
 		HttpSession session = request.getSession();
 		Integer cartItemsCounts = (Integer)session.getAttribute("cartItemsCounts");
 		session.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts-1);
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		return ResponseEntity.ok(cartItemsCounts-1);
 	}
 
 	/**

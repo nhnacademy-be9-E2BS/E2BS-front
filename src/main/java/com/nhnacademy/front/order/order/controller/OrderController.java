@@ -58,9 +58,13 @@ import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class OrderController {
@@ -91,10 +95,18 @@ public class OrderController {
 	 */
 	@JwtTokenCheck
 	@GetMapping("/members/order")
-	public String getCheckOut(Model model, @CookieValue(name = "orderCart") String encodedCart, HttpServletRequest request) throws JsonProcessingException {
+	public String getCheckOut(Model model, @CookieValue(name = "orderCart") String encodedCart,
+		HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+
 		// Base64 디코딩 → JSON → DTO 역직렬화
 		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
 		RequestCartOrderDTO orderRequest = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
+
+		// 쿠키 삭제
+		Cookie deleteCookie = new Cookie("orderCart", null);
+		deleteCookie.setPath("/");
+		deleteCookie.setMaxAge(0);
+		response.addCookie(deleteCookie);
 
 		List<Integer> quantities = orderRequest.getCartQuantities();
 		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getProductIds());
@@ -131,7 +143,7 @@ public class OrderController {
 	 * 비회원 가입 또는 로그인시 선택한 장바구니 항목들에 대한 결제 주문서 작성 페이지
 	 */
 	@PostMapping("/customers/order")
-	public String getCheckOutCustomerCart(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest) {
+	public String getCheckOutCustomerCart(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest, HttpServletResponse response) {
 		// 회원 결제에서 쿠폰, 포인트, 주소만 제외
 		List<Integer> quantities = orderRequest.getRequestCartOrder().getCartQuantities();
 		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getRequestCartOrder().getProductIds());
@@ -143,10 +155,17 @@ public class OrderController {
 			productCategoryMap.put(dto.getProductId(), dto.getCategoryIds());
 		}
 
+		// 쿠키 삭제
+		Cookie deleteCookie = new Cookie("orderCart", null);
+		deleteCookie.setPath("/");
+		deleteCookie.setMaxAge(0);
+		response.addCookie(deleteCookie);
+
 		model.addAttribute("products", products);
 		model.addAttribute("quantities", quantities);
 		model.addAttribute("wrappers", wrappers);
 		model.addAttribute("customerId", orderRequest.getCustomerId());
+		model.addAttribute("customerName", orderRequest.getCustomerName());
 		model.addAttribute("productCategories", productCategoryMap);
 		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
 		model.addAttribute("tossClientKey", tossClientKey);

@@ -1,5 +1,7 @@
 package com.nhnacademy.front.account.admin.controller.settings;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -14,8 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.nhnacademy.front.account.admin.model.domain.MonthlySummary;
+import com.nhnacademy.front.account.admin.model.domain.WeeklySummary;
 import com.nhnacademy.front.account.admin.model.dto.request.RequestAdminSettingsMemberStateDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDTO;
+import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.account.admin.service.AdminSettingsService;
@@ -38,8 +43,15 @@ public class AdminSettingsController {
 	@GetMapping
 	public String getAdminSettings(Model model) {
 		ResponseAdminSettingsDTO settings = adminSettingsService.getAdminSettings();
+		ResponseAdminSettingsDailySummaryDTO dailySummaries = adminSettingsService.getAdminSettingsDailySummaries();
+		WeeklySummary weeklySummary = adminSettingsService.getWeeklySummary(dailySummaries);
+		MonthlySummary monthlySummary = adminSettingsService.getAdminSettingsMonthlySummaries().getMonthlySummary();
 
 		model.addAttribute("settings", settings);
+		model.addAttribute("updatedTime", LocalDateTime.now());
+		model.addAttribute("dailySummaries", dailySummaries.getDailySummaries());
+		model.addAttribute("weeklySummary", weeklySummary);
+		model.addAttribute("monthlySummary", monthlySummary);
 
 		return "admin/settings/admin-settings";
 	}

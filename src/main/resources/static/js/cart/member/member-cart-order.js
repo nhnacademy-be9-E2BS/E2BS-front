@@ -81,14 +81,18 @@ $(document).ready(function () {
             cartQuantities: selectedCartQuantities
         };
 
+        console.log('cartOrder: ', cartOrder)
+
         // 직렬화 → Base64 인코딩
         const jsonStr = JSON.stringify(cartOrder);
         const encoded = btoa(unescape(encodeURIComponent(jsonStr)));  // 한글깨짐 방지
 
+        console.log('encoded: ' + encoded)
+
         // 쿠키 저장
-        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; httponly; secure; samesite=strict`;
+        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=strict`;
 
         // 주문서 페이지로 GET 이동
-        window.location.href = '/members/carts/order';
+        window.location.href = '/members/order';
     });
 });
