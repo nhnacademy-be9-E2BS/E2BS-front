@@ -211,30 +211,33 @@
                     <div class="pagination"></div>
                 </div>
             </div>
+
+
+            <!-- 장바구니 이동 모달 -->
+            <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
+                            <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="닫기"></button>
+                        </div>
+                        <div class="modal-body">
+                            장바구니로 이동하시겠습니까?
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기</button>
+                            <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </section>
 </div>
 
 <script type="text/javascript" th:inline="javascript">
 
-    <!-- 장바구니 이동 모달 -->
-    <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
-                    <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="닫기"></button>
-                </div>
-                <div class="modal-body">
-                    장바구니로 이동하시겠습니까?
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기</button>
-                    <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     const bestList = /*[[${BestSellerList}]]*/ [];
     function leftBestSeller() {

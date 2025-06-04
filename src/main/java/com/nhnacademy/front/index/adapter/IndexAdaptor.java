@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.nhnacademy.front.index.model.dto.response.ResponseMainPageProductDTO;
 
-@FeignClient(name = "index-service", url = "${index.url}")
+@FeignClient(name = "index-service", url = "${index.url}/category")
 public interface IndexAdaptor {
 	@GetMapping("/bestseller")
 	ResponseEntity<List<ResponseMainPageProductDTO>> getBestSellerProducts();

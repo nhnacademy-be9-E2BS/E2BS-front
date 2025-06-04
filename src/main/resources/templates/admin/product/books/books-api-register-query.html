@@ -28,7 +28,7 @@
     <section class="container mt-4">
         <h2>도서 정보 확인 및 등록</h2>
 
-        <form th:action="@{/admin/settings/books/aladdin/register/submit}" method="post" class="mt-4">
+        <form th:action="@{/admin/settings/books/aladdin/register/submit/list}" method="post" class="mt-4">
             <div class="mb-3">
                 <label for="productTitle" class="form-label">도서 제목</label>
                 <input type="text" class="form-control" id="productTitle" name="productTitle"
@@ -127,7 +127,7 @@
 
             <!-- 카테고리 모달 -->
             <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable modal-md">
+                <div class="modal-dialog modal-dialog-scrollable modal-md modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="categoryModalLabel">카테고리 선택</h5>
@@ -161,7 +161,7 @@
 
 
             <div class="modal fade" id="tagModal" tabindex="-1" aria-labelledby="tagModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable modal-sm">
+                <div class="modal-dialog modal-dialog-scrollable modal-sm modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="tagModalLabel">태그 선택</h5>
