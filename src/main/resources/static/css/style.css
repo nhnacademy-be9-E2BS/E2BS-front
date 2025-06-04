@@ -4803,15 +4803,14 @@ a {
 .book_list { position: relative; width: 1230px; margin: 0 auto; /*padding-bottom: 30px;*/ min-height: 500px;}
 .book_list ul { display: flex; justify-content: space-evenly; }
 .book_list ul li div { width: 200px;}
-.book_img { border: 1px solid #ddd;}
+.book_img { border: 6px; border-radius: 6px;}
 .book_list .book_list_title { text-align: center; font-size: 18px; color: #666; width:200px;}
 .book_list .book_sub_list_title {text-align: center; font-size: 14px; color: #666; text-overflow: ellipsis; text-wrap: nowrap; overflow: hidden;}
 .book_img_width_no .book_sublist_info_box { position: absolute; bottom: -30px; width: 150px !important; overflow: hidden; left: 0;
 }
 
 
-.today { /*position: relative;*/ display: flex; justify-content: space-evenly; width: 1230px; margin: 0 auto; padding: 40px;}
-.today .book { display: flex; justify-content: space-evenly; width: 696px; position: relative; }
+.today .book { display: flex; justify-content: space-evenly; width: 500px; position: relative; }
 .today .book .pp { width: 200px; height: 300px; position: relative; padding-top: 20px; box-sizing: border-box; margin-left: 20px; }
 .today .book .pp img { border: 1px solid #ddd; width: 100%; box-sizing: border-box; }
 .today .book .pp:hover img { filter: brightness(0.6);}
@@ -4839,9 +4838,7 @@ a {
 
 
 .main_best{ background-color:#f6f6f6;}
-.bestseller { position: relative; width: 1230px; margin: 50px auto; padding: 30px 0px; /* border: 1px solid #c8bdb4; border-radius: 30px; box-shadow: 0px 0px 20px 0px #e5e5e5; */
-    height: 565px;
-    overflow: hidden;}
+
 
 .best_book_list { position: relative; /*padding: 0 30px;*/}
 .best_book_list ul { display: flex; justify-content: space-evenly;}
