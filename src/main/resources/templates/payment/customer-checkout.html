@@ -5,47 +5,6 @@
 <body>
 <div layout:fragment="content">
 
-    <!--모달 영역-->
-    <div id="addressModal" class="modal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
-     overflow: hidden; background-color: rgba(0,0,0,0.5);">
-        <div class="modal-content" style="background-color: #fff; margin: 15% auto; padding: 20px; width: 50%; max-height: 50vh; overflow-y: auto;
-        border-radius: 8px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.25);">
-            <span class="close" onclick="closeAddressModal()" style="float: right; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
-            <span>등록된 주소</span>
-            <div th:each="address, iterStat : ${addresses}" class="address-box" th:attr="data-address-index = ${iterStat.index}"
-                 style="border: 1px solid #ccc; border-radius: 10px; padding: 16px; margin-top: 12px; position: relative; cursor: pointer;">
-                <strong th:text="${address.addressAlias}"></strong>
-                <span th:text="'('+${address.addressCode}+'): ' + ${address.addressInfo} + ${address.addressExtra} +' ' + ${address.addressDetail}"></span>
-            </div>
-        </div>
-    </div>
-
-    <div id="couponModal" class="modal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
-     overflow: hidden; background-color: rgba(0,0,0,0.5);">
-        <div class="modal-content" style="background-color: #fff; margin: 15% auto; padding: 20px; width: 50%; max-height: 50vh; overflow-y: auto;
-        border-radius: 8px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.25);">
-            <span class="close" onclick="closeCouponModal()" style="float: right; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
-            <span>쿠폰</span>
-            <div th:each="coupon, iterStat : ${coupons}" class="coupon-box" th:attr="data-coupon-index = ${iterStat.index}"
-                 style="border: 1px solid #ccc; border-radius: 10px; padding: 16px; margin-top: 12px; position: relative; cursor: pointer;"
-                 th:data-coupon-id="${coupon.memberCouponId}"
-                 th:data-policy-name="${coupon.couponPolicyName}"
-                 th:data-discount-rate="${coupon.couponPolicyDiscountRate}"
-                 th:data-discount-price="${coupon.couponPolicySalePrice}"
-                 th:data-minimum-price="${coupon.couponPolicyMinimum}"
-                 th:data-maximum-price="${coupon.couponPolicyMaximumAmount}"
-                 th:data-target-product-id="${coupon.productId}"
-                 th:data-target-category-id="${coupon.categoryId}"
-                 th:data-coupon-name="${coupon.couponName}">
-                <strong th:text="${coupon.couponName}"></strong><br>
-                <span th:text="${coupon.getCouponPolicyName()}"></span> <br>
-                <span th:if="${coupon.productId != null}" th:text="'상품 전용 쿠폰: '+${coupon.productTitle}"></span>
-                <span th:if="${coupon.categoryId != null}" th:text="'카테고리 전용 쿠폰: '+${coupon.categoryName}"></span>
-                <span th:if="${coupon.productId == null and coupon.categoryId == null}">전체 적용 쿠폰</span>
-            </div>
-        </div>
-    </div>
-
     <!-- 배너 영역 -->
     <section class="blog-banner-area" id="category">
         <div class="container h-100">
@@ -79,7 +38,6 @@
                         <tr class="product-card"
                             th:id="'wrap'+${product.productId}+'-product-row'"
                             th:attr="data-wrap-available=${product.productPackageable}, data-product-id=${product.productId}"
-                            th:data-category-ids="${productCategories[product.productId]}"
                             th:data-product-price="${product.productSalePrice * quantities[iterStat.index]}">
                             <td style="width: 20%; border-bottom: 1px solid #ddd;">
                                 <img th:src="${product.productImagePaths[0].productImagePath}" style="width: 150px; height: auto;">
@@ -157,48 +115,19 @@
                                     <strong>주소</strong>
                                 </td>
                                 <td style="min-width: 320px;">
-
-                                    <div th:if="${defaultAddress!=null}">
-                                        <div style="display: flex; gap: 8px; margin-bottom: 6px;">
-                                            <input type="text" id="sample6_postcode" placeholder="우편번호"
-                                                   th:value="${defaultAddress.addressCode}" disabled
-                                                   class="form-control" style="max-width: 120px;">
-                                            <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"
-                                                   class="btn btn-outline-primary" style="padding: 0 12px;">
-                                            <button onclick="openAddressModal()" class="btn btn-primary btn-sm"
-                                                    style="width: 100%; background-color: white; color: black; border: 1px solid #ddd;
-                                                    border-radius: 6px; transition: background-color 0.2s ease;"
-                                                    onmouseover="this.style.backgroundColor='#f3f3f3'"
-                                                    onmouseout="this.style.backgroundColor='#ffffff'">배송지 선택</button>
-                                        </div>
-                                        <input type="text" id="sample6_address" placeholder="주소"
-                                               th:value="${defaultAddress.addressInfo}" disabled class="form-control mb-2">
-                                        <input type="text" id="sample6_detailAddress" placeholder="상세주소"
-                                               th:value="${defaultAddress.addressDetail}" class="form-control mb-2">
-                                        <input type="text" id="sample6_extraAddress" placeholder="참고항목"
-                                               th:value="${defaultAddress.addressExtra}" disabled
-                                               class="form-control mb-3">
+                                    <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+                                        <input type="text" id="sample6_postcode" placeholder="우편번호" disabled
+                                               class="form-control" style="max-width: 120px;">
+                                        <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"
+                                               class="btn btn-outline-primary" style="padding: 0 12px;">
                                     </div>
+                                    <input type="text" id="sample6_address" placeholder="주소" disabled
+                                           class="form-control mb-2">
+                                    <input type="text" id="sample6_detailAddress" placeholder="상세주소"
+                                           class="form-control mb-2">
+                                    <input type="text" id="sample6_extraAddress" placeholder="참고항목"
+                                           disabled class="form-control mb-3">
 
-                                    <div th:if="${defaultAddress==null}">
-                                        <div style="display: flex; gap: 8px; margin-bottom: 6px;">
-                                            <input type="text" id="sample6_postcode" placeholder="우편번호" disabled
-                                                   class="form-control" style="max-width: 120px;">
-                                            <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"
-                                                   class="btn btn-outline-primary" style="padding: 0 12px;">
-                                            <button onclick="openAddressModal()" class="btn btn-primary btn-sm"
-                                                    style="width: 100%; background-color: white; color: black; border: 1px solid #ddd;
-                                                    border-radius: 6px; transition: background-color 0.2s ease;"
-                                                    onmouseover="this.style.backgroundColor='#f3f3f3'"
-                                                    onmouseout="this.style.backgroundColor='#ffffff'">배송지 선택</button>
-                                        </div>
-                                        <input type="text" id="sample6_address" placeholder="주소" disabled
-                                               class="form-control mb-2">
-                                        <input type="text" id="sample6_detailAddress" placeholder="상세주소"
-                                               class="form-control mb-2">
-                                        <input type="text" id="sample6_extraAddress" placeholder="참고항목"
-                                               disabled class="form-control mb-3">
-                                    </div>
                                 </td>
 
                             </tr>
@@ -232,45 +161,7 @@
                             </tr>
 
                         </table>
-                        <br>
-                        <table cellpadding="10" width="100%"
-                               style="border-collapse: separate; border-spacing: 0; border: 1px solid #ccc; border-radius: 12px;overflow: hidden;">
-                            <tr>
-                                <td style="font-weight: bold;">나의 포인트</td>
-                                <td>
-                                    <span>보유: </span>
-                                    <span th:text="${T(java.lang.String).format('%,d',memberPoint)}" style="font-weight: bold;"></span>
-                                    <span>원</span>
-                                </td>
-                            </tr>
 
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <div style="display: flex; gap: 8px; align-items: center;">
-                                        <input type="number" id="pointInput" class="form-control"
-                                               style="width: 300px; text-align: right;" th:max="${memberPoint}">
-                                        <button class="btn btn-secondary" onclick="useAllPoint()">전액 사용</button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td style="font-weight: bold;">할인 쿠폰</td>
-                                <td>
-                                    <div style="display: flex; align-items: center;">
-                                        <span class="close" id="couponDelBth" onclick="deleteCoupon()"
-                                              style="display: none; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
-                                        <span id="couponName" data-coupon-id="" style="display: none; margin-left: 8px;"></span>
-
-                                        <!-- 버튼 오른쪽 정렬 -->
-                                        <button class="btn btn-secondary" onclick="openCouponModal()" style="margin-left: auto; margin-right: 115px;">
-                                            쿠폰 사용하기
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
                         <br>
 
                         <table cellpadding="10" width="100%"
@@ -310,7 +201,7 @@
                                         <input type="radio" id="tossPay_payment_method" name="payment_method" value="tossPay">
                                         <label for="tossPay_payment_method">토스 결제</label>
                                     </div>
-                                    <span>* 현재는 토스 간편 결제, 포인트로 전액 결제만 지원합니다.</span>
+                                    <span>* 현재는 토스 간편 결제만 지원합니다.</span>
                                 </td>
                             </tr>
                         </table>
@@ -350,14 +241,6 @@
                                     <span class="text-end">5,000</span>
                                 </li>
                                 <li class="d-flex justify-content-between align-items-center py-2">
-                                    <span class="text-start">포인트 사용</span>
-                                    <span class="text-end">500</span>
-                                </li>
-                                <li class="d-flex justify-content-between align-items-center py-2">
-                                    <span class="text-start">쿠폰 할인</span>
-                                    <span class="text-end">0</span>
-                                </li>
-                                <li class="d-flex justify-content-between align-items-center py-2">
                                     <span class="text-start">결제금액</span>
                                     <span class="text-end" id="payment_amount">27,480</span>
                                 </li>
@@ -382,60 +265,6 @@
             </div>
         </div>
 
-        <!--모달 관련 JS-->
-        <script th:inline="javascript">
-            function toggleWrapOptions(id) {
-                const elem = document.getElementById(id);
-                if (elem.style.display === 'none' || elem.style.display === '') {
-                    elem.style.display = 'table-row';
-                } else {
-                    elem.style.display = 'none';
-                }
-            }
-            function openAddressModal() {
-                document.getElementById("addressModal").style.display = "block";
-            }
-
-            function closeAddressModal() {
-                document.getElementById("addressModal").style.display = "none";
-            }
-
-            function openCouponModal() {
-                document.getElementById("couponModal").style.display = "block";
-            }
-
-            function closeCouponModal() {
-                document.getElementById("couponModal").style.display = "none";
-            }
-            // 바깥 클릭 시 닫기
-            window.onclick = function(event) {
-                const modal = document.getElementById("addressModal");
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-                const modal2 = document.getElementById("couponModal");
-                if (event.target === modal2) {
-                    modal2.style.display = "none";
-                }
-            }
-
-            // 각 주소 클릭 시 주소 정보를 적용
-            const addressesDiv = document.querySelectorAll(".address-box");
-
-            addressesDiv.forEach(div =>{
-                div.addEventListener("click", function (){
-                    let addressIndex = div.dataset.addressIndex;
-                    let addressList = /*[[${addresses}]]*/ [];
-                    let address = addressList[addressIndex];
-                    document.getElementById("sample6_postcode").value = address.addressCode;
-                    document.getElementById("sample6_address").value = address.addressInfo;
-                    document.getElementById("sample6_detailAddress").value = address.addressDetail;
-                    document.getElementById("sample6_extraAddress").value = address.addressExtra;
-                    closeAddressModal();
-                });
-            });
-        </script>
-
         <!--결제 요청 JS-->
         <script src="https://js.tosspayments.com/v1/payment"></script>
         <script>
@@ -453,7 +282,7 @@
                 const payAmount = parseInt(parseCurrency(document.getElementById("payment_amount").innerText));
                 const selected = document.querySelector('input[name="payment_method"]:checked');
                 const checkbox = document.getElementById('f-option4'); // 이용약관 체크 확인
-                if (!selected && !(payAmount === 0)) {
+                if (!selected) {
                     alert("결제 수단을 선택해주세요.");
                     return;
                 }
@@ -468,14 +297,9 @@
                 }
 
                 // 결제 방식
-                let method = "point";
-                if(selected !== null){
-                    method = selected.value;
-                }
+                let method = selected.value;
 
-
-                // 결제 금액이 0원이면 외부 결제로 결제 방지
-                if (method === "tossPay" && !(payAmount === 0)) {
+                if (method === "tossPay") {
                     // 주문서 저장
                     const response = await saveOrder(method);
 
@@ -487,22 +311,7 @@
 
                     tossPayWidget(response.orderId, response.amount);
                 } else {
-                    // 포인트 결제 로직
-                    if (payAmount !== 0) {
-                        alert("사용 포인트가 부족합니다.");
-                    } else {
-                        // 결제 진행
-                        const response = await saveOrder(method);
-                        // 응답의 data가 null이 아니면 정상 저장 된거이므로 성공 url이동
-                        // null이면 주문 처리 실패니까 실패 url로 리다이렉트
-                        // 프론트에서는 포인트가 충분했으나 DB에서는 부족한 경우
-                        if (response !== null) {
-                            window.location.href = "/order/confirm";
-                        } else {
-                            window.location.href = "/order/fail"
-                        }
-                    }
-
+                    alert("지원하지 않는 결제 수단입니다.");
                 }
             });
 
@@ -561,29 +370,13 @@
             }
 
             function createOrderData() {
-                // 선택한 쿠폰 id 가져오기
-                let couponId = document.getElementById("couponName").dataset.couponId;
-
-                if (couponId === "") {
-                    couponId = null;
-                }
-
-                // 포인트 입력 없을 시 0원 처리
-                let pointAmountData = document.getElementById("pointInput").value;
-                if (pointAmountData === "") {
-                    pointAmountData = "0";
-                }
-
-                // 순수 금액 계산, 상품 금액 - 쿠폰 적용 금액
                 let pureAmount = 0;
 
                 const productAmountSpan = document.querySelector(".list_2 li:nth-child(1) span:nth-child(2)");
                 pureAmount = parseCurrency(productAmountSpan.textContent);
-                const couponSpan = document.querySelector(".list_2 li:nth-child(4) span:nth-child(2)");
-                pureAmount -= parseCurrency(couponSpan.textContent);
 
                 const order = {
-                    memberCouponId: couponId,
+                    memberCouponId: null,
                     deliveryFeeId: [[${deliveryFee.deliveryFeeId}]],
                     customerId: [[${customerId}]],
                     orderReceiverName: document.getElementById("receiverName").value,
@@ -593,7 +386,7 @@
                     orderAddressInfo: document.getElementById("sample6_address").value,
                     orderAddressDetail: document.getElementById("sample6_detailAddress").value,
                     orderAddressExtra: document.getElementById("sample6_extraAddress").value,
-                    orderPointAmount: parseInt(pointAmountData),
+                    orderPointAmount: 0,
                     orderMemo: document.getElementById("receiverMemo").value,
                     orderPaymentStatus: false,
                     orderPureAmount: pureAmount,
@@ -638,7 +431,7 @@
                         amount: payAmount,
                         orderId: orderId,
                         orderName: gerOrderName(),
-                        customerName: "[[${member.customer.customerName}]]",
+                        customerName: "[[${customerName}]]",
                         successUrl: "[[${tossSuccessUrl}]]",
                         failUrl: "[[${tossFailUrl}]]",
                         // 결제 승인 중 실패 할 경우 자동 리다이렉트 경로, 우리는 백에서 승인 처리를 하므로 여기서 작동할 일이 없음
@@ -658,6 +451,11 @@
                     });
             }
 
+            // 문자열 자르기 유틸
+            function shorten(str, maxLength = 30) {
+                return str.length > maxLength ? str.slice(0, maxLength - 3) + '...' : str;
+            }
+
             // 주문 이름 제작
             function gerOrderName() {
                 // 모든 .product-name span 가져오기
@@ -665,12 +463,13 @@
 
                 // 이름 텍스트만 배열로 뽑기
                 const names = Array.from(productNameSpans).map(span => span.textContent.trim());
+                const firstName = shorten(names[0]);
 
                 // 조건에 따라 문자열 생성
                 if (names.length === 1) {
-                    return names[0]; // ex. "해리포터"
+                    return firstName; // ex. "해리포터"
                 } else if (names.length > 1) {
-                    return `${names[0]} 외 ${names.length - 1}건`; // ex. "해리포터 외 1건"
+                    return `${firstName} 외 ${names.length - 1}건`; // ex. "해리포터 외 1건"
                 } else {
                     return ""; // 상품이 없는 경우
                 }
@@ -876,8 +675,6 @@
                 }
 
                 calculateTotal();
-                // 포장지 가격은 상품 가격에 포함되므로 라디오 버튼 활성화를 다시 검사한다.
-                updateCouponActivation();
             }
 
             // 포장지 선택을 위한 라디오 입력에 이벤트 등록
@@ -906,18 +703,11 @@
             const productAmountSpan = document.querySelector(".list_2 li:nth-child(1) span:nth-child(2)");
             // 배송비 칸
             const shippingFeeSpan = document.querySelector(".list_2 li:nth-child(2) span:nth-child(2)");
-            // 포인트 입력 창
-            const pointInput = document.getElementById("pointInput");
-            // 포인트 적용 금액 칸
-            const pointSpan = document.querySelector(".list_2 li:nth-child(3) span:nth-child(2)");
-            // 쿠폰 적용 금액 칸
-            const couponSpan = document.querySelector(".list_2 li:nth-child(4) span:nth-child(2)");
             // 결제 총 금액 칸
-            const totalAmountSpan = document.querySelector(".list_2 li:nth-child(5) span:nth-child(2)");
+            const totalAmountSpan = document.querySelector(".list_2 li:nth-child(3) span:nth-child(2)");
 
             const FREE_SHIPPING_THRESHOLD = [[${deliveryFee.deliveryFeeFreeAmount}]];
             const SHIPPING_COST = [[${deliveryFee.deliveryFeeAmount}]];
-            const MAX_POINT = parseInt(pointInput.max);
 
             // 금액에서 , 제거하기
             function parseCurrency(value) {
@@ -954,132 +744,10 @@
                 let shippingCost = productTotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
                 shippingFeeSpan.textContent = formatCurrency(shippingCost);
 
-                // 쿠폰 값 적용
-                let couponDiscount = parseCurrency(couponSpan.textContent);
-
-                couponSpan.textContent = "-" + formatCurrency(couponDiscount);
-
-                // 포인트 계산
-                let pointUsed = Math.min(parseCurrency(pointInput.value), MAX_POINT, productTotal + shippingCost - couponDiscount);
-                pointSpan.textContent = "-" + formatCurrency(pointUsed);
-
-                // 결제 금액 상품 금액 + 배송비 - 쿠폰 할인 (포인트 추후 제외)
-                let finalAmount = productTotal + shippingCost - couponDiscount;
-
-                // 할인 내역이 전체 금액이 넘을 경우 전체 금액은 0원 설정
-                if (finalAmount < 0) {
-                    finalAmount = 0;
-                }
-
-                // 사용하려한 포인트가 결제 금액보다 많은 경우
-                // 사용 가능한 포인트는 최대 결제 금액까지만 입력 가능하게 제한
-                if (pointInput.value > finalAmount) {
-                    pointInput.value = finalAmount;
-                    finalAmount = 0;
-                } else {
-                    finalAmount = finalAmount - pointUsed;
-                }
+                // 결제 금액 상품 금액 + 배송비
+                let finalAmount = productTotal + shippingCost;
 
                 totalAmountSpan.textContent = formatCurrency(finalAmount);
-            }
-
-            // 최소 주문액에 맞춰 쿠폰 활성화 적용
-            function updateCouponActivation() {
-                const wrapList = document.querySelectorAll('.list li[id*="-wrap"] .last');
-                const productPrice = getProductTotal(wrapList);// 현재 상품 금액
-                const couponBoxes = document.querySelectorAll('.coupon-box');
-
-                couponBoxes.forEach(box => {
-                    const minPrice = parseInt(box.dataset.minimumPrice);
-
-                    if (productPrice < minPrice) {
-                        // 조건 미달: 비활성화
-                        box.classList.add('disabled');
-                        box.style.pointerEvents = 'none';
-                        box.style.opacity = '0.5';
-
-                        // 포장지 선택을 빼서 쿠폰이 비활성화 되기 전 이미 적용된 쿠폰이면 제거한다.
-                        const couponNameSpan = document.getElementById("couponName");
-                        if(box.dataset.couponId === couponNameSpan.dataset.couponId){
-                            deleteCoupon();
-                        }
-
-                    } else {
-                        // 조건 만족: 활성화
-                        box.classList.remove('disabled');
-                        box.style.pointerEvents = 'auto';
-                        box.style.opacity = '1';
-
-                        box.addEventListener("click", function (){
-                            const wrapList = document.querySelectorAll('.list li[id*="-wrap"] .last');
-                            const productPrice = getProductTotal(wrapList);// 가격 변동 시점 상품 금액
-
-                            const targetProductId = box.dataset.targetProductId;
-                            const targetCategoryId = box.dataset.targetCategoryId;
-
-                            const discountRate = box.dataset.discountRate;
-                            let discount = 0;
-
-                            if(!discountRate){ // 정액 쿠폰은 적용 방식이 모두 같음
-                                discount = box.dataset.discountPrice;
-                            }else{
-                                let targetTotalPrice = 0; // 할인이 적용될 대상 금액
-
-                                if(!targetProductId && !targetCategoryId){ // 전체 적용 쿠폰
-                                    targetTotalPrice = productPrice;
-
-                                }else if(targetProductId){ // 특정 상품 적용 쿠폰
-                                    document.querySelectorAll('.product-card').forEach(productdiv => {
-                                        if(productdiv.dataset.productId === targetProductId){
-                                            targetTotalPrice += productdiv.dataset.productPrice;
-                                        }
-                                    });
-                                }else if(targetCategoryId) { // 특정 카테고리 적용쿠폰
-                                    document.querySelectorAll('.product-card').forEach(productdiv => {
-                                        let categoryIds = JSON.parse(productdiv.dataset.categoryIds);
-
-                                        if(categoryIds.includes(targetCategoryId)){
-                                            targetTotalPrice += productdiv.dataset.productPrice;
-                                        }
-                                    });
-                                }
-                                const maxDiscount = box.dataset.maximumPrice;
-                                const calc = Math.floor(targetTotalPrice * discountRate / 100);
-                                discount = Math.min(calc, maxDiscount);
-                            }
-
-                            const couponNameSpan = document.getElementById("couponName");
-                            couponNameSpan.style.display = "block";
-                            couponNameSpan.innerText = box.dataset.couponName;
-                            couponNameSpan.dataset.couponId = box.dataset.couponId;
-
-                            const couponDelBtn = document.getElementById("couponDelBth");
-                            couponDelBtn.style.display = "block";
-
-                            couponSpan.textContent = discount; // calculateTotal에서 - 처리함
-                            closeCouponModal();
-                            calculateTotal();
-                        });
-                    }
-                });
-            }
-
-            function deleteCoupon(){
-                const couponNameSpan = document.getElementById("couponName");
-                couponNameSpan.style.display = "none";
-                couponNameSpan.innerText = "";
-                couponNameSpan.dataset.couponId = "";
-
-                const couponDelBtn = document.getElementById("couponDelBth");
-                couponDelBtn.style.display = "none";
-                couponSpan.textContent = "0";
-                calculateTotal();
-            }
-
-            function useAllPoint() {
-                const pointInput = document.getElementById("pointInput");
-                pointInput.value = parseInt(pointInput.max);
-                calculateTotal();
             }
 
             const phoneInput = document.getElementById('receiverPhone');
@@ -1107,25 +775,8 @@
                 }
             });
 
-            // 포인트 입력 창에 대한 제한 이벤트 등록
-            pointInput.addEventListener("input", () => {
-                const max = parseInt(pointInput.max);
-                const value = pointInput.value;
-
-                if (value > max) {
-                    pointInput.value = max;
-                }
-                if (value < 0) {
-                    pointInput.value = 0;
-                }
-                // 포인트를 입력한 후에는 가격 계산 재 실행
-                calculateTotal();
-            });
-
-
             // 초기 실행
             calculateTotal();
-            updateCouponActivation();
         </script>
     </section>
     <!--================End Checkout Area =================-->
