@@ -12,6 +12,11 @@ eureka:
     prefer-ip-address: true # 서비스 등록 시 도메인 대신 IP 주소로 등록
 
 spring:
+#  session:
+#    store-type: redis          # 저장 타입을 redis로 선언
+##    timeout: 3600s          # 세션 만료 시간 (초 단위)
+#    redis:
+#      namespace: e2bs:sessions # Redis 키 prefix 커스터마이징
   data:
     redis:
       host: s4.java21.net

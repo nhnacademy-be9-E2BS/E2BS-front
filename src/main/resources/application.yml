@@ -1,3 +1,9 @@
+servlet:
+  session:
+    cookie:
+      same-site: none
+      secure: true
+
 # 공통 설정
 spring:
   application:
