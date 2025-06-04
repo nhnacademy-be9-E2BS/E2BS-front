@@ -34,25 +34,25 @@
                             <input type="hidden" name="productDescription" id="productDescription">
                         </div>
 
-                        <!-- 저자 선택 버튼 및 표시 영역 -->
+                        <!-- 기여자 선택 버튼 및 표시 영역 -->
                         <div class="mb-3">
-                            <label class="form-label d-block">저자 선택</label>
+                            <label class="form-label d-block">기여자 선택</label>
                             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
                                     data-bs-target="#contributorModal">
-                                저자 선택
+                                기여자 선택
                             </button>
-                            <div id="selectedContributorList" class="form-text mt-1">선택된 저자 없음</div>
+                            <div id="selectedContributorList" class="form-text mt-1">선택된 기여자 없음</div>
                         </div>
 
 
-                        <!-- 저자 모달 -->
+                        <!-- 기여자 모달 -->
                         <div class="modal fade" id="contributorModal" tabindex="-1"
                              aria-labelledby="contributorModalLabel"
                              aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable modal-sm modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="contributorModalLabel">저자 선택</h5>
+                                        <h5 class="modal-title" id="contributorModalLabel">기여자 선택</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="닫기"></button>
                                     </div>
@@ -65,11 +65,10 @@
                                                            th:id="'contributor-' + ${contributor.contributorId}"
                                                            th:name="contributorIds"
                                                            th:value="${contributor.contributorId}"
-                                                           th:data-name="${contributor.contributorName + ' (' + contributor.positionName + ')'}"
-                                                           th:checked="${product?.contributors?.contains(contributor.contributorId)}">
+                                                           th:data-name="${contributor.contributorName + ' (' + contributor.positionName + ')'}">
                                                     <label class="form-check-label"
                                                            th:for="'contributor-' + ${contributor.contributorId}"
-                                                           th:text="${contributor.contributorName + ' (' + contributor.positionName + ')'}">저자명(역할)</label>
+                                                           th:text="${contributor.contributorName + ' (' + contributor.positionName + ')'}">기여자명(역할)</label>
                                                 </div>
                                             </li>
                                         </ul>
@@ -98,24 +97,28 @@
                         </div>
                         <!-- ISBN -->
                         <div class="col-md-12 form-group">
+                            <label>ISBN</label>
                             <input type="text" class="form-control" name="productIsbn" placeholder="ISBN"
                                    th:value="${product?.productIsbn ?: ''}" required>
                         </div>
 
                         <!-- 정가 -->
                         <div class="col-md-12 form-group">
+                            <label>정가</label>
                             <input type="number" class="form-control" name="productRegularPrice" placeholder="정가"
                                    th:value="${product?.productRegularPrice ?: ''}" required>
                         </div>
 
                         <!-- 판매가 -->
                         <div class="col-md-12 form-group">
+                            <label>판매가</label>
                             <input type="number" class="form-control" name="productSalePrice" placeholder="판매가"
                                    th:value="${product?.productSalePrice ?: ''}" required>
                         </div>
 
                         <!-- 출판 일시 -->
                         <div class="col-md-12 form-group">
+                            <label>출판일</label>
                             <input type="date" class="form-control" name="productPublishedAt"
                                    th:value="${product?.productPublishedAt ?: ''}" required>
                         </div>
@@ -174,6 +177,7 @@
 
                         <!-- 재고 -->
                         <div class="col-md-12 form-group">
+                            <label>재고</label>
                             <input type="number" class="form-control" name="productStock" placeholder="재고"
                                    th:value="${product?.productStock ?: ''}" required>
                         </div>
