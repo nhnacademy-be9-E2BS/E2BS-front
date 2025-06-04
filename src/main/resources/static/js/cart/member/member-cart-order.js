@@ -86,9 +86,9 @@ $(document).ready(function () {
         const encoded = btoa(unescape(encodeURIComponent(jsonStr)));  // 한글깨짐 방지
 
         // 쿠키 저장
-        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; httponly; secure; samesite=strict`;
+        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=strict`;
 
         // 주문서 페이지로 GET 이동
-        window.location.href = '/members/carts/order';
+        window.location.href = '/members/order';
     });
 });
