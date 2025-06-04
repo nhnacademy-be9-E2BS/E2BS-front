@@ -182,3 +182,11 @@
     </div>
 </div>
 
+<div class="col-xl-3 col-lg-4 col-md-5" th:fragment="search-sidebar">
+    <div class="sidebar-filter">
+        <div class="top-filter-head">검색 결과</div>
+        <div class="common-filter">
+            <div class="head" th:text="${keyword} + '(으)로 검색 결과 ' + ${products.totalElements} + '건 검색'"></div>
+        </div>
+    </div>
+</div>

@@ -18,7 +18,7 @@
                             <!-- 1단계 카테고리 (최상위) -->
                             <li th:each="category : ${headerCategories}" class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle"
-                                   th:href="@{/books/category/{categoryId}(categoryId=${category.categoryId})}"
+                                   th:href="@{/books/search/category/{categoryId}(categoryId=${category.categoryId})}"
                                    id="dropdownMenuLink"
                                    data-toggle="dropdown"
                                    aria-haspopup="true"
@@ -28,13 +28,13 @@
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                     <li th:each="child : ${category.children}" class="dropdown-submenu">
                                         <a class="dropdown-item dropdown-toggle"
-                                           th:href="@{/books/category/{categoryId}(categoryId=${child.categoryId})}"
+                                           th:href="@{/books/search/category/{categoryId}(categoryId=${child.categoryId})}"
                                            th:text="${child.categoryName}"></a>
                                         <!-- 3단계 카테고리 -->
                                         <ul class="dropdown-menu">
                                             <li th:each="grandChild : ${child.children}">
                                                 <a class="dropdown-item"
-                                                   th:href="@{/books/category/{categoryId}(categoryId=${grandChild.categoryId})}"
+                                                   th:href="@{/books/search/category/{categoryId}(categoryId=${grandChild.categoryId})}"
                                                    th:text="${grandChild.categoryName}"></a>
                                             </li>
                                         </ul>
@@ -42,6 +42,21 @@
                                 </ul>
                             </li>
                         </ul>
+
+                        <!-- 헤더 내부에 추가 -->
+                        <form id="searchForm" action="/books/search" method="get" style="display: flex; align-items: center;">
+                            <input
+                                    type="text"
+                                    name="keyword"
+                                    placeholder="검색어를 입력하세요"
+                                    required
+                                    style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;"/>
+                            <button
+                                    type="submit"
+                                    style="margin-left: 8px; padding: 6px 12px; border: none; background-color: #007bff; color: white; border-radius: 4px;">
+                                검색
+                            </button>
+                        </form>
 
                         <ul class="nav-shop">
                             <!-- 로그인 안 된 경우 -->

@@ -21,12 +21,10 @@ import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
 import com.nhnacademy.front.review.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/books")
-@Slf4j
 public class ProductController {
 
 	private final ProductService productService;
