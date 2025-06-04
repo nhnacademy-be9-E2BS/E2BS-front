@@ -32,38 +32,38 @@
             <div class="mb-3">
                 <label for="productTitle" class="form-label">도서 제목</label>
                 <input type="text" class="form-control" id="productTitle" name="productTitle"
-                       th:value="${book.productTitle}" required readonly>
+                       th:value="${book.productTitle}" required >
             </div>
 
             <div class="mb-3">
                 <label for="publisherName" class="form-label">출판사</label>
                 <input type="text" class="form-control" id="publisherName" name="publisherName"
-                       th:value="${book.publisherName}" required readonly>
+                       th:value="${book.publisherName}" required >
             </div>
 
             <div class="mb-3">
                 <label for="productPublishedAt" class="form-label">출판일</label>
                 <input type="date" class="form-control" id="productPublishedAt" name="productPublishedAt"
-                       th:value="${book.productPublishedAt}" required readonly>
+                       th:value="${book.productPublishedAt}" required >
             </div>
 
 
             <div class="mb-3">
                 <label for="contributors" class="form-label">기여자 정보</label>
                 <input type="text" class="form-control" id="contributors" name="contributors"
-                       th:value="${book.contributors}" required readonly>
+                       th:value="${book.contributors}" required >
             </div>
 
             <div class="mb-3">
                 <label for="productIsbn" class="form-label">ISBN</label>
                 <input type="text" class="form-control" id="productIsbn" name="productIsbn"
-                       th:value="${book.productIsbn}" required readonly>
+                       th:value="${book.productIsbn}" required >
             </div>
 
             <div class="mb-3">
                 <label for="productImage" class="form-label">이미지 URL</label>
                 <input type="text" class="form-control" id="productImage" name="productImage"
-                       th:value="${book.productImage}" readonly>
+                       th:value="${book.productImage}" >
             </div>
 
             <div class="mb-3">
@@ -83,13 +83,13 @@
             <div class="mb-3">
                 <label for="productRegularPrice" class="form-label">정가</label>
                 <input type="number" class="form-control" id="productRegularPrice" name="productRegularPrice"
-                       th:value="${book.productRegularPrice}" required readonly>
+                       th:value="${book.productRegularPrice}" required >
             </div>
 
             <div class="mb-3">
                 <label for="productSalePrice" class="form-label">판매가</label>
                 <input type="number" class="form-control" id="productSalePrice" name="productSalePrice"
-                       th:value="${book.productSalePrice}" required readonly>
+                       th:value="${book.productSalePrice}" required >
             </div>
 
 
@@ -194,12 +194,6 @@
             </div>
 
             <input type="hidden" name="queryType" th:value="${book.queryType}" />
-
-            <div class="mb-3">
-                <label class="form-label">[디버그] 현재 queryType:</label>
-                <p th:text="${book.queryType}">queryType 값이 없습니다.</p>
-            </div>
-
             <button type="submit" class="btn btn-primary" id="submitBtn">등록</button>
             <a th:href="@{/admin/settings/books/search}" class="btn btn-secondary">취소</a>
         </form>
