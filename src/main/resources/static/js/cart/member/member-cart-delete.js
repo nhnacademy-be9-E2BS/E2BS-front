@@ -23,6 +23,12 @@ $(document).ready(function () {
                 // }
             },
             success: function (response) {
+                if (response === 0) {
+                    $(`.nav-shop__circle`).hide();
+                } else {
+                    $(`.nav-shop__circle`).text(response);
+                }
+
                 alert('장바구니에 삭제 되었습니다!');
 
                 row.remove();
@@ -81,8 +87,14 @@ $(document).ready(function () {
             beforeSend: function(xhr) {
             },
             success: function (response) {
+                console.log(typeof response);
+                console.log(response);
+                console.log($('.nav-shop__circle').length);
+
+                $(`.nav-shop__circle`).hide();
+
                 alert('장바구니를 비웠습니다!');
-                $('#cart-container').hide();
+                $('#cart-container').remove();
                 $('.table').append('<tbody><tr><td colspan="6" style="text-align:center;">장바구니가 비어 있습니다.</td></tr></tbody>');
             },
             error: function (xhr, status, error) {
