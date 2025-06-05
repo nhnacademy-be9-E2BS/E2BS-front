@@ -5,12 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.review.adaptor.MemberReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ProductReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ReviewAdaptor;
 import com.nhnacademy.front.review.exception.ReviewProcessException;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewMetaDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseMemberReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
+	private final MemberReviewAdaptor memberReviewAdaptor;
 	private final ProductReviewAdaptor productReviewAdaptor;
 	private final ReviewAdaptor reviewAdaptor;
 
@@ -63,6 +66,16 @@ public class ReviewServiceImpl implements ReviewService {
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
 			throw new ReviewProcessException("상품 리뷰 정보 조회 실패: " + result.getStatusCode());
+		}
+		return result.getBody();
+	}
+
+	@Override
+	public PageResponse<ResponseMemberReviewDTO> getReviewsByMember(String memberId, Pageable pageable) {
+		ResponseEntity<PageResponse<ResponseMemberReviewDTO>> result = memberReviewAdaptor.getReviewsByMember(memberId, pageable);
+
+		if (!result.getStatusCode().is2xxSuccessful()) {
+			throw new ReviewProcessException("회원 리뷰 페이징 목록 조회 실패: " + result.getStatusCode());
 		}
 		return result.getBody();
 	}

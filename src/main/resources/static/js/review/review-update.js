@@ -44,6 +44,8 @@ $(document).on('change', '.custom-file-input', function (event) {
 });
 
 function submitReviewUpdate(reviewId, index) {
+    console.log('리뷰 제출', reviewId, index);
+
     const form = $(`#edit-form-${index} form`)[0];
     const formData = new FormData(form);
 
