@@ -4,354 +4,482 @@
       layout:decorate="~{layouts/admin-layout}">
 <body>
 <div layout:fragment="content">
-    <style>
-        .category-dash ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-        .category-dash ul li {
-            border-left: 1px dashed #ccc;
-            padding-left: 10px;
-        }
-
-        .category-left {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .toggle {
-            cursor: pointer;
-            margin-right: 5px;
-        }
-    </style>
-
     <section>
         <div class="container">
-            <h2>Coupon Register</h2>
+            <h2>쿠폰 등록</h2>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <h4>Register New Coupon</h4>
+            <!-- 스타일 -->
+            <style>
+                .table th {
+                    text-align: center;
+                    vertical-align: middle;
+                    color: #333;
+                    font-size: 15px;
+                }
 
-                    <!-- 쿠폰 등록 폼 -->
-                    <form class="row login_form" action="/admin/settings/coupons/register" method="post">
-                        <table class="table table-bordered">
-                            <tbody>
-                            <!-- 쿠폰명 -->
-                            <tr>
-                                <th style="width: 180px;">쿠폰명</th>
-                                <td>
-                                    <input type="text" class="form-control" name="couponName" placeholder="쿠폰명을 입력하세요" required>
-                                </td>
-                            </tr>
+                .table thead th {
+                    font-weight: 600;
+                    background: #fafafa;
+                    border-top: 2px solid #666;
+                }
 
-                            <!-- 쿠폰 정책 -->
-                            <tr>
-                                <th>쿠폰 정책</th>
-                                <td>
-                                    <select class="form-control" name="couponPolicyId" required>
-                                        <option value="none" disabled selected>선택해주세요</option>
-                                        <option th:each="policy : ${couponPolicies}"
-                                                th:value="${policy.couponPolicyId}"
-                                                th:text="${policy.couponPolicyName + ' (' + #temporals.format(policy.couponPolicyCreatedAt, 'yyyy-MM-dd') + ')'}">
-                                        </option>
-                                    </select>
-                                </td>
-                            </tr>
+                .coupon-section {
+                    border: 1px solid #eee;
+                    padding: 20px;
+                    border-radius: 6px;
+                    background-color: #fff;
+                    margin-bottom: 40px;
+                }
 
-                            <!-- 쿠폰 종류 -->
-                            <tr>
-                                <th>쿠폰 종류</th>
-                                <td>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="couponType" id="typeTotal" value="total" th:checked="${couponType == 'total'}">
-                                        <label class="form-check-label" for="typeTotal">전체 할인 (일반, 생일, Welcome)</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="couponType" id="typeCategory" value="category">
-                                        <label class="form-check-label" for="typeCategory">카테고리 할인</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="couponType" id="typeProduct" value="product" th:checked="${couponType == 'product'}">
-                                        <label class="form-check-label" for="typeProduct">도서 할인</label>
-                                    </div>
-                                </td>
-                            </tr>
+                .pagination .page-link {
+                    color: #333;
+                }
 
-                            <!-- 카테고리 선택 -->
-                            <tr id="categoryRow" class="hidden">
-                                <th>카테고리</th>
-                                <td>
-                                    <!-- 조회 영역 -->
-                                    <div class="row mb-5">
-                                        <div class="col-12 category-dash">
-                                            <ul id="categoryTree">
-                                                <li th:each="category : ${categories}" class="mb-2">
-                                                    <div class="d-flex justify-content-between align-items-start">
-                                                        <!-- 들여쓰기 + 텍스트 -->
-                                                        <div class="category-left">
-                                                            <div class="d-flex align-items-center">
-                                                                <span class="toggle me-2" onclick="toggleClick(this)">📁</span>
-                                                                <span th:text="${category.categoryName}"></span>
-                                                            </div>
-                                                        </div>
+                .pagination .page-item.active .page-link {
+                    background-color: #666;
+                    border-color: #666;
+                    color: #fff;
+                }
 
-                                                        <!-- 오른쪽 버튼 -->
-                                                        <div class="ms-2">
-                                                            <button type="button"
-                                                                    class="btn btn-sm btn-outline-success"
-                                                                    th:attr="data-id=${category.categoryId}, data-name=${category.categoryName}"
-                                                                    onclick="selectCategory(this)">선택</button>
+                /* 링크 스타일 제거 */
+                a.coupon-link {
+                    color: #333 !important;
+                    text-decoration: none;
+                }
+
+                a.coupon-link:hover {
+                    text-decoration: underline;
+                }
+
+                /* 카테고리 트리 스타일 (기존 유지) */
+                .category-dash ul {
+                    list-style-type: none;
+                    padding-left: 0;
+                }
+
+                .category-dash ul li {
+                    border-left: 1px dashed #ccc;
+                    padding-left: 10px;
+                }
+
+                .category-left {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .toggle {
+                    cursor: pointer;
+                    margin-right: 5px;
+                }
+
+                /* 숨김 처리 */
+                .hidden {
+                    display: none;
+                }
+
+                /* select multiple 높이 */
+                select[multiple] {
+                    height: 300px;
+                }
+
+                table th {
+                    white-space: nowrap;
+                    vertical-align: top;
+                    text-align: left;
+                }
+                /* 모달 전체 배경 (어둡고 반투명) */
+                .modal {
+                    display: none; /* 기본은 숨김 */
+                    position: fixed;
+                    z-index: 1000; /* 최상위 */
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto; /* 스크롤 가능 */
+                    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 */
+                }
+
+                /* 모달 내용 박스 */
+                .modal-content {
+                    background-color: #fff;
+                    margin: 10% auto; /* 화면 상단에서 10% 아래, 가로 중앙 */
+                    padding: 20px 30px;
+                    border-radius: 8px;
+                    width: 600px;
+                    max-width: 90%;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                    position: relative;
+                }
+
+                /* 닫기 버튼 */
+                .close {
+                    color: #aaa;
+                    position: absolute;
+                    top: 15px;
+                    right: 20px;
+                    font-size: 28px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: color 0.3s ease;
+                }
+
+                .close:hover,
+                .close:focus {
+                    color: #000;
+                    text-decoration: none;
+                }
+
+                /* 제목 스타일 */
+                .modal-content h2 {
+                    margin-top: 0;
+                    font-weight: 700;
+                    color: #333;
+                }
+            </style>
+
+            <div class="coupon-section">
+                <h4 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">새 쿠폰 등록
+                    <span style="font-size: 14px; color: #888; font-weight: normal;">| 쿠폰 정책과 종류를 선택하여 쿠폰을 등록할 수 있습니다.</span>
+                </h4>
+
+                <div class="alert alert-warning" role="alert" style="font-size: 14px;">
+                    ※ 일반쿠폰, 생일쿠폰, 웰컴쿠폰은 전체 도서에 대해 할인이 적용됩니다.<br>
+                    ※ 생일쿠폰의 쿠폰명은 "X월 생일 쿠폰" 으로 명확히 작성해주세요.<br>
+                    ※ 웰컴쿠폰의 쿠폰명은 "웰컴 쿠폰" 으로 명확히 작성해주세요.<br>
+                </div>
+
+                <form action="/admin/settings/coupons/register" method="post" class="row g-3">
+
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <th>쿠폰 종류</th>
+                            <td>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="couponType" id="typeTotal" value="total" th:checked="${couponType == 'total'}">
+                                    <label class="form-check-label" for="typeTotal">전체 할인 (일반, 생일, Welcome)</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="couponType" id="typeCategory" value="category">
+                                    <label class="form-check-label" for="typeCategory">카테고리 할인</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="couponType" id="typeProduct" value="product" th:checked="${couponType == 'product'}">
+                                    <label class="form-check-label" for="typeProduct">도서 할인</label>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th style="width: 100px;">쿠폰명</th>
+                            <td>
+                                <input type="text" class="form-control" name="couponName" placeholder="쿠폰명을 입력하세요" required>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>쿠폰 정책</th>
+                            <td>
+                                <select class="form-select" name="couponPolicyId" required>
+                                    <option value="none" disabled selected>선택해주세요</option>
+                                    <option th:each="policy : ${couponPolicies}"
+                                            th:value="${policy.couponPolicyId}"
+                                            th:text="${policy.couponPolicyName + ' (' + #temporals.format(policy.couponPolicyCreatedAt, 'yyyy-MM-dd') + ')'}">
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+
+
+
+                        <!-- 카테고리 선택 (원본 유지) -->
+                        <tr id="categoryRow" class="hidden">
+                            <th>카테고리</th>
+                            <td>
+                                <div class="row mb-5">
+                                    <div class="col-12 category-dash">
+                                        <ul id="categoryTree">
+                                            <li th:each="category : ${categories}" class="mb-2">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="category-left">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="toggle me-2" onclick="toggleClick(this)">📁</span>
+                                                            <span th:text="${category.categoryName}"></span>
                                                         </div>
                                                     </div>
-
-                                                    <!-- 자식 카테고리 -->
-                                                    <ul th:if="${#lists.size(category.children) > 0}" class="ms-4 mt-2">
-                                                        <th:block th:replace="admin/coupon/coupon-register-categoryFragment :: categoryFragment(category=${category})" />
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- 선택한 카테고리 -->
-                            <tr id="categoryRow2" class="hidden">
-                                <th>선택한 카테고리</th>
-                                <td>
-                                    <span id="selectedCategoryName">없음</span>
-                                    <input type="hidden" name="categoryId" id="selectedCategoryId" />
-                                </td>
-                            </tr>
-
-
-                            <!-- 도서 선택 -->
-                            <tr id="productRow" class="hidden">
-                                <th>도서</th>
-                                <td>
-                                    <div class="row mb-5">
-                                        <div class="col-12">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                <tr>
-                                                    <th>도서ID</th>
-                                                    <th>이미지</th>
-                                                    <th>ISBN</th>
-                                                    <th>도서명</th>
-                                                    <th>기여자</th>
-                                                    <th>출판사</th>
-                                                    <th>정가</th>
-                                                    <th>재고</th>
-                                                    <th>선택</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr th:each="product : ${products}">
-                                                    <td th:text="${product.productId}">-</td>
-                                                    <td th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
-                                                        <img th:src="${product.productImagePaths[0].productImagePath}"
-                                                             th:alt="${product.productTitle} + ' 표지 이미지'"
-                                                             style="width: 50px; height: auto;"
-                                                             onerror="this.src='https://via.placeholder.com/110x150?text=No+Image'">
-                                                    </td>
-                                                    <td th:text="${product.productIsbn}">-</td>
-                                                    <td th:text="${product.productTitle}">-</td>
-                                                    <td>
-                                                        <ul>
-                                                            <li th:each="contributor : ${product.contributors}" th:text="${contributor.contributorName}"></li>
-                                                        </ul>
-                                                    </td>
-                                                    <td th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">-</td>
-                                                    <td th:text="${product.productRegularPrice}">-</td>
-                                                    <td th:text="${product.productStock}">-</td>
-                                                    <td>
+                                                    <div class="ms-2">
                                                         <button type="button" class="btn btn-sm btn-outline-success"
-                                                                th:attr="data-id=${product.productId}, data-name=${product.productTitle}"
-                                                                onclick="selectProduct(this)">
-                                                            선택
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-
-                                            <!-- 페이징 -->
-                                            <div class="row">
-                                                <div class="col-12 d-flex justify-content-center">
-                                                    <nav>
-                                                        <ul class="pagination" th:if="${products.totalPages > 0}">
-                                                            <!-- 처음 -->
-                                                            <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
-                                                                <a class="page-link" th:href="@{'/admin/settings/coupons/register'(page=0, size=${products.size}, couponType='product')}">처음</a>
-                                                            </li>
-
-                                                            <!-- 페이지 번호 -->
-                                                            <li class="page-item"
-                                                                th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
-                                                                th:classappend="${i == products.number} ? 'active'">
-                                                                <a class="page-link"
-                                                                   th:href="@{'/admin/settings/coupons/register'(page=${i}, size=${products.size}, couponType='product')}"
-                                                                   th:text="${i + 1}">1</a>
-                                                            </li>
-
-                                                            <!-- 마지막 -->
-                                                            <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
-                                                                <a class="page-link"
-                                                                   th:href="@{'/admin/settings/coupons/register'(page=${products.totalPages - 1}, size=${products.size}, couponType='product')}">마지막</a>
-                                                            </li>
-                                                        </ul>
-                                                    </nav>
+                                                                th:attr="data-id=${category.categoryId}, data-name=${category.categoryName}"
+                                                                onclick="selectCategory(this)">선택</button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                <ul th:if="${#lists.size(category.children) > 0}" class="ms-4 mt-2">
+                                                    <th:block th:replace="admin/coupon/coupon-register-categoryFragment :: categoryFragment(category=${category})" />
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
 
+                        <tr id="categoryRow2" class="hidden">
+                            <th>선택한 카테고리</th>
+                            <td>
+                                <span id="selectedCategoryName">없음</span>
+                                <input type="hidden" name="categoryId" id="selectedCategoryId" />
+                            </td>
+                        </tr>
+
+                        <tr id="productRowSearch" class="hidden">
+                            <th>도서 검색</th>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary" id="openModalBtn">
+                                    검색하기
+                                </button>
+
+                                <a href="/admin/settings/coupons/register?couponType=product" class="btn btn-outline-secondary" style="margin-left: 8px;">
+                                    전체조회
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr id="productRow" class="hidden">
+                            <th>도서</th>
+                            <td>
+                                <div class="row mb-5">
+                                    <div class="col-12">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>이미지</th>
+                                                <th>ISBN</th>
+                                                <th>도서명</th>
+                                                <th>기여자</th>
+                                                <th>출판사</th>
+                                                <th>정가</th>
+                                                <th>재고</th>
+                                                <th>선택</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="product : ${products}">
+                                                <td th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
+                                                    <img th:src="${product.productImagePaths[0].productImagePath}"
+                                                         th:alt="${product.productTitle} + ' 표지 이미지'"
+                                                         style="width: 50px; height: auto;"
+                                                         onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+                                                </td>
+
+                                                <td th:text="${product.productIsbn}">-</td>
+                                                <td th:text="${product.productTitle}"
+                                                    th:title="${product.productTitle}"
+                                                    style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                    -
+                                                </td>
+                                                <td>
+                                                    <ul>
+                                                        <li th:each="contributor : ${product.contributors}" th:text="${contributor.contributorName}"></li>
+                                                    </ul>
+                                                </td>
+                                                <td th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">-</td>
+                                                <td th:text="${T(java.lang.String).format('%,d원', product.productRegularPrice)}">1,000원</td>
+                                                <td th:text="${product.productStock + '개'}">30개</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-outline-success"
+                                                            th:attr="data-id=${product.productId}, data-name=${product.productTitle}"
+                                                            onclick="selectProduct(this)">
+                                                        선택
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <!-- 페이징 -->
+                                        <div class="row">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <nav>
+                                                    <ul class="pagination" th:if="${products.totalPages > 0}">
+                                                        <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
+                                                            <a class="page-link" th:href="@{'/admin/settings/coupons/register'(page=0, size=${products.size}, couponType='product')}">처음</a>
+                                                        </li>
+
+                                                        <li class="page-item"
+                                                            th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+                                                            th:classappend="${i == products.number} ? 'active'">
+                                                            <a class="page-link"
+                                                               th:href="@{'/admin/settings/coupons/register'(page=${i}, size=${products.size}, couponType='product')}"
+                                                               th:text="${i + 1}">1</a>
+                                                        </li>
+
+                                                        <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
+                                                            <a class="page-link"
+                                                               th:href="@{'/admin/settings/coupons/register'(page=${products.totalPages - 1}, size=${products.size}, couponType='product')}">마지막</a>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
                                         </div>
                                     </div>
-                                </td>
-                            </tr>
+                                </div>
+                            </td>
+                        </tr>
 
-                            <!-- 선택한 도서 -->
-                            <tr id="productRow2" class="hidden">
-                                <th>선택한 도서</th>
-                                <td>
-                                    <span id="selectedProductName">없음</span>
-                                    <input type="hidden" name="productId" id="selectedProductId" />
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <tr id="productRow2" class="hidden">
+                            <th>선택한 도서</th>
+                            <td>
+                                <span id="selectedProductName">없음</span>
+                                <input type="hidden" name="productId" id="selectedProductId" />
+                            </td>
+                        </tr>
 
-                        <!-- 제출 버튼 -->
-                        <div class="text-center mt-4">
-                            <button type="submit" class="button button-register w-100">REGISTER COUPON</button>
-                        </div>
-                    </form>
+                        </tbody>
+                    </table>
 
-                    <!-- 스크립트 및 스타일 -->
-                    <script>
-                        function selectCategory(button) {
-                            const categoryId = button.getAttribute("data-id");
-                            const categoryName = button.getAttribute("data-name");
-
-                            // 값 표시
-                            document.getElementById("selectedCategoryName").textContent = categoryName;
-                            document.getElementById("selectedCategoryId").value = categoryId;
-                        }
-
-                        function selectProduct(button) {
-                            const productId = button.getAttribute("data-id");
-                            const productName = button.getAttribute("data-name");
-
-                            // 선택한 도서명, id 반영
-                            document.getElementById("selectedProductName").textContent = productName;
-                            document.getElementById("selectedProductId").value = productId;
-                        }
-
-
-                        // 폼 제출 시 유효성 검사
-                        document.querySelector("form").addEventListener("submit", function (e) {
-                            const couponType = document.querySelector("input[name='couponType']:checked").value;
-                            const categoryId = document.getElementById("selectedCategoryId").value;
-                            const productId = document.getElementById("selectedProductId").value;
-                            const couponPolicy = document.querySelector("select[name='couponPolicyId']");
-
-                            // 쿠폰 정책 선택 검사
-                            if (couponPolicy.value === "none") {
-                                e.preventDefault();
-                                alert("쿠폰 정책을 선택해주세요.");
-                                return;
-                            }
-
-                            // 카테고리 선택 안 한 경우
-                            if (couponType === "category" && !categoryId) {
-                                e.preventDefault();
-                                alert("카테고리를 선택해주세요.");
-                                return;
-                            }
-
-                            // 도서 선택 안 한 경우
-                            if (couponType === "product" && !productId) {
-                                e.preventDefault();
-                                alert("도서를 선택해주세요.");
-                                return;
-                            }
-
-                        });
-
-                        document.addEventListener("DOMContentLoaded", () => {
-                            const toggles = document.querySelectorAll("#categoryTree .toggle");
-
-                            toggles.forEach(span => {
-                                const li = span.closest("li");
-                                const childUl = li.querySelector("ul");
-
-                                if (!childUl) {
-                                    span.textContent = "🔹"; // 자식이 없는 경우
-                                } else {
-                                    span.textContent = "📂"; // 처음에 다 열어서 보여줌
-                                    // childUl.style.display = "none"; // 기본은 닫힌 상태
-                                }
-                            });
-                        });
-
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const radios = document.querySelectorAll("input[name='couponType']");
-                            const categoryRow = document.getElementById("categoryRow")
-                            const categoryRow2 = document.getElementById("categoryRow2");
-                            const productRow = document.getElementById("productRow");
-                            const productRow2 = document.getElementById("productRow2");
-
-
-                            function updateVisibility(value) {
-                                categoryRow.classList.toggle("hidden", value !== "category");
-                                categoryRow2.classList.toggle("hidden", value !== "category");
-                                productRow.classList.toggle("hidden", value !== "product");
-                                productRow2.classList.toggle("hidden", value !== "product");
-                            }
-
-                            updateVisibility(document.querySelector("input[name='couponType']:checked").value);
-
-                            radios.forEach(radio => {
-                                radio.addEventListener("change", function () {
-                                    updateVisibility(this.value);
-                                });
-                            });
-                        });
-
-                        function toggleClick(element) {
-                            const parentLi = element.closest("li");
-                            const childUl = parentLi.querySelector("ul");
-
-                            if (childUl) {
-                                const isVisible = childUl.style.display !== "none";
-                                childUl.style.display = isVisible ? "none" : "block";
-                                element.textContent = isVisible ? "📁" : "📂"; // 닫힘이면 📁, 열림이면 📂
-                            }
-                        }
-                    </script>
-
-
-                    <style>
-                        .hidden {
-                            display: none;
-                        }
-
-                        select[multiple] {
-                            height: 300px;
-                        }
-
-                        table th {
-                            white-space: nowrap;
-                            vertical-align: top;
-                            text-align: left;
-                        }
-                    </style>
-
-                </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-sm" style="background-color: #666; color: #fff; font-weight: 600; width: 120px;">
+                            쿠폰 등록
+                        </button>
+                    </div>
+                </form>
             </div>
-
         </div>
+
+        <!-- 모달 -->
+        <div id="productSearchModal" class="modal">
+            <div class="modal-content">
+                <span id="closeModalBtn" class="close">&times;</span>
+                <h2>도서 검색</h2>
+
+                <!-- 검색 폼 -->
+                <form id="searchForm" method="get" action="/admin/settings/coupons/register">
+                    <input type="text" name="keyword" required placeholder="검색어를 입력하세요" />
+                    <input type="hidden" name="couponType" value="product" />
+                    <button type="submit">검색</button>
+                </form>
+
+            </div>
+        </div>
+
+
+        <!-- 스크립트 -->
+        <script>
+            // 모달 열고 닫기
+            const modal = document.getElementById('productSearchModal');
+            const openBtn = document.getElementById('openModalBtn');
+            const closeBtn = document.getElementById('closeModalBtn');
+            openBtn.addEventListener('click', () => {
+                modal.style.display = 'block';
+            });
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+
+
+            // 카테고리 트리 토글 (원본 유지)
+            function toggleClick(elem) {
+                const ul = elem.closest('li').querySelector('ul');
+                if (ul) {
+                    ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
+                }
+            }
+
+            // 쿠폰 종류에 따라 영역 보이기/숨기기
+            const couponTypeRadios = document.querySelectorAll('input[name="couponType"]');
+            const categoryRow = document.getElementById('categoryRow');
+            const categoryRow2 = document.getElementById('categoryRow2');
+            const productRowSearch = document.getElementById('productRowSearch');
+            const productRow = document.getElementById('productRow');
+            const productRow2 = document.getElementById('productRow2');
+
+            function updateCouponTypeView() {
+                const selected = document.querySelector('input[name="couponType"]:checked').value;
+                if (selected === 'total') {
+                    categoryRow.classList.add('hidden');
+                    categoryRow2.classList.add('hidden');
+                    productRowSearch.classList.add('hidden');
+                    productRow.classList.add('hidden');
+                    productRow2.classList.add('hidden');
+                } else if (selected === 'category') {
+                    categoryRow.classList.remove('hidden');
+                    categoryRow2.classList.remove('hidden');
+                    productRowSearch.classList.add('hidden');
+                    productRow.classList.add('hidden');
+                    productRow2.classList.add('hidden');
+                } else if (selected === 'product') {
+                    categoryRow.classList.add('hidden');
+                    categoryRow2.classList.add('hidden');
+                    productRowSearch.classList.remove('hidden');
+                    productRow.classList.remove('hidden');
+                    productRow2.classList.remove('hidden');
+                }
+            }
+
+            couponTypeRadios.forEach(radio => {
+                radio.addEventListener('change', updateCouponTypeView);
+            });
+
+            updateCouponTypeView();
+
+            // 카테고리 선택
+            function selectCategory(button) {
+                const id = button.getAttribute('data-id');
+                const name = button.getAttribute('data-name');
+
+                document.getElementById('selectedCategoryId').value = id;
+                document.getElementById('selectedCategoryName').innerText = name;
+            }
+
+            // 도서 선택
+            function selectProduct(button) {
+                const id = button.getAttribute('data-id');
+                const name = button.getAttribute('data-name');
+
+                document.getElementById('selectedProductId').value = id;
+                document.getElementById('selectedProductName').innerText = name;
+            }
+
+            // 폼 제출 시 검증
+            document.querySelector('form').addEventListener('submit', function(event) {
+                const couponType = document.querySelector('input[name="couponType"]:checked').value;
+                if (couponType === 'category') {
+                    if (!document.getElementById('selectedCategoryId').value) {
+                        alert('카테고리를 선택하세요.');
+                        event.preventDefault();
+                        return false;
+                    }
+                } else if (couponType === 'product') {
+                    if (!document.getElementById('selectedProductId').value) {
+                        alert('도서를 선택하세요.');
+                        event.preventDefault();
+                        return false;
+                    }
+                }
+            });
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const toggles = document.querySelectorAll("#categoryTree .toggle");
+
+                toggles.forEach(span => {
+                    const li = span.closest("li");
+                    const childUl = li.querySelector("ul");
+
+                    if (!childUl) {
+                        span.textContent = "🔹";
+                    } else {
+                        span.textContent = "📂";
+                    }
+                });
+            });
+        </script>
     </section>
 </div>
 </body>

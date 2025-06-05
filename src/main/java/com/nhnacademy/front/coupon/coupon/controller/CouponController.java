@@ -29,13 +29,16 @@ import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 import com.nhnacademy.front.coupon.coupon.service.CouponService;
 import com.nhnacademy.front.coupon.couponpolicy.model.dto.response.ResponseCouponPolicyDTO;
 import com.nhnacademy.front.coupon.couponpolicy.service.CouponPolicyService;
+import com.nhnacademy.front.elasticsearch.service.ProductSearchService;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.service.ProductAdminService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/settings/coupons")
@@ -45,6 +48,7 @@ public class CouponController {
 	private final CouponPolicyService couponPolicyServiceImpl;
 	private final AdminCategoryService adminCategoryService;
 	private final ProductAdminService productAdminService;
+	private final ProductSearchService productSearchService;
 
 	/**
 	 * 관리자 쿠폰 생성 뷰
@@ -52,14 +56,22 @@ public class CouponController {
 	@JwtTokenCheck
 	@GetMapping("/register")
 	public String createCouponForm(@PageableDefault Pageable pageable,
-		@RequestParam(value = "couponType", required = false) String couponType, Model model) {
+		@RequestParam(value = "couponType", required = false) String couponType,
+		@RequestParam(value = "keyword", required = false) String keyword, Model model) {
+		log.info("keyword : {}", keyword);
 		Pageable pageable_fix = PageRequest.of(0, Integer.MAX_VALUE);
 		PageResponse<ResponseCouponPolicyDTO> couponPolicyDTO = couponPolicyServiceImpl.getCouponPolicies(pageable_fix);
 		Page<ResponseCouponPolicyDTO> couponPolicies = PageResponseConverter.toPage(couponPolicyDTO);
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
+
 		PageResponse<ResponseProductReadDTO> productDTO = productAdminService.getProducts(pageable);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(productDTO);
+		if(keyword != null) {
+			PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword, null);
+			products = PageResponseConverter.toPage(response);
+			log.info(String.valueOf(products.getTotalElements()));
+		}
 
 		if (couponType == null) {
 			couponType = "total";
@@ -120,4 +132,16 @@ public class CouponController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+	/**
+	 * 도서 쿠폰 등록할때 도서 검색 결과 리스트
+	 */
+	@JwtTokenCheck
+	@GetMapping("/books/search")
+	public ResponseEntity<Page<ResponseProductReadDTO>> getProductsBySearch(@RequestParam String keyword) {
+		Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
+		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword,
+			null);
+		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
+		return ResponseEntity.ok(products);
+	}
 }
