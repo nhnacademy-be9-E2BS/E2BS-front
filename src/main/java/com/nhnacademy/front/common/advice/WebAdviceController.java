@@ -35,23 +35,28 @@ import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.account.memberrank.exception.NotFoundMemberRankException;
 import com.nhnacademy.front.account.oauth.exception.PaycoProcessingException;
 import com.nhnacademy.front.cart.exception.CartProcessException;
-import com.nhnacademy.front.common.exception.EmptyRequestException;
-import com.nhnacademy.front.common.exception.EmptyResponseException;
-import com.nhnacademy.front.common.exception.LoginRedirectException;
-import com.nhnacademy.front.common.exception.ServerErrorException;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.EmptyRequestException;
+import com.nhnacademy.front.common.error.exception.EmptyResponseException;
+import com.nhnacademy.front.common.error.exception.LoginRedirectException;
+import com.nhnacademy.front.common.error.exception.ServerErrorException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.product.like.exception.LikeProcessException;
 import com.nhnacademy.front.review.exception.ReviewProcessException;
 
-@ControllerAdvice
-public class WebAdviceController {
+import lombok.RequiredArgsConstructor;
 
-	@ExceptionHandler(LoginRedirectException.class)
-	public ModelAndView handleLoginRedirect(LoginRedirectException ex) {
-		ModelAndView modelAndView = new ModelAndView("redirect:/login");
-		modelAndView.addObject("error", ex.getMessage());
-		return modelAndView;
-	}
+@ControllerAdvice
+@RequiredArgsConstructor
+public class WebAdviceController {
+	private final ErrorMessageLoader errorMessageLoader;
+
+	// @ExceptionHandler(LoginRedirectException.class)
+	// public ModelAndView handleLoginRedirect(LoginRedirectException ex) {
+	// 	ModelAndView modelAndView = new ModelAndView("redirect:/login");
+	// 	modelAndView.addObject("error", ex.getMessage());
+	// 	return modelAndView;
+	// }
 
 	// 잘못된 요청 에러
 	@ExceptionHandler({RegisterNotEqualsPasswordException.class, GetAddressFailedException.class,
@@ -89,6 +94,17 @@ public class WebAdviceController {
 	@ExceptionHandler({CustomerLoginCheckException.class})
 	public ResponseEntity<String> authException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+	}
+
+	@ExceptionHandler({LoginRedirectException.class})
+	public ModelAndView systemException500() {
+		String code = "F500";
+		String errorMessage = errorMessageLoader.getMessage(code);
+
+		ModelAndView modelAndView = new ModelAndView("redirect:/error/500");
+		modelAndView.addObject("errorMessage", errorMessage);
+
+		return modelAndView;
 	}
 
 }

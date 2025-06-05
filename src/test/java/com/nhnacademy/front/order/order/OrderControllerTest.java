@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.account.address.service.AddressService;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;

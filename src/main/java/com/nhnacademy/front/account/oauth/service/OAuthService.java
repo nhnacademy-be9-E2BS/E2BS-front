@@ -17,7 +17,7 @@ import com.nhnacademy.front.account.oauth.model.dto.request.RequestOAuthRegister
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponseCheckOAuthIdDTO;
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponsePaycoMemberInfoDTO;
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponseProviderPaycoAccessTokenDTO;
-import com.nhnacademy.front.common.exception.ServerErrorException;
+import com.nhnacademy.front.common.error.exception.ServerErrorException;
 
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;

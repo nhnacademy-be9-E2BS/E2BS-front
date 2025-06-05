@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.coupon.coupon.model.dto.request.RequestCouponDTO;
@@ -77,7 +77,7 @@ public class CouponController {
 	@JwtTokenCheck
 	@PostMapping("/register")
 	public String createCoupon(@Validated @ModelAttribute RequestCouponDTO request, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		couponServiceImpl.createCoupon(request);

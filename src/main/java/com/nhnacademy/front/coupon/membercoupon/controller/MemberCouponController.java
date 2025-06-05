@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
@@ -54,7 +54,7 @@ public class MemberCouponController {
 	@JwtTokenCheck
 	@PostMapping("/admin/settings/memberCoupons/issue")
 	public String postMemberCoupons(@Validated RequestAllMemberCouponDTO request, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		memberCouponService.issueCouponToAllMember(request);
@@ -73,7 +73,8 @@ public class MemberCouponController {
 			throw new JwtException("JWT token is null");
 		}
 
-		PageResponse<ResponseMemberCouponDTO> response = memberCouponService.getMemberCouponsByMemberId(memberId, pageable);
+		PageResponse<ResponseMemberCouponDTO> response = memberCouponService.getMemberCouponsByMemberId(memberId,
+			pageable);
 		Page<ResponseMemberCouponDTO> memberCoupons = PageResponseConverter.toPage(response);
 
 		model.addAttribute("memberCoupons", memberCoupons);

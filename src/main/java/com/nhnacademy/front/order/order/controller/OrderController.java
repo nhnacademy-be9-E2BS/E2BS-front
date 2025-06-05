@@ -36,7 +36,7 @@ import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfo
 import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrderCouponDTO;
@@ -114,10 +114,15 @@ public class OrderController {
 		ResponseMemberInfoDTO member = memberMypageService.getMemberInfo(request);
 		long memberPoint = memberMypageService.getMemberPoint(new RequestMemberIdDTO(member.getMemberId()));
 		List<ResponseMemberAddressDTO> addresses = addressService.getMemberAddresses(member.getMemberId());
-		ResponseMemberAddressDTO defaultAddress = addresses.stream().filter(addr -> addr.isAddressDefault()).findFirst().orElse(null);
+		ResponseMemberAddressDTO defaultAddress = addresses.stream()
+			.filter(addr -> addr.isAddressDefault())
+			.findFirst()
+			.orElse(null);
 
-		List<ResponseOrderCouponDTO> coupons = memberCouponService.getCouponsInOrder(member.getMemberId(),orderRequest.getProductIds());
-		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(orderRequest.getProductIds());
+		List<ResponseOrderCouponDTO> coupons = memberCouponService.getCouponsInOrder(member.getMemberId(),
+			orderRequest.getProductIds());
+		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(
+			orderRequest.getProductIds());
 		Map<Long, List<Long>> productCategoryMap = new HashMap<>();
 		for (ResponseCategoryIdsDTO dto : categories) {
 			productCategoryMap.put(dto.getProductId(), dto.getCategoryIds());
@@ -143,13 +148,16 @@ public class OrderController {
 	 * 비회원 가입 또는 로그인시 선택한 장바구니 항목들에 대한 결제 주문서 작성 페이지
 	 */
 	@PostMapping("/customers/order")
-	public String getCheckOutCustomerCart(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest, HttpServletResponse response) {
+	public String getCheckOutCustomerCart(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest,
+		HttpServletResponse response) {
 		// 회원 결제에서 쿠폰, 포인트, 주소만 제외
 		List<Integer> quantities = orderRequest.getRequestCartOrder().getCartQuantities();
-		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getRequestCartOrder().getProductIds());
+		List<ResponseProductReadDTO> products = productService.getProducts(
+			orderRequest.getRequestCartOrder().getProductIds());
 		List<ResponseWrapperDTO> wrappers = wrapperService.getWrappersBySaleable(Pageable.unpaged()).getContent();
-		
-		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(orderRequest.getRequestCartOrder().getProductIds());
+
+		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(
+			orderRequest.getRequestCartOrder().getProductIds());
 		Map<Long, List<Long>> productCategoryMap = new HashMap<>();
 		for (ResponseCategoryIdsDTO dto : categories) {
 			productCategoryMap.put(dto.getProductId(), dto.getCategoryIds());
@@ -320,7 +328,7 @@ public class OrderController {
 	}
 
 	@GetMapping("/mypage/return")
-	public String getReturnOrders(Model model, HttpServletRequest request ,Pageable pageable) {
+	public String getReturnOrders(Model model, HttpServletRequest request, Pageable pageable) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 
 		ResponseEntity<PageResponse<ResponseOrderReturnDTO>> response =

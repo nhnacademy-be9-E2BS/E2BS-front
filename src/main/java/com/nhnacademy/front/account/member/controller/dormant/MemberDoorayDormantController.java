@@ -15,7 +15,7 @@ import com.nhnacademy.front.account.member.exception.DormantProcessingException;
 import com.nhnacademy.front.account.member.model.dto.request.RequestDoorayAuthenticationDTO;
 import com.nhnacademy.front.account.member.model.dto.request.RequestDormantDoorayNumberDTO;
 import com.nhnacademy.front.account.member.service.MemberDormantService;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

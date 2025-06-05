@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.pointpolicy.model.domain.PointPolicyType;
 import com.nhnacademy.front.pointpolicy.model.dto.request.RequestPointPolicyRegisterDTO;
 import com.nhnacademy.front.pointpolicy.model.dto.request.RequestPointPolicyUpdateDTO;
@@ -64,8 +64,9 @@ public class PointPolicyController {
 	 */
 	@JwtTokenCheck
 	@PostMapping("/admin/settings/pointPolicies/register")
-	public String createPointPolicies(@Validated @ModelAttribute RequestPointPolicyRegisterDTO request, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+	public String createPointPolicies(@Validated @ModelAttribute RequestPointPolicyRegisterDTO request,
+		BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		pointPolicyService.createPointPolicy(request);
@@ -86,7 +87,7 @@ public class PointPolicyController {
 	public ResponseEntity<Void> updatePointPolicy(@PathVariable("pointPolicyId") Long pointPolicyId,
 		@Validated @ModelAttribute RequestPointPolicyUpdateDTO request,
 		BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		pointPolicyService.updatePointPolicy(pointPolicyId, request);

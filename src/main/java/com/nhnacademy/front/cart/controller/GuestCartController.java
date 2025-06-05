@@ -21,7 +21,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartItemsForGues
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForGuestDTO;
 import com.nhnacademy.front.cart.service.GuestCartService;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.util.GuestCookieUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,13 +36,13 @@ public class GuestCartController {
 
 	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
 
-
 	/**
 	 * 게스트 장바구니 항목 추가
 	 */
 	@PostMapping("/guests/carts/items")
-	public ResponseEntity<Integer> guestAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult,
-		                                          HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Integer> guestAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto,
+		BindingResult bindingResult,
+		HttpServletRequest request, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -89,8 +89,9 @@ public class GuestCartController {
 	 * 게스트 장바구니 항목 수량 변경
 	 */
 	@PutMapping("/guests/carts/items")
-	public ResponseEntity<Integer> updateCartItemForGuest(@Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult,
-		                                               HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Integer> updateCartItemForGuest(@Validated @RequestBody RequestUpdateCartItemsDTO requestDto,
+		BindingResult bindingResult,
+		HttpServletRequest request, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -113,8 +114,9 @@ public class GuestCartController {
 	 * 게스트 장바구니 항목 삭제
 	 */
 	@DeleteMapping("/guests/carts/items")
-	public ResponseEntity<Integer> deleteCartItemForGuest(@Validated @RequestBody RequestDeleteCartItemsForGuestDTO requestDto, BindingResult bindingResult,
-		                                               HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Integer> deleteCartItemForGuest(
+		@Validated @RequestBody RequestDeleteCartItemsForGuestDTO requestDto, BindingResult bindingResult,
+		HttpServletRequest request, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -129,9 +131,9 @@ public class GuestCartController {
 		guestCartService.deleteCartItemForGuest(requestDto);
 
 		Integer cartItemsCounts = (Integer)request.getSession().getAttribute(CART_ITEMS_COUNTS);
-		request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts-1);
+		request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts - 1);
 
-		return ResponseEntity.ok(cartItemsCounts-1);
+		return ResponseEntity.ok(cartItemsCounts - 1);
 	}
 
 	/**
