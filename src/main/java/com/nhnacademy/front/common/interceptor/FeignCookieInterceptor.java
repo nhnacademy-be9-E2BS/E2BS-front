@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.nhnacademy.front.common.exception.LoginRedirectException;
+import com.nhnacademy.front.common.error.exception.LoginRedirectException;
 import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.jwt.rule.JwtRule;
 

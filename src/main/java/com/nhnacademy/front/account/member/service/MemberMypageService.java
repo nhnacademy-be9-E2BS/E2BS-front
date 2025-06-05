@@ -17,7 +17,7 @@ import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfo
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberPointDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMypageMemberCouponDTO;
 import com.nhnacademy.front.account.memberrank.model.domain.RankName;
-import com.nhnacademy.front.common.exception.EmptyResponseException;
+import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.jwt.rule.JwtRule;
 

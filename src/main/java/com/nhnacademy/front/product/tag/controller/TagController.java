@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
@@ -85,7 +85,8 @@ public class TagController {
 	 */
 	@JwtTokenCheck
 	@DeleteMapping("/{tagId}")
-	public ResponseEntity<Void> deleteTag(@PathVariable Long tagId, @Validated @RequestBody RequestTagDTO requestTagDTO) {
+	public ResponseEntity<Void> deleteTag(@PathVariable Long tagId,
+		@Validated @RequestBody RequestTagDTO requestTagDTO) {
 		tagService.deleteTag(tagId, requestTagDTO);
 
 		return ResponseEntity.ok().build();

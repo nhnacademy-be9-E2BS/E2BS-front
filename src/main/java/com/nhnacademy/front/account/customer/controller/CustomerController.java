@@ -20,7 +20,7 @@ import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomer
 import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerRegisterDTO;
 import com.nhnacademy.front.account.customer.service.CustomerService;
 import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,7 +38,6 @@ public class CustomerController {
 		return "member/login/customer-login";
 	}
 
-
 	/// 비회원 주문 전 인증 폼
 	@GetMapping("/order/auth")
 	public String guestAuthForm() {
@@ -47,8 +46,9 @@ public class CustomerController {
 
 	/// 비회원 인증 폼으로 이동 전에 세션에 주문할 장바구니 항목을 저장하기 위한 요청
 	@PostMapping("/order/auth")
-	public ResponseEntity<Void> redirectGuestAuth(@RequestBody RequestCartOrderDTO requestCartOrderDTO, BindingResult bindingResult,
-		                                          HttpServletResponse response) throws JsonProcessingException {
+	public ResponseEntity<Void> redirectGuestAuth(@RequestBody RequestCartOrderDTO requestCartOrderDTO,
+		BindingResult bindingResult,
+		HttpServletResponse response) throws JsonProcessingException {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -73,7 +73,8 @@ public class CustomerController {
 	/// 비회원 가입 요청
 	@PostMapping("/customers/register")
 	public ResponseEntity<ResponseCustomerRegisterDTO> register(@CookieValue(name = "orderCart") String encodedCart,
-		                                                        @Validated @RequestBody RequestCustomerRegisterDTO requestCustomerRegisterDTO, BindingResult bindingResult) throws JsonProcessingException {
+		@Validated @RequestBody RequestCustomerRegisterDTO requestCustomerRegisterDTO,
+		BindingResult bindingResult) throws JsonProcessingException {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -83,14 +84,16 @@ public class CustomerController {
 		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
 		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
 
-		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(), customer.getCustomerId(), requestCartOrderDTO);
+		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(),
+			customer.getCustomerId(), requestCartOrderDTO);
 		return ResponseEntity.ok(response);
 	}
 
 	// 주문 시 비회원 로그인 요청
 	@PostMapping("/customers/login")
 	public ResponseEntity<ResponseCustomerRegisterDTO> login(@CookieValue(name = "orderCart") String encodedCart,
-		                                                     @Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO, BindingResult bindingResult) throws JsonProcessingException {
+		@Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO, BindingResult bindingResult) throws
+		JsonProcessingException {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -100,7 +103,8 @@ public class CustomerController {
 		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
 		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
 
-		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(), customer.getCustomerId(), requestCartOrderDTO);
+		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(),
+			customer.getCustomerId(), requestCartOrderDTO);
 		return ResponseEntity.ok(response);
 	}
 
