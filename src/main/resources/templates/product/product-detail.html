@@ -418,7 +418,7 @@
 								<h4>리뷰 작성</h4>
 
 								<form th:action="@{/reviews}" method="POST" enctype="multipart/form-data" class="form-contact form-review mt-3">
-									<input type="hidden" name="productId" value="1" />
+									<input type="hidden" name="productId" th:value="${product.productId}" />
 
 									<div class="form-group">
 										<p>평점:</p>

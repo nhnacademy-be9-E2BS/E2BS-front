@@ -36,6 +36,7 @@ import com.nhnacademy.front.account.pointhistory.exception.PointHistoryGetExcept
 import com.nhnacademy.front.cart.exception.CartProcessException;
 import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 import com.nhnacademy.front.common.error.exception.LoginRedirectException;
+import com.nhnacademy.front.common.error.exception.NotMatchedLoginPasswordException;
 import com.nhnacademy.front.common.error.exception.ServerErrorException;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
@@ -96,7 +97,6 @@ public class WebAdviceController {
 		DormantProcessingException.class, NotFoundMemberRankNameException.class, NotFoundMemberInfoException.class,
 		RegisterProcessException.class, GetMemberStateFailedException.class, PaycoProcessingException.class,
 		PointHistoryGetException.class
-
 	})
 	public ModelAndView systemException500() {
 		String code = "F500";
@@ -108,7 +108,7 @@ public class WebAdviceController {
 		return modelAndView;
 	}
 
-	@ExceptionHandler({LoginProcessException.class})
+	@ExceptionHandler({LoginProcessException.class, NotMatchedLoginPasswordException.class})
 	public ModelAndView memberLoginException() {
 		String code = "M403";
 		String errorMessage = errorMessageLoader.getMessage(code);

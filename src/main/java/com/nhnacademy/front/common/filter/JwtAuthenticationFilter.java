@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.nhnacademy.front.account.auth.model.dto.request.RequestJwtTokenDTO;
 import com.nhnacademy.front.account.auth.service.AuthService;
 import com.nhnacademy.front.account.member.service.MemberService;
-import com.nhnacademy.front.common.error.exception.LoginRedirectException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -96,6 +95,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) throws IOException, ServletException {
 
-		throw new LoginRedirectException();
+		String errorMessage = URLEncoder.encode("아이디 또는 비밀번호가 일치하지 않습니다.", StandardCharsets.UTF_8);
+		response.sendRedirect("/login?error=" + errorMessage);
+
 	}
 }

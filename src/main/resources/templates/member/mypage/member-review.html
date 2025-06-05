@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mypage-layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .content {
+            width: 100%;
+        }
+
+        .book-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .book-card {
+            display: flex;
+            align-items: stretch;
+            background: #f5fae6;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            margin-bottom: 24px;
+            padding: 20px 28px;
+            min-height: 150px;
+        }
+
+        .book-image {
+            width: 110px;
+            min-width: 110px;
+            margin-right: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #d3e0f0;
+            background: #fff;
+        }
+
+        .book-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .book-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #235;
+        }
+
+        .book-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            font-size: 1em;
+            color: #444;
+        }
+
+        .book-actions {
+            display: flex;
+            align-items: flex-start;
+            margin-left: 30px;
+        }
+
+        .book-actions a {
+            background: #2582e6;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background 0.2s;
+        }
+
+        .book-actions a:hover {
+            background: #1a5fa3;
+        }
+
+        /* 채운 별의 색상은 노란색으로 설정 */
+        .fa-star.filled {
+            color: gold;
+            transition: color 0.2s ease;
+        }
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content">
+        <h2>리뷰 내역</h2>
+        <ul class="book-list">
+            <li class="book-card" th:each="review, stat : ${reviewsByMember.content}">
+                <!-- 이미지 -->
+                <div class="book-image"
+                     th:if="${!#strings.isEmpty(review.productThumbnail)}">
+                    <a th:href="@{/books/{productId}(productId=${review.productId})}" class="image-link">
+                        <img th:src="${review.productThumbnail}"
+                             th:alt="${review.productTitle} + ' 표지 이미지'"
+                             th:id="${'image-' + stat.index}"
+                             onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+                    </a>
+                </div>
+
+                <!-- 정보 -->
+                <div class="book-info">
+                    <div class="book-title" th:text="${review.productTitle}">도서 제목</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="d-flex">
+                            <i class="fa fa-star filled"
+                               th:each="i : ${#numbers.sequence(1, review.reviewGrade)}"></i>
+                        </div>
+                        <p class="mb-0 text-muted" th:text="${#temporals.format(review.reviewCreatedAt, 'yy-MM-dd')}">날짜</p>
+                    </div>
+
+                    <div class="book-meta">
+                        <div th:if="${!#strings.isEmpty(review.reviewImage)}"
+                             th:id="${'image-' + stat.index}">
+                            <img th:src="${review.reviewImage}" alt="리뷰 이미지" style="max-width: 150px; height: 200px;"
+                                 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+                        </div>
+
+                        <div>
+                            <p th:id="${'text-' + stat.index}" th:text="${review.reviewContent}"></p>
+                        </div>
+
+                        <!-- 리뷰 수정 폼 (기본은 숨김) stat은 타임리프에서 제공하는 현재 반복 상태 정보를 담는 객체 -->
+                        <div th:id="${'edit-form-' + stat.index}" style="display: none;">
+                            <form>
+                                <input type="hidden" name="reviewId" th:value="${review.reviewId}">
+                                <textarea name="reviewContent" class="form-control mb-2" rows="3"
+                                          th:text="${review.reviewContent}"></textarea>
+
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="updateImage" name="reviewImage">
+                                    <label class="custom-file-label" for="updateImage">수정할 파일을 선택하세요</label>
+                                </div>
+
+                                <!-- 이미지 미리보기 영역 -->
+                                <div class="preview-container mb-2">
+                                    <img id="update-imagePreview" src="#" alt="이미지 미리보기" style="display:none; max-width: 350px;" />
+                                </div>
+
+                                <button type="button" class="btn btn-success btn-sm"
+                                        th:onclick="|submitReviewUpdate('${review.reviewId}', '${stat.index}')|">
+                                    저장
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                        th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">취소</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book-actions">
+                    <button class="btn btn-primary"
+                            th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">
+                        <i class="bi bi-pencil-square"></i> 수정
+                    </button>
+                </div>
+            </li>
+        </ul>
+
+        <!-- 페이지네이션 -->
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <nav aria-label="페이지 이동">
+                    <ul class="pagination pagination-sm" th:if="${reviewsByMember.totalPages > 0}">
+                        <!-- 처음 버튼 -->
+                        <li class="page-item" th:classappend="${!reviewsByMember.hasPrevious()} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/mypage/reviews(page=0, size=${reviewsByMember.size})}" tabindex="-1"><<</a>
+                        </li>
+                        <!-- 전체 페이지 번호 출력 -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(0, reviewsByMember.totalPages - 1)}"
+                            th:classappend="${i == reviewsByMember.number} ? 'active' : ''">
+                            <a class="page-link"
+                               th:href="@{/mypage/reviews(page=${i}, size=${reviewsByMember.size})}"
+                               th:text="${i + 1}">1</a>
+                        </li>
+                        <!-- 마지막 버튼 -->
+                        <li class="page-item" th:classappend="${!reviewsByMember.hasNext()} ? 'disabled' : ''">
+                            <a class="page-link"
+                               th:href="@{/mypage/reviews(page=${reviewsByMember.totalPages - 1}, size=${reviewsByMember.size})}">>></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/review/review-update.js}"></script>
+</div>
+</body>
+</html>
