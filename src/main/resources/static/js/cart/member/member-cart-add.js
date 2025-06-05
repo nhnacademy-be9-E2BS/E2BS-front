@@ -27,6 +27,13 @@ $(document).ready(function () {
                 // }
             },
             success: function (response) {
+                console.log(typeof response);
+                console.log(response);
+
+                $('.nav-shop__circle')
+                    .text(response)
+                    .css('display', response > 0 ? 'inline-block' : 'none');
+
                 // 모달 표시
                 const modal = new bootstrap.Modal(document.getElementById('cartConfirmModal'));
                 modal.show();

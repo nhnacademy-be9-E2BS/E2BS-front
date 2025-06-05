@@ -3,58 +3,144 @@
       layout:decorate="~{layouts/admin-layout}">
 <body>
 <div layout:fragment="content">
-    <h3>회원 관리</h3>
     <section>
         <div class="container" style="padding: 20px;">
             <style>
                 table {
                     width: 100%;
                     border-collapse: collapse;
-                    margin-top: 30px;
-                }
-
-                th, td {
-                    border-bottom: 1px solid #e0e0e0;
-                    padding: 12px 16px;
-                    text-align: center;
+                    margin-top: 20px;
+                    font-family: 'Segoe UI', sans-serif;
+                    font-size: 14px;
+                    background-color: #fff;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
                 }
 
                 th {
-                    background-color: #f8f9fa;
-                    font-weight: bold;
-                    color: #333;
+                    background-color: #3f51b5;
+                    color: white;
+                    font-weight: 600;
+                    padding: 14px;
+                    text-align: center;
+                }
+
+                td {
+                    padding: 14px;
+                    text-align: center;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+
+                tr:last-child td {
+                    border-bottom: none;
                 }
 
                 tr:hover {
-                    background-color: #f1f1f1;
-                }
-
-                .btn {
-                    padding: 6px 12px;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 0.9rem;
-                }
-
-                .btn-danger {
-                    background-color: #dc3545;
-                    color: white;
-                }
-
-                .btn-success {
-                    background-color: #28a745;
-                    color: white;
-                }
-
-                .btn-secondary {
-                    background-color: #6c757d;
-                    color: white;
+                    background-color: #f9f9f9;
                 }
 
                 select {
-                    padding: 6px;
+                    padding: 6px 10px;
+                    border: 1px solid #ccc;
                     border-radius: 6px;
+                    font-size: 13px;
+                }
+
+                /* 버튼 기본 스타일 */
+                .btn {
+                    padding: 8px 16px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 13px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.2s ease-in-out;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+
+                /* 삭제 버튼 */
+                .btn-danger {
+                    background: linear-gradient(45deg, #f44336, #e53935);
+                    color: white;
+                }
+
+                .btn-danger:hover {
+                    background: linear-gradient(45deg, #d32f2f, #c62828);
+                    transform: scale(1.05);
+                }
+
+                /* 관리자 권한 부여 */
+                .btn-success {
+                    background: linear-gradient(45deg, #4caf50, #43a047);
+                    color: white;
+                }
+
+                .btn-success:hover {
+                    background: linear-gradient(45deg, #388e3c, #2e7d32);
+                    transform: scale(1.05);
+                }
+
+                /* 관리자 권한 제거 */
+                .btn-secondary {
+                    background: linear-gradient(45deg, #607d8b, #546e7a);
+                    color: white;
+                }
+
+                .btn-secondary:hover {
+                    background: linear-gradient(45deg, #455a64, #37474f);
+                    transform: scale(1.05);
+                }
+
+                /* 선택박스 */
+                select {
+                    padding: 6px 12px;
+                    border: 1px solid #bbb;
+                    border-radius: 6px;
+                    font-size: 13px;
+                    background-color: #fafafa;
+                    transition: box-shadow 0.2s ease-in-out;
+                }
+
+                select:focus {
+                    outline: none;
+                    box-shadow: 0 0 0 2px #3f51b540;
+                }
+
+
+                .pagination {
+                    display: flex;
+                    list-style: none;
+                    padding: 0;
+                    margin-top: 30px;
+                }
+
+                .page-item {
+                    margin: 0 4px;
+                }
+
+                .page-link {
+                    display: block;
+                    padding: 8px 14px;
+                    border-radius: 6px;
+                    background-color: #f1f1f1;
+                    color: #333;
+                    text-decoration: none;
+                }
+
+                .page-item.active .page-link {
+                    background-color: #3f51b5;
+                    color: white;
+                    font-weight: 600;
+                }
+
+                .page-item.disabled .page-link {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+
+                h2 {
+                    font-family: 'Segoe UI', sans-serif;
                 }
             </style>
 
@@ -83,28 +169,27 @@
                               method="post">
                             <select name="memberStateName" onchange="this.form.submit()">
                                 <option value="ACTIVE"
-                                        th:selected="${member.memberState.getMemberStateName().name() == 'ACTIVE'}">활성
+                                        th:selected="${member.memberState.memberStateName.name() == 'ACTIVE'}">활성
                                 </option>
                                 <option value="DORMANT"
-                                        th:selected="${member.memberState.getMemberStateName().name() == 'DORMANT'}">휴면
+                                        th:selected="${member.memberState.memberStateName.name() == 'DORMANT'}">휴면
                                 </option>
                                 <option value="WITHDRAW"
-                                        th:selected="${member.memberState.getMemberStateName().name() == 'WITHDRAW'}">탈퇴
+                                        th:selected="${member.memberState.memberStateName.name() == 'WITHDRAW'}">탈퇴
                                 </option>
                             </select>
                         </form>
                     </td>
 
-                    <!-- 권한 부여 -->
+                    <!-- 권한 변경 -->
                     <td>
                         <form th:action="@{/admin/settings/members/{memberId}(memberId=${member.memberId})}"
                               method="post">
                             <input type="hidden" name="_method" value="put"/>
                             <input type="hidden" name="memberId" th:value="${member.memberId}"/>
-
                             <button type="submit"
                                     th:classappend="${member.memberRole == 'ADMIN'} ? 'btn btn-secondary' : 'btn btn-success'"
-                                    th:text="${member.memberRole == 'ADMIN'} ? '관리자 권한 제거' : '관리자 권한 부여'">
+                                    th:text="${member.memberRole == 'ADMIN'} ? '관리자 제거' : '관리자 부여'">
                             </button>
                         </form>
                     </td>
@@ -124,31 +209,27 @@
             </table>
 
             <!-- 페이징 -->
-            <div class="row">
-                <div class="col-12 d-flex justify-content-center">
-                    <nav>
-                        <ul class="pagination" th:if="${members.totalPages > 0}">
-                            <li class="page-item"
-                                th:classappend="${!members.hasPrevious()} ? 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{'/mypage/pointHistory'(page=0, size=${members.size})}">처음</a>
-                            </li>
+            <div style="display: flex; justify-content: center;">
+                <nav>
+                    <ul class="pagination" th:if="${members.totalPages > 0}">
+                        <li class="page-item" th:classappend="${!members.hasPrevious()} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{'/admin/settings/members'(page=0, size=${members.size})}">처음</a>
+                        </li>
 
-                            <li class="page-item"
-                                th:each="i : ${#numbers.sequence(0, members.totalPages - 1)}"
-                                th:classappend="${i == members.number} ? 'active'">
-                                <a class="page-link"
-                                   th:href="@{'/mypage/pointHistory'(page=${i}, size=${members.size})}"
-                                   th:text="${i + 1}">1</a>
-                            </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, members.totalPages - 1)}"
+                            th:classappend="${i == members.number} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{'/admin/settings/members'(page=${i}, size=${members.size})}"
+                               th:text="${i + 1}">1</a>
+                        </li>
 
-                            <li class="page-item" th:classappend="${!members.hasNext()} ? 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{'/mypage/pointHistory'(page=${members.totalPages - 1}, size=${members.size})}">마지막</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                        <li class="page-item" th:classappend="${!members.hasNext()} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{'/admin/settings/members'(page=${members.totalPages - 1}, size=${members.size})}">마지막</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
 
         </div>

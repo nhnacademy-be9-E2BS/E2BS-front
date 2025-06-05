@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.account.admin.model.dto.request.RequestAdminSettingsMemberStateDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDTO;
+import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
+import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMonthlySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.common.page.PageResponse;
 
@@ -40,5 +42,11 @@ public interface AdminSettingsAdaptor {
 	@GetMapping("/customers")
 	ResponseEntity<PageResponse<ResponseAdminSettingsNonMembersDTO>> getAdminSettingsNonMembers(
 		@SpringQueryMap Pageable pageable);
+
+	@GetMapping("/daily")
+	ResponseEntity<ResponseAdminSettingsDailySummaryDTO> getAdminSettingsDailySummaries();
+
+	@GetMapping("/monthly")
+	ResponseEntity<ResponseAdminSettingsMonthlySummaryDTO> getAdminSettingsMonthlySummaries();
 
 }

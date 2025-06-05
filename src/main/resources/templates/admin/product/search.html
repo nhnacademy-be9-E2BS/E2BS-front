@@ -30,10 +30,10 @@
         <h5>🔥 목록 조회 (베스트셀러 / 신간)</h5>
         <div class="col-md-6">
             <select name="queryType" class="form-select">
-                <option value="ItemNewAll" th:selected="${param.queryType == 'ItemNewAll'}">신간 전체</option>
-                <option value="ItemNewSpecial" th:selected="${param.queryType == 'ItemNewSpecial'}">추천 신간</option>
+                <option value="ItemNewAll" th:selected="${param.queryType == 'ItemNewAll'}">신간</option>
+                <option value="ItemNewSpecial" th:selected="${param.queryType == 'ItemNewSpecial'}">신간스페셜</option>
                 <option value="Bestseller" th:selected="${param.queryType == 'Bestseller'}">베스트셀러</option>
-                <option value="BlogBest" th:selected="${param.queryType == 'BlogBest'}">블로그 인기</option>
+                <option value="BlogBest" th:selected="${param.queryType == 'BlogBest'}">블로그 베스트</option>
             </select>
         </div>
         <div class="col-md-3">

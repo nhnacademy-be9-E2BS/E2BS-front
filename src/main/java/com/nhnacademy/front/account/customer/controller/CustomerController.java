@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.account.customer.model.dto.request.RequestCustomerLoginDTO;
 import com.nhnacademy.front.account.customer.model.dto.request.RequestCustomerRegisterDTO;
+import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerDTO;
 import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerRegisterDTO;
 import com.nhnacademy.front.account.customer.service.CustomerService;
 import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
@@ -77,12 +78,12 @@ public class CustomerController {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		Long customerId = customerService.customerRegister(requestCustomerRegisterDTO);
+		ResponseCustomerDTO customer = customerService.customerRegister(requestCustomerRegisterDTO);
 
 		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
 		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
 
-		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customerId, requestCartOrderDTO);
+		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(), customer.getCustomerId(), requestCartOrderDTO);
 		return ResponseEntity.ok(response);
 	}
 
@@ -94,12 +95,12 @@ public class CustomerController {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		Long customerId = customerService.customerLogin(requestCustomerLoginDTO);
+		ResponseCustomerDTO customer = customerService.customerLogin(requestCustomerLoginDTO);
 
 		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
 		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
 
-		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customerId, requestCartOrderDTO);
+		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(), customer.getCustomerId(), requestCartOrderDTO);
 		return ResponseEntity.ok(response);
 	}
 
