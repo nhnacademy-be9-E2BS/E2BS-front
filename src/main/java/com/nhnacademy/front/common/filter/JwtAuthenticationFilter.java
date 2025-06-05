@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.nhnacademy.front.account.auth.model.dto.request.RequestJwtTokenDTO;
 import com.nhnacademy.front.account.auth.service.AuthService;
 import com.nhnacademy.front.account.member.service.MemberService;
+import com.nhnacademy.front.common.error.exception.LoginRedirectException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -89,5 +90,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		RequestJwtTokenDTO tokenDTO = new RequestJwtTokenDTO(memberId);
 		authService.postAuthCreateJwtToken(tokenDTO, response, request);
 		chain.doFilter(request, response);
+	}
+
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException failed) throws IOException, ServletException {
+
+		throw new LoginRedirectException("");
 	}
 }

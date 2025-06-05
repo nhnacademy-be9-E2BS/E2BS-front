@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.service.MemberCartService;
+import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
@@ -48,6 +49,9 @@ class MemberCartControllerTest {
 
 	@MockitoBean
 	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
+	@MockitoBean
+	private ErrorMessageLoader errorMessageLoader;
 
 	@BeforeEach
 	void setUp() throws Exception {

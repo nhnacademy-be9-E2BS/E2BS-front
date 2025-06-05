@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.nhnacademy.front.account.auth.model.dto.request.RequestJwtTokenDTO;
 import com.nhnacademy.front.account.auth.service.AuthService;
-import com.nhnacademy.front.common.exception.LoginRedirectException;
+import com.nhnacademy.front.common.error.exception.LoginRedirectException;
 import com.nhnacademy.front.jwt.parser.JwtExpParser;
 import com.nhnacademy.front.jwt.parser.JwtMemberIdParser;
 import com.nhnacademy.front.jwt.rule.JwtRule;

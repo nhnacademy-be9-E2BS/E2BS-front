@@ -14,7 +14,7 @@ import com.nhnacademy.front.account.member.model.dto.request.RequestMemberInfoDT
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

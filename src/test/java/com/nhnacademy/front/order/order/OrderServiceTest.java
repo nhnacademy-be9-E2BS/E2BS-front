@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
+import com.nhnacademy.front.order.order.adaptor.OrderMemberAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
@@ -26,6 +27,9 @@ class OrderServiceTest {
 
 	@InjectMocks
 	private OrderService orderService;
+
+	@Mock
+	private OrderMemberAdaptor orderMemberAdaptor;
 
 	@Mock
 	private OrderAdaptor orderAdaptor;
@@ -56,14 +60,14 @@ class OrderServiceTest {
 		ResponseOrderResultDTO responseDTO = new ResponseOrderResultDTO();
 		ResponseEntity<ResponseOrderResultDTO> expectedResponse = ResponseEntity.ok(responseDTO);
 
-		when(orderAdaptor.postPointCreateOrder(request)).thenReturn(expectedResponse);
+		when(orderMemberAdaptor.postPointCreateOrder(request)).thenReturn(expectedResponse);
 
 		// when
 		ResponseEntity<ResponseOrderResultDTO> actualResponse = orderService.createPointOrder(request);
 
 		// then
 		assertEquals(expectedResponse, actualResponse);
-		verify(orderAdaptor).postPointCreateOrder(request);
+		verify(orderMemberAdaptor).postPointCreateOrder(request);
 	}
 
 	@Test
@@ -127,11 +131,11 @@ class OrderServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		ResponseEntity<PageResponse<ResponseOrderDTO>> response = ResponseEntity.ok(
 			new PageResponse<ResponseOrderDTO>());
-		when(orderAdaptor.getOrdersByMemberId(pageable, memberId)).thenReturn(response);
+		when(orderMemberAdaptor.getOrdersByMemberId(pageable, memberId)).thenReturn(response);
 
 		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderService.getOrdersByMemberId(pageable, memberId);
 		assertEquals(response, actual);
-		verify(orderAdaptor, times(1)).getOrdersByMemberId(pageable, memberId);
+		verify(orderMemberAdaptor, times(1)).getOrdersByMemberId(pageable, memberId);
 	}
 
 	@Test
@@ -139,9 +143,9 @@ class OrderServiceTest {
 	void testCancelOrder() {
 		String orderId = "TEST-ORDER-CODE";
 		ResponseEntity<Void> expectedResponse = ResponseEntity.ok().build();
-		when(orderAdaptor.cancelOrder(orderId)).thenReturn(expectedResponse);
+		when(orderMemberAdaptor.cancelOrder(orderId)).thenReturn(expectedResponse);
 		ResponseEntity<Void> actualResponse = orderService.cancelOrder(orderId);
 		assertEquals(expectedResponse, actualResponse);
-		verify(orderAdaptor).cancelOrder(orderId);
+		verify(orderMemberAdaptor).cancelOrder(orderId);
 	}
 }

@@ -1,0 +1,45 @@
+<!-- src/main/resources/templates/error/500.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>서버 오류</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .error-image {
+            width: 300px;
+            margin-bottom: 30px;
+        }
+
+        .message {
+            font-size: 24px;
+            font-weight: bold;
+            color: #b00020;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+<img class="error-image" src="/images/error/500.png" alt="서버 오류 이미지">
+<div class="message" th:text="${errorMessage}">서버 오류가 발생했습니다.</div>
+<a class="back-button" href="javascript:history.back()">이전으로 돌아가기</a>
+</body>
+</html>

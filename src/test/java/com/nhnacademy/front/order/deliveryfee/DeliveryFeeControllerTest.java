@@ -22,6 +22,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -46,6 +47,9 @@ public class DeliveryFeeControllerTest {
 
 	@MockitoBean
 	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
+	@MockitoBean
+	private ErrorMessageLoader errorMessageLoader;
 
 	@BeforeEach
 	void setUp() throws Exception {

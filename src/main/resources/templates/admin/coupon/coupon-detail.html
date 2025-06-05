@@ -4,11 +4,55 @@
       layout:decorate="~{layouts/admin-layout}">
 <body>
 <div layout:fragment="content">
-    <section class="login_box_area section-margin">
+    <section>
         <div class="container">
-            <h2>Coupon Detail</h2>
+            <!-- Header Box -->
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 24px; margin-bottom: 32px;">
+                <h3 style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">
+                    쿠폰 상세 정보
+                    <span style="font-size: 14px; color: #888; font-weight: normal;">| 쿠폰의 상세 정보를 확인할 수 있습니다.</span>
+                </h3>
+            </div>
 
-            <table class="table table-striped">
+            <!-- 링크 스타일 설정 -->
+            <style>
+                a.coupon-link {
+                    color: #333 !important;
+                    text-decoration: none;
+                }
+
+                a.coupon-link:hover {
+                    text-decoration: underline;
+                }
+
+                .detail-table th, .detail-table td {
+                    text-align: left;
+                    vertical-align: middle;
+                    font-size: 15px;
+                    padding: 12px;
+                    border: 1px solid #eee;
+                }
+
+                .detail-table th {
+                    width: 180px;
+                    background-color: #fafafa;
+                    font-weight: 600;
+                    color: #555;
+                }
+
+                .detail-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background: #fff;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+                    margin-bottom: 32px;
+                }
+            </style>
+
+            <!-- Coupon Detail Table -->
+            <table class="detail-table">
                 <tbody>
                 <tr>
                     <th>쿠폰 ID</th>
@@ -26,7 +70,8 @@
                     <th>쿠폰정책명</th>
                     <td>
                         <a th:href="@{/admin/settings/couponPolicies/{id}(id=${coupon.couponPolicyId})}"
-                           th:text="${coupon.couponPolicyName}">정책명</a>
+                           th:text="${coupon.couponPolicyName}"
+                           class="coupon-link">정책명</a>
                     </td>
                 </tr>
                 <tr>
@@ -48,8 +93,9 @@
                 </tbody>
             </table>
 
-            <div class="mt-3">
-                <a class="btn btn-secondary" th:href="@{/admin/settings/coupons}">목록으로</a>
+            <!-- Back Button -->
+            <div>
+                <a class="btn btn-sm btn-secondary" th:href="@{/admin/settings/coupons}">← 목록으로</a>
             </div>
         </div>
     </section>

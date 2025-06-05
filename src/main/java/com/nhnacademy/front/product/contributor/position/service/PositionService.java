@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.common.exception.EmptyRequestException;
+import com.nhnacademy.front.common.error.exception.EmptyRequestException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.contributor.position.adaptor.PositionAdaptor;
 import com.nhnacademy.front.product.contributor.position.exception.PositionGetProcessException;
@@ -47,8 +47,8 @@ public class PositionService {
 	/**
 	 * position 수정
 	 */
-	public void updatePosition(Long positionId,RequestPositionDTO requestPositionDTO) {
-		if (Objects.isNull(requestPositionDTO) || Objects.isNull(positionId) ) {
+	public void updatePosition(Long positionId, RequestPositionDTO requestPositionDTO) {
+		if (Objects.isNull(requestPositionDTO) || Objects.isNull(positionId)) {
 			throw new EmptyRequestException(REQUEST_VALUE_MISSING_MESSAGE);
 		}
 
@@ -94,7 +94,8 @@ public class PositionService {
 	 */
 	public List<ResponsePositionDTO> getPositionList() {
 		try {
-			ResponseEntity<PageResponse<ResponsePositionDTO>> response = positionAdaptor.getPositions(PageRequest.of(0, 100));
+			ResponseEntity<PageResponse<ResponsePositionDTO>> response = positionAdaptor.getPositions(
+				PageRequest.of(0, 100));
 			return response.getBody().getContent();
 		} catch (FeignException e) {
 			throw new PositionGetProcessException("Feign 오류로 포지션 목록 가져오기 실패");
