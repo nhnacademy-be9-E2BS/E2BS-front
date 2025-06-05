@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -46,6 +47,9 @@ class PublisherControllerTest {
 
 	@MockitoBean
 	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
+	@MockitoBean
+	private ErrorMessageLoader errorMessageLoader;
 
 	@BeforeEach
 	void setUp() throws Exception {
