@@ -79,7 +79,11 @@
                                class="coupon-link">정책명</a>
                         </td>
                         <td th:text="${coupon.categoryId != null ? coupon.categoryName : ''}">-</td>
-                        <td th:text="${coupon.productId != null ? coupon.productTitle : ''}">-</td>
+                        <td th:text="${coupon.productId != null ? coupon.productTitle : ''}"
+                            th:title="${coupon != null ? coupon.productTitle : ''}"
+                            style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            -
+                        </td>
                         <td>
                             <button type="button"
                                     class="btn btn-sm"
@@ -182,6 +186,10 @@
                 document.getElementById('selectedCouponId').value   = couponId;
                 document.getElementById('selectedCouponName').value = couponName;
             }
+
+            document.querySelector('form[action="/admin/settings/memberCoupons/issue"]').addEventListener('submit', function () {
+                alert('쿠폰발급 요청 성공');
+            });
         </script>
     </section>
 </div>

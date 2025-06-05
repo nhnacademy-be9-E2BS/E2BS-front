@@ -87,7 +87,9 @@
                                class="coupon-link">정책</a>
                         </td>
                         <td th:text="${coupon.categoryId != null ? coupon.categoryName : ''}">-</td>
-                        <td th:text="${coupon.productId != null ? coupon.productTitle : ''}">-</td>
+                        <td th:text="${coupon.productId != null ? coupon.productTitle : ''}"
+                            th:title="${coupon.productTitle}"
+                            style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">-</td>
                         <td>
                             <button class="btn btn-sm"
                                     th:attr="data-id=${coupon.couponId}"
