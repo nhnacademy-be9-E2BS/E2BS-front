@@ -177,7 +177,6 @@ public class OrderController {
 	/**
 	 * 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 미리 저장하는 기능
 	 */
-	@JwtTokenCheck
 	@PostMapping("/order/tossPay")
 	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(@Validated @RequestBody RequestOrderWrapperDTO request,
 		BindingResult bindingResult) {
@@ -205,7 +204,6 @@ public class OrderController {
 	 * 결제 완료 시 이동될 페이지
 	 * 여기에서 토스에서 제공한 데이터를 back으로 요청하여 결제 승인을 진행
 	 */
-	@JwtTokenCheck
 	@GetMapping("/order/success")
 	public String getSuccessOrder(@RequestParam String orderId, @RequestParam String paymentKey,
 		@RequestParam long amount) {
@@ -244,7 +242,6 @@ public class OrderController {
 	/**
 	 * 결제 모달을 끌 시 호출 할 주문서 삭제 요청
 	 */
-	@JwtTokenCheck
 	@PostMapping("/order/cancel")
 	public ResponseEntity<Void> deleteOrder(@RequestParam String orderId) {
 		return orderService.deleteOrder(orderId);
@@ -337,5 +334,51 @@ public class OrderController {
 		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
 		model.addAttribute("returnDTO", returnDTO);
 		return "member/mypage/orderReturnDetail";
+	}
+
+	@GetMapping("/customers/{customerId}/orders")
+	public String getCustomerOrders(Model model, @PathVariable long customerId, @PageableDefault(page = 0, size = 10) Pageable pageable) {
+		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByCustomerId(pageable, customerId);
+		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
+		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
+		model.addAttribute("orders", orders);
+		model.addAttribute("customerId", customerId);
+		return "customer/orders";
+	}
+
+
+	@GetMapping("/customers/{customerId}/orders/{orderCode}")
+	public String getCustomerOrderDetails(Model model, @PathVariable long customerId, @PathVariable String orderCode) {
+		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);
+		ResponseOrderWrapperDTO responseOrder = response.getBody();
+		ResponseOrderDTO order = responseOrder.getOrder();
+		List<ResponseOrderDetailDTO> orderDetails = responseOrder.getOrderDetails();
+
+		long productAmount = 0;
+		for (ResponseOrderDetailDTO orderDetail : orderDetails) {
+			productAmount += orderDetail.getOrderDetailPerPrice() * orderDetail.getOrderQuantity();
+			// 포장지가 있다면 포장지 가격도 포함
+			if (orderDetail.getWrapperPrice() != null) {
+				productAmount += orderDetail.getWrapperPrice() * orderDetail.getOrderQuantity();
+			}
+		}
+		LocalDate shipmentDate = order.getShipmentDate();
+		LocalDate now = LocalDate.now();
+
+		boolean isReturnAvailable = false;
+		boolean isChangeOfMindReturnAvailable = false;
+		if (shipmentDate != null) {
+			long daysBetween = ChronoUnit.DAYS.between(shipmentDate, now);
+			isReturnAvailable = daysBetween <= 30;
+			isChangeOfMindReturnAvailable = daysBetween <= 10;
+		}
+
+		model.addAttribute("isReturnAvailable", isReturnAvailable);
+		model.addAttribute("isChangeOfMindReturnAvailable", isChangeOfMindReturnAvailable);
+		model.addAttribute("order", order);
+		model.addAttribute("orderDetails", orderDetails);
+		model.addAttribute("productAmount", productAmount);
+
+		return "customer/orderDetails";
 	}
 }

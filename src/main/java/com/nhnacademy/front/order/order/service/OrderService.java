@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
+import com.nhnacademy.front.order.order.adaptor.OrderMemberAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+	private final OrderMemberAdaptor orderMemberAdaptor;
 	private final OrderAdaptor orderAdaptor;
 
 	/**
@@ -36,7 +38,7 @@ public class OrderService {
 	 */
 	public ResponseEntity<ResponseOrderResultDTO> createPointOrder(
 		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO) throws FeignException {
-		return orderAdaptor.postPointCreateOrder(requestOrderWrapperDTO);
+		return orderMemberAdaptor.postPointCreateOrder(requestOrderWrapperDTO);
 	}
 
 	/**
@@ -59,7 +61,12 @@ public class OrderService {
 	 */
 	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, String memberId)
 		throws FeignException {
-		return orderAdaptor.getOrdersByMemberId(pageable, memberId);
+		return orderMemberAdaptor.getOrdersByMemberId(pageable, memberId);
+	}
+
+	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByCustomerId(Pageable pageable, long customerId)
+		throws FeignException {
+		return orderAdaptor.getOrdersByCustomerId(pageable, customerId);
 	}
 
 	/**
@@ -74,18 +81,18 @@ public class OrderService {
 	 * 회원이 대기 상태인 특정 주문을 취소하는 메서드
 	 */
 	public ResponseEntity<Void> cancelOrder(String orderCode) throws FeignException {
-		return orderAdaptor.cancelOrder(orderCode);
+		return orderMemberAdaptor.cancelOrder(orderCode);
 	}
 
 	public ResponseEntity<Void> returnOrder(RequestOrderReturnDTO returnDTO) throws FeignException {
-		return orderAdaptor.returnOrder(returnDTO);
+		return orderMemberAdaptor.returnOrder(returnDTO);
 	}
 
 	public ResponseEntity<PageResponse<ResponseOrderReturnDTO>> getReturnOrdersByMemberId(Pageable pageable, String memberId){
-		return orderAdaptor.getReturnOrdersByMemberId(pageable, memberId);
+		return orderMemberAdaptor.getReturnOrdersByMemberId(pageable, memberId);
 	}
 
 	public ResponseEntity<ResponseOrderReturnDTO> getReturnOrderByOrderCode(String orderCode){
-		return orderAdaptor.getReturnOrder(orderCode);
+		return orderMemberAdaptor.getReturnOrder(orderCode);
 	}
 }

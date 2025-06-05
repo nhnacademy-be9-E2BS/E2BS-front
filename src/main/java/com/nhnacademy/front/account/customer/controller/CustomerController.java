@@ -87,7 +87,7 @@ public class CustomerController {
 		return ResponseEntity.ok(response);
 	}
 
-	/// 비회원 로그인 요청
+	// 주문 시 비회원 로그인 요청
 	@PostMapping("/customers/login")
 	public ResponseEntity<ResponseCustomerRegisterDTO> login(@CookieValue(name = "orderCart") String encodedCart,
 		                                                     @Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO, BindingResult bindingResult) throws JsonProcessingException {
@@ -102,6 +102,21 @@ public class CustomerController {
 
 		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(), customer.getCustomerId(), requestCartOrderDTO);
 		return ResponseEntity.ok(response);
+	}
+
+
+	// 주문 시 비회원 로그인 요청
+	@PostMapping("/customers/order/login")
+	public ResponseEntity<Long> login(@Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO
+		, BindingResult bindingResult) throws JsonProcessingException {
+
+		if (bindingResult.hasErrors()) {
+			throw new ValidationFailedException(bindingResult);
+		}
+
+		ResponseCustomerDTO customer = customerService.customerLogin(requestCustomerLoginDTO);
+
+		return ResponseEntity.ok(customer.getCustomerId());
 	}
 
 }
