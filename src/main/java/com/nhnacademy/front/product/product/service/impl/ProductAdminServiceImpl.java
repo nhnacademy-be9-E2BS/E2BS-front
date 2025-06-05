@@ -1,13 +1,13 @@
 package com.nhnacademy.front.product.product.service.impl;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.elasticsearch.adaptor.ProductSearchAdaptor;
 import com.nhnacademy.front.product.product.adaptor.ProductAdminAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductAdminServiceImpl implements ProductAdminService {
 
 	private final ProductAdminAdaptor productAdminAdaptor;
+	private final ProductSearchAdaptor productSearchAdaptor;
 
 	/**
 	 * product를 back에서 저장 (관계 테이블들도)
@@ -60,6 +61,19 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	@Override
 	public PageResponse<ResponseProductReadDTO> getProducts(Pageable pageable) throws FeignException {
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productAdminAdaptor.getProducts(pageable);
+
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new ProductGetProcessException("전체 도서 조회 실패");
+		}
+		return response.getBody();
+	}
+
+	/**
+	 * 전체 products 리스트 검색하여 페이징 조회
+	 */
+	@Override
+	public PageResponse<ResponseProductReadDTO> getProductsBySearch(Pageable pageable, String keyword) throws FeignException {
+		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsBySearch(pageable, keyword, null);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("전체 도서 조회 실패");
