@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.common.exception.EmptyResponseException;
+import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 import com.nhnacademy.front.home.adaptor.HomeAdaptor;
 import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.nhnacademy.front.account.address.model.dto.request.RequestMemberAddressSaveDTO;
 import com.nhnacademy.front.account.address.service.AddressService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
 import jakarta.servlet.http.HttpServletRequest;

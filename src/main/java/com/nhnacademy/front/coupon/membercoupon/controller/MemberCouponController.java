@@ -1,7 +1,5 @@
 package com.nhnacademy.front.coupon.membercoupon.controller;
 
-import java.util.Objects;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -11,9 +9,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
@@ -23,7 +22,6 @@ import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseMembe
 import com.nhnacademy.front.coupon.membercoupon.service.MemberCouponService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -54,7 +52,7 @@ public class MemberCouponController {
 	@JwtTokenCheck
 	@PostMapping("/admin/settings/memberCoupons/issue")
 	public String postMemberCoupons(@Validated RequestAllMemberCouponDTO request, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		memberCouponService.issueCouponToAllMember(request);
@@ -66,17 +64,28 @@ public class MemberCouponController {
 	 */
 	@JwtTokenCheck
 	@GetMapping("/mypage/couponBox")
-	public String getMemberCouponBox(HttpServletRequest request, @PageableDefault() Pageable pageable, Model model) {
+	public String getMemberCouponBox(HttpServletRequest request, @PageableDefault(size = 8) Pageable pageable, Model model, @RequestParam(required = false) Long status) {
 		// JWT 토큰에서 Long ld 추출
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
-		if (Objects.isNull(memberId)) {
-			throw new JwtException("JWT token is null");
+
+		PageResponse<ResponseMemberCouponDTO> response = memberCouponService.getUsableMemberCouponsByMemberId(memberId, pageable);
+		Long usableCouponCount = response.getTotalElements();
+
+		if (status == null || status == 1) {
+			response = memberCouponService.getMemberCouponsByMemberId(memberId, pageable);
+		} else if(status == 2) {
+			response = memberCouponService.getUsableMemberCouponsByMemberId(memberId, pageable);
+		} else if(status == 3) {
+			response = memberCouponService.getUnusableMemberCouponsByMemberId(memberId, pageable);
+		} else {
+			response = memberCouponService.getMemberCouponsByMemberId(memberId, pageable);
 		}
 
-		PageResponse<ResponseMemberCouponDTO> response = memberCouponService.getMemberCouponsByMemberId(memberId, pageable);
 		Page<ResponseMemberCouponDTO> memberCoupons = PageResponseConverter.toPage(response);
 
 		model.addAttribute("memberCoupons", memberCoupons);
+		model.addAttribute("usableCouponCount", usableCouponCount);
+		model.addAttribute("status", status);
 		return "member/mypage/coupon-box";
 	}
 }

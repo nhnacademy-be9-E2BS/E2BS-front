@@ -3698,7 +3698,7 @@ a {
 
 @media (min-width: 1000px) {
     .login_form_inner {
-        padding-top: 115px;
+        padding-top: 80px;
         padding-bottom: 0
     }
 }

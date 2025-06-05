@@ -1,4 +1,4 @@
-package com.nhnacademy.front.common.exception;
+package com.nhnacademy.front.common.error.exception;
 
 public class EmptyResponseException extends RuntimeException {
 	public EmptyResponseException(String message) {

@@ -13,7 +13,7 @@ import com.nhnacademy.front.account.address.exception.SaveAddressFailedException
 import com.nhnacademy.front.account.address.exception.UpdateAddressFailedException;
 import com.nhnacademy.front.account.address.model.dto.request.RequestMemberAddressSaveDTO;
 import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAddressDTO;
-import com.nhnacademy.front.common.exception.EmptyResponseException;
+import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;

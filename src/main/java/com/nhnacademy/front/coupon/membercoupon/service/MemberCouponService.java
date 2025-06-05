@@ -15,6 +15,10 @@ public interface MemberCouponService {
 
 	PageResponse<ResponseMemberCouponDTO> getMemberCouponsByMemberId(String memberId, Pageable pageable);
 
+	PageResponse<ResponseMemberCouponDTO> getUsableMemberCouponsByMemberId(String memberId, Pageable pageable);
+
+	PageResponse<ResponseMemberCouponDTO> getUnusableMemberCouponsByMemberId(String memberId, Pageable pageable);
+
 	/**
 	 * 주문서에서 적용 가능한 쿠폰 리스트 조회
 	 */

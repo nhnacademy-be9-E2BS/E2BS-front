@@ -15,4 +15,12 @@ public interface MemberCouponBoxAdaptor {
 	@GetMapping("/{memberId}/coupons")
 	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@PathVariable String memberId,
 		Pageable pageable);
+
+	@GetMapping("/{memberId}/couponsUsable")
+	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getUsableMemberCouponsByMemberId(@PathVariable String memberId,
+		Pageable pageable);
+
+	@GetMapping("/{memberId}/couponsUnusable")
+	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getUnusableMemberCouponsByMemberId(@PathVariable String memberId,
+		Pageable pageable);
 }

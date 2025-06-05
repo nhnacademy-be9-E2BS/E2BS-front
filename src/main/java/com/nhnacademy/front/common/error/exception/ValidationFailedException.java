@@ -1,4 +1,4 @@
-package com.nhnacademy.front.common.exception;
+package com.nhnacademy.front.common.error.exception;
 
 import java.util.stream.Collectors;
 

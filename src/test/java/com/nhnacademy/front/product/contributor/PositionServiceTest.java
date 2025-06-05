@@ -18,7 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.nhnacademy.front.common.exception.EmptyRequestException;
+import com.nhnacademy.front.common.error.exception.EmptyRequestException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.contributor.position.adaptor.PositionAdaptor;
 import com.nhnacademy.front.product.contributor.position.exception.PositionGetProcessException;
@@ -54,7 +54,6 @@ class PositionServiceTest {
 			EmptyRequestException.class);
 	}
 
-
 	@Test
 	@DisplayName("position 생성 - 실패1")
 	void createPositionFail2() {
@@ -71,7 +70,8 @@ class PositionServiceTest {
 		long positionId = 1L;
 		RequestPositionDTO requestPositionDTO = new RequestPositionDTO("position1");
 
-		when(positionAdaptor.putUpdatePosition(positionId, requestPositionDTO)).thenReturn(new ResponsePositionDTO(positionId, "position1"));
+		when(positionAdaptor.putUpdatePosition(positionId, requestPositionDTO)).thenReturn(
+			new ResponsePositionDTO(positionId, "position1"));
 
 		positionService.updatePosition(positionId, requestPositionDTO);
 		verify(positionAdaptor, times(1)).putUpdatePosition(positionId, requestPositionDTO);
@@ -100,7 +100,7 @@ class PositionServiceTest {
 
 		when(positionAdaptor.putUpdatePosition(positionId, requestPositionDTO)).thenReturn(null);
 
-		assertThatThrownBy(() -> positionService.updatePosition(positionId,requestPositionDTO)).isInstanceOf(
+		assertThatThrownBy(() -> positionService.updatePosition(positionId, requestPositionDTO)).isInstanceOf(
 			PositionProcessException.class);
 	}
 
@@ -112,7 +112,7 @@ class PositionServiceTest {
 
 		when(positionAdaptor.putUpdatePosition(positionId, requestPositionDTO)).thenThrow(FeignException.class);
 
-		assertThatThrownBy(() -> positionService.updatePosition(positionId,requestPositionDTO)).isInstanceOf(
+		assertThatThrownBy(() -> positionService.updatePosition(positionId, requestPositionDTO)).isInstanceOf(
 			PositionProcessException.class);
 	}
 
@@ -135,7 +135,7 @@ class PositionServiceTest {
 
 	@Test
 	@DisplayName("position 단건 조회 실패1")
-	 void getPositionByIdFail1() {
+	void getPositionByIdFail1() {
 		when(positionAdaptor.getPosition(1L)).thenThrow(FeignException.class);
 		assertThatThrownBy(() -> positionService.getPositionById(1L)).isInstanceOf(
 			PositionGetProcessException.class);
@@ -179,7 +179,6 @@ class PositionServiceTest {
 		verify(positionAdaptor, times(1)).getPositions(pageable);
 	}
 
-
 	@Test
 	@DisplayName("position 전체 조회 실패")
 	void getPositionsFail() {
@@ -189,7 +188,6 @@ class PositionServiceTest {
 		assertThatThrownBy(() -> positionService.getPositions(pageable)).isInstanceOf(
 			PositionProcessException.class);
 	}
-
 
 	@Test
 	@DisplayName("position 리스트 조회 성공")
