@@ -35,7 +35,7 @@ public class AdminSettingsService {
 	public ResponseAdminSettingsDTO getAdminSettings() throws FeignException {
 		ResponseEntity<ResponseAdminSettingsDTO> response = adminSettingsAdaptor.getAdminSettings();
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-			throw new AdminSettingsFailedException("관리자 페이지를 위한 데이터들을 가져오지 못했습니다.");
+			throw new AdminSettingsFailedException();
 		}
 
 		return response.getBody();
@@ -44,7 +44,7 @@ public class AdminSettingsService {
 	public ResponseAdminSettingsDailySummaryDTO getAdminSettingsDailySummaries() throws FeignException {
 		ResponseEntity<ResponseAdminSettingsDailySummaryDTO> response = adminSettingsAdaptor.getAdminSettingsDailySummaries();
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-			throw new AdminSettingsFailedException("관리자 페이지를 위한 데이터들을 가져오지 못했습니다.");
+			throw new AdminSettingsFailedException();
 		}
 
 		return response.getBody();
@@ -53,7 +53,7 @@ public class AdminSettingsService {
 	public ResponseAdminSettingsMonthlySummaryDTO getAdminSettingsMonthlySummaries() throws FeignException {
 		ResponseEntity<ResponseAdminSettingsMonthlySummaryDTO> response = adminSettingsAdaptor.getAdminSettingsMonthlySummaries();
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-			throw new AdminSettingsFailedException("관리자 페이지를 위한 데이터들을 가져오지 못했습니다.");
+			throw new AdminSettingsFailedException();
 		}
 
 		return response.getBody();
@@ -64,7 +64,7 @@ public class AdminSettingsService {
 		ResponseEntity<PageResponse<ResponseAdminSettingsMembersDTO>> response = adminSettingsAdaptor.getAdminSettingsMembers(
 			pageable);
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-			throw new AdminSettingsMembersFailedException("회원 목록을 가져오지 못했습니다.");
+			throw new AdminSettingsMembersFailedException();
 		}
 
 		return response.getBody();
@@ -75,21 +75,21 @@ public class AdminSettingsService {
 		ResponseEntity<Void> response = adminSettingsAdaptor.updateAdminSettingsMemberState(memberId,
 			requestAdminSettingsMemberStateDTO);
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new AdminSettingsMemberUpdateFailedException("회원 상태를 변경하지 못했습니다.");
+			throw new AdminSettingsMemberUpdateFailedException();
 		}
 	}
 
 	public void updateAdminSettingsMemberRole(String memberId) throws FeignException {
 		ResponseEntity<Void> response = adminSettingsAdaptor.updateAdminSettingsMemberRole(memberId);
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new AdminSettingsMemberUpdateFailedException("회원 권한을 변경하지 못했습니다.");
+			throw new AdminSettingsMemberUpdateFailedException();
 		}
 	}
 
 	public void deleteAdminSettingsMember(String memberId) throws FeignException {
 		ResponseEntity<Void> response = adminSettingsAdaptor.deleteAdminSettingsMember(memberId);
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new AdminSettingsMemberDeleteFailedException("회원 탈퇴에 실패했습니다.");
+			throw new AdminSettingsMemberDeleteFailedException();
 		}
 	}
 
@@ -98,7 +98,7 @@ public class AdminSettingsService {
 		ResponseEntity<PageResponse<ResponseAdminSettingsNonMembersDTO>> response = adminSettingsAdaptor.getAdminSettingsNonMembers(
 			pageable);
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new AdminSettingsNonMembersFailedException("비회원 목록을 가져오지 못했습니다.");
+			throw new AdminSettingsNonMembersFailedException();
 		}
 
 		return response.getBody();

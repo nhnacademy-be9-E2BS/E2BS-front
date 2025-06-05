@@ -28,7 +28,7 @@ public class HomeService {
 
 		ResponseEntity<ResponseHomeMemberNameDTO> response = homeAdaptor.getHomeMemberName(memberId);
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-			throw new EmptyResponseException("회원 이름을 가져오지 못했습니다.");
+			throw new EmptyResponseException();
 		}
 
 		return response.getBody();

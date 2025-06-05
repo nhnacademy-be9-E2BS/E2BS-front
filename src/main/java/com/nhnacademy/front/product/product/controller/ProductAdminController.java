@@ -1,6 +1,7 @@
 package com.nhnacademy.front.product.product.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
@@ -63,8 +65,14 @@ public class ProductAdminController {
 	 */
 	@JwtTokenCheck
 	@GetMapping
-	public String getProducts(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
-		PageResponse<ResponseProductReadDTO> response = productAdminService.getProducts(pageable);
+	public String getProducts(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+		@RequestParam(required = false) String keyword) {
+		PageResponse<ResponseProductReadDTO> response;
+		if(Objects.isNull(keyword)) {
+			response = productAdminService.getProducts(pageable);
+		} else {
+			response = productAdminService.getProductsBySearch(pageable, keyword);
+		}
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
 		model.addAttribute("products", products);

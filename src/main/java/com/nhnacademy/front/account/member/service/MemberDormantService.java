@@ -51,7 +51,7 @@ public class MemberDormantService {
 		String memberId) {
 		String doorayDormantKey = "doorayDormantNumber:" + memberId;
 		if (Objects.isNull(redisTemplate.opsForValue().get(doorayDormantKey))) {
-			throw new DormantProcessingException("휴면 해제 과정에서 오류가 발생했습니다. 다시 시도해 주세요.");
+			throw new DormantProcessingException();
 		}
 
 		Integer number = (Integer)redisTemplate.opsForValue().get(doorayDormantKey);
@@ -64,7 +64,7 @@ public class MemberDormantService {
 		String memberId) {
 		String emailDormantKey = "emailDormantNumber:" + memberId;
 		if (Objects.isNull(redisTemplate.opsForValue().get(emailDormantKey))) {
-			throw new DormantProcessingException("휴면 해제 과정에서 오류가 발생했습니다. 다시 시도해 주세요.");
+			throw new DormantProcessingException();
 		}
 
 		Integer number = (Integer)redisTemplate.opsForValue().get(emailDormantKey);
@@ -81,7 +81,7 @@ public class MemberDormantService {
 	public void changeMemberStateActive(String memberId, HttpServletRequest request) {
 		ResponseEntity<Void> response = memberDormantAdaptor.changeDormantMemberStateActive(memberId);
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new DormantProcessingException("휴면 해제 과정에서 오류가 발생했습니다. 다시 시도해 주세요.");
+			throw new DormantProcessingException();
 		}
 
 		if (request.getSession().getAttribute("dormantMemberId") != null) {
@@ -100,7 +100,7 @@ public class MemberDormantService {
 	public String getMemberEmail(String memberId) {
 		ResponseEntity<ResponseMemberEmailDTO> response = memberDormantAdaptor.getMemberEmail(memberId);
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-			throw new DormantProcessingException("휴면 해제 과정에서 오류가 발생했습니다. 다시 시도해 주세요.");
+			throw new DormantProcessingException();
 		}
 
 		return response.getBody().getCustomerEmail();
