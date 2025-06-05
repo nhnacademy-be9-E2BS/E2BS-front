@@ -149,16 +149,27 @@
                             <div class="coupon-header" th:text="${coupon.couponPolicyName}">T Day 이벤트</div>
                             <div class="coupon-name" th:text="${coupon.couponName}">5,000원 할인</div>
                             <div class="coupon-description">
-                                <div class="coupon-description">
-                                    <span>할인 대상 : </span>
+                                <div class="coupon-description d-flex align-items-center" style="gap: 4px;">
+                                    <span style="white-space: nowrap;">할인 대상 :</span>
+
                                     <a th:if="${coupon.categoryName != null}"
-                                          th:text="${coupon.categoryName} + ' (카테고리)'"
-                                          th:href="@{/books/category/{id}(id=${coupon.categoryId})}"></a>
+                                       th:text="${coupon.categoryName} + ' (카테고리)'"
+                                       th:href="@{/books/category/{id}(id=${coupon.categoryId})}"
+                                       style="display: inline-block; max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                       th:title="${coupon.categoryName} + ' (카테고리)'"></a>
+
                                     <a th:if="${coupon.categoryName == null and coupon.productTitle != null}"
-                                          th:href="@{/books/{id}(id=${coupon.productId})}"
-                                          th:text="${coupon.productTitle} + ' (도서)'"></a>
-                                    <span th:if="${coupon.categoryName == null and coupon.productTitle == null}">전체</span>
+                                       th:href="@{/books/{id}(id=${coupon.productId})}"
+                                       th:text="${coupon.productTitle} + ' (도서)'"
+                                       th:title="${coupon.productTitle} + ' (도서)'"
+                                       style="display: inline-block; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    </a>
+
+                                    <span th:if="${coupon.categoryName == null and coupon.productTitle == null}"
+                                          style="display: inline-block; max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                          title="전체">전체</span>
                                 </div>
+
                             </div>
                             <div class="coupon-valid">
                                 발급일 : <span th:text="${#temporals.format(coupon.memberCouponCreatedAt, 'yyyy.MM.dd')}"></span><br>
