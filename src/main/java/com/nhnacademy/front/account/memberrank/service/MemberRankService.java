@@ -21,7 +21,7 @@ public class MemberRankService {
 	public List<ResponseMemberRankDTO> getMemberRank(String memberId) throws FeignException {
 		ResponseEntity<List<ResponseMemberRankDTO>> response = memberRankAdaptor.getMemberRank(memberId);
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberRankNameException("등급 정보를 가져오지 못했습니다.");
+			throw new NotFoundMemberRankNameException();
 		}
 
 		return response.getBody();

@@ -96,6 +96,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) throws IOException, ServletException {
 
-		throw new LoginRedirectException("");
+		throw new LoginRedirectException();
 	}
 }

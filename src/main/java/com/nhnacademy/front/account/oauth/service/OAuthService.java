@@ -72,7 +72,7 @@ public class OAuthService {
 			authorizationGrantType, clientId, clientSecret, code
 		);
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-			throw new PaycoProcessingException(PAYCO_PROCESSING_MESSAGE);
+			throw new PaycoProcessingException();
 		}
 
 		return response.getBody();
@@ -87,7 +87,7 @@ public class OAuthService {
 			|| response.getBody().getData() == null
 			|| response.getBody().getData().getMember() == null) {
 
-			throw new PaycoProcessingException(PAYCO_PROCESSING_MESSAGE);
+			throw new PaycoProcessingException();
 		}
 
 		return response.getBody();
@@ -102,7 +102,7 @@ public class OAuthService {
 			ResponseEntity<ResponseCheckOAuthIdDTO> responseCheckOAuthIdDTO = oAuthLoginAdaptor.checkOAuthLoginId(idNo);
 			if (!responseCheckOAuthIdDTO.getStatusCode().is2xxSuccessful()
 				|| Objects.isNull(responseCheckOAuthIdDTO.getBody())) {
-				throw new PaycoProcessingException(PAYCO_PROCESSING_MESSAGE);
+				throw new PaycoProcessingException();
 			}
 
 			if (!responseCheckOAuthIdDTO.getBody().isExistsOAuthId()) {
@@ -116,7 +116,7 @@ public class OAuthService {
 
 				ResponseEntity<Void> registerResponse = oAuthRegisterAdaptor.registerOAuth(requestOAuthRegisterDTO);
 				if (!registerResponse.getStatusCode().is2xxSuccessful()) {
-					throw new ServerErrorException(SYSTEM_ERROR_MESSAGE);
+					throw new ServerErrorException();
 				}
 			}
 
@@ -125,7 +125,7 @@ public class OAuthService {
 			authService.postAuthCreateJwtToken(requestJwtTokenDTO, response, request);
 
 		} catch (FeignException ex) {
-			throw new ServerErrorException(SYSTEM_ERROR_MESSAGE);
+			throw new ServerErrorException();
 		}
 	}
 
