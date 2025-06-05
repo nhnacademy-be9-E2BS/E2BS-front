@@ -36,7 +36,7 @@ public class MemberLoginUserDetailsService implements UserDetailsService {
 				|| Objects.isNull(loginMemberDTO.getMemberId())
 				|| !loginMemberDTO.getMemberId().equals(username)
 				|| Objects.isNull(loginMemberDTO.getCustomerPassword())) {
-				throw new LoginProcessException("로그인 실패(사용자 정보 불일치)");
+				throw new LoginProcessException();
 			}
 
 			return new LoginProcessMember(loginMemberDTO.getMemberId(),
@@ -44,7 +44,7 @@ public class MemberLoginUserDetailsService implements UserDetailsService {
 				loginMemberDTO.getMemberRoleName());
 
 		} catch (FeignException e) {
-			throw new LoginProcessException("로그인 실패");
+			throw new LoginProcessException();
 		}
 	}
 

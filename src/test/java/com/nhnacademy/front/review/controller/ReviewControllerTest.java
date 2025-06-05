@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -52,6 +53,9 @@ class ReviewControllerTest {
 
 	@MockitoBean
 	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+
+	@MockitoBean
+	private ErrorMessageLoader errorMessageLoader;
 
 	@BeforeEach
 	void setUp() throws Exception {

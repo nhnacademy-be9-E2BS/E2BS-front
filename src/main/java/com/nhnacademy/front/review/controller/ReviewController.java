@@ -46,7 +46,7 @@ public class ReviewController {
 	 */
 	@PostMapping("/reviews")
 	public ResponseEntity<Void> createReview(@Validated @ModelAttribute RequestCreateReviewDTO  requestDto, BindingResult bindingResult,
-								HttpServletRequest request) {
+								             HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -63,7 +63,8 @@ public class ReviewController {
 	 * 리뷰 수정
 	 */
 	@PutMapping("/reviews/{reviewId}")
-	public ResponseEntity<ResponseUpdateReviewDTO> updateReview(@PathVariable long reviewId, @Validated @ModelAttribute RequestUpdateReviewDTO requestDto, BindingResult bindingResult) {
+	public ResponseEntity<ResponseUpdateReviewDTO> updateReview(@PathVariable long reviewId,
+		                                                        @Validated @ModelAttribute RequestUpdateReviewDTO requestDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -76,7 +77,8 @@ public class ReviewController {
 	 * 상품에 대한 리뷰 페이징 목록 조회
 	 */
 	@GetMapping("/products/{productId}/reviews")
-	public String getReviewsByProduct(@PathVariable long productId, @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+	public String getReviewsByProduct(@PathVariable long productId,
+		                              @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
 		ResponseReviewInfoDTO reviewInfo = reviewService.getReviewInfo(productId);
 
 		PageResponse<ResponseReviewPageDTO> response = reviewService.getReviewsByProduct(productId, pageable);

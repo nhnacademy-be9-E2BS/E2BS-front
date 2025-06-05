@@ -3698,7 +3698,7 @@ a {
 
 @media (min-width: 1000px) {
     .login_form_inner {
-        padding-top: 115px;
+        padding-top: 80px;
         padding-bottom: 0
     }
 }
@@ -3727,7 +3727,7 @@ a {
     margin-bottom: 22px
 }
 
-.login_form .form-group input {
+.login_form .form-group input:not([type="radio"]) {
     height: 40px;
     border: none;
     border-bottom: 1px solid #cccccc;

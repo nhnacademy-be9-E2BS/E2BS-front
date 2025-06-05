@@ -267,6 +267,18 @@
             </div>
         </div>
 
+        <!--포장지 관련 JS-->
+        <script>
+            function toggleWrapOptions(id) {
+                const elem = document.getElementById(id);
+                if (elem.style.display === 'none' || elem.style.display === '') {
+                    elem.style.display = 'table-row';
+                } else {
+                    elem.style.display = 'none';
+                }
+            }
+        </script>
+
         <!--결제 요청 JS-->
         <script src="https://js.tosspayments.com/v1/payment"></script>
         <script>

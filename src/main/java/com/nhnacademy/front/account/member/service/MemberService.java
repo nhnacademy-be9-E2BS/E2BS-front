@@ -39,7 +39,7 @@ public class MemberService {
 	public void createMember(RequestRegisterMemberDTO requestRegisterMemberDTO) {
 		if (!requestRegisterMemberDTO.getCustomerPassword()
 			.equals(requestRegisterMemberDTO.getCustomerPasswordCheck())) {
-			throw new RegisterNotEqualsPasswordException("입력하신 비밀번호가 서로 같지 않습니다.");
+			throw new RegisterNotEqualsPasswordException();
 		}
 
 		String customerPassword = passwordEncoder.encode(requestRegisterMemberDTO.getCustomerPassword());
@@ -52,11 +52,11 @@ public class MemberService {
 				.postRegisterMember(requestRegisterMemberDTO);
 
 			if (Objects.isNull(responseRegisterMemberDTO) || Objects.isNull(responseRegisterMemberDTO.getMemberId())) {
-				throw new RegisterProcessException("회원가입 실패");
+				throw new RegisterProcessException();
 			}
 
 		} catch (FeignException ex) {
-			throw new RegisterProcessException("회원가입 실패");
+			throw new RegisterProcessException();
 		}
 
 	}
@@ -87,12 +87,12 @@ public class MemberService {
 		try {
 			ResponseEntity<ResponseMemberStateDTO> response = memberStateAdaptor.getMemberState(memberId);
 			if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-				throw new GetMemberStateFailedException("회원 상태를 가져오지 못했습니다.");
+				throw new GetMemberStateFailedException();
 			}
 
 			return response.getBody().getMemberstate();
 		} catch (FeignException ex) {
-			throw new GetMemberStateFailedException("회원 상태를 가져오지 못했습니다.");
+			throw new GetMemberStateFailedException();
 		}
 	}
 

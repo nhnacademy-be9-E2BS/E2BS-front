@@ -68,7 +68,7 @@
                     <div>
                         <div class="card-title">방문자 수 (오늘)</div>
                         <div class="card-value">
-                            <span th:text="${settings.totalTodayLoginMembersCnt}">0</span><span>명</span>
+                            <span th:text="${#numbers.formatInteger(settings.totalTodayLoginMembersCnt, 0, 'COMMA')}">0</span><span>명</span>
                         </div>
                     </div>
                     <div class="card-subtext">업데이트: <span th:text="${updatedTime}">14:30</span></div>
@@ -78,7 +78,7 @@
                     <div>
                         <div class="card-title">총 회원 수</div>
                         <div class="card-value">
-                            <span th:text="${settings.totalMembersCnt}">0</span><span>명</span>
+                            <span th:text="${#numbers.formatInteger(settings.totalMembersCnt, 0, 'COMMA')}">0</span><span>명</span>
                         </div>
                     </div>
                     <div class="card-subtext">업데이트: <span th:text="${updatedTime}">14:30</span></div>
@@ -88,7 +88,7 @@
                     <div>
                         <div class="card-title">총 주문 수</div>
                         <div class="card-value">
-                            <span th:text="${settings.totalOrdersCnt}">0</span><span>건</span>
+                            <span th:text="${#numbers.formatInteger(settings.totalOrdersCnt, 0, 'COMMA')}">0</span><span>건</span>
                         </div>
                     </div>
                     <div class="card-subtext">업데이트: <span th:text="${updatedTime}">14:30</span></div>
@@ -101,7 +101,7 @@
                     <div>
                         <div class="card-title">오늘 매출</div>
                         <div class="card-value">
-                            <span th:text="${settings.totalDailySales}">0</span><span>원</span>
+                            <span th:text="${#numbers.formatInteger(settings.totalDailySales, 0, 'COMMA')}">0</span><span>원</span>
                         </div>
                     </div>
                     <div class="card-subtext">업데이트: <span th:text="${updatedTime}">14:30</span></div>
@@ -111,7 +111,7 @@
                     <div>
                         <div class="card-title">이번 달 매출</div>
                         <div class="card-value">
-                            <span th:text="${settings.totalMonthlySales}">0</span><span>원</span>
+                            <span th:text="${#numbers.formatInteger(settings.totalMonthlySales, 0, 'COMMA')}">0</span><span>원</span>
                         </div>
                     </div>
                     <div class="card-subtext">업데이트: <span th:text="${updatedTime}">14:30</span></div>
@@ -121,7 +121,7 @@
                     <div>
                         <div class="card-title">총 매출</div>
                         <div class="card-value">
-                            <span th:text="${settings.totalSales}">0</span><span>원</span>
+                            <span th:text="${#numbers.formatInteger(settings.totalSales, 0, 'COMMA')}">0</span><span>원</span>
                         </div>
                     </div>
                     <div class="card-subtext">업데이트: <span th:text="${updatedTime}">14:30</span></div>
@@ -148,12 +148,16 @@
                             <td style="padding: 10px; border-bottom: 1px solid #eee;" th:text="${summary.date}">
                                 2022-05-10
                             </td>
-                            <td style="padding: 10px; border-bottom: 1px solid #eee;" th:text="${summary.orderCount}">
-                                0
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;"
+                                th:text="${#numbers.formatInteger(summary.orderCount, 0, 'COMMA')}">0
                             </td>
                             <td style="padding: 10px; border-bottom: 1px solid #eee;"
-                                th:text="(${summary.sales} ?: 0) + '원'">
-                                0원
+                                th:if="${summary.sales == null}"
+                                th:text="'0원'">
+                            </td>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;"
+                                th:unless="${summary.sales == null}"
+                                th:text="|${#numbers.formatInteger(summary.sales, 0, 'COMMA')}원|">
                             </td>
                             <td style="padding: 10px; border-bottom: 1px solid #eee;" th:text="${summary.signupCount}">0
                             </td>
@@ -162,17 +166,25 @@
                         <!-- ⬇ 최근 7일 합계 -->
                         <tr style="text-align: center; background-color: #f8f9fa; font-weight: bold;">
                             <td style="padding: 10px; border-top: 1px solid #ddd;">최근 7일 합계</td>
-                            <td th:text="${weeklySummary.orderCount}">0건</td>
-                            <td th:text="${weeklySummary.sales} + '원'">0원</td>
-                            <td th:text="${weeklySummary.signupCount}">0명</td>
+                            <td th:text="${#numbers.formatInteger(weeklySummary.orderCount, 0, 'COMMA')}">0건</td>
+                            <td th:text="${#numbers.formatInteger(weeklySummary.sales, 0, 'COMMA')} + '원'">0원</td>
+                            <td th:text="${#numbers.formatInteger(weeklySummary.signupCount, 0, 'COMMA')}">0명</td>
                         </tr>
 
                         <!-- ⬇ 이번달 합계 -->
                         <tr style="text-align: center; background-color: #f1f3f5; font-weight: bold;">
                             <td style="padding: 10px; border-top: 1px solid #ccc;">이번달 합계</td>
-                            <td th:text="${monthlySummary.orderCount}">0건</td>
-                            <td th:text="(${monthlySummary.sales} ?: 0) + '원'">0원</td>
-                            <td th:text="${monthlySummary.signupCount}">0명</td>
+                            <td th:text="${#numbers.formatInteger(monthlySummary.orderCount, 0, 'COMMA')}">0건</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;"
+                                th:if="${monthlySummary.sales == null}"
+                                th:text="'0원'">
+                            </td>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;"
+                                th:unless="${monthlySummary.sales == null}"
+                                th:text="|${#numbers.formatInteger(monthlySummary.sales, 0, 'COMMA')}원|">
+                            </td>
+
+                            <td th:text="${#numbers.formatInteger(monthlySummary.signupCount, 0, 'COMMA')}">0명</td>
                         </tr>
 
                         </tbody>

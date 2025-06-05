@@ -31,13 +31,13 @@ public class CustomerService {
 		try {
 			ResponseEntity<ResponseCustomerDTO> response = customerLoginAdaptor.customerLogin(requestCustomerLoginDTO);
 			if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-				throw new CustomerLoginProcessingException("비회원 로그인 실패했습니다.");
+				throw new CustomerLoginProcessingException();
 			}
 
 			return response.getBody();
 
 		} catch (FeignException ex) {
-			throw new CustomerLoginProcessingException("비회원 로그인 실패했습니다.");
+			throw new CustomerLoginProcessingException();
 		}
 	}
 
@@ -45,21 +45,22 @@ public class CustomerService {
 		try {
 			if (!requestCustomerRegisterDTO.getCustomerPassword()
 				.equals(requestCustomerRegisterDTO.getCustomerPasswordCheck())) {
-				throw new CustomerPasswordCheckException("비밀번호가 서로 일치하지 않습니다.");
+				throw new CustomerPasswordCheckException();
 			}
 
 			String customerPassword = passwordEncoder.encode(requestCustomerRegisterDTO.getCustomerPassword());
 			requestCustomerRegisterDTO.setCustomerPassword(customerPassword);
 			requestCustomerRegisterDTO.setCustomerPasswordCheck(customerPassword);
 
-			ResponseEntity<ResponseCustomerDTO> response = customerRegisterAdaptor.customerRegister(requestCustomerRegisterDTO);
+			ResponseEntity<ResponseCustomerDTO> response = customerRegisterAdaptor.customerRegister(
+				requestCustomerRegisterDTO);
 			if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-				throw new CustomerRegisterProcessingException("비회원 첫주문 실패했습니다.");
+				throw new CustomerRegisterProcessingException();
 			}
 
 			return response.getBody();
 		} catch (FeignException ex) {
-			throw new CustomerRegisterProcessingException("비회원 첫주문 실패했습니다.");
+			throw new CustomerRegisterProcessingException();
 		}
 	}
 

@@ -17,7 +17,7 @@ import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfo
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberPointDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMypageMemberCouponDTO;
 import com.nhnacademy.front.account.memberrank.model.domain.RankName;
-import com.nhnacademy.front.common.exception.EmptyResponseException;
+import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.jwt.rule.JwtRule;
 
@@ -43,7 +43,7 @@ public class MemberMypageService {
 		ResponseMypageMemberCouponDTO responseMemberCouponDTO = memberCouponAdaptor
 			.getMemberCouponAmount(requestMemberIdDTO.getMemberId());
 		if (Objects.isNull(responseMemberCouponDTO)) {
-			throw new EmptyResponseException("쿠폰 개수를 가져오지 못했습니다.");
+			throw new EmptyResponseException();
 		}
 
 		return responseMemberCouponDTO.getCouponCnt();
@@ -56,7 +56,7 @@ public class MemberMypageService {
 		ResponseMemberPointDTO responseMemberPointDTO = memberPointHistoryAdaptor
 			.getMemberPointAmount(requestMemberIdDTO.getMemberId());
 		if (Objects.isNull(responseMemberPointDTO)) {
-			throw new EmptyResponseException("포인트 정보를 가져오지 못했습니다.");
+			throw new EmptyResponseException();
 		}
 
 		return responseMemberPointDTO.getPointAmount();
@@ -70,11 +70,11 @@ public class MemberMypageService {
 
 		ResponseEntity<ResponseMemberInfoDTO> memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
 		if (!memberInfoDTO.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberRankNameException("회원의 등급 정보를 가져오지 못했습니다.");
+			throw new NotFoundMemberRankNameException();
 		}
 
 		if (Objects.isNull(memberInfoDTO.getBody())) {
-			throw new NotFoundMemberRankNameException("회원의 등급 정보를 가져오지 못했습니다.");
+			throw new NotFoundMemberRankNameException();
 		}
 
 		return memberInfoDTO.getBody().getMemberRank().getMemberRankName();
@@ -88,11 +88,11 @@ public class MemberMypageService {
 
 		ResponseEntity<ResponseMemberInfoDTO> memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
 		if (!memberInfoDTO.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberInfoException("회원 정보를 변경하지 못했습니다.");
+			throw new NotFoundMemberInfoException();
 		}
 
 		if (Objects.isNull(memberInfoDTO.getBody())) {
-			throw new NotFoundMemberInfoException("회원 정보를 변경하지 못했습니다.");
+			throw new NotFoundMemberInfoException();
 		}
 
 		return memberInfoDTO.getBody();
@@ -107,7 +107,7 @@ public class MemberMypageService {
 
 		ResponseEntity<Void> response = memberInfoAdaptor.updateMemberInfo(memberId, requestMemberInfoDTO);
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberInfoException("회원 정보를 변경하지 못했습니다.");
+			throw new NotFoundMemberInfoException();
 		}
 	}
 
@@ -120,7 +120,7 @@ public class MemberMypageService {
 
 		ResponseEntity<Void> responseEntity = memberInfoAdaptor.withdrawMember(memberId);
 		if (!responseEntity.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberInfoException("회원 탈퇴를 하지 못했습니다.");
+			throw new NotFoundMemberInfoException();
 		}
 
 		withdraw(request, response, memberId);

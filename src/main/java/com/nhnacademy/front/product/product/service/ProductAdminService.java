@@ -1,7 +1,5 @@
 package com.nhnacademy.front.product.product.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Pageable;
 
 import com.nhnacademy.front.common.page.PageResponse;
@@ -23,6 +21,9 @@ public interface ProductAdminService {
 
 	//관리자 - 전체 도서 페이지로 조회
 	PageResponse<ResponseProductReadDTO> getProducts(Pageable pageable);
+
+	//관리자 - 전체 도서에서 검색하여 페이지로 조회
+	PageResponse<ResponseProductReadDTO> getProductsBySearch(Pageable pageable, String keyword);
 
 	//관리자 - 도서 수정
 	void updateProduct(long productId, RequestProductDTO request);

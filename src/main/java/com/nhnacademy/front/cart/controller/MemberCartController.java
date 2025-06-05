@@ -20,7 +20,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.service.MemberCartService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,8 +39,9 @@ public class MemberCartController {
 	 */
 	@JwtTokenCheck
 	@PostMapping("/members/carts/items")
-	public ResponseEntity<Integer> memberAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto, BindingResult bindingResult,
-		                                        HttpServletRequest request) {
+	public ResponseEntity<Integer> memberAddToCart(@Validated @RequestBody RequestAddCartItemsDTO requestDto,
+		BindingResult bindingResult,
+		HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -84,8 +85,8 @@ public class MemberCartController {
 	@JwtTokenCheck
 	@PutMapping("/members/carts/items/{cartItemsId}")
 	public ResponseEntity<Integer> updateCartItemForMember(@PathVariable long cartItemsId,
-		                                                @Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult,
-		                                                HttpServletRequest request) {
+		@Validated @RequestBody RequestUpdateCartItemsDTO requestDto, BindingResult bindingResult,
+		HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -111,9 +112,9 @@ public class MemberCartController {
 
 		HttpSession session = request.getSession();
 		Integer cartItemsCounts = (Integer)session.getAttribute("cartItemsCounts");
-		session.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts-1);
+		session.setAttribute(CART_ITEMS_COUNTS, cartItemsCounts - 1);
 
-		return ResponseEntity.ok(cartItemsCounts-1);
+		return ResponseEntity.ok(cartItemsCounts - 1);
 	}
 
 	/**

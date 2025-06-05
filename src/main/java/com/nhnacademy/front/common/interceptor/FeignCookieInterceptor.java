@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.nhnacademy.front.common.exception.LoginRedirectException;
+import com.nhnacademy.front.common.error.exception.LoginRedirectException;
 import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.jwt.rule.JwtRule;
 
@@ -22,8 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FeignCookieInterceptor implements RequestInterceptor {
 	private static final String SET_COOKIE = "Set-Cookie";
 	private static final String ACCESS_REFRESH = "access-refresh";
-
-	private static final String LOGIN_EXCEPTION_MESSAGE = "로그인을 다시 해주세요.";
 
 	@Override
 	public void apply(RequestTemplate requestTemplate) {
@@ -64,7 +62,7 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 	private String extractAccessTokenFromCookie(HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
 		if (cookies == null) {
-			throw new LoginRedirectException(LOGIN_EXCEPTION_MESSAGE);
+			throw new LoginRedirectException();
 		}
 
 		for (Cookie cookie : cookies) {
@@ -73,7 +71,7 @@ public class FeignCookieInterceptor implements RequestInterceptor {
 			}
 		}
 
-		throw new LoginRedirectException(LOGIN_EXCEPTION_MESSAGE);
+		throw new LoginRedirectException();
 	}
 
 }

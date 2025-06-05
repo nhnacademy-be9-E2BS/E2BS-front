@@ -1,5 +1,3 @@
-<!-- 관리자 페이지 - 포인트 정책 관리 -->
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -8,188 +6,90 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>Point Policy Management</h2>
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 24px; margin-bottom: 32px;">
+                <h3 style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">
+                    포인트 정책 관리 <span style="font-size: 14px; color: #888; font-weight: normal;">| 포인트 정책을 생성 및 관리할 수 있습니다.</span>
+                </h3>
 
-            <a th:href="@{/admin/settings/pointPolicies/register}">포인트 정책 등록</a>
-
-            <!-- 회원가입 정책 -->
-            <div class="row mt-5 mb-5">
-                <div class="col-12">
-                    <h4>회원가입 정책</h4>
-                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
-                        <thead>
-                        <tr>
-                            <th style="width: 30%;">정책명</th>
-                            <th style="width: 15%;">포인트 수치</th>
-                            <th style="width: 20%;">생성일</th>
-                            <th style="width: 20%;">활성 상태</th>
-                            <th style="width: 15%;">관리</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="policy : ${pointPolicies_register}">
-                            <td th:text="${policy.pointPolicyName}">정책명</td>
-                            <td>
-                                <input type="number"
-                                       th:value="${policy.pointPolicyFigure}"
-                                       th:id="'figure-' + ${policy.pointPolicyId}"
-                                       class="form-control"
-                                       readonly />
-                            </td>
-                            <td th:text="${#temporals.format(policy.pointPolicyCreatedAt, 'yyyy-MM-dd HH:mm')}">2024-01-01</td>
-                            <td>
-                                <span th:text="${policy.pointPolicyIsActive} ? '활성' : '비활성'"
-                                      th:classappend="${policy.pointPolicyIsActive} ? 'text-success' : 'text-secondary'">활성</span>
-                                <button type="button" class="btn btn-sm btn-outline-primary ms-2"
-                                        th:if="${!policy.pointPolicyIsActive}"
-                                        th:onclick="'activatePolicy(' + ${policy.pointPolicyId} + ')'">활성화
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
-                                <button type="button" class="btn btn-sm btn-primary d-none save-btn"
-                                        th:onclick="'updatePointPolicy('+${policy.pointPolicyId}+')'">저장</button>
-                                <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <a th:href="@{/admin/settings/pointPolicies/register}"
+                   style="display: inline-block; background: #666; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 14px; text-decoration: none;">
+                    포인트 정책 등록
+                </a>
             </div>
 
-            <!-- 이미지 리뷰 정책 -->
-            <div class="row mb-5">
-                <div class="col-12">
-                    <h4>이미지 리뷰 정책</h4>
-                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
-                        <thead>
-                        <tr>
-                            <th style="width: 30%;">정책명</th>
-                            <th style="width: 15%;">포인트 수치</th>
-                            <th style="width: 20%;">생성일</th>
-                            <th style="width: 20%;">활성 상태</th>
-                            <th style="width: 15%;">관리</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="policy : ${pointPolicies_review_img}">
-                            <td th:text="${policy.pointPolicyName}">정책명</td>
-                            <td>
-                                <input type="number"
-                                       th:value="${policy.pointPolicyFigure}"
-                                       th:id="'figure-' + ${policy.pointPolicyId}"
-                                       class="form-control"
-                                       readonly />
-                            </td>
-                            <td th:text="${#temporals.format(policy.pointPolicyCreatedAt, 'yyyy-MM-dd HH:mm')}">2024-01-01</td>
-                            <td>
-                                <span th:text="${policy.pointPolicyIsActive} ? '활성' : '비활성'"
-                                      th:classappend="${policy.pointPolicyIsActive} ? 'text-success' : 'text-secondary'">활성</span>
-                                <button type="button" class="btn btn-sm btn-outline-primary ms-2"
-                                        th:if="${!policy.pointPolicyIsActive}"
-                                        th:onclick="'activatePolicy(' + ${policy.pointPolicyId} + ')'">활성화
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
-                                <button type="button" class="btn btn-sm btn-primary d-none save-btn"
-                                        th:onclick="'updatePointPolicy('+${policy.pointPolicyId}+')'">저장</button>
-                                <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <style>
+                .table th, .table td {
+                    text-align: center;
+                    vertical-align: middle;
+                    color: #333;
+                    font-size: 15px;
+                }
 
-            <!-- 일반 리뷰 정책 -->
-            <div class="row mb-5">
-                <div class="col-12">
-                    <h4>일반 리뷰 정책</h4>
-                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
-                        <thead>
-                        <tr>
-                            <th style="width: 30%;">정책명</th>
-                            <th style="width: 15%;">포인트 수치</th>
-                            <th style="width: 20%;">생성일</th>
-                            <th style="width: 20%;">활성 상태</th>
-                            <th style="width: 15%;">관리</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="policy : ${pointPolicies_review}">
-                            <td th:text="${policy.pointPolicyName}">정책명</td>
-                            <td>
-                                <input type="number"
-                                       th:value="${policy.pointPolicyFigure}"
-                                       th:id="'figure-' + ${policy.pointPolicyId}"
-                                       class="form-control"
-                                       readonly />
-                            </td>
-                            <td th:text="${#temporals.format(policy.pointPolicyCreatedAt, 'yyyy-MM-dd HH:mm')}">2024-01-01</td>
-                            <td>
-                                <span th:text="${policy.pointPolicyIsActive} ? '활성' : '비활성'"
-                                    th:classappend="${policy.pointPolicyIsActive} ? 'text-success' : 'text-secondary'">활성</span>
-                                <button type="button" class="btn btn-sm btn-outline-primary ms-2"
-                                        th:if="${!policy.pointPolicyIsActive}"
-                                        th:onclick="'activatePolicy(' + ${policy.pointPolicyId} + ')'">활성화
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
-                                <button type="button" class="btn btn-sm btn-primary d-none save-btn"
-                                        th:onclick="'updatePointPolicy('+${policy.pointPolicyId}+')'">저장</button>
-                                <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                .table thead th {
+                    font-weight: 600;
+                    background: #fafafa;
+                    border-top: 2px solid #666;
+                }
 
-            <!-- 기본 적립률(%) 정책 -->
-            <div class="row mb-5">
-                <div class="col-12">
-                    <h4>기본 적립률(%) 정책</h4>
-                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
-                        <thead>
-                        <tr>
-                            <th style="width: 30%;">정책명</th>
-                            <th style="width: 15%;">포인트 수치 (%)</th>
-                            <th style="width: 20%;">생성일</th>
-                            <th style="width: 20%;">활성 상태</th>
-                            <th style="width: 15%;">관리</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="policy : ${pointPolicies_book}">
-                            <td th:text="${policy.pointPolicyName}">정책명</td>
-                            <td>
-                                <input type="number"
-                                       th:value="${policy.pointPolicyFigure}"
-                                       th:id="'figure-' + ${policy.pointPolicyId}"
-                                       class="form-control"
-                                       readonly />
-                            </td>
-                            <td th:text="${#temporals.format(policy.pointPolicyCreatedAt, 'yyyy-MM-dd HH:mm')}">2024-01-01</td>
-                            <td>
-                                <span th:text="${policy.pointPolicyIsActive} ? '활성' : '비활성'"
-                                      th:classappend="${policy.pointPolicyIsActive} ? 'text-success' : 'text-secondary'">활성</span>
-                                <button type="button" class="btn btn-sm btn-outline-primary ms-2"
-                                        th:if="${!policy.pointPolicyIsActive}"
-                                        th:onclick="'activatePolicy(' + ${policy.pointPolicyId} + ')'">활성화
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
-                                <button type="button" class="btn btn-sm btn-primary d-none save-btn"
-                                        th:onclick="'updatePointPolicy('+${policy.pointPolicyId}+')'">저장</button>
-                                <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                h4 {
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin-bottom: 16px;
+                }
+
+                .policy-section {
+                    border: 1px solid #eee;
+                    padding: 20px;
+                    border-radius: 6px;
+                    margin-bottom: 28px;
+                    background-color: #fff;
+                }
+            </style>
+
+            <!-- 반복 영역 -->
+            <div class="policy-section" th:each="section : ${policySections}">
+                <h4 th:text="${section.title}">정책 제목</h4>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th style="width: 30%;">정책명</th>
+                        <th style="width: 15%;">포인트 수치</th>
+                        <th style="width: 20%;">생성일</th>
+                        <th style="width: 20%;">활성 상태</th>
+                        <th style="width: 15%;">관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="policy : ${section.policies}">
+                        <td th:text="${policy.pointPolicyName}">정책명</td>
+                        <td>
+                            <input type="number"
+                                   th:value="${policy.pointPolicyFigure}"
+                                   th:id="'figure-' + ${policy.pointPolicyId}"
+                                   class="form-control"
+                                   readonly/>
+                        </td>
+                        <td th:text="${#temporals.format(policy.pointPolicyCreatedAt, 'yyyy-MM-dd HH:mm')}">2024-01-01</td>
+                        <td>
+                            <span th:text="${policy.pointPolicyIsActive} ? '활성' : '비활성'"
+                                  th:classappend="${policy.pointPolicyIsActive} ? 'text-success' : 'text-secondary'">활성</span>
+                            <button type="button" class="btn btn-sm btn-outline-primary ms-2"
+                                    th:if="${!policy.pointPolicyIsActive}"
+                                    th:onclick="'activatePolicy(' + ${policy.pointPolicyId} + ')'">활성화
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
+                            <button type="button" class="btn btn-sm btn-primary d-none save-btn"
+                                    th:onclick="'updatePointPolicy(' + ${policy.pointPolicyId} + ')'">저장</button>
+                            <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(section.policies)}">
+                        <td colspan="5" style="padding: 40px 0; color: #777;">정책이 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
         </div>
@@ -241,21 +141,23 @@
 
                     let originalFigure;
 
-                    editBtn.addEventListener("click", () => {
-                        originalFigure = figureInput.value;
-                        figureInput.removeAttribute("readonly");
-                        editBtn.classList.add("d-none");
-                        saveBtn.classList.remove("d-none");
-                        cancelBtn.classList.remove("d-none");
-                    });
+                    if (editBtn && saveBtn && cancelBtn && figureInput) {
+                        editBtn.addEventListener("click", () => {
+                            originalFigure = figureInput.value;
+                            figureInput.removeAttribute("readonly");
+                            editBtn.classList.add("d-none");
+                            saveBtn.classList.remove("d-none");
+                            cancelBtn.classList.remove("d-none");
+                        });
 
-                    cancelBtn.addEventListener("click", () => {
-                        figureInput.value = originalFigure;
-                        figureInput.setAttribute("readonly", true);
-                        editBtn.classList.remove("d-none");
-                        saveBtn.classList.add("d-none");
-                        cancelBtn.classList.add("d-none");
-                    });
+                        cancelBtn.addEventListener("click", () => {
+                            figureInput.value = originalFigure;
+                            figureInput.setAttribute("readonly", true);
+                            editBtn.classList.remove("d-none");
+                            saveBtn.classList.add("d-none");
+                            cancelBtn.classList.add("d-none");
+                        });
+                    }
                 });
             });
         </script>

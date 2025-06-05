@@ -1,6 +1,8 @@
 package com.nhnacademy.front.pointpolicy.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.pointpolicy.model.domain.PointPolicyType;
 import com.nhnacademy.front.pointpolicy.model.dto.request.RequestPointPolicyRegisterDTO;
 import com.nhnacademy.front.pointpolicy.model.dto.request.RequestPointPolicyUpdateDTO;
@@ -41,10 +43,26 @@ public class PointPolicyController {
 		List<ResponsePointPolicyDTO> responseReview = pointPolicyService.getReviewPointPolicy();
 		List<ResponsePointPolicyDTO> responseBook = pointPolicyService.getBookPointPolicy();
 
-		model.addAttribute("pointPolicies_register", responseRegister);
-		model.addAttribute("pointPolicies_review_img", responseReviewImg);
-		model.addAttribute("pointPolicies_review", responseReview);
-		model.addAttribute("pointPolicies_book", responseBook);
+		List<Map<String, Object>> sections = new ArrayList<>();
+
+		sections.add(Map.of(
+			"title", "회원가입 정책",
+			"policies", responseRegister
+		));
+		sections.add(Map.of(
+			"title", "이미지 리뷰 정책",
+			"policies", responseReviewImg
+		));
+		sections.add(Map.of(
+			"title", "일반 리뷰 정책",
+			"policies", responseReview
+		));
+		sections.add(Map.of(
+			"title", "기본 적립률(%) 정책",
+			"policies", responseBook
+		));
+
+		model.addAttribute("policySections", sections);
 		return "admin/pointpolicy/point-policy";
 	}
 
@@ -64,12 +82,13 @@ public class PointPolicyController {
 	 */
 	@JwtTokenCheck
 	@PostMapping("/admin/settings/pointPolicies/register")
-	public String createPointPolicies(@Validated @ModelAttribute RequestPointPolicyRegisterDTO request, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+	public String createPointPolicies(@Validated @ModelAttribute RequestPointPolicyRegisterDTO request,
+		BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		pointPolicyService.createPointPolicy(request);
-		return "redirect:/admin/settings/point-policies";
+		return "redirect:/admin/settings/pointPolicies";
 	}
 
 	/**
@@ -86,7 +105,7 @@ public class PointPolicyController {
 	public ResponseEntity<Void> updatePointPolicy(@PathVariable("pointPolicyId") Long pointPolicyId,
 		@Validated @ModelAttribute RequestPointPolicyUpdateDTO request,
 		BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		pointPolicyService.updatePointPolicy(pointPolicyId, request);
