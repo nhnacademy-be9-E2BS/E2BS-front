@@ -62,6 +62,11 @@ public class OrderService {
 		return orderAdaptor.getOrdersByMemberId(pageable, memberId);
 	}
 
+	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByCustomerId(Pageable pageable, long customerId)
+		throws FeignException {
+		return orderAdaptor.getOrdersByCustomerId(pageable, customerId);
+	}
+
 	/**
 	 * 주문 상세 조회 시 사용하는 메서드
 	 * 관리자 + 일반 회원 둘 다 사용 메서드

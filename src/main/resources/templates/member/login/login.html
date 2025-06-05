@@ -76,6 +76,36 @@
                 .btn-cancel {
                     background: #ccc;
                 }
+
+                .login-tab {
+                    padding: 12px 24px;
+                    border: 1px solid #ccc;
+                    border-bottom: none;
+                    border-radius: 12px 12px 0 0;
+                    cursor: pointer;
+                    font-weight: bold;
+                    font-size: 14px;
+                }
+
+                .tab-active {
+                    background-color: #e0d6cd;
+                    color: #5a3e2b;
+                }
+
+                .tab-inactive {
+                    background-color: #cccccc;
+                    color: #666666;
+                }
+
+                .tab-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-end;
+                }
+
+                #memberTab, #guestTab {
+                    width: 170px;
+                }
             </style>
             <div class="row">
                 <div class="col-lg-6">
@@ -89,34 +119,120 @@
                 <div class="col-lg-6">
                     <div class="login_form_inner">
                         <h3>E2BS</h3>
-                        <form class="row login_form" action="/member/login" method="post" id="contactForm">
-                            <div class="col-md-12 form-group">
-                                <input type="text" class="form-control" id="memberId" name="memberId"
-                                       placeholder="아이디 입력하세요" onfocus="this.placeholder = ''"
-                                       onblur="this.placeholder = '아이디 입력하세요'" required>
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <input type="password" class="form-control" id="customerPassword"
-                                       name="customerPassword"
-                                       placeholder="비밀번호 입력하세요" onfocus="this.placeholder = ''"
-                                       onblur="this.placeholder = '비밀번호 입력하세요'" required>
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <button type="submit" value="submit" class="button button-login w-100">로그인</button>
-                            </div>
+                        <br>
+                        <div class="tab-container">
+                            <div id="memberTab" class="login-tab tab-active">회원 로그인</div>
+                            <div id="guestTab" class="login-tab tab-inactive">비회원 주문조회</div>
+                        </div>
+                        <br>
+                        <div id="loginTab">
+                            <form class="row login_form" action="/member/login" method="post" id="contactForm">
+                                <div class="col-md-12 form-group">
+                                    <input type="text" class="form-control" id="memberId" name="memberId"
+                                           placeholder="아이디 입력하세요" onfocus="this.placeholder = ''"
+                                           onblur="this.placeholder = '아이디 입력하세요'" required>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <input type="password" class="form-control" id="customerPassword"
+                                           name="customerPassword"
+                                           placeholder="비밀번호 입력하세요" onfocus="this.placeholder = ''"
+                                           onblur="this.placeholder = '비밀번호 입력하세요'" required>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <button type="submit" value="submit" class="button button-login w-100">로그인</button>
+                                </div>
 
 
-                            <!-- PAYCO 로그인 박스 -->
-                            <h2 class="payco-title">PAYCO</h2>
-                            <p class="payco-desc">E2BS 서비스는 PAYCO 아이디로<br>간편한 로그인을 이용할 수 있습니다.</p>
-                            <a href="/oauth2/authorization/payco" class="payco-button">
-                                PAYCO로 로그인
-                            </a>
-                        </form>
+                                <!-- PAYCO 로그인 박스 -->
+                                <h2 class="payco-title">PAYCO</h2>
+                                <p class="payco-desc">E2BS 서비스는 PAYCO 아이디로<br>간편한 로그인을 이용할 수 있습니다.</p>
+                                <a href="/oauth2/authorization/payco" class="payco-button">
+                                    PAYCO로 로그인
+                                </a>
+                            </form>
+                        </div>
+                        <div id="guestOrderTab" style="display: none;">
+                            <div class="row login_form">
+                                <div class="col-md-12 form-group">
+                                    <input type="text" class="form-control" id="guestEmail"
+                                           placeholder="이메일 입력하세요" onfocus="this.placeholder = ''"
+                                           onblur="this.placeholder = '이메일 입력하세요'" required>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <input type="password" class="form-control"
+                                           id="guestPassword"
+                                           placeholder="비밀번호 입력하세요" onfocus="this.placeholder = ''"
+                                           onblur="this.placeholder = '비밀번호 입력하세요'" required>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <button type="submit" onclick="guestOrderLogin()" class="button button-login w-100">조회하기</button>
+                                </div>
+                            </div>
+                            <span>※비회원으로 주문하신 내역이 있는 분만 이용이 가능합니다.</span>
+                            <br>
+                            <span>※비회원 주문 시 입력한 이메일, 비밀번호로 로그인해주세요.</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!--비회원 로그인 및 창 이동-->
+        <script>
+            function guestOrderLogin(){
+                const guestEmail = document.getElementById('guestEmail').value;
+                const guestPassword = document.getElementById('guestPassword').value;
+                if(guestEmail === ""){
+                    alert("이메일을 입력해주세요");
+                    return;
+                }
+                if(guestPassword === ""){
+                    alert("비밀번호를 적어주세요");
+                    return;
+                }
+
+                fetch("/customers/order/login",{
+                    method: "POST",
+                    headers : {"Content-Type": "application/json",},
+                    body: JSON.stringify({customerEmail: guestEmail, customerPassword: guestPassword})
+                }).then(res =>{
+                    if(res.ok){
+                        alert("성공");
+                        // window.location.href = "/customers/"+ res.json() +"/orders";
+                    }else{
+                        alert("이메일과 비밀번호를 다시 확인해주세요.");
+                    }
+                })
+            }
+        </script>
+
+        <!--로그인, 비회원 주문 조회 창 전환-->
+        <script>
+            const memberTab = document.getElementById('memberTab');
+            const guestTab = document.getElementById('guestTab');
+            const loginTab = document.getElementById('loginTab');
+            const guestOrderTab = document.getElementById('guestOrderTab');
+
+            memberTab.addEventListener('click', () => {
+                memberTab.classList.add('tab-active');
+                memberTab.classList.remove('tab-inactive');
+
+                guestTab.classList.add('tab-inactive');
+                guestTab.classList.remove('tab-active');
+                loginTab.style.display = 'block';
+                guestOrderTab.style.display = 'none';
+            });
+
+            guestTab.addEventListener('click', () => {
+                guestTab.classList.add('tab-active');
+                guestTab.classList.remove('tab-inactive');
+
+                memberTab.classList.add('tab-inactive');
+                memberTab.classList.remove('tab-active');
+                loginTab.style.display = 'none';
+                guestOrderTab.style.display = 'block';
+            });
+        </script>
 
         <!-- 로그인 실패 시 팝업창 -->
         <script>
