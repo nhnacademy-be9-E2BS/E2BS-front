@@ -8,28 +8,52 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>Company Management</h2>
+            <style>
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 15px;
+                }
 
+                th, td {
+                    border-bottom: 1px solid #e0e0e0;
+                    padding: 12px 16px;
+                    text-align: center;
+                }
+
+                th {
+                    background-color: #f8f9fa;
+                    font-weight: bold;
+                    color: #333;
+                }
+
+                tr:hover {
+                    background-color: #f1f1f1;
+                }
+            </style>
+
+            <h3>출판사 관리</h3>
+            <br>
             <!-- 등록 폼 -->
             <div class="row">
                 <div class="col-lg-8">
-                    <h4>Register New Company</h4>
+                    <h4>출판사 등록</h4>
                     <form class="row login_form" action="/admin/settings/companies" method="post">
                         <div class="col-md-12 form-group">
                             <input type="text" class="form-control" name="publisherName" placeholder="출판사명" required>
                         </div>
-                        <div class="col-md-12 form-group mt-3">
-                            <button type="submit" class="button button-register w-100">Register Company</button>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" class="button button-register w-100">등록하기</button>
                         </div>
                     </form>
                 </div>
             </div>
-
+            <br>
             <!-- 조회 영역 -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <h4>Company List</h4>
-                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                    <h4>출판사 목록</h4>
+                    <table>
                         <thead>
                         <tr>
                             <th style="width: 80%;">출판사명</th>
@@ -54,7 +78,7 @@
                                     <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
 
                                     <!-- 저장 버튼 -->
-                                    <button type="button" class="btn btn-sm btn-primary d-none save-btn" th:onclick="'updatePublisher('+${publisher.publisherId}+')'">저장</button>
+                                    <button type="button" class="btn btn-sm btn-success d-none save-btn" th:onclick="'updatePublisher('+${publisher.publisherId}+')'">저장</button>
 
                                     <!-- 취소 버튼 (초기에는 숨김) -->
                                     <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>

@@ -8,12 +8,54 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>Paper Management</h2>
+            <style>
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 15px;
+                }
 
+                th, td {
+                    border-bottom: 1px solid #e0e0e0;
+                    padding: 12px 16px;
+                    text-align: center;
+                    vertical-align: middle;
+                }
+
+                th {
+                    background-color: #f8f9fa;
+                    font-weight: bold;
+                    color: #333;
+                }
+
+                tr:hover {
+                    background-color: #f1f1f1;
+                }
+
+                select {
+                    padding: 6px;
+                    border-radius: 6px;
+                }
+
+                .form-check-input {
+                    vertical-align: middle;
+                    position: relative;
+                    top: 2px;
+                }
+
+                .form-check input[type="radio"] {
+                    position: absolute;
+                    margin-top: 2px;
+                    margin-left: -1.25rem;
+                }
+            </style>
+
+            <h3>포장지 관리</h3>
+            <br>
             <!-- 등록 폼 -->
             <div class="row">
                 <div class="col-lg-8">
-                    <h4>Register New Paper</h4>
+                    <h4>포장지 등록</h4>
                     <form class="row login_form" action="/admin/settings/papers" method="post" enctype="multipart/form-data">
                         <div class="col-md-6 form-group">
                             <input type="text" class="form-control" name="wrapperName" placeholder="포장지명" required>
@@ -21,33 +63,32 @@
                         <div class="col-md-6 form-group">
                             <input type="number" class="form-control" name="wrapperPrice" placeholder="포장지 가격" required>
                         </div>
-                        <!-- 추후에 이미지 업로드로 수정 필요 -->
                         <div class="col-md-6 form-group">
-                            <input type="file" class="form-control-file" name="wrapperImage" accept="image/*" placeholder="포장지 이미지" required>
+                            <input type="file" name="wrapperImage" accept="image/*" placeholder="포장지 이미지" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="wrapperSaleable" id="saleableTrue" value="true" required>
                                 <label class="form-check-label" for="saleableTrue">판매 가능</label>
                             </div>
-
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="wrapperSaleable" id="saleableFalse" value="false">
                                 <label class="form-check-label" for="saleableFalse">판매 불가</label>
                             </div>
                         </div>
-                        <div class="col-md-12 form-group mt-3">
-                            <button type="submit" class="button button-register w-100">Register Paper</button>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" class="button button-register w-100">등록하기</button>
                         </div>
                     </form>
                 </div>
             </div>
+            <br>
 
             <!-- 조회 영역 -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <h4>Paper List</h4>
-                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                    <h4>포장지 목록</h4>
+                    <table>
                         <thead>
                         <tr>
                             <th style="width: 25%;">포장지명</th>
@@ -59,17 +100,17 @@
                         <tbody>
                         <tr th:each="wrapper : ${wrappers}">
                             <td th:text="${wrapper.wrapperName}"></td>
-                            <td th:text="${wrapper.wrapperPrice}"></td>
+                            <td th:text="${#numbers.formatInteger(wrapper.wrapperPrice, 1, 'COMMA')}"></td>
                             <td>
                                 <img th:src="${wrapper.wrapperImage}" style="max-width: 200px; height: auto;">
                             </td>
                             <td th:id="'saleable-' + ${wrapper.wrapperId}">
-                                <select
-                                        class="form-control saleable-dropdown"
-                                        th:onchange="'updateWrapperSaleable(' + ${wrapper.wrapperId} + ')'">
-                                    <option value="true" th:selected="${wrapper.wrapperSaleable}">판매 중</option>
-                                    <option value="false" th:selected="${!wrapper.wrapperSaleable}">판매 중지</option>
-                                </select>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <select th:onchange="'updateWrapperSaleable(' + ${wrapper.wrapperId} + ')'">
+                                        <option value="true" th:selected="${wrapper.wrapperSaleable}">판매 중</option>
+                                        <option value="false" th:selected="${!wrapper.wrapperSaleable}">판매 중지</option>
+                                    </select>
+                                </div>
                             </td>
                         </tr>
                         </tbody>
@@ -110,7 +151,7 @@
 
         <script>
             function updateWrapperSaleable(wrapperId) {
-                const selectedValue = document.querySelector(`#saleable-${wrapperId} > div > span`).innerHTML;
+                const selectedValue = document.querySelector(`#saleable-${wrapperId} > div > div > span`).innerHTML;
                 const wrapperSaleable = selectedValue === "판매 중";
 
                 console.log("Selected saleable value:", selectedValue);
