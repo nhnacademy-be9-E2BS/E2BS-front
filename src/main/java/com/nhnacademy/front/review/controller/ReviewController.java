@@ -103,7 +103,7 @@ public class ReviewController {
 
 		model.addAttribute("reviewsByMember", reviewsByMember);
 
-		return "review/member-review";
+		return "member/mypage/member-review";
 	}
 
 }
