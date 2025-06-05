@@ -342,6 +342,43 @@ public class OrderController {
 		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
 		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
 		model.addAttribute("orders", orders);
+		model.addAttribute("customerId", customerId);
 		return "customer/orders";
+	}
+
+
+	@GetMapping("/customers/{customerId}/orders/{orderCode}")
+	public String getCustomerOrderDetails(Model model, @PathVariable long customerId, @PathVariable String orderCode) {
+		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);
+		ResponseOrderWrapperDTO responseOrder = response.getBody();
+		ResponseOrderDTO order = responseOrder.getOrder();
+		List<ResponseOrderDetailDTO> orderDetails = responseOrder.getOrderDetails();
+
+		long productAmount = 0;
+		for (ResponseOrderDetailDTO orderDetail : orderDetails) {
+			productAmount += orderDetail.getOrderDetailPerPrice() * orderDetail.getOrderQuantity();
+			// 포장지가 있다면 포장지 가격도 포함
+			if (orderDetail.getWrapperPrice() != null) {
+				productAmount += orderDetail.getWrapperPrice() * orderDetail.getOrderQuantity();
+			}
+		}
+		LocalDate shipmentDate = order.getShipmentDate();
+		LocalDate now = LocalDate.now();
+
+		boolean isReturnAvailable = false;
+		boolean isChangeOfMindReturnAvailable = false;
+		if (shipmentDate != null) {
+			long daysBetween = ChronoUnit.DAYS.between(shipmentDate, now);
+			isReturnAvailable = daysBetween <= 30;
+			isChangeOfMindReturnAvailable = daysBetween <= 10;
+		}
+
+		model.addAttribute("isReturnAvailable", isReturnAvailable);
+		model.addAttribute("isChangeOfMindReturnAvailable", isChangeOfMindReturnAvailable);
+		model.addAttribute("order", order);
+		model.addAttribute("orderDetails", orderDetails);
+		model.addAttribute("productAmount", productAmount);
+
+		return "customer/orderDetails";
 	}
 }

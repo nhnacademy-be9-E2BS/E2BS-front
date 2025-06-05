@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/mypage-layout}">
+      layout:decorate="~{layouts/customer-layout}">
 <body>
 <div layout:fragment="content">
     <section>
@@ -98,7 +98,7 @@
                         <span th:case="false">결제 대기</span>
                     </td>
                     <td style="text-align: center;">
-                        <a th:href="'/mypage/orders/'+${order.orderCode}">상세 보기</a>
+                        <a th:href="'/customers/'+ ${customerId} +'/orders/'+${order.orderCode}">상세 보기</a>
                     </td>
                 </tr>
 

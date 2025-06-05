@@ -197,11 +197,12 @@
                     body: JSON.stringify({customerEmail: guestEmail, customerPassword: guestPassword})
                 }).then(res =>{
                     if(res.ok){
-                        alert("성공");
-                        // window.location.href = "/customers/"+ res.json() +"/orders";
+                        return res.json();
                     }else{
                         alert("이메일과 비밀번호를 다시 확인해주세요.");
                     }
+                }).then(data => {
+                    window.location.href = "/customers/"+ data +"/orders";
                 })
             }
         </script>
