@@ -120,7 +120,7 @@
                                             th:formaction="@{/members/carts}" type="submit">
                                         <i class="ti-shopping-cart"></i>
                                         <span class="nav-shop__circle"
-                                              th:if="${session.cartItemsCounts > 0}"
+                                              th:style="${session.cartItemsCounts == null || session.cartItemsCounts == 0} ? 'display:none;' : ''"
                                               th:text="${session.cartItemsCounts}">0</span>
                                     </button>
 
@@ -128,7 +128,7 @@
                                             th:formaction="@{/guests/carts}" type="submit">
                                         <i class="ti-shopping-cart"></i>
                                         <span class="nav-shop__circle"
-                                              th:if="${session.cartItemsCounts > 0}"
+                                              th:style="${session.cartItemsCounts == null || session.cartItemsCounts == 0} ? 'display:none;' : ''"
                                               th:text="${session.cartItemsCounts}">0</span>
                                     </button>
                                 </form>

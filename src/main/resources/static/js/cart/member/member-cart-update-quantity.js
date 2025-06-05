@@ -74,6 +74,14 @@ function sendCartUpdate(productId, cartItemsId, quantity) {
             quantity: quantity
         }),
         success: function (response) {
+            console.log(typeof response);
+            console.log(response);
+
+            if (response === 0) {
+                $(`.nav-shop__circle`).hide();
+            } else {
+                $(`.nav-shop__circle`).text(response);
+            }
             console.log('장바구니 수량 업데이트 성공:', response.message);
         },
         error: function (xhr, status, error) {

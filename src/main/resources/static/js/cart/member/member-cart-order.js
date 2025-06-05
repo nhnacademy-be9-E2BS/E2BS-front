@@ -81,9 +81,13 @@ $(document).ready(function () {
             cartQuantities: selectedCartQuantities
         };
 
+        console.log('cartOrder: ', cartOrder)
+
         // 직렬화 → Base64 인코딩
         const jsonStr = JSON.stringify(cartOrder);
         const encoded = btoa(unescape(encodeURIComponent(jsonStr)));  // 한글깨짐 방지
+
+        console.log('encoded: ' + encoded)
 
         // 쿠키 저장
         document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=strict`;

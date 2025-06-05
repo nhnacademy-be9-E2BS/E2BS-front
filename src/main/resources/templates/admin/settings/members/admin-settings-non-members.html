@@ -3,30 +3,76 @@
       layout:decorate="~{layouts/admin-layout}">
 <body>
 <div layout:fragment="content">
-    <h3>비회원 고객 목록</h3>
     <section>
         <div class="container" style="padding: 20px;">
             <style>
                 table {
                     width: 100%;
                     border-collapse: collapse;
-                    margin-top: 30px;
-                }
-
-                th, td {
-                    border-bottom: 1px solid #e0e0e0;
-                    padding: 12px 16px;
-                    text-align: center;
+                    margin-top: 20px;
+                    font-family: 'Segoe UI', sans-serif;
+                    font-size: 14px;
+                    background-color: #fff;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
                 }
 
                 th {
-                    background-color: #f8f9fa;
-                    font-weight: bold;
-                    color: #333;
+                    background-color: #3f51b5;
+                    color: white;
+                    font-weight: 600;
+                    padding: 14px;
+                    text-align: center;
+                }
+
+                td {
+                    padding: 14px;
+                    text-align: center;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+
+                tr:last-child td {
+                    border-bottom: none;
                 }
 
                 tr:hover {
+                    background-color: #f9f9f9;
+                }
+
+                .pagination {
+                    display: flex;
+                    list-style: none;
+                    padding: 0;
+                    margin-top: 30px;
+                }
+
+                .page-item {
+                    margin: 0 4px;
+                }
+
+                .page-link {
+                    display: block;
+                    padding: 8px 14px;
+                    border-radius: 6px;
                     background-color: #f1f1f1;
+                    color: #333;
+                    text-decoration: none;
+                }
+
+                .page-item.active .page-link {
+                    background-color: #3f51b5;
+                    color: white;
+                    font-weight: 600;
+                }
+
+                .page-item.disabled .page-link {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+
+                h2 {
+                    font-family: 'Segoe UI', sans-serif;
                 }
             </style>
 
@@ -46,6 +92,31 @@
                 </tr>
                 </tbody>
             </table>
+
+            <!-- 페이징 -->
+            <div style="display: flex; justify-content: center;">
+                <nav>
+                    <ul class="pagination" th:if="${nonMembers.totalPages > 0}">
+                        <li class="page-item" th:classappend="${!nonMembers.hasPrevious()} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{'/admin/settings/customers'(page=0, size=${nonMembers.size})}">처음</a>
+                        </li>
+
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(0, nonMembers.totalPages - 1)}"
+                            th:classappend="${i == nonMembers.number} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{'/admin/settings/customers'(page=${i}, size=${nonMembers.size})}"
+                               th:text="${i + 1}">1</a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${!nonMembers.hasNext()} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{'/admin/settings/customers'(page=${nonMembers.totalPages - 1}, size=${nonMembers.size})}">마지막</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
 
         </div>
     </section>
