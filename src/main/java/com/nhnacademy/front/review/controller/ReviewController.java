@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
@@ -97,7 +97,8 @@ public class ReviewController {
 	 */
 	@JwtTokenCheck
 	@GetMapping("/mypage/reviews")
-	public String getReviewsByCustomer(HttpServletRequest request, @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+	public String getReviewsByCustomer(HttpServletRequest request,
+		                              @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 
 		PageResponse<ResponseMemberReviewDTO> response = reviewService.getReviewsByMember(memberId, pageable);
