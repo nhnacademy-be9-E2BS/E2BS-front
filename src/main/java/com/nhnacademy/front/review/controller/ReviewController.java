@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseMemberReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
@@ -86,6 +88,22 @@ public class ReviewController {
 		model.addAttribute("starCounts", reviewInfo.getStarCounts());
 
 		return "review/product-detail";
+	}
+
+	/**
+	 * 회원이 작성한 리뷰 페이징 목록 조회
+	 */
+	@JwtTokenCheck
+	@GetMapping("/mypage/reviews")
+	public String getReviewsByCustomer(HttpServletRequest request, @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+
+		PageResponse<ResponseMemberReviewDTO> response = reviewService.getReviewsByMember(memberId, pageable);
+		Page<ResponseMemberReviewDTO> reviewsByMember = PageResponseConverter.toPage(response);
+
+		model.addAttribute("reviewsByMember", reviewsByMember);
+
+		return "review/member-review";
 	}
 
 }
