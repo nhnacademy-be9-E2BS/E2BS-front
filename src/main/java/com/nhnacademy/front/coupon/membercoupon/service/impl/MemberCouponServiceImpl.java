@@ -40,7 +40,25 @@ public class MemberCouponServiceImpl implements MemberCouponService {
 	public PageResponse<ResponseMemberCouponDTO> getMemberCouponsByMemberId(String memberId, Pageable pageable) throws FeignException {
 		ResponseEntity<PageResponse<ResponseMemberCouponDTO>> response = memberCouponBoxAdaptor.getMemberCouponsByMemberId(memberId, pageable);
 		if(!response.getStatusCode().is2xxSuccessful()) {
-			throw new CouponBoxGetProcessException("회원 아이디로 쿠폰 조회 실패");
+			throw new CouponBoxGetProcessException("회원 아이디로 전체 쿠폰 조회 실패");
+		}
+		return response.getBody();
+	}
+
+	@Override
+	public PageResponse<ResponseMemberCouponDTO> getUsableMemberCouponsByMemberId(String memberId, Pageable pageable) throws FeignException {
+		ResponseEntity<PageResponse<ResponseMemberCouponDTO>> response = memberCouponBoxAdaptor.getUsableMemberCouponsByMemberId(memberId, pageable);
+		if(!response.getStatusCode().is2xxSuccessful()) {
+			throw new CouponBoxGetProcessException("회원 아이디로 사용가능 쿠폰 조회 실패");
+		}
+		return response.getBody();
+	}
+
+	@Override
+	public PageResponse<ResponseMemberCouponDTO> getUnusableMemberCouponsByMemberId(String memberId, Pageable pageable) throws FeignException {
+		ResponseEntity<PageResponse<ResponseMemberCouponDTO>> response = memberCouponBoxAdaptor.getUnusableMemberCouponsByMemberId(memberId, pageable);
+		if(!response.getStatusCode().is2xxSuccessful()) {
+			throw new CouponBoxGetProcessException("회원 아이디로 사용불가 쿠폰 조회 실패");
 		}
 		return response.getBody();
 	}

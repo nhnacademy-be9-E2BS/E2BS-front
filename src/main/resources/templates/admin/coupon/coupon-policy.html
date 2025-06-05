@@ -6,131 +6,194 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>Coupon Policy Management</h2>
+            <h2>쿠폰 정책 관리</h2>
 
-            <!-- 카드로 감싼 폼 영역 -->
-            <div class="row mb-5">
-                <div class="col-12">
-                    <br>
-                    <form action="/admin/settings/couponPolicies" method="post" id="couponPolicyForm">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="minimumAmount" class="form-label">최소주문금액</label>
-                                <input type="number" class="form-control" name="couponPolicyMinimum" id="minimumAmount" placeholder="ex) 30000" required>
-                            </div>
+            <!-- 스타일 -->
+            <style>
+                .table th, .table td {
+                    text-align: center;
+                    vertical-align: middle;
+                    color: #333;
+                    font-size: 15px;
+                }
 
-                            <!-- 할인 방식 선택 -->
-                            <div class="col-md-12">
-                                <label class="form-label">할인 방식 선택</label>
-                                <div class="form-check form-check-inline ms-2">
-                                    <input class="form-check-input" type="radio" name="discountType" id="rateType" value="rate" checked>
-                                    <label class="form-check-label" for="rateType">정률 (%)</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="discountType" id="amountType" value="amount">
-                                    <label class="form-check-label" for="amountType">정액 (₩)</label>
-                                </div>
-                            </div>
+                .table thead th {
+                    font-weight: 600;
+                    background: #fafafa;
+                    border-top: 2px solid #666;
+                }
 
-                            <!-- 정률 필드 -->
-                            <div class="col-md-6 rate-group">
-                                <label for="discountRate" class="form-label">할인률 (%)</label>
-                                <input type="number" class="form-control" name="couponPolicyDiscountRate" id="discountRate" placeholder="ex) 10">
-                            </div>
+                .coupon-section {
+                    border: 1px solid #eee;
+                    padding: 20px;
+                    border-radius: 6px;
+                    background-color: #fff;
+                    margin-bottom: 40px;
+                }
 
-                            <div class="col-md-6 rate-group">
-                                <label for="maximumAmount" class="form-label">최대할인금액</label>
-                                <input type="number" class="form-control" name="couponPolicyMaximumAmount" id="maximumAmount" placeholder="ex) 5000">
-                            </div>
+                .pagination .page-link {
+                    color: #333;
+                }
 
-                            <!-- 정액 필드 -->
-                            <div class="col-md-6 amount-group d-none">
-                                <label for="salePrice" class="form-label">할인금액</label>
-                                <input type="number" class="form-control" name="couponPolicySalePrice" id="salePrice" placeholder="ex) 3000">
-                            </div>
+                .pagination .page-item.active .page-link {
+                    background-color: #666;
+                    border-color: #666;
+                    color: #fff;
+                }
 
-                            <!-- 자동 생성된 정책명 -->
-                            <div class="col-md-12">
-                                <label for="couponPolicyName" class="form-label">쿠폰정책명</label>
-                                <input type="text" class="form-control" name="couponPolicyName" id="couponPolicyName" placeholder="자동 생성 버튼을 눌러주세요" required>
-                            </div>
+                /* 링크 스타일 제거 */
+                a.policy-link {
+                    color: #333 !important;
+                    text-decoration: none;
+                }
 
-                            <!-- 버튼들 -->
-                            <div class="col-md-6">
-                                <button type="button" class="btn btn-outline-secondary w-100" onclick="generatePolicyName()">정책명 자동 생성</button>
+                a.policy-link:hover {
+                    text-decoration: underline;
+                }
+
+                .btn-register {
+                    background-color: #666;
+                    color: #fff;
+                    font-weight: 600;
+                }
+
+                .btn-outline-generate {
+                    border: 1px solid #666;
+                    color: #666;
+                    font-weight: 500;
+                }
+
+                .form-label {
+                    font-weight: 500;
+                }
+            </style>
+
+            <!-- 폼 영역 -->
+            <div class="coupon-section">
+                <h4 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">
+                    쿠폰 정책 등록
+                    <span style="font-size: 14px; color: #888; font-weight: normal;"></span>
+                </h4>
+
+                <form action="/admin/settings/couponPolicies" method="post" id="couponPolicyForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="minimumAmount" class="form-label">최소주문금액</label>
+                            <input type="number" class="form-control" name="couponPolicyMinimum" id="minimumAmount" placeholder="ex) 30000" required>
+                        </div>
+
+                        <!-- 할인 방식 선택 -->
+                        <div class="col-md-12">
+                            <label class="form-label">할인 방식 선택</label>
+                            <div class="form-check form-check-inline ms-2">
+                                <input class="form-check-input" type="radio" name="discountType" id="rateType" value="rate" checked>
+                                <label class="form-check-label" for="rateType">정률 (%)</label>
                             </div>
-                            <div class="col-md-6">
-                                <button type="submit" class="button button-register w-100">Register Policy</button>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="discountType" id="amountType" value="amount">
+                                <label class="form-check-label" for="amountType">정액 (₩)</label>
                             </div>
                         </div>
-                    </form>
-                </div>
-            </div>
 
-            <!-- 조회 영역 -->
-            <div class="row mb-5">
-                <div class="col-12">
-                    <h4>Coupon Policy List</h4>
-                    <table class="table table-bordered" style="table-layout: auto; width: 100%;">
-                        <thead>
-                        <tr style="white-space: nowrap;">
-                            <th>쿠폰정책명</th>
-                            <th>최소주문금액</th>
-                            <th>할인률 (%)</th>
-                            <th>최대할인금액</th>
-                            <th>할인금액</th>
-                            <th>정책생성일</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="policy : ${couponPolicies}">
-                            <td><a th:href="@{/admin/settings/couponPolicies/{id}(id=${policy.getCouponPolicyId()})}"
-                                   th:text="${policy.couponPolicyName}">Policy Name</a></td>
-                            <td th:text="${policy.couponPolicyMinimum}">0</td>
-                            <td th:text="${policy.couponPolicyDiscountRate}">10</td>
-                            <td th:text="${policy.couponPolicyMaximumAmount}">10000</td>
-                            <td th:text="${policy.couponPolicySalePrice}">500</td>
-                            <td th:text="${#temporals.format(policy.couponPolicyCreatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        <!-- 정률 필드 -->
+                        <div class="col-md-6 rate-group">
+                            <label for="discountRate" class="form-label">할인률 (%)</label>
+                            <input type="number" class="form-control" name="couponPolicyDiscountRate" id="discountRate" placeholder="ex) 10">
+                        </div>
+                        <div class="col-md-6 rate-group">
+                            <label for="maximumAmount" class="form-label">최대할인금액</label>
+                            <input type="number" class="form-control" name="couponPolicyMaximumAmount" id="maximumAmount" placeholder="ex) 5000">
+                        </div>
 
-                    <!-- 페이징 영역 -->
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-center">
-                            <nav>
-                                <ul class="pagination" th:if="${couponPolicies.totalPages > 0}">
-                                    <!-- 처음 버튼 -->
-                                    <li class="page-item" th:classappend="${!couponPolicies.hasPrevious()} ? 'disabled'">
-                                        <a class="page-link" th:href="@{'/admin/settings/couponPolicies'(page=0, size=${couponPolicies.size})}">처음</a>
-                                    </li>
+                        <!-- 정액 필드 -->
+                        <div class="col-md-6 amount-group d-none">
+                            <label for="salePrice" class="form-label">할인금액</label>
+                            <input type="number" class="form-control" name="couponPolicySalePrice" id="salePrice" placeholder="ex) 3000">
+                        </div>
 
-                                    <!-- 전체 페이지 번호 출력 -->
-                                    <li class="page-item"
-                                        th:each="i : ${#numbers.sequence(0, couponPolicies.totalPages - 1)}"
-                                        th:classappend="${i == couponPolicies.number} ? 'active'">
-                                        <a class="page-link"
-                                           th:href="@{'/admin/settings/couponPolicies'(page=${i}, size=${couponPolicies.size})}"
-                                           th:text="${i + 1}">1</a>
-                                    </li>
+                        <!-- 자동 생성된 정책명 -->
+                        <div class="col-md-12">
+                            <label for="couponPolicyName" class="form-label">쿠폰정책명</label>
+                            <input type="text" class="form-control" name="couponPolicyName" id="couponPolicyName" placeholder="자동 생성 버튼을 눌러주세요" required>
+                        </div>
 
-                                    <!-- 마지막 버튼 -->
-                                    <li class="page-item" th:classappend="${!couponPolicies.hasNext()} ? 'disabled'">
-                                        <a class="page-link"
-                                           th:href="@{'/admin/settings/couponPolicies'(page=${couponPolicies.totalPages - 1}, size=${couponPolicies.size})}">마지막</a>
-                                    </li>
-                                </ul>
-                            </nav>
+                        <!-- 버튼들 -->
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-outline-generate w-100" onclick="generatePolicyName()">정책명 자동 생성</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-register w-100">쿠폰 정책 등록</button>
                         </div>
                     </div>
-
-
-
-                </div>
+                </form>
             </div>
 
+            <!-- 리스트 영역 -->
+            <div class="coupon-section">
+                <h4 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">
+                    쿠폰 정책 목록
+                    <span style="font-size: 14px; color: #888; font-weight: normal;"></span>
+                </h4>
+
+                <table class="table table-bordered" style="table-layout: auto; width: 100%;">
+                    <thead>
+                    <tr style="white-space: nowrap;">
+                        <th>쿠폰정책명</th>
+                        <th>최소주문금액</th>
+                        <th>할인률 (%)</th>
+                        <th>최대할인금액</th>
+                        <th>할인금액</th>
+                        <th>정책생성일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="policy : ${couponPolicies.content}">
+                        <td>
+                            <a th:href="@{/admin/settings/couponPolicies/{id}(id=${policy.getCouponPolicyId()})}"
+                               th:text="${policy.couponPolicyName}"
+                               class="policy-link">Policy Name</a>
+                        </td>
+                        <td th:text="${policy.couponPolicyMinimum != null ? T(java.lang.String).format('%,d원', policy.couponPolicyMinimum) : ''}">0원</td>
+                        <td th:text="${policy.couponPolicyDiscountRate != null ? policy.couponPolicyDiscountRate + '%' : ''}">0%</td>
+                        <td th:text="${policy.couponPolicyMaximumAmount != null ? T(java.lang.String).format('%,d원', policy.couponPolicyMaximumAmount) : ''}">0원</td>
+                        <td th:text="${policy.couponPolicySalePrice != null ? T(java.lang.String).format('%,d원', policy.couponPolicySalePrice) : ''}">0원</td>
+                        <td th:text="${policy.couponPolicyCreatedAt != null ? #temporals.format(policy.couponPolicyCreatedAt, 'yyyy-MM-dd HH:mm') : ''}">2025-01-01</td>
+
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(couponPolicies.content)}">
+                        <td colspan="6" style="padding: 40px 0; color: #777;">등록된 쿠폰 정책이 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- 페이징 영역 -->
+                <div class="row mt-4">
+                    <div class="col-12 d-flex justify-content-center">
+                        <nav>
+                            <ul class="pagination" th:if="${couponPolicies.totalPages > 0}">
+                                <li class="page-item" th:classappend="${!couponPolicies.hasPrevious()} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{'/admin/settings/couponPolicies'(page=0, size=${couponPolicies.size})}">처음</a>
+                                </li>
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, couponPolicies.totalPages - 1)}"
+                                    th:classappend="${i == couponPolicies.number} ? 'active'">
+                                    <a class="page-link"
+                                       th:href="@{'/admin/settings/couponPolicies'(page=${i}, size=${couponPolicies.size})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${!couponPolicies.hasNext()} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{'/admin/settings/couponPolicies'(page=${couponPolicies.totalPages - 1}, size=${couponPolicies.size})}">마지막</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <!-- 스크립트 -->
         <script th:inline="javascript">
             function toggleDiscountFields() {
                 const rateFields = document.querySelectorAll('.rate-group');
@@ -150,24 +213,10 @@
                 document.querySelectorAll('input[name="discountType"]').forEach(radio => {
                     radio.addEventListener('change', toggleDiscountFields);
                 });
-                toggleDiscountFields(); // 초기화
+                toggleDiscountFields();
             });
 
-            function toggleDiscountFields() {
-                const rateFields = document.querySelectorAll('.rate-group');
-                const amountFields = document.querySelectorAll('.amount-group');
-                const selected = document.querySelector('input[name="discountType"]:checked').value;
-
-                if (selected === 'rate') {
-                    rateFields.forEach(f => f.classList.remove('d-none'));
-                    amountFields.forEach(f => f.classList.add('d-none'));
-                } else {
-                    rateFields.forEach(f => f.classList.add('d-none'));
-                    amountFields.forEach(f => f.classList.remove('d-none'));
-                }
-            }
-
-            // 숫자 포맷 함수 (천 단위 콤마 + 원 단위)
+            // 숫자 포맷 함수 (천 단위 콤마)
             const formatCurrency = (number) => {
                 return parseInt(number, 10).toLocaleString('ko-KR');
             };
@@ -194,13 +243,6 @@
 
                 document.getElementById('couponPolicyName').value = name;
             }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                document.querySelectorAll('input[name="discountType"]').forEach(radio => {
-                    radio.addEventListener('change', toggleDiscountFields);
-                });
-                toggleDiscountFields();
-            });
         </script>
     </section>
 </div>
