@@ -1,5 +1,7 @@
 package com.nhnacademy.front.order.order.service;
 
+import java.time.LocalDate;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -59,9 +61,9 @@ public class OrderService {
 	/**
 	 * 해당 회원의 주문 목록을 가져오는 메서드
 	 */
-	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, String memberId, String stateName)
-		throws FeignException {
-		return orderMemberAdaptor.getOrdersByMemberId(pageable, memberId, stateName);
+	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, String memberId, String stateName,
+		LocalDate startDate, LocalDate endDate, String orderCode) throws FeignException {
+		return orderMemberAdaptor.getOrdersByMemberId(pageable, memberId, stateName, startDate, endDate, orderCode);
 	}
 
 	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByCustomerId(Pageable pageable, long customerId)

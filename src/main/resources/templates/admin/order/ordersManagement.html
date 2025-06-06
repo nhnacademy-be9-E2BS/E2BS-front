@@ -8,25 +8,135 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>주문 조회</h2>
+            <style>
+                .custom-slim-btn {
+                    padding: 6px 18px;
+                    font-size: 15px;
+                    background-color: #8e7b7b;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                }
+
+                .custom-slim-btn:hover {
+                    background-color: #7c6a6a;
+                }
+
+                .custom-date-btn {
+                    padding: 6px 14px;
+                    font-size: 14px;
+                    border-radius: 6px;
+                    background: white;
+                    border: 1px solid #ccc;
+                    color: #333;
+                }
+
+                .custom-date-btn:hover {
+                    background-color: #f0f0f0;
+                }
+
+                .form-select {
+                    padding: 4px 10px !important;
+                    font-size: 14px;
+                    height: auto;
+                }
+
+                .date-range-selectors {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                    margin-bottom: 10px;
+                }
+
+                .date-range-selectors select {
+                    width: 100px;
+                    padding: 6px 10px;
+                    font-size: 14px;
+                }
+
+                .date-range-selectors .dash {
+                    margin: 0 4px;
+                    font-weight: bold;
+                    font-size: 16px;
+                }
+
+                .nice-select {
+                    max-width: 200px;
+                }
+
+                .nice-select .list {
+                    max-height: 200px;
+                    overflow-y: auto;
+                }
+
+                .orderStateSearch {
+                    width: 200px;
+                }
+            </style>
+
+            <h2>주문/배송조회</h2>
+
+            <!-- 조회 영역 (기간 및 상품명) -->
+            <div style="border: 1px solid #aaa; border-radius: 24px; padding: 24px; margin-bottom: 40px;">
+                <div style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">기간별 조회</div>
+                <div class="date-range-selectors" >
+                    <select id="startYear" onchange="updateDays('startYear', 'startMonth', 'startDay')"></select>
+                    <select id="startMonth" onchange="updateDays('startYear', 'startMonth', 'startDay')"></select>
+                    <select id="startDay" class="daySelect"></select>
+
+                    <span class="dash">-</span>
+                    <select id="endYear" onchange="updateDays('endYear', 'endMonth', 'endDay')"></select>
+                    <select id="endMonth" onchange="updateDays('startYear', 'endMonth', 'endDay')"></select>
+                    <select id="endDay" class="daySelect"></select>
+
+                    <form action="/admin/settings/orders" method="GET" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                        <input type="hidden" id="startDate" name="startDate" />
+                        <input type="hidden" id="endDate" name="endDate" />
+                        <button class="custom-slim-btn" onclick="return setDateBeforeSubmit()">조회</button>
+                    </form>
+                </div>
+
+                <div style="font-weight: bold; font-size: 20px; margin-bottom: 10px;">주문코드 조회</div>
+                <div>
+                    <form action="/admin/settings/orders" method="GET" class="d-flex gap-2" style="align-items: center;">
+                        <input type="text" class="form-control" name="orderCode" style="max-width: 320px;">
+                        <button class="btn btn-outline-secondary" type="submit">조회</button>
+                    </form>
+                </div>
+
+                <div style="font-weight: bold; font-size: 20px; margin-bottom: 10px;">회원 ID 조회</div>
+                <div>
+                    <form action="/admin/settings/orders" method="GET" class="d-flex gap-2" style="align-items: center;">
+                        <input type="text" class="form-control" name="memberId" style="max-width: 320px;">
+                        <button class="btn btn-outline-secondary" type="submit">조회</button>
+                    </form>
+                </div>
+
+                <div style="font-weight: bold; font-size: 20px; margin-bottom: 10px;">주문상태 조회</div>
+                <form method="get" action="/admin/settings/orders" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <select id="status" name="status" style="display: inline-block; width: 200px;" class="orderStateSearch">
+                        <option value="">-- 전체 보기 --</option>
+                        <option value="WAIT" th:selected="${param.status == 'WAIT'}">대기</option>
+                        <option value="DELIVERY" th:selected="${param.status == 'DELIVERY'}">배송 중</option>
+                        <option value="COMPLETE" th:selected="${param.status == 'COMPLETE'}">배송 완료</option>
+                        <option value="RETURN" th:selected="${param.status == 'RETURN'}">반품</option>
+                        <option value="CANCEL" th:selected="${param.status == 'CANCEL'}">주문 취소</option>
+                    </select>
+                    <button type="submit"  class="btn btn-outline-secondary">필터 적용</button>
+                </form>
+
+
+                <div style="font-size: 14px; color: #666; margin-top: 14px;">
+                    <i class="fas fa-square" style="font-size: 8px; color: #bcae9e; margin-right: 6px;"></i>
+                    조회기간은 최대 1년 단위로 설정하실 수 있으며, 주문번호를 클릭하시면 주문에 대한 상세정보를 보실 수 있습니다.
+                </div>
+            </div>
 
             <!-- 조회 영역 -->
             <div class="row mb-5">
                 <div class="col-12">
                     <h4>주문 목록</h4>
-                    <form method="get" action="/admin/settings/orders" style="margin-bottom: 1rem;">
-                        <label for="status">주문 상태:</label>
-                        <select id="status" name="status" class="form-select"
-                                style="display: inline-block; width: 200px;">
-                            <option value="">-- 전체 보기 --</option>
-                            <option value="WAIT" th:selected="${param.status == 'WAIT'}">대기</option>
-                            <option value="DELIVERY" th:selected="${param.status == 'DELIVERY'}">배송 중</option>
-                            <option value="COMPLETE" th:selected="${param.status == 'COMPLETE'}">배송 완료</option>
-                            <option value="RETURN" th:selected="${param.status == 'RETURN'}">반품</option>
-                            <option value="CANCEL" th:selected="${param.status == 'CANCEL'}">주문 취소</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary btn-sm">필터 적용</button>
-                    </form>
                     <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <thead>
                         <tr>
@@ -102,7 +212,85 @@
 
         </div>
 
+        <script src="/vendors/jquery/jquery-3.2.1.min.js"></script>
+        <script src="/vendors/nice-select/jquery.nice-select.min.js"></script>
         <script>
+            const now = new Date();
+            const thisYear = now.getFullYear();
+            const yearSelects = [document.getElementById("startYear"), document.getElementById("endYear")];
+            const monthSelects = [document.getElementById("startMonth"), document.getElementById("endMonth")];
+
+            for (let y = thisYear; y >= thisYear - 5; y--) {
+                yearSelects.forEach(select => {
+                    let option = new Option(y, y);
+                    select.add(option);
+                });
+            }
+
+            for (let m = 1; m <= 12; m++) {
+                const padded = String(m).padStart(2, '0');
+                monthSelects.forEach(select => {
+                    let option = new Option(padded, padded);
+                    select.add(option);
+                });
+            }
+            updateDays('startYear', 'startMonth', 'startDay');
+            updateDays('endYear', 'endMonth', 'endDay');
+
+            // select 태그에서 달에 따라 변하는 일 계산
+            function updateDays(yearId, monthId, dayId) {
+                const year = parseInt(document.getElementById(yearId).value);
+                const month = parseInt(document.getElementById(monthId).value);
+                const daySelect = document.getElementById(dayId);
+
+                // 해당 월의 마지막 날짜 계산
+                const lastDay = new Date(year, month, 0).getDate();
+
+                // 기존 옵션 제거
+                daySelect.innerHTML = "";
+
+                for (let d = 1; d <= lastDay; d++) {
+                    const padded = String(d).padStart(2, '0');
+                    let option = new Option(padded, padded);
+                    daySelect.add(option);
+                }
+
+                $('.daySelect').niceSelect('update');
+            }
+
+            function setDateBeforeSubmit() {
+                // 시작일과 종료일의 형식 맞추기
+                const y = document.getElementById("startYear").value;
+                const m = document.getElementById("startMonth").value.padStart(2, '0');
+                const d = document.getElementById("startDay").value.padStart(2, '0');
+                const startDateStr = `${y}-${m}-${d}`;
+
+                const ey = document.getElementById("endYear").value;
+                const em = document.getElementById("endMonth").value.padStart(2, '0');
+                const ed = document.getElementById("endDay").value.padStart(2, '0');
+                const endDateStr = `${ey}-${em}-${ed}`;
+
+                const start = new Date(startDateStr);
+                const end = new Date(endDateStr);
+
+                // 날짜 유효성 체크
+                if (start > end) {
+                    alert("시작일은 종료일보다 이후일 수 없습니다.");
+                    return false;
+                }
+
+                // 최대 1년(365일) 차이 체크
+                const diffDays = (end - start) / (1000 * 60 * 60 * 24); // 밀리초 → 일수
+                if (diffDays > 365) {
+                    alert("조회 기간은 최대 1년까지만 가능합니다.");
+                    return false;
+                }
+
+                // 유효하면 hidden input에 값 넣기
+                document.getElementById("startDate").value = startDateStr;
+                document.getElementById("endDate").value = endDateStr;
+
+            }
 
         </script>
     </section>

@@ -1,5 +1,7 @@
 package com.nhnacademy.front.order.order.service;
 
+import java.time.LocalDate;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,12 +20,9 @@ import lombok.RequiredArgsConstructor;
 public class OrderAdminService {
 	private final OrderAdminAdaptor orderAdminAdaptor;
 
-	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable) throws FeignException {
-		return orderAdminAdaptor.getOrders(pageable);
-	}
-
-	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable, String stateName) {
-		return orderAdminAdaptor.getOrders(pageable, stateName);
+	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable, String status,
+		LocalDate startDate, LocalDate endDate, String orderCode, String memberId) throws FeignException {
+		return orderAdminAdaptor.getOrders(pageable, status, startDate, endDate, orderCode, memberId);
 	}
 
 	public ResponseEntity<Void> startDelivery(@PathVariable String orderCode) {
