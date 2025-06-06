@@ -260,10 +260,12 @@ public class OrderController {
 	@JwtTokenCheck
 	@GetMapping("/mypage/orders")
 	public String getMemberOrders(Model model, HttpServletRequest request,
-		@PageableDefault(page = 0, size = 10) Pageable pageable) {
-		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+		@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false) String status,
+		@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate,
+		@RequestParam(required = false) String orderCode) {
 
-		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByMemberId(pageable, memberId);
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByMemberId(pageable, memberId, status, startDate, endDate, orderCode);
 		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
 		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
 		model.addAttribute("orders", orders);

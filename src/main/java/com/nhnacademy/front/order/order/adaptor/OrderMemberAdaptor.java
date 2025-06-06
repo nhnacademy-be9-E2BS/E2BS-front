@@ -1,5 +1,7 @@
 package com.nhnacademy.front.order.order.adaptor;
 
+import java.time.LocalDate;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,6 @@ import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
-import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 
 @FeignClient(name = "order-member-service", url = "${order.order.auth}")
 public interface OrderMemberAdaptor {
@@ -26,7 +27,11 @@ public interface OrderMemberAdaptor {
 		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO);
 
 	@GetMapping
-	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, @RequestParam String memberId);
+	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, @RequestParam String memberId,
+		@RequestParam(required = false) String stateName,
+		@RequestParam(required = false) LocalDate startDate,
+		@RequestParam(required = false) LocalDate endDate,
+		@RequestParam(required = false) String orderCode);
 
 	@DeleteMapping("/{orderCode}")
 	ResponseEntity<Void> cancelOrder(@PathVariable String orderCode);

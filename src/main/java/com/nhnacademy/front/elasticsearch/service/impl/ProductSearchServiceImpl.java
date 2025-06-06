@@ -57,4 +57,38 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
 		}
 	}
+
+	/**
+	 * 헤더 클릭 시 베스트 도서 조회 (top 30)
+	 */
+	@Override
+	public PageResponse<ResponseProductReadDTO> getBestProducts(Pageable pageable) {
+		try {
+			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getBestProducts(pageable);
+
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+			}
+			return response.getBody();
+		} catch (FeignException e) {
+			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+		}
+	}
+
+	/**
+	 * 헤더 클릭 시 신상 도서 조회 (출판일자 3개월 이내)
+	 */
+	@Override
+	public PageResponse<ResponseProductReadDTO> getNewestProducts(Pageable pageable) {
+		try {
+			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getNewestProducts(pageable);
+
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+			}
+			return response.getBody();
+		} catch (FeignException e) {
+			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+		}
+	}
 }
