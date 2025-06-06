@@ -90,6 +90,7 @@
                                 placeholder="검색어를 입력하세요"
                                 required
                                 class="form-control search-input"
+                                th:value="${param.keyword}"
                         />
                         <button type="submit" class="btn search-button">
                             <i class="fas fa-search"></i>
@@ -151,6 +152,17 @@
     <div class="category-bar py-2 sticky-shadow header_area" style="background-color: white; z-index: 500;">
         <div class="container">
             <ul class="nav menu_nav justify-content-center">
+                <!-- 베스트 도서 링크 -->
+                <li class="nav-item">
+                    <a class="nav-link" style="color: black;" href="/books/search/best">베스트</a>
+                </li>
+
+                <!-- 신상 도서 링크 -->
+                <li class="nav-item">
+                    <a class="nav-link" style="color: black;" href="/books/search/newest">신상</a>
+                </li>
+
+                <!-- 카테고리별 도서 링크 -->
                 <li th:each="category : ${headerCategories}" class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" style="color: black;"
                        th:href="@{/books/search/category/{categoryId}(categoryId=${category.categoryId})}"

@@ -57,6 +57,19 @@
                     font-weight: bold;
                     font-size: 16px;
                 }
+
+                .nice-select {
+                    max-width: 200px;
+                }
+
+                .nice-select .list {
+                    max-height: 200px;
+                    overflow-y: auto;
+                }
+
+                .orderStateSearch {
+                    width: 200px;
+                }
             </style>
 
             <h2>주문/배송조회</h2>
@@ -64,44 +77,52 @@
             <!-- 조회 영역 (기간 및 상품명) -->
             <div style="border: 1px solid #aaa; border-radius: 24px; padding: 24px; margin-bottom: 40px;">
                 <div style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">기간별 조회</div>
-                <div class="date-range-selectors">
-                    <select>
-                        <option>2025</option>
-                    </select>
-                    <select>
-                        <option>5</option>
-                    </select>
-                    <select>
-                        <option>2</option>
-                    </select>
+                <div class="date-range-selectors" >
+                    <select id="startYear" onchange="updateDays('startYear', 'startMonth', 'startDay')"></select>
+                    <select id="startMonth" onchange="updateDays('startYear', 'startMonth', 'startDay')"></select>
+                    <select id="startDay" class="daySelect"></select>
 
                     <span class="dash">-</span>
+                    <select id="endYear" onchange="updateDays('endYear', 'endMonth', 'endDay')"></select>
+                    <select id="endMonth" onchange="updateDays('endYear', 'endMonth', 'endDay')"></select>
+                    <select id="endDay" class="daySelect"></select>
 
-                    <select>
-                        <option>2025</option>
-                    </select>
-                    <select>
-                        <option>6</option>
-                    </select>
-                    <select>
-                        <option>2</option>
-                    </select>
-
-                    <button class="custom-slim-btn">조회</button>
+                    <form action="/mypage/orders" method="GET" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                        <input type="hidden" id="startDate" name="startDate" />
+                        <input type="hidden" id="endDate" name="endDate" />
+                        <button class="custom-slim-btn" onclick="return setDateBeforeSubmit()">조회</button>
+                    </form>
                 </div>
 
                 <div style="font-weight: bold; font-size: 20px; margin-bottom: 10px;">주문코드 조회</div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="text" class="form-control" style="max-width: 320px;"/>
-                    <button class="btn btn-outline-secondary">조회</button>
-                    <span style="color: #888; font-size: 14px;">주문코드 검색</span>
+                <div>
+                    <form action="/mypage/orders" method="GET" class="d-flex gap-2" style="align-items: center;">
+                        <input type="text" class="form-control" name="orderCode" style="max-width: 320px;" th:value="${param.orderCode}">
+                        <button class="btn btn-outline-secondary" type="submit">조회</button>
+                    </form>
                 </div>
+
+
+                <div style="font-weight: bold; font-size: 20px; margin-bottom: 10px;">주문상태 조회</div>
+                <form method="get" action="/mypage/orders" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <select id="status" name="status" style="display: inline-block; width: 200px;" class="orderStateSearch">
+                        <option value="">-- 전체 보기 --</option>
+                        <option value="WAIT">대기</option>
+                        <option value="DELIVERY">배송 중</option>
+                        <option value="COMPLETE">배송 완료</option>
+                        <option value="RETURN">반품</option>
+                        <option value="CANCEL">주문 취소</option>
+                    </select>
+                    <button type="submit"  class="btn btn-outline-secondary">필터 적용</button>
+                </form>
+
 
                 <div style="font-size: 14px; color: #666; margin-top: 14px;">
                     <i class="fas fa-square" style="font-size: 8px; color: #bcae9e; margin-right: 6px;"></i>
                     조회기간은 최대 1년 단위로 설정하실 수 있으며, 주문번호를 클릭하시면 주문에 대한 상세정보를 보실 수 있습니다.
                 </div>
             </div>
+
 
             <!-- 기존 주문 목록 테이블 -->
             <h4 class="mb-4" style="font-weight: bold;">주문 목록</h4>
@@ -158,17 +179,17 @@
                     <nav>
                         <ul class="pagination" th:if="${orders.totalPages > 0}">
                             <li class="page-item" th:classappend="${!orders.hasPrevious()} ? 'disabled'">
-                                <a class="page-link" th:href="@{'/mypage/orders'(page=0, size=${orders.size})}">처음</a>
+                                <a class="page-link" th:href="@{'/mypage/orders'(page=0, size=${orders.size}, orderCode=${param.orderCode}, startDate=${param.startDate}, endDate=${param.endDate}, status=${param.status})}">처음</a>
                             </li>
                             <li class="page-item"
                                 th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}"
                                 th:classappend="${i == orders.number} ? 'active'">
-                                <a class="page-link" th:href="@{'/mypage/orders'(page=${i}, size=${orders.size})}"
+                                <a class="page-link" th:href="@{'/mypage/orders'(page=${i}, size=${orders.size}, orderCode=${param.orderCode}, startDate=${param.startDate}, endDate=${param.endDate}, status=${param.status})}"
                                    th:text="${i + 1}">1</a>
                             </li>
                             <li class="page-item" th:classappend="${!orders.hasNext()} ? 'disabled'">
                                 <a class="page-link"
-                                   th:href="@{'/mypage/orders'(page=${orders.totalPages - 1}, size=${orders.size})}">마지막</a>
+                                   th:href="@{'/mypage/orders'(page=${orders.totalPages - 1}, size=${orders.size}, orderCode=${param.orderCode}, startDate=${param.startDate}, endDate=${param.endDate}, status=${param.status})}">마지막</a>
                             </li>
                         </ul>
                     </nav>
@@ -177,9 +198,136 @@
 
         </div>
 
+        <script src="/vendors/jquery/jquery-3.2.1.min.js"></script>
+        <script src="/vendors/nice-select/jquery.nice-select.min.js"></script>
         <script>
+            const now = new Date();
+            const thisYear = now.getFullYear();
+            const yearSelects = [document.getElementById("startYear"), document.getElementById("endYear")];
+            const monthSelects = [document.getElementById("startMonth"), document.getElementById("endMonth")];
 
+            for (let y = thisYear; y >= thisYear - 5; y--) {
+                yearSelects.forEach(select => {
+                    let option = new Option(y, y);
+                    select.add(option);
+                });
+            }
+
+            for (let m = 1; m <= 12; m++) {
+                const padded = String(m).padStart(2, '0');
+                monthSelects.forEach(select => {
+                    let option = new Option(padded, padded);
+                    select.add(option);
+                });
+            }
+            updateDays('startYear', 'startMonth', 'startDay');
+            updateDays('endYear', 'endMonth', 'endDay');
+
+            // select 태그에서 달에 따라 변하는 일 계산
+            function updateDays(yearId, monthId, dayId) {
+                const year = parseInt(document.getElementById(yearId).value);
+                const month = parseInt(document.getElementById(monthId).value);
+                const daySelect = document.getElementById(dayId);
+
+                // 해당 월의 마지막 날짜 계산
+                const lastDay = new Date(year, month, 0).getDate();
+
+                // 기존 옵션 제거
+                daySelect.innerHTML = "";
+
+                for (let d = 1; d <= lastDay; d++) {
+                    const padded = String(d).padStart(2, '0');
+                    let option = new Option(padded, padded);
+                    daySelect.add(option);
+                }
+
+                $('.daySelect').niceSelect('update');
+            }
+
+            function setDateBeforeSubmit() {
+                // 시작일과 종료일의 형식 맞추기
+                const y = document.getElementById("startYear").value;
+                const m = document.getElementById("startMonth").value.padStart(2, '0');
+                const d = document.getElementById("startDay").value.padStart(2, '0');
+                const startDateStr = `${y}-${m}-${d}`;
+
+                const ey = document.getElementById("endYear").value;
+                const em = document.getElementById("endMonth").value.padStart(2, '0');
+                const ed = document.getElementById("endDay").value.padStart(2, '0');
+                const endDateStr = `${ey}-${em}-${ed}`;
+
+                const start = new Date(startDateStr);
+                const end = new Date(endDateStr);
+
+                // 날짜 유효성 체크
+                if (start > end) {
+                    alert("시작일은 종료일보다 이후일 수 없습니다.");
+                    return false;
+                }
+
+                // 최대 1년(365일) 차이 체크
+                const diffDays = (end - start) / (1000 * 60 * 60 * 24); // 밀리초 → 일수
+                if (diffDays > 365) {
+                    alert("조회 기간은 최대 1년까지만 가능합니다.");
+                    return false;
+                }
+
+                // 유효하면 hidden input에 값 넣기
+                document.getElementById("startDate").value = startDateStr;
+                document.getElementById("endDate").value = endDateStr;
+
+            }
         </script>
+
+        <script>
+            // URL에서 status 파라미터 꺼내기
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get("status");
+
+            if (status) {
+                const select = document.getElementById("status");
+                select.value = status;
+
+                // nice-select는 값 바꿔도 UI가 안 변하므로 강제로 반영
+                $(select).niceSelect('update');
+            }
+
+            const startDate = urlParams.get("startDate");
+
+            if (startDate) {
+                const [year, month, day] = startDate.split("-");
+                const ySelect = document.getElementById("startYear");
+                const mSelect = document.getElementById("startMonth");
+                const dSelect = document.getElementById("startDay");
+
+                ySelect.value = year;
+                mSelect.value = month;
+                dSelect.value = day;
+
+                $(ySelect).niceSelect('update');
+                $(mSelect).niceSelect('update');
+                $(dSelect).niceSelect('update');
+            }
+
+            const endDate = urlParams.get("endDate");
+
+            if (endDate) {
+                const [year, month, day] = endDate.split("-");
+
+                const eySelect = document.getElementById("endYear");
+                const emSelect = document.getElementById("endMonth");
+                const edSelect = document.getElementById("endDay");
+
+                eySelect.value = year;
+                emSelect.value = month;
+                edSelect.value = day;
+
+                $(eySelect).niceSelect('update');
+                $(emSelect).niceSelect('update');
+                $(edSelect).niceSelect('update');
+            }
+        </script>
+
     </section>
 </div>
 </body>
