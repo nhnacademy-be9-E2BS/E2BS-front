@@ -1,7 +1,6 @@
 // 리뷰 작성 모달
 function openReviewCreateModal(button) {
-    const productId = button.getAttribute('data-product-id');
-    document.getElementById('createReviewModalProductId').value = productId;
+    document.getElementById('createReviewModalProductId').value = button.getAttribute('data-product-id');
 
     // 모달 표시
     const modal = new bootstrap.Modal(document.getElementById('reviewCreateModal'));

@@ -75,7 +75,7 @@ function submitReviewUpdate(reviewId, index) {
             } else {
                 // div가 없을 경우 직접 추가할 수도 있음
                 const newImageHtml = `<div class="preview-container mt-2 text-center" id="image-${index}">
-                                                <img src="${response.reviewImageUrl}" 
+                                                <img src="${response.reviewImageUrl}" alt="리뷰 이미지"
                                                      style="max-width:100%; height:auto; border-radius:10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
                                                      onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                                             </div>`;
