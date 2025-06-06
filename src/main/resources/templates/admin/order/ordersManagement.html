@@ -87,7 +87,7 @@
 
                     <span class="dash">-</span>
                     <select id="endYear" onchange="updateDays('endYear', 'endMonth', 'endDay')"></select>
-                    <select id="endMonth" onchange="updateDays('startYear', 'endMonth', 'endDay')"></select>
+                    <select id="endMonth" onchange="updateDays('endYear', 'endMonth', 'endDay')"></select>
                     <select id="endDay" class="daySelect"></select>
 
                     <form action="/admin/settings/orders" method="GET" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -100,7 +100,7 @@
                 <div style="font-weight: bold; font-size: 20px; margin-bottom: 10px;">주문코드 조회</div>
                 <div>
                     <form action="/admin/settings/orders" method="GET" class="d-flex gap-2" style="align-items: center;">
-                        <input type="text" class="form-control" name="orderCode" style="max-width: 320px;">
+                        <input type="text" class="form-control" name="orderCode" style="max-width: 320px;" th:value="${param.orderCode}">
                         <button class="btn btn-outline-secondary" type="submit">조회</button>
                     </form>
                 </div>
@@ -108,7 +108,7 @@
                 <div style="font-weight: bold; font-size: 20px; margin-bottom: 10px;">회원 ID 조회</div>
                 <div>
                     <form action="/admin/settings/orders" method="GET" class="d-flex gap-2" style="align-items: center;">
-                        <input type="text" class="form-control" name="memberId" style="max-width: 320px;">
+                        <input type="text" class="form-control" name="memberId" style="max-width: 320px;" th:value="${param.memberId}">
                         <button class="btn btn-outline-secondary" type="submit">조회</button>
                     </form>
                 </div>
@@ -117,11 +117,11 @@
                 <form method="get" action="/admin/settings/orders" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
                     <select id="status" name="status" style="display: inline-block; width: 200px;" class="orderStateSearch">
                         <option value="">-- 전체 보기 --</option>
-                        <option value="WAIT" th:selected="${param.status == 'WAIT'}">대기</option>
-                        <option value="DELIVERY" th:selected="${param.status == 'DELIVERY'}">배송 중</option>
-                        <option value="COMPLETE" th:selected="${param.status == 'COMPLETE'}">배송 완료</option>
-                        <option value="RETURN" th:selected="${param.status == 'RETURN'}">반품</option>
-                        <option value="CANCEL" th:selected="${param.status == 'CANCEL'}">주문 취소</option>
+                        <option value="WAIT">대기</option>
+                        <option value="DELIVERY">배송 중</option>
+                        <option value="COMPLETE">배송 완료</option>
+                        <option value="RETURN">반품</option>
+                        <option value="CANCEL">주문 취소</option>
                     </select>
                     <button type="submit"  class="btn btn-outline-secondary">필터 적용</button>
                 </form>
@@ -214,6 +214,7 @@
 
         <script src="/vendors/jquery/jquery-3.2.1.min.js"></script>
         <script src="/vendors/nice-select/jquery.nice-select.min.js"></script>
+
         <script>
             const now = new Date();
             const thisYear = now.getFullYear();
@@ -293,6 +294,58 @@
             }
 
         </script>
+
+
+        <script>
+            // URL에서 status 파라미터 꺼내기
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get("status");
+
+            if (status) {
+                const select = document.getElementById("status");
+                select.value = status;
+
+                // nice-select는 값 바꿔도 UI가 안 변하므로 강제로 반영
+                $(select).niceSelect('update');
+            }
+
+            const startDate = urlParams.get("startDate");
+
+            if (startDate) {
+                const [year, month, day] = startDate.split("-");
+                const ySelect = document.getElementById("startYear");
+                const mSelect = document.getElementById("startMonth");
+                const dSelect = document.getElementById("startDay");
+
+                ySelect.value = year;
+                mSelect.value = month;
+                dSelect.value = day;
+
+                $(ySelect).niceSelect('update');
+                $(mSelect).niceSelect('update');
+                $(dSelect).niceSelect('update');
+            }
+
+            const endDate = urlParams.get("endDate");
+
+            if (endDate) {
+                const [year, month, day] = endDate.split("-");
+
+                const eySelect = document.getElementById("endYear");
+                const emSelect = document.getElementById("endMonth");
+                const edSelect = document.getElementById("endDay");
+
+                eySelect.value = year;
+                emSelect.value = month;
+                edSelect.value = day;
+
+                $(eySelect).niceSelect('update');
+                $(emSelect).niceSelect('update');
+                $(edSelect).niceSelect('update');
+            }
+
+        </script>
+
     </section>
 </div>
 </body>
