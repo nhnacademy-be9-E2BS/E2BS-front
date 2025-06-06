@@ -84,14 +84,18 @@
                 <h4 class="mt-5 mb-3">주문 내역</h4>
                 <table class="table table-bordered">
                     <tr>
-                        <th>상품명</th>
+                        <th style="width: 60%;">상품명</th>
                         <th>단일 가격</th>
                         <th>수량</th>
                         <th>포장지</th>
                     </tr>
                     <tr th:each="orderDetail:${orderDetails}">
-                        <td>
-                            <a  th:text="${orderDetail.productName}" th:href="'/books/'+${orderDetail.productId}"></a>
+                        <td class="text-truncate" style="max-width: 1px;">
+                            <a class="d-inline-block text-truncate" style="max-width: 100%;"
+                               th:href="'/books/'+${orderDetail.productId}"
+                               th:title="${orderDetail.productName}"
+                               th:text="${orderDetail.productName}">
+                            </a>
                         </td>
                         <td th:text="${T(java.lang.String).format('%,d',orderDetail.orderDetailPerPrice)}"></td>
                         <td th:text="${orderDetail.orderQuantity}"></td>
