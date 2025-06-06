@@ -16,7 +16,7 @@ function toggleEditForm(textId, editId) {
     }
 }
 
-$(document).on('change', '.custom-file-input', function (event) {
+$(document).on('change', '.form-control', function (event) {
     const input = this;
     const file = input.files[0];
 
@@ -58,7 +58,7 @@ function submitReviewUpdate(reviewId, index) {
         success: function (response) {
             console.log("서버 응답:", response);
 
-            alert('리뷰가 성공적으로 수정되었습니다.');
+            alert('리뷰가 수정되었습니다.');
 
 
             // 텍스트 업데이트
@@ -84,6 +84,42 @@ function submitReviewUpdate(reviewId, index) {
                 message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
                            `상태 코드: ${xhr.responseJSON.status}\n` +
                            `발생 시간: ${xhr.responseJSON.timeStamp}`;
+            }
+
+            alert(message);
+        }
+    });
+}
+
+function submitOrderDetailReviewUpdate() {
+    const reviewId = document.getElementById('updateReviewId').value;
+    console.log("리뷰 ID:", reviewId);
+
+    const form = document.querySelector('#reviewUpdateModal form');
+    const formData = new FormData(form);
+
+    $.ajax({
+        url: `/reviews/${reviewId}`,
+        type: 'PUT',
+        data: formData,
+        contentType: false,      // 중요 multipart 사용 시 false: false로 설정해야 FormData 사용 가능
+        processData: false,      // 중요 multipart 사용 시 false: query string으로 변환되지 않도록 false 설정
+        success: function (response) {
+            console.log("서버 응답:", response);
+            alert('리뷰가 수정되었습니다.');
+
+            window.location.reload();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+            console.error('status:', status);
+            console.error('xhr:', xhr);
+
+            let message = '리뷰 수정 중 오류가 발생했습니다.';
+            if (xhr.responseJSON) {
+                message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
+                    `상태 코드: ${xhr.responseJSON.status}\n` +
+                    `발생 시간: ${xhr.responseJSON.timeStamp}`;
             }
 
             alert(message);

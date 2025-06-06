@@ -138,7 +138,7 @@ class LikeControllerTest {
 					.with(csrf()))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("likeProducts"))
-				.andExpect(view().name("product/products-like"));
+				.andExpect(view().name("member/mypage/products-like"));
 		}
 	}
 

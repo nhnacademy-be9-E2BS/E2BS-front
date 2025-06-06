@@ -72,7 +72,7 @@ public class LikeController {
 
 		model.addAttribute("likeProducts", likeProductsByCustomer);
 
-		return "product/products-like";
+		return "member/mypage/products-like";
 	}
 
 }

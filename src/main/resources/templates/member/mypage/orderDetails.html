@@ -4,6 +4,37 @@
 <html
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layouts/mypage-layout}">
+
+<head>
+    <style>
+        .product-link {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .product-link:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .product-title-wrapper {
+            font-weight: 500;          /* 글씨 진하게 */
+            color: #333;               /* 진한 색상으로 */
+            width: 350px;              /* 원하는 고정 너비 설정 */
+            white-space: nowrap;       /* 텍스트 줄바꿈 방지 */
+            overflow: hidden;          /* 넘치는 텍스트 숨김 */
+            text-overflow: ellipsis;   /* 넘치는 텍스트 생략 (...) 처리 */
+        }
+        .fa-star {
+            color: #ccc;
+            transition: color 0.2s ease;
+        }
+        .fa-star.filled {
+            color: gold;
+            transition: color 0.2s ease;
+        }
+    </style>
+</head>
+
 <body>
 <div layout:fragment="content">
 
@@ -40,6 +71,115 @@
         </div>
     </div>
 
+    <!-- 리뷰 작성 모달 -->
+    <div class="modal" id="reviewCreateModal" tabindex="-1" aria-labelledby="reviewCreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- 넓은 모달 -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewCreateModalLabel">리뷰 작성</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-contact form-review mt-3">
+                        <input type="hidden" name="productId" id="createReviewModalProductId" />
+
+                        <!-- 평점 -->
+                        <div class="form-group mb-3">
+                            <label class="fw-bold mb-1">평점 선택</label>
+                            <ul class="list d-flex gap-2 px-0 mb-2" style="list-style: none;">
+                                <li><a href="#" class="star" data-star-value="1"><i class="fa fa-star fa-2x"></i></a></li>
+                                <li><a href="#" class="star" data-star-value="2"><i class="fa fa-star fa-2x"></i></a></li>
+                                <li><a href="#" class="star" data-star-value="3"><i class="fa fa-star fa-2x"></i></a></li>
+                                <li><a href="#" class="star" data-star-value="4"><i class="fa fa-star fa-2x"></i></a></li>
+                                <li><a href="#" class="star" data-star-value="5"><i class="fa fa-star fa-2x"></i></a></li>
+                            </ul>
+                            <p class="text-muted" id="selectedRating">0점</p>
+                            <input type="hidden" name="reviewGrade" id="ratingInput" value="0" />
+                        </div>
+
+                        <!-- 이미지 업로드 -->
+                        <div class="form-group mb-3">
+                            <label for="createImage" class="form-label fw-bold">이미지 업로드</label>
+                            <input type="file" class="form-control" id="createImage" name="reviewImage">
+                            <div class="preview-container mt-2 text-center">
+                                <img id="create-imagePreview" src="#" alt="이미지 미리보기"
+                                     style="display:none; max-width:100%; height:auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+                                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'" />
+                            </div>
+                        </div>
+
+                        <!-- 리뷰 내용 -->
+                        <div class="form-group mb-3">
+                            <label for="textarea" class="form-label fw-bold">리뷰 내용</label>
+                            <textarea class="form-control" name="reviewContent" id="textarea" rows="12"
+                                      style="min-height: 300px;" placeholder="상품에 대한 솔직한 리뷰를 작성해주세요 :)"></textarea>
+                        </div>
+
+                        <!-- 제출 버튼 -->
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold fs-5 rounded-pill">작성완료</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 리뷰 수정 모달 -->
+    <div class="modal fade" id="reviewUpdateModal" tabindex="-1" aria-labelledby="reviewUpdateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- 넓은 모달 -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewUpdateModalLabel">리뷰 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" name="reviewId" id="updateReviewId" />
+
+                        <!-- 평점 -->
+                        <div class="form-group mb-3">
+                            <ul class="list d-flex gap-2 px-0 mb-2" style="list-style: none;">
+                                <li><i class="fa fa-star"></i></li>
+                                <li><i class="fa fa-star"></i></li>
+                                <li><i class="fa fa-star"></i></li>
+                                <li><i class="fa fa-star"></i></li>
+                                <li><i class="fa fa-star"></i></li>
+                            </ul>
+                        </div>
+
+                        <!-- 이미지 업로드 -->
+                        <div class="form-group mb-3">
+                            <label for="updateImage" class="form-label fw-bold">이미지 업로드</label>
+                            <input type="file" class="form-control" id="updateImage" name="reviewImage">
+                            <div class="preview-container mt-2 text-center">
+                                <img id="update-imagePreview" src="#" alt="리뷰 이미지 미리보기"
+                                     style="display:none; max-width:100%; height:auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+                                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'" />
+                            </div>
+                        </div>
+
+                        <!-- 리뷰 내용 -->
+                        <div class="form-group mb-3">
+                            <label for="updateTextarea" class="form-label fw-bold">리뷰 내용</label>
+                            <textarea class="form-control" name="reviewContent" id="updateTextarea" rows="12"
+                                      style="min-height: 300px;" placeholder="상품에 대한 솔직한 리뷰를 작성해주세요 :)"></textarea>
+                        </div>
+
+                        <!-- 제출 버튼 -->
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-warning px-5 py-2 fw-bold fs-5 rounded-pill"
+                                    onclick="submitOrderDetailReviewUpdate()">
+                                수정완료
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <section>
         <div class="container">
             <h2>주문 조회</h2>
@@ -52,6 +192,7 @@
                     th:attr="data-code=${order.orderCode}"
                     onclick="openReturnModal()">반품 신청
             </button>
+
             <!-- 조회 영역 -->
             <div class="card p-4">
                 <h4 class="mb-3">주문 정보</h4>
@@ -132,16 +273,31 @@
                         <th>단일 가격</th>
                         <th>수량</th>
                         <th>포장지</th>
+                        <th>리뷰</th>
                     </tr>
                     <tr th:each="orderDetail:${orderDetails}">
                         <td>
-                            <a  th:text="${orderDetail.productName}" th:href="'/books/'+${orderDetail.productId}"></a>
+                            <div class="product-title-wrapper">
+                                <a th:text="${orderDetail.productName}" th:href="'/books/'+${orderDetail.productId}" class="product-link"></a>
+                            </div>
                         </td>
                         <td th:text="${T(java.lang.String).format('%,d',orderDetail.orderDetailPerPrice)}"></td>
                         <td th:text="${orderDetail.orderQuantity}"></td>
                         <td th:if="${orderDetail.wrapperId} == null">포장 없음</td>
                         <td th:if="${orderDetail.wrapperId} != null">
                             <span th:text="${orderDetail.wrapperName}+'(개당 '+${T(java.lang.String).format('%,d',orderDetail.wrapperPrice)}+')'"></span>
+                        </td>
+
+                        <td>
+                            <!--th:if="${order.state.equals('COMPLETE')} and ${isReviewed}"-->
+                            <button class="btn-primary" th:if="${!isReviewed}"
+                                    th:attr="data-product-id=${orderDetail.productId}"
+                                    onclick="openReviewCreateModal(this)">리뷰 작성
+                            </button>
+                            <button class="btn-primary" th:if="${isReviewed}"
+                                    th:data-orderdetail-id="${orderDetail.orderDetailId}"
+                                    onclick="openReviewUpdateModal(this)">리뷰 수정
+                            </button>
                         </td>
                     </tr>
                 </table>
@@ -187,6 +343,8 @@
             </div>
 
         </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <script>
             function cancelOrder(orderCode) {
@@ -252,7 +410,86 @@
                     modal.style.display = "none";
                 }
             }
+
+            // 리뷰 모달
+            function openReviewCreateModal(button) {
+                const productId = button.getAttribute('data-product-id');
+                document.getElementById('createReviewModalProductId').value = productId;
+
+                // 모달 표시
+                const modal = new bootstrap.Modal(document.getElementById('reviewCreateModal'));
+                modal.show();
+
+                // 닫는 버튼 클릭시 닫기
+                $('.btn-close').off('click').on('click', function () {
+                    modal.hide();
+                });
+            }
+
+            function openReviewUpdateModal(button) {
+                const orderDetailId = button.getAttribute('data-orderdetail-id');
+                console.log('orderDetailId: ', orderDetailId)
+
+                $.ajax({
+                    url: `/reviews/${orderDetailId}`,
+                    type: 'GET',
+                    success: function (response) {
+                        console.log("서버 응답:", response);
+
+                        // 응답에서 필드 꺼내기
+
+                        // 필드에 값 채우기
+                        document.getElementById('updateReviewId').value = response.reviewId;
+                        document.getElementById('updateTextarea').value = response.reviewContent;
+
+                        // 별점 UI 업데이트
+                        document.querySelectorAll('#reviewUpdateModal .list .fa-star').forEach((el, index) => {
+                            if (index < response.reviewGrade) {
+                                el.classList.add('fa-2x');
+                            } else {
+                                el.classList.remove('fa', 'fa-star');
+                            }
+                        });
+
+                        // 이미지가 있으면 미리보기 보여주기
+                        const imagePreview = document.getElementById('update-imagePreview');
+                        if (response.reviewImage) {
+                            imagePreview.src = response.reviewImage;
+                            imagePreview.style.display = 'block';
+                        } else {
+                            imagePreview.style.display = 'none';
+                        }
+
+                        // 모달 표시
+                        const modal = new bootstrap.Modal(document.getElementById('reviewUpdateModal'));
+                        modal.show();
+
+                        // 닫는 버튼 클릭시 닫기
+                        $('.btn-close').off('click').on('click', function () {
+                            modal.hide();
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        console.error('status:', status);
+                        console.error('xhr:', xhr);
+
+                        let message = '리뷰 수정 모달을 가져오는 중 오류가 발생했습니다.';
+                        if (xhr.responseJSON) {
+                            message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
+                                `상태 코드: ${xhr.responseJSON.status}\n` +
+                                `발생 시간: ${xhr.responseJSON.timeStamp}`;
+                        }
+
+                        alert(message);
+                    }
+                });
+            }
         </script>
+
+        <script th:src="@{/js/review/review-create.js}"></script>
+        <script th:src="@{/js/review/review-update.js}"></script>
+        <script th:src="@{/js/review/star-count.js}"></script>
     </section>
 </div>
 </body>
