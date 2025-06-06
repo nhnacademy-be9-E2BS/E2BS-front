@@ -62,7 +62,8 @@
                               <td>
                                   <div class="media">
                                       <div class="d-flex">
-                                          <img th:src="@{${cartItem.productImagePath}}" src="/img/cart/cart2.png" alt="" style="width: 100px; height: 150px;">
+                                          <img th:src="@{${cartItem.productImagePath}}" src="/img/cart/cart2.png" alt="" style="width: 100px; height: 150px;"
+                                               onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                                       </div>
                                       <div class="media-body product-title-wrapper">
                                           <a th:href="@{/books/{productId}(productId=${cartItem.productId})}" class="product-link">

@@ -139,6 +139,7 @@
                 .action-item:hover {
                     color: #111;
                 }
+
             </style>
 
             <div class="member-summary-bar">
@@ -191,29 +192,53 @@
             </div>
 
             <!-- 하단 주문/배송 정보 -->
-            <h5 style="margin: 10px 0 12px 6px;">최근 주문/배송 내역</h5>
+            <h5 style="margin: 10px 0 12px 6px;">최근 주문/배송 내역 (배송 전)</h5>
             <table class="order-table">
                 <thead>
                 <tr>
-                    <th>주문번호</th>
-                    <th>주문일자</th>
-                    <th>출고예정일</th>
-                    <th>상품명</th>
-                    <th>주문금액</th>
+                    <th style="white-space: nowrap;">주문일자</th>
+                    <th style="white-space: nowrap;">주문번호</th>
+                    <th style="white-space: nowrap;">상품명</th>
+                    <th style="white-space: nowrap;">상품개수</th>
+                    <th style="white-space: nowrap;">상품금액</th>
+                    <th style="white-space: nowrap;">상태</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="order : ${recentOrders}">
-                    <td th:text="${order.id}">123456</td>
-                    <td th:text="${order.orderDate}">2025-06-01</td>
-                    <td th:text="${order.shipDate}">2025-06-03</td>
-                    <td th:text="${order.productName}">E2BS 책</td>
-                    <td th:text="${#numbers.formatInteger(order.totalPrice, 0)} + '원'">25,000원</td>
-                </tr>
+                <th:block th:each="order : ${recentOrders}">
+                    <th:block th:each="product, iterStat : ${order.products}">
+                        <tr>
+                            <!-- 주문일자 및 주문번호는 첫 번째 상품에만 표시 -->
+                            <td th:if="${iterStat.index == 0}" th:rowspan="${order.products.size()}"
+                                th:text="${#temporals.format(order.orderCreatedAt, 'yyyy-MM-dd')}">
+                                2025-06-06
+                            </td>
+                            <td th:if="${iterStat.index == 0}" th:rowspan="${order.products.size()}"
+                                th:text="${order.orderCode}">
+                                주문번호
+                            </td>
+
+                            <!-- 상품 정보 -->
+                            <td th:text="${product.productName}">상품명</td>
+                            <td th:text="${product.quantity}">수량</td>
+                            <td th:text="${#numbers.formatInteger(product.price, 0)} + '원'">단가</td>
+
+                            <!-- 상태도 첫 행에만 -->
+                            <td th:if="${iterStat.index == 0}" th:rowspan="${order.products.size()}"
+                                th:switch="${order.orderStateName}">
+                                <span th:case="'WAIT'">배송 대기</span>
+                                <span th:case="'CANCEL'">주문 취소</span>
+                                <span th:case="'DELIVERY'">배송 중</span>
+                                <span th:case="'RETURN'">반품</span>
+                                <span th:case="'COMPLETE'">배송 완료</span>
+                            </td>
+                        </tr>
+                    </th:block>
+                </th:block>
+
+                <!-- 주문 없음 -->
                 <tr th:if="${#lists.isEmpty(recentOrders)}">
-                    <td colspan="5">최근 주문내역이 없습니다.</td>
+                    <td colspan="6">최근 주문내역이 없습니다.</td>
                 </tr>
-                </tbody>
             </table>
 
         </div>

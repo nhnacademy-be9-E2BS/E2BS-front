@@ -1,5 +1,6 @@
 package com.nhnacademy.front.order.order.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -35,14 +36,13 @@ public class OrderAdminController {
 
 	@JwtTokenCheck
 	@GetMapping("/admin/settings/orders")
-	public String getOrders(Model model, @PageableDefault(page = 0, size = 10) Pageable pageable,
-		@RequestParam(required = false) Long status) {
-		ResponseEntity<PageResponse<ResponseOrderDTO>> response = null;
-		if (status == null) {
-			response = orderAdminService.getOrders(pageable);
-		} else {
-			response = orderAdminService.getOrders(pageable, status);
-		}
+	public String getOrders(Model model,
+		@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false) String status,
+		@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate,
+		@RequestParam(required = false) String orderCode, @RequestParam(required = false) String memberId) {
+
+		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderAdminService.getOrders(pageable, status, startDate, endDate, orderCode, memberId);
+
 		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
 		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
 		model.addAttribute("orders", orders);

@@ -12,4 +12,10 @@ public interface ProductSearchService {
 
 	// 카테고리로 검색 (정렬 선택적)
 	PageResponse<ResponseProductReadDTO> getProductsByCategory(Pageable pageable, Long categoryId, ProductSortType sort);
+
+	// 베스트 도서 - 헤더 클릭
+	PageResponse<ResponseProductReadDTO> getBestProducts(Pageable pageable);
+
+	// 신상 도서 - 헤더 클릭
+	PageResponse<ResponseProductReadDTO> getNewestProducts(Pageable pageable);
 }

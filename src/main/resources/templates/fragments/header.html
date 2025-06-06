@@ -1,145 +1,195 @@
 <!DOCTYPE html>
 <html lang="kor" xmlns:th="http://www.thymeleaf.org">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <div th:fragment="header">
-    <header class="header_area">
+    <style>
+        .search-box {
+            max-width: 500px;
+            width: 100%;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input {
+            border: none;
+            flex: 1;
+            height: 100%;
+            padding: 0 20px;
+            font-size: 16px;
+            background-color: transparent;
+            outline: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-button {
+            border: none;
+            background: transparent;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 18px;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            color: #000;
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background-color: white;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .sticky-shadow {
+            box-shadow: 0px 10px 27px 3px rgba(221, 221, 221, 0.4);
+        }
+
+        .nav-shop .nav-item {
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+
+        .nav-shop__circle {
+            font-size: 12px;
+            position: relative;
+            top: -10px;
+            left: -6px;
+            color: white;
+            background: red;
+            border-radius: 50%;
+            padding: 2px 6px;
+        }
+    </style>
+
+    <!-- 고정 헤더 영역 -->
+    <header class="header_area sticky-header">
         <div class="main_menu">
             <nav class="navbar navbar-expand-lg navbar-light">
-                <div class="container">
-                    <style>
-                        .nav-shop .nav-item {
-                            margin-left: 8px;
-                            margin-right: 8px;
-                        }
-
-                        .nav-shop__circle {
-                            font-size: 12px;
-                            position: relative;
-                            top: -10px;
-                            left: -6px;
-                            color: white;
-                            background: red;
-                            border-radius: 50%;
-                            padding: 2px 6px;
-                        }
-
-                        .nav-shop li {
-                            margin-left: 10px;
-                            margin-right: 10px;
-                        }
-                    </style>
+                <div class="container d-flex justify-content-between align-items-center">
+                    <!-- 로고 -->
                     <a class="navbar-brand logo_h" href="/"><h1>E2BS</h1></a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent"
-                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-                        <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
-                            <!-- 1단계 카테고리 (최상위) -->
-                            <li th:each="category : ${headerCategories}" class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle"
-                                   th:href="@{/books/search/category/{categoryId}(categoryId=${category.categoryId})}"
-                                   id="dropdownMenuLink"
-                                   data-toggle="dropdown"
-                                   aria-haspopup="true"
-                                   aria-expanded="false"
-                                   th:text="${category.categoryName}"></a>
-                                <!-- 2단계 카테고리 -->
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li th:each="child : ${category.children}" class="dropdown-submenu">
-                                        <a class="dropdown-item dropdown-toggle"
-                                           th:href="@{/books/search/category/{categoryId}(categoryId=${child.categoryId})}"
-                                           th:text="${child.categoryName}"></a>
-                                        <!-- 3단계 카테고리 -->
-                                        <ul class="dropdown-menu">
-                                            <li th:each="grandChild : ${child.children}">
-                                                <a class="dropdown-item"
-                                                   th:href="@{/books/search/category/{categoryId}(categoryId=${grandChild.categoryId})}"
-                                                   th:text="${grandChild.categoryName}"></a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
 
-                        <form id="searchForm" action="/books/search" method="get" style="display: flex; align-items: center;">
-                            <input
-                                    type="text"
-                                    name="keyword"
-                                    placeholder="검색어를 입력하세요"
-                                    required
-                                    style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;"/>
-                            <button
-                                    type="submit"
-                                    style="margin-left: 8px; padding: 6px 12px; border: none; background-color: #007bff; color: white; border-radius: 4px;">
-                                검색
-                            </button>
-                        </form>
+                    <!-- 검색창 -->
+                    <form id="searchForm" action="/books/search" method="get" class="search-box d-flex mx-3">
+                        <input
+                                type="text"
+                                name="keyword"
+                                placeholder="검색어를 입력하세요"
+                                required
+                                class="form-control search-input"
+                                th:value="${param.keyword}"
+                        />
+                        <button type="submit" class="btn search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
 
-                        <ul class="nav-shop">
-                            <!-- 로그인 안 된 경우 -->
-                            <li class="nav-item" th:if="${memberRole == null || memberName == null}">
-                                <a class="button button-header" th:href="@{/login}">Login</a>
-                            </li>
+                    <!-- 로그인 / 장바구니 -->
+                    <ul class="nav-shop d-flex align-items-center list-unstyled mb-0">
+                        <li class="nav-item" th:if="${memberRole == null || memberName == null}">
+                            <a class="button button-header" th:href="@{/login}">Login</a>
+                        </li>
+                        <li class="nav-item" th:if="${memberName != null}">
+                            <span class="nav-link" th:text="${memberName}">회원명</span>
+                        </li>
+                        <li class="nav-item" th:if="${memberName != null}">
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
+                        </li>
 
-                            <!-- 로그인 된 경우 -->
-                            <li class="nav-item" th:if="${memberName != null}">
-                                <!-- 사용자 이름 -->
-                                <span class="nav-link" th:text="${memberName}">회원명</span>
-                            </li>
+                        <!-- 마이페이지 아이콘 -->
+                        <li class="nav-item dropdown mypage-hover"
+                            th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}">
+                            <a class="nav-link dropdown-toggle" href="/mypage">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown mypage-hover"
+                            th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'ADMIN'}">
+                            <a class="nav-link dropdown-toggle" href="/admin/settings">
+                                <i class="fas fa-user-cog"></i>
+                            </a>
+                        </li>
 
-                            <li class="nav-item" th:if="${memberName != null}">
-                                <form th:action="@{/logout}" method="post">
-                                    <button type="submit" class="dropdown-item">Logout</button>
-                                </form>
-                            </li>
-
-                            <li class="nav-item">
-                                <form style="margin: 0; padding: 0; display: inline-block;">
-                                    <li class="nav-item dropdown mypage-hover"
-                                        th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}">
-                                        <a class="nav-link dropdown-toggle" href="/mypage" id="mypageDropdown">
-                                            <i class="fas fa-user"></i>
-                                        </a>
-                                    </li>
-
-
-                                    <li class="nav-item dropdown mypage-hover"
-                                        th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'ADMIN'}">
-                                        <a class="nav-link dropdown-toggle" href="/admin/settings"
-                                           id="settingsDropdown">
-                                            <i class="fas fa-user"></i>
-                                        </a>
-                                    </li>
-
-                                    <button th:if="${session.isMember}"
-                                            th:formaction="@{/members/carts}" type="submit">
-                                        <i class="ti-shopping-cart"></i>
-                                        <span class="nav-shop__circle"
-                                              th:style="${session.cartItemsCounts == null || session.cartItemsCounts == 0} ? 'display:none;' : ''"
-                                              th:text="${session.cartItemsCounts}">0</span>
-                                    </button>
-
-                                    <button th:if="${session.isMember == null}"
-                                            th:formaction="@{/guests/carts}" type="submit">
-                                        <i class="ti-shopping-cart"></i>
-                                        <span class="nav-shop__circle"
-                                              th:style="${session.cartItemsCounts == null || session.cartItemsCounts == 0} ? 'display:none;' : ''"
-                                              th:text="${session.cartItemsCounts}">0</span>
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-
-                    </div>
+                        <!-- 장바구니 -->
+                        <li class="nav-item">
+                            <form style="margin: 0; padding: 0; display: inline-block;">
+                                <button th:if="${session.isMember}" th:formaction="@{/members/carts}" type="submit">
+                                    <i class="ti-shopping-cart"></i>
+                                    <span class="nav-shop__circle"
+                                          th:style="${session.cartItemsCounts == null || session.cartItemsCounts == 0} ? 'display:none;' : ''"
+                                          th:text="${session.cartItemsCounts}">0</span>
+                                </button>
+                                <button th:if="${session.isMember == null}" th:formaction="@{/guests/carts}" type="submit">
+                                    <i class="ti-shopping-cart"></i>
+                                    <span class="nav-shop__circle"
+                                          th:style="${session.cartItemsCounts == null || session.cartItemsCounts == 0} ? 'display:none;' : ''"
+                                          th:text="${session.cartItemsCounts}">0</span>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </nav>
         </div>
     </header>
+
+    <!-- 카테고리 네비게이션 (스크롤 시 사라짐) -->
+    <div class="category-bar py-2 sticky-shadow header_area" style="background-color: white; z-index: 500;">
+        <div class="container">
+            <ul class="nav menu_nav justify-content-center">
+                <!-- 베스트 도서 링크 -->
+                <li class="nav-item">
+                    <a class="nav-link" style="color: black;" href="/books/search/best">베스트</a>
+                </li>
+
+                <!-- 신상 도서 링크 -->
+                <li class="nav-item">
+                    <a class="nav-link" style="color: black;" href="/books/search/newest">신상</a>
+                </li>
+
+                <!-- 카테고리별 도서 링크 -->
+                <li th:each="category : ${headerCategories}" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" style="color: black;"
+                       th:href="@{/books/search/category/{categoryId}(categoryId=${category.categoryId})}"
+                       id="dropdownMenuLink"
+                       data-toggle="dropdown"
+                       aria-haspopup="true"
+                       aria-expanded="false"
+                       th:text="${category.categoryName}"></a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li th:each="child : ${category.children}" class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle"
+                               th:href="@{/books/search/category/{categoryId}(categoryId=${child.categoryId})}"
+                               th:text="${child.categoryName}"></a>
+                            <ul class="dropdown-menu">
+                                <li th:each="grandChild : ${child.children}">
+                                    <a class="dropdown-item"
+                                       th:href="@{/books/search/category/{categoryId}(categoryId=${grandChild.categoryId})}"
+                                       th:text="${grandChild.categoryName}"></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <script>
         document.querySelectorAll('.nav-link.dropdown-toggle').forEach(link => {
             link.addEventListener('click', function (e) {
@@ -147,5 +197,24 @@
             });
         });
     </script>
+
+    <script>
+        const stickyHeader = document.querySelector('.sticky-header');
+        const categoryBar = document.querySelector('.category-bar');
+
+        function updateHeaderShadow() {
+            const rect = categoryBar.getBoundingClientRect();
+            if (rect.bottom <= stickyHeader.offsetHeight) {
+                // 카테고리가 헤더 뒤로 가려졌을 때
+                stickyHeader.classList.add('sticky-shadow');
+            } else {
+                stickyHeader.classList.remove('sticky-shadow');
+            }
+        }
+
+        window.addEventListener('scroll', updateHeaderShadow);
+        window.addEventListener('resize', updateHeaderShadow);
+        window.addEventListener('load', updateHeaderShadow);
+    </script>
+
 </div>
-</html>
