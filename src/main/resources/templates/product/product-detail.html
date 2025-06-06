@@ -345,7 +345,8 @@
 										<!--<img src="/img/product/product1.png" alt="리뷰 이미지" style="max-width: 150px;">-->
 										<div th:if="${!#strings.isEmpty(review.reviewImage)}"
 											 th:id="${'image-' + stat.index}">
-											<img th:src="${review.reviewImage}" alt="리뷰 이미지" style="max-width: 350px;">
+											<img th:src="${review.reviewImage}"  style="max-width:100%; height:auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+												 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
 										</div>
 									</div>
 

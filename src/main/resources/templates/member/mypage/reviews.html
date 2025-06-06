@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 목록</title>
+    <title>리뷰 내역</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -113,7 +113,6 @@
                     <a th:href="@{/books/{productId}(productId=${review.productId})}" class="image-link">
                         <img th:src="${review.productThumbnail}"
                              th:alt="${review.productTitle} + ' 표지 이미지'"
-                             th:id="${'image-' + stat.index}"
                              onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                     </a>
                 </div>
@@ -137,7 +136,7 @@
                                  onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                         </div>
 
-                        <div>
+                        <div th:id="${'text-div-' + stat.index}">
                             <p th:id="${'text-' + stat.index}" th:text="${review.reviewContent}"></p>
                         </div>
 
