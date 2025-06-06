@@ -19,7 +19,7 @@ public interface OrderAdminAdaptor {
 
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable,
-		@RequestParam(required = false) Long stateId);
+		@RequestParam(required = false) String stateName);
 
 	@PostMapping("/{orderCode}")
 	ResponseEntity<Void> startDelivery(@PathVariable String orderCode);

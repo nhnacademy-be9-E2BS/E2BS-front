@@ -103,6 +103,20 @@
                 </div>
             </div>
 
+            <form method="get" action="/mypage/orders" style="margin-bottom: 1rem;">
+                <label for="status">주문 상태:</label>
+                <select id="status" name="status" class="form-select"
+                        style="display: inline-block; width: 200px;">
+                    <option value="">-- 전체 보기 --</option>
+                    <option value="WAIT" th:selected="${param.status == 'WAIT'}">대기</option>
+                    <option value="DELIVERY" th:selected="${param.status == 'DELIVERY'}">배송 중</option>
+                    <option value="COMPLETE" th:selected="${param.status == 'COMPLETE'}">배송 완료</option>
+                    <option value="RETURN" th:selected="${param.status == 'RETURN'}">반품</option>
+                    <option value="CANCEL" th:selected="${param.status == 'CANCEL'}">주문 취소</option>
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">필터 적용</button>
+            </form>
+
             <!-- 기존 주문 목록 테이블 -->
             <h4 class="mb-4" style="font-weight: bold;">주문 목록</h4>
             <table class="table" style="width: 100%; border-top: 2px solid #666; font-size: 15px;">

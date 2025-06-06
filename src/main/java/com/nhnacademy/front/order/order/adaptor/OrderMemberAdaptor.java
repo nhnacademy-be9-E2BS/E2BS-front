@@ -26,7 +26,7 @@ public interface OrderMemberAdaptor {
 		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO);
 
 	@GetMapping
-	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, @RequestParam String memberId);
+	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, @RequestParam String memberId, @RequestParam(required = false) String stateName);
 
 	@DeleteMapping("/{orderCode}")
 	ResponseEntity<Void> cancelOrder(@PathVariable String orderCode);

@@ -36,9 +36,9 @@ public class OrderAdminController {
 	@JwtTokenCheck
 	@GetMapping("/admin/settings/orders")
 	public String getOrders(Model model, @PageableDefault(page = 0, size = 10) Pageable pageable,
-		@RequestParam(required = false) Long status) {
+		@RequestParam(required = false) String status) {
 		ResponseEntity<PageResponse<ResponseOrderDTO>> response = null;
-		if (status == null) {
+		if (status == null || status.isEmpty()) {
 			response = orderAdminService.getOrders(pageable);
 		} else {
 			response = orderAdminService.getOrders(pageable, status);

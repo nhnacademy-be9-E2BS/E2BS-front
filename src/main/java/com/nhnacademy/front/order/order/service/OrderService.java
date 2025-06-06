@@ -59,9 +59,9 @@ public class OrderService {
 	/**
 	 * 해당 회원의 주문 목록을 가져오는 메서드
 	 */
-	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, String memberId)
+	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, String memberId, String stateName)
 		throws FeignException {
-		return orderMemberAdaptor.getOrdersByMemberId(pageable, memberId);
+		return orderMemberAdaptor.getOrdersByMemberId(pageable, memberId, stateName);
 	}
 
 	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByCustomerId(Pageable pageable, long customerId)

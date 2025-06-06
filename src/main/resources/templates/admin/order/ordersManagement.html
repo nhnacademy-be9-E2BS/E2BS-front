@@ -19,11 +19,11 @@
                         <select id="status" name="status" class="form-select"
                                 style="display: inline-block; width: 200px;">
                             <option value="">-- 전체 보기 --</option>
-                            <option value="5" th:selected="${param.status == '5'}">대기</option>
-                            <option value="3" th:selected="${param.status == '3'}">배송 중</option>
-                            <option value="2" th:selected="${param.status == '2'}">배송 완료</option>
-                            <option value="4" th:selected="${param.status == '4'}">반품</option>
-                            <option value="1" th:selected="${param.status == '1'}">주문 취소</option>
+                            <option value="WAIT" th:selected="${param.status == 'WAIT'}">대기</option>
+                            <option value="DELIVERY" th:selected="${param.status == 'DELIVERY'}">배송 중</option>
+                            <option value="COMPLETE" th:selected="${param.status == 'COMPLETE'}">배송 완료</option>
+                            <option value="RETURN" th:selected="${param.status == 'RETURN'}">반품</option>
+                            <option value="CANCEL" th:selected="${param.status == 'CANCEL'}">주문 취소</option>
                         </select>
                         <button type="submit" class="btn btn-primary btn-sm">필터 적용</button>
                     </form>

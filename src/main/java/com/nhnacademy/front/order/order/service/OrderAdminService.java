@@ -22,8 +22,8 @@ public class OrderAdminService {
 		return orderAdminAdaptor.getOrders(pageable);
 	}
 
-	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable, Long stateId) {
-		return orderAdminAdaptor.getOrders(pageable, stateId);
+	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable, String stateName) {
+		return orderAdminAdaptor.getOrders(pageable, stateName);
 	}
 
 	public ResponseEntity<Void> startDelivery(@PathVariable String orderCode) {
