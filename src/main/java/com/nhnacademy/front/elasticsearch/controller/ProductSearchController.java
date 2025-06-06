@@ -73,4 +73,36 @@ public class ProductSearchController {
 
 		return "product/category";
 	}
+
+	/**
+	 * 사용자 - 베스트를 눌러서 해당하는 도서 리스트 조회 (페이징)
+	 * 정렬 불가
+	 */
+	@GetMapping("/best")
+	public String getBestProducts(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
+		PageResponse<ResponseProductReadDTO> response = productSearchService.getBestProducts(pageable);
+		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
+
+		model.addAttribute("products", products);
+		model.addAttribute("keyword", "베스트 도서");
+		model.addAttribute("sort", ProductSortType.NO_SORT.toString());
+
+		return "product/search";
+	}
+
+	/**
+	 * 사용자 - 신상도서를 눌러서 해당하는 도서 리스트 조회 (페이징)
+	 * 정렬 불가
+	 */
+	@GetMapping("/newest")
+	public String getNewestProducts(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
+		PageResponse<ResponseProductReadDTO> response = productSearchService.getNewestProducts(pageable);
+		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
+
+		model.addAttribute("products", products);
+		model.addAttribute("keyword", "신상 도서");
+		model.addAttribute("sort", ProductSortType.NO_SORT.toString());
+
+		return "product/search";
+	}
 }
