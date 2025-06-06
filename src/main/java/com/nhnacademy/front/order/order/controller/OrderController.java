@@ -57,6 +57,7 @@ import com.nhnacademy.front.product.category.model.dto.response.ResponseCategory
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
+import com.nhnacademy.front.review.service.ReviewService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -87,6 +88,7 @@ public class OrderController {
 
 	private final UserCategoryService userCategoryService;
 	private final MemberCouponService memberCouponService;
+	private final ReviewService reviewService;
 
 	private final ObjectMapper objectMapper;
 
@@ -300,11 +302,14 @@ public class OrderController {
 			isChangeOfMindReturnAvailable = daysBetween <= 10;
 		}
 
+		Boolean isReviewed = reviewService.isReviewedByOrder(orderCode);
+
 		model.addAttribute("isReturnAvailable", isReturnAvailable);
 		model.addAttribute("isChangeOfMindReturnAvailable", isChangeOfMindReturnAvailable);
 		model.addAttribute("order", order);
 		model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("productAmount", productAmount);
+		model.addAttribute("isReviewed", isReviewed);
 
 		return "member/mypage/orderDetails";
 	}

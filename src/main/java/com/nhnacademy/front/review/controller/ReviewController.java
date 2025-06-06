@@ -23,6 +23,7 @@ import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.review.model.dto.ReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseMemberReviewDTO;
@@ -106,7 +107,13 @@ public class ReviewController {
 
 		model.addAttribute("reviewsByMember", reviewsByMember);
 
-		return "member/mypage/member-review";
+		return "member/mypage/reviews";
+	}
+
+	@GetMapping("/reviews/{orderDetailId}")
+	public ResponseEntity<ReviewDTO> getReviewByOrderDetailId(@PathVariable long orderDetailId) {
+		ReviewDTO body = reviewService.findReviewByOrderDetailId(orderDetailId);
+		return ResponseEntity.ok(body);
 	}
 
 }
