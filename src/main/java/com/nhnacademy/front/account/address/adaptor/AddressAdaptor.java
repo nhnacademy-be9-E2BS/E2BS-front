@@ -37,4 +37,8 @@ public interface AddressAdaptor {
 	ResponseEntity<Void> deleteAddress(@PathVariable("memberId") String memberId,
 		@PathVariable("addressId") long addressId);
 
+	@PostMapping("/{memberId}/addresses/{addressId}/default")
+	ResponseEntity<Void> setDefaultAddress(@PathVariable("memberId") String memberId,
+		@PathVariable("addressId") long addressId);
+
 }

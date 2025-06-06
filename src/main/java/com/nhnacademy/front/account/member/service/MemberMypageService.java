@@ -1,5 +1,6 @@
 package com.nhnacademy.front.account.member.service;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,13 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.account.member.adaptor.MemberCouponAdaptor;
 import com.nhnacademy.front.account.member.adaptor.MemberInfoAdaptor;
+import com.nhnacademy.front.account.member.adaptor.MemberOrderAdaptor;
 import com.nhnacademy.front.account.member.adaptor.MemberPointHistoryAdaptor;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberInfoException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberRankNameException;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberInfoDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberOrderDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberPointDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberRecentOrderDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMypageMemberCouponDTO;
 import com.nhnacademy.front.account.memberrank.model.domain.RankName;
 import com.nhnacademy.front.common.error.exception.EmptyResponseException;
@@ -35,6 +39,19 @@ public class MemberMypageService {
 	private final MemberPointHistoryAdaptor memberPointHistoryAdaptor;
 	private final MemberInfoAdaptor memberInfoAdaptor;
 	private final RedisTemplate<String, Object> redisTemplate;
+	private final MemberOrderAdaptor memberOrderAdaptor;
+
+	/**
+	 * 마이페이지 총 주문 건 수
+	 */
+	public int getMemberOrder(String memberId) throws FeignException {
+		ResponseEntity<ResponseMemberOrderDTO> response = memberOrderAdaptor.getMemberOrdersCnt(memberId);
+		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
+			throw new EmptyResponseException();
+		}
+
+		return response.getBody().getOrderCnt();
+	}
 
 	/**
 	 * 회원이 가지고 있는 쿠폰 개수를 가져오는 메서드
@@ -124,6 +141,19 @@ public class MemberMypageService {
 		}
 
 		withdraw(request, response, memberId);
+	}
+
+	/**
+	 * 최근 주문 조회
+	 */
+	public List<ResponseMemberRecentOrderDTO> getMemberRecentOrders(String memberId) throws FeignException {
+		ResponseEntity<List<ResponseMemberRecentOrderDTO>> response = memberOrderAdaptor.getMemberRecentOrders(
+			memberId);
+		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
+			throw new EmptyResponseException();
+		}
+
+		return response.getBody();
 	}
 
 	private void withdraw(HttpServletRequest request, HttpServletResponse response, String memberId) {
