@@ -35,9 +35,16 @@ import com.nhnacademy.front.product.category.service.AdminCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.service.ProductAdminService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "쿠폰", description = "쿠폰 관리 페이지 및 기능 제공")
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -53,9 +60,11 @@ public class CouponController {
 	/**
 	 * 관리자 쿠폰 생성 뷰
 	 */
+	@Operation(summary = "쿠폰 생성 폼 페이지", description = "관리자가 쿠폰 타입에 따라 쿠폰 생성 기능 제공")
 	@JwtTokenCheck
 	@GetMapping("/register")
-	public String createCouponForm(@PageableDefault Pageable pageable,
+	public String createCouponForm(
+		@PageableDefault Pageable pageable,
 		@RequestParam(value = "couponType", required = false) String couponType,
 		@RequestParam(value = "keyword", required = false) String keyword, Model model) {
 		log.info("keyword : {}", keyword);
@@ -86,9 +95,17 @@ public class CouponController {
 	/**
 	 * 관리자 쿠폰 생성 post
 	 */
+	@Operation(summary = "쿠폰 생성 요청 처리", description = "입력받은 쿠폰 정보를 바탕으로 쿠폰 생성",
+	responses = {
+		@ApiResponse(responseCode = "302", description = "쿠폰 생성 성공 후 쿠폰 조회 페이지로 리다이렉션"),
+		@ApiResponse(responseCode = "400", description = "입력값 검증 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class)))
+	})
 	@JwtTokenCheck
 	@PostMapping("/register")
-	public String createCoupon(@Validated @ModelAttribute RequestCouponDTO request, BindingResult bindingResult) {
+	public String createCoupon(
+		@Parameter(description = "쿠폰 등록 요청 DTO", required = true, schema = @Schema(implementation = RequestCouponDTO.class))
+		@Validated @ModelAttribute RequestCouponDTO request,
+		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -99,6 +116,7 @@ public class CouponController {
 	/**
 	 * 관리자 쿠폰 전체 조회
 	 */
+	@Operation(summary = "관리자 쿠폰 전체 조회", description = "생성한 전체 쿠폰 조회")
 	@JwtTokenCheck
 	@GetMapping
 	public String getCoupons(@PageableDefault() Pageable pageable, Model model) {
@@ -112,9 +130,12 @@ public class CouponController {
 	/**
 	 * 관리자 쿠폰 ID로 단건 조회
 	 */
+	@Operation(summary = "쿠폰 단건 조회", description = "연결된 쿠폰 정보를 ID로 조회")
 	@JwtTokenCheck
 	@GetMapping("/{couponId}")
-	public String getCoupon(@PathVariable Long couponId, Model model) {
+	public String getCoupon(
+		@Parameter(description = "쿠폰 ID", example = "1")
+		@PathVariable Long couponId, Model model) {
 		ResponseCouponDTO response = couponServiceImpl.getCoupon(couponId);
 
 		model.addAttribute("coupon", response);
@@ -125,23 +146,17 @@ public class CouponController {
 	 * 쿠폰 활성 여부 변경
 	 * 활성 <-> 비활성 상태 변경
 	 */
+	@Operation(summary = "쿠폰 활성/비활성 여부 변경", description = "쿠폰의 활성여부를 변경",
+	responses = {
+		@ApiResponse(responseCode = "200", description = "쿠폰 활성 여부 변경 성공"),
+		@ApiResponse(responseCode = "400", description = "쿠폰 활성 상태 변경 실패")
+	})
 	@JwtTokenCheck
 	@PutMapping("/{couponId}")
-	public ResponseEntity<Void> updateCoupon(@PathVariable Long couponId) {
+	public ResponseEntity<Void> updateCoupon(
+		@Parameter(description = "쿠폰 ID", example = "1")
+		@PathVariable Long couponId) {
 		couponServiceImpl.updateCoupon(couponId);
 		return ResponseEntity.status(HttpStatus.OK).build();
-	}
-
-	/**
-	 * 도서 쿠폰 등록할때 도서 검색 결과 리스트
-	 */
-	@JwtTokenCheck
-	@GetMapping("/books/search")
-	public ResponseEntity<Page<ResponseProductReadDTO>> getProductsBySearch(@RequestParam String keyword) {
-		Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
-		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword,
-			null);
-		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
-		return ResponseEntity.ok(products);
 	}
 }
