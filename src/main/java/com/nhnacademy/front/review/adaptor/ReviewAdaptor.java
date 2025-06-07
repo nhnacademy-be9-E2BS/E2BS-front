@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nhnacademy.front.common.config.FeignFormDataSupportConfig;
-import com.nhnacademy.front.review.model.dto.ReviewDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewMetaDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 
@@ -36,6 +36,6 @@ public interface ReviewAdaptor {
 	 * 주문 상세 Id로 리뷰 정보 가져오기
 	 */
 	@GetMapping("/{orderDetailId}")
-	ResponseEntity<ReviewDTO> findReviewByOrderDetailId(@PathVariable long orderDetailId);
+	ResponseEntity<ResponseReviewDTO> findReviewByOrderDetailId(@PathVariable long orderDetailId);
 
 }
