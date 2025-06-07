@@ -10,7 +10,7 @@ import com.nhnacademy.front.review.adaptor.MemberReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ProductReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ReviewAdaptor;
 import com.nhnacademy.front.review.exception.ReviewProcessException;
-import com.nhnacademy.front.review.model.dto.ReviewDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewMetaDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
@@ -118,9 +118,9 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public ReviewDTO findReviewByOrderDetailId(long orderDetailId) {
+	public ResponseReviewDTO findReviewByOrderDetailId(long orderDetailId) {
 		try {
-			ResponseEntity<ReviewDTO> result = reviewAdaptor.findReviewByOrderDetailId(orderDetailId);
+			ResponseEntity<ResponseReviewDTO> result = reviewAdaptor.findReviewByOrderDetailId(orderDetailId);
 
 			if (!result.getStatusCode().is2xxSuccessful()) {
 				throw new ReviewProcessException("주문 상세 ID로 리뷰 조회 실패: " + result.getStatusCode());
