@@ -14,7 +14,7 @@ import com.nhnacademy.front.account.member.exception.DormantDoorayNotMatchedNumb
 import com.nhnacademy.front.account.member.exception.DormantProcessingException;
 import com.nhnacademy.front.account.member.model.dto.request.RequestDormantEmailNumberDTO;
 import com.nhnacademy.front.account.member.service.MemberDormantService;
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -82,7 +82,7 @@ public class MemberEmailDormantController {
 		}
 
 		if (request.getSession().getAttribute("dormantMemberId") == null) {
-			throw new DormantProcessingException("휴면 해제 과정에서 오류가 발생했습니다. 다시 시도해 주세요.");
+			throw new DormantProcessingException();
 		}
 		String memberId = request.getSession().getAttribute("dormantMemberId").toString();
 

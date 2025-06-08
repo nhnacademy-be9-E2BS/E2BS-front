@@ -1,11 +1,14 @@
 package com.nhnacademy.front.account.member.controller.mypage;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberRecentOrderDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.account.member.service.MemberService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
@@ -28,6 +31,12 @@ public class MemberMypageController {
 
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 
+		int orderCnt = 0;
+		int orderCntFromBack = memberMypageService.getMemberOrder(memberId);
+		if (orderCntFromBack > 0) {
+			orderCnt = orderCntFromBack;
+		}
+
 		RequestMemberIdDTO requestMemberIdDTO = new RequestMemberIdDTO(memberId);
 		String memberName = memberService.getMemberName(request);
 
@@ -44,12 +53,16 @@ public class MemberMypageController {
 		}
 
 		String rankName = String.valueOf(memberMypageService.getMemberRankName(request));
+		List<ResponseMemberRecentOrderDTO> responseMemberRecentOrderDTO = memberMypageService.getMemberRecentOrders(
+			memberId);
 
 		model.addAttribute("memberId", memberId);
 		model.addAttribute("memberName", memberName);
+		model.addAttribute("orderCnt", orderCnt);
 		model.addAttribute("couponCnt", couponCnt);
 		model.addAttribute("pointAmount", pointAmount);
 		model.addAttribute("rankName", rankName);
+		model.addAttribute("recentOrders", responseMemberRecentOrderDTO);
 
 		return "member/mypage/mypage";
 	}

@@ -40,10 +40,15 @@
                             th:attr="data-wrap-available=${product.productPackageable}, data-product-id=${product.productId}"
                             th:data-product-price="${product.productSalePrice * quantities[iterStat.index]}">
                             <td style="width: 20%; border-bottom: 1px solid #ddd;">
-                                <img th:src="${product.productImagePaths[0].productImagePath}" style="width: 150px; height: auto;">
+                                <img th:src="${product.productImagePaths[0].productImagePath}"
+                                     th:alt="${product.productTitle} + ' 표지 이미지'" style="width: 150px; height: auto;"
+                                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                             </td>
-                            <td style="width: 30%; border-bottom: 1px solid #ddd;">
-                                <span class="product-name" th:text="${product.productTitle}">책 제목</span>
+                            <td style="width: 30%; max-width: 1px; border-bottom: 1px solid #ddd;">
+                                <span class="text-truncate d-inline-block"
+                                      style="max-width: 100%;"
+                                      th:text="${product.productTitle}">
+                                </span>
                             </td>
                             <td style="width: 20%; border-bottom: 1px solid #ddd;">
                                 <span th:text="${T(java.lang.String).format('%,d',product.productSalePrice)}+'원'">10,000</span>
@@ -225,7 +230,9 @@
                                     th:each="product, iterStat: ${products}"
                                     th:attr="data-product-id=${product.productId}"
                                     th:id="'wrap'+${product.productId}+'-item'">
-                                    <span class="text-start" th:text="${product.productTitle}"></span>
+                                    <span class="d-inline-block text-truncate"
+                                          style="max-width: 200px;"
+                                          th:text="${product.productTitle}"></span>
                                     <span class="text-center" th:text="'X '+${quantities[iterStat.index]}"></span>
                                     <span class="text-end last" th:text="${T(java.lang.String).format('%,d',product.productSalePrice * quantities[iterStat.index])}"></span>
                                 </li>
@@ -264,6 +271,18 @@
                 </div>
             </div>
         </div>
+
+        <!--포장지 관련 JS-->
+        <script>
+            function toggleWrapOptions(id) {
+                const elem = document.getElementById(id);
+                if (elem.style.display === 'none' || elem.style.display === '') {
+                    elem.style.display = 'table-row';
+                } else {
+                    elem.style.display = 'none';
+                }
+            }
+        </script>
 
         <!--결제 요청 JS-->
         <script src="https://js.tosspayments.com/v1/payment"></script>

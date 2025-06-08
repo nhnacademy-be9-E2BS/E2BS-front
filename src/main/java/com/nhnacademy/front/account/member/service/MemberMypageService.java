@@ -1,5 +1,6 @@
 package com.nhnacademy.front.account.member.service;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,16 +9,19 @@ import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.account.member.adaptor.MemberCouponAdaptor;
 import com.nhnacademy.front.account.member.adaptor.MemberInfoAdaptor;
+import com.nhnacademy.front.account.member.adaptor.MemberOrderAdaptor;
 import com.nhnacademy.front.account.member.adaptor.MemberPointHistoryAdaptor;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberInfoException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberRankNameException;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberInfoDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberOrderDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberPointDTO;
+import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberRecentOrderDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMypageMemberCouponDTO;
 import com.nhnacademy.front.account.memberrank.model.domain.RankName;
-import com.nhnacademy.front.common.exception.EmptyResponseException;
+import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.jwt.rule.JwtRule;
 
@@ -35,6 +39,19 @@ public class MemberMypageService {
 	private final MemberPointHistoryAdaptor memberPointHistoryAdaptor;
 	private final MemberInfoAdaptor memberInfoAdaptor;
 	private final RedisTemplate<String, Object> redisTemplate;
+	private final MemberOrderAdaptor memberOrderAdaptor;
+
+	/**
+	 * 마이페이지 총 주문 건 수
+	 */
+	public int getMemberOrder(String memberId) throws FeignException {
+		ResponseEntity<ResponseMemberOrderDTO> response = memberOrderAdaptor.getMemberOrdersCnt(memberId);
+		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
+			throw new EmptyResponseException();
+		}
+
+		return response.getBody().getOrderCnt();
+	}
 
 	/**
 	 * 회원이 가지고 있는 쿠폰 개수를 가져오는 메서드
@@ -43,7 +60,7 @@ public class MemberMypageService {
 		ResponseMypageMemberCouponDTO responseMemberCouponDTO = memberCouponAdaptor
 			.getMemberCouponAmount(requestMemberIdDTO.getMemberId());
 		if (Objects.isNull(responseMemberCouponDTO)) {
-			throw new EmptyResponseException("쿠폰 개수를 가져오지 못했습니다.");
+			throw new EmptyResponseException();
 		}
 
 		return responseMemberCouponDTO.getCouponCnt();
@@ -56,7 +73,7 @@ public class MemberMypageService {
 		ResponseMemberPointDTO responseMemberPointDTO = memberPointHistoryAdaptor
 			.getMemberPointAmount(requestMemberIdDTO.getMemberId());
 		if (Objects.isNull(responseMemberPointDTO)) {
-			throw new EmptyResponseException("포인트 정보를 가져오지 못했습니다.");
+			throw new EmptyResponseException();
 		}
 
 		return responseMemberPointDTO.getPointAmount();
@@ -70,11 +87,11 @@ public class MemberMypageService {
 
 		ResponseEntity<ResponseMemberInfoDTO> memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
 		if (!memberInfoDTO.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberRankNameException("회원의 등급 정보를 가져오지 못했습니다.");
+			throw new NotFoundMemberRankNameException();
 		}
 
 		if (Objects.isNull(memberInfoDTO.getBody())) {
-			throw new NotFoundMemberRankNameException("회원의 등급 정보를 가져오지 못했습니다.");
+			throw new NotFoundMemberRankNameException();
 		}
 
 		return memberInfoDTO.getBody().getMemberRank().getMemberRankName();
@@ -88,11 +105,11 @@ public class MemberMypageService {
 
 		ResponseEntity<ResponseMemberInfoDTO> memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
 		if (!memberInfoDTO.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberInfoException("회원 정보를 변경하지 못했습니다.");
+			throw new NotFoundMemberInfoException();
 		}
 
 		if (Objects.isNull(memberInfoDTO.getBody())) {
-			throw new NotFoundMemberInfoException("회원 정보를 변경하지 못했습니다.");
+			throw new NotFoundMemberInfoException();
 		}
 
 		return memberInfoDTO.getBody();
@@ -107,7 +124,7 @@ public class MemberMypageService {
 
 		ResponseEntity<Void> response = memberInfoAdaptor.updateMemberInfo(memberId, requestMemberInfoDTO);
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberInfoException("회원 정보를 변경하지 못했습니다.");
+			throw new NotFoundMemberInfoException();
 		}
 	}
 
@@ -120,10 +137,23 @@ public class MemberMypageService {
 
 		ResponseEntity<Void> responseEntity = memberInfoAdaptor.withdrawMember(memberId);
 		if (!responseEntity.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberInfoException("회원 탈퇴를 하지 못했습니다.");
+			throw new NotFoundMemberInfoException();
 		}
 
 		withdraw(request, response, memberId);
+	}
+
+	/**
+	 * 최근 주문 조회
+	 */
+	public List<ResponseMemberRecentOrderDTO> getMemberRecentOrders(String memberId) throws FeignException {
+		ResponseEntity<List<ResponseMemberRecentOrderDTO>> response = memberOrderAdaptor.getMemberRecentOrders(
+			memberId);
+		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
+			throw new EmptyResponseException();
+		}
+
+		return response.getBody();
 	}
 
 	private void withdraw(HttpServletRequest request, HttpServletResponse response, String memberId) {

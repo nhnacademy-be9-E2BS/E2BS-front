@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public Integer mergeCartItemsToMemberFromGuest(RequestMergeCartItemDTO request) {
 		try {
-			ResponseEntity<Integer> result = cartAdaptor.mergeCartItemsToMemberFromGuest(request.getMemberId(), request.getSessionId());
+			ResponseEntity<Integer> result = cartAdaptor.mergeCartItemsToMemberFromGuest(request);
 
 			if (!result.getStatusCode().is2xxSuccessful()) {
 				throw new CartProcessException("Cart processing failed");

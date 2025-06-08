@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.common.exception.EmptyResponseException;
+import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 import com.nhnacademy.front.home.adaptor.HomeAdaptor;
 import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
@@ -28,7 +28,7 @@ public class HomeService {
 
 		ResponseEntity<ResponseHomeMemberNameDTO> response = homeAdaptor.getHomeMemberName(memberId);
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-			throw new EmptyResponseException("회원 이름을 가져오지 못했습니다.");
+			throw new EmptyResponseException();
 		}
 
 		return response.getBody();
