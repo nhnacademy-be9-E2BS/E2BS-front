@@ -45,7 +45,7 @@
                             <td th:text="${T(java.lang.String).format('%,d',deliveryFee.deliveryFeeFreeAmount)}"></td>
                             <td>
                                 <span th:text="${#temporals.format(deliveryFee.deliveryFeeDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
-                                <span th:if="${iterStat.index == 0}"
+                                <span th:if="${iterStat.index == 0 } and (${param.page == null} or ${param.page[0] == '0'})"
                                       style="color: gray; font-weight: bold;">(적용중)</span>
                             </td>
                         </tr>

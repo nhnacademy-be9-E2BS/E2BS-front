@@ -332,11 +332,6 @@
 											<div class="d-flex justify-content-between align-items-center">
 												<h4 class="mb-0" th:text="${review.customerName}">이름</h4>
 												<p class="mb-0 text-muted" th:text="${#temporals.format(review.reviewCreatedAt, 'yy-MM-dd')}">날짜</p>
-
-												<button class="btn btn-primary"
-														th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">
-													<i class="bi bi-pencil-square"></i> 수정
-												</button>
 											</div>
 
 											<div>
@@ -350,36 +345,12 @@
 										<!--<img src="/img/product/product1.png" alt="리뷰 이미지" style="max-width: 150px;">-->
 										<div th:if="${!#strings.isEmpty(review.reviewImage)}"
 											 th:id="${'image-' + stat.index}">
-											<img th:src="${review.reviewImage}" alt="리뷰 이미지" style="max-width: 350px;">
+											<img th:src="${review.reviewImage}"  style="max-width:100%; height:auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+												 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
 										</div>
 									</div>
 
 									<p th:id="${'text-' + stat.index}" th:text="${review.reviewContent}">리뷰내용</p>
-									<!-- 리뷰 수정 폼 (기본은 숨김) stat은 타임리프에서 제공하는 현재 반복 상태 정보를 담는 객체 -->
-									<div th:id="${'edit-form-' + stat.index}" style="display: none;">
-										<form th:action="@{/reviews/update}" enctype="multipart/form-data">
-											<input type="hidden" name="reviewId" th:value="${review.reviewId}">
-											<textarea name="reviewContent" class="form-control mb-2" rows="3"
-													  th:text="${review.reviewContent}"></textarea>
-
-											<div class="custom-file">
-												<input type="file" class="custom-file-input" id="updateImage" name="reviewImage">
-												<label class="custom-file-label" for="updateImage">수정할 파일을 선택하세요</label>
-											</div>
-
-											<!-- 이미지 미리보기 영역 -->
-											<div class="preview-container mb-2">
-												<img id="update-imagePreview" src="#" alt="이미지 미리보기" style="display:none; max-width: 350px;" />
-											</div>
-
-											<button type="button" class="btn btn-success btn-sm"
-													th:onclick="|submitReviewUpdate('${review.reviewId}', '${stat.index}')|">
-												저장
-											</button>
-											<button type="button" class="btn btn-secondary btn-sm"
-													th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">취소</button>
-										</form>
-									</div>
 								</div>
 
 								<!-- 페이징 -->

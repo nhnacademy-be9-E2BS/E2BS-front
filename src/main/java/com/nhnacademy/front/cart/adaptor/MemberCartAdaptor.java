@@ -19,7 +19,7 @@ import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDT
 public interface MemberCartAdaptor {
 
 	/**
-	 * 회원 - 장바구니 목록 페이징 조회
+	 * 회원 - 장바구니 목록 조회
 	 */
 	@GetMapping("/{memberId}/carts")
 	ResponseEntity<List<ResponseCartItemsForMemberDTO>> getCartItemsByMember(@PathVariable String memberId);

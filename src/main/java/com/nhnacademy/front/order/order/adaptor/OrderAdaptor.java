@@ -33,4 +33,8 @@ public interface OrderAdaptor {
 
 	@GetMapping("/customers/orders")
 	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByCustomerId(Pageable pageable, @RequestParam long customerId);
+
+	@GetMapping("/{orderCode}/reviewed")
+	ResponseEntity<Boolean> isReviewedByOrder(@PathVariable String orderCode);
+
 }
