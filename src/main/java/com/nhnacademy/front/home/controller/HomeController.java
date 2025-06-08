@@ -13,9 +13,13 @@ import com.nhnacademy.front.home.service.HomeService;
 import com.nhnacademy.front.index.model.dto.response.ResponseMainPageProductDTO;
 import com.nhnacademy.front.index.service.IndexService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "메인 페이지", description = "메인 페이지 화면 제공 및 기능 구현")
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
@@ -23,6 +27,10 @@ public class HomeController {
 	private final HomeService homeService;
 	private final IndexService indexService;
 
+	@Operation(summary = "메인 페이지 화면", description = "메인 페이지 데이터 요청 및 화면 제공",
+		responses = {
+			@ApiResponse(responseCode = "201", description = "메인 페이지 화면 제공을 위한 요청 및 성공 응답")
+		})
 	@JwtTokenCheck
 	@GetMapping("/")
 	public String index(HttpServletRequest request, Model model) {
