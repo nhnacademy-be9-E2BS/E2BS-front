@@ -3,7 +3,7 @@ package com.nhnacademy.front.review.service;
 import org.springframework.data.domain.Pageable;
 
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.review.model.dto.ReviewDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseMemberReviewDTO;
@@ -18,5 +18,5 @@ public interface ReviewService {
 	ResponseReviewInfoDTO getReviewInfo(long productId);
 	PageResponse<ResponseMemberReviewDTO> getReviewsByMember(String memberId, Pageable pageable);
 	Boolean isReviewedByOrder(String orderCode);
-	ReviewDTO findReviewByOrderDetailId(long orderDetailId);
+	ResponseReviewDTO findReviewByOrderDetailId(long orderDetailId);
 }
