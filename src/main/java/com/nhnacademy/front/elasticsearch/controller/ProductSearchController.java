@@ -1,5 +1,6 @@
 package com.nhnacademy.front.elasticsearch.controller;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
@@ -84,10 +85,8 @@ public class ProductSearchController {
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
 		model.addAttribute("products", products);
-		model.addAttribute("keyword", "베스트 도서");
-		model.addAttribute("sort", ProductSortType.NO_SORT.toString());
 
-		return "product/search";
+		return "product/best-product";
 	}
 
 	/**
@@ -100,9 +99,8 @@ public class ProductSearchController {
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
 		model.addAttribute("products", products);
-		model.addAttribute("keyword", "신상 도서");
-		model.addAttribute("sort", ProductSortType.NO_SORT.toString());
+		model.addAttribute("todayDate", LocalDate.now());
 
-		return "product/search";
+		return "product/newest-product";
 	}
 }
