@@ -12,14 +12,7 @@
                     포인트 내역 <span style="font-size: 14px; color: #888; font-weight: normal;">| 상품 구매 및 각종 활동 참여 시 적립금이 지급됩니다.</span>
                 </h3>
                 <div style="font-size: 18px; margin-bottom: 20px;">
-                    <span>사용 가능한 적립금 : <span style="color: red; font-weight: bold;" th:text="${usablePoint} + '원'">1,000원</span></span>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <span>소멸 예정 적립금 (90일 이내) : <span style="color: #555; font-weight: bold;"
-                                                     th:text="${expireSoonPoint} + '원'">0원</span></span>
-                    &nbsp;&nbsp;<button
-                        style="background: #999; color: white; padding: 4px 10px; border: none; border-radius: 4px; font-size: 13px;">
-                    자세히보기
-                </button>
+                    <span>사용 가능한 적립금 : <span style="font-weight: bold;" th:text="${usablePoint} + '원'">1,000원</span></span>
                 </div>
 
                 <div style="border: 1px solid #eee; padding: 20px; border-radius: 6px;">

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
+import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.account.pointhistory.model.dto.response.ResponsePointHistoryDTO;
 import com.nhnacademy.front.account.pointhistory.service.PointHistoryService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
@@ -28,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class PointHistoryController {
 
 	private final PointHistoryService pointHistoryService;
+	private final MemberMypageService memberMypageService;
 	private final HomeService homeService;
 
 	/**
@@ -52,7 +55,10 @@ public class PointHistoryController {
 		PageResponse<ResponsePointHistoryDTO> response = pointHistoryService.getPointHistoryByMemberId(memberId, pageable);
 		Page<ResponsePointHistoryDTO> pointHistories = PageResponseConverter.toPage(response);
 
+		Long usablePoint = memberMypageService.getMemberPoint(new RequestMemberIdDTO(memberId));
+
 		model.addAttribute("pointHistories", pointHistories);
+		model.addAttribute("usablePoint", usablePoint);
 		return "member/mypage/point-history";
 	}
 }
