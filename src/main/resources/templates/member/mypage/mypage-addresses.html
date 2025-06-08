@@ -166,13 +166,23 @@
 
             <h3>배송주소록</h3>
 
-            <div class="address-info-box">
+            <div th:each="address : ${addresses}" th:if="${address.addressDefault}" class="address-info-box">
                 <div class="address-info">
-                    <div><span>집</span><span class="default-tag">기본배송지</span></div>
-                    <div><strong>김도윤 / 010-9140-6307</strong></div>
-                    <div>[05571] 서울특별시 송파구 올림픽로4길 42 (잠실동, 우성아파트) 7동 1207호</div>
+                    <div>
+                        <span th:text="${address.addressAlias != null ? address.addressAlias : '배송지'}">배송지</span>
+                        <span class="default-tag">기본배송지</span>
+                    </div>
+                    <div>
+                        <strong th:text="${address.addressReceiver} + ' / ' + ${address.addressReceiverPhone}">
+                            김도윤 / 010-9140-6307
+                        </strong>
+                    </div>
+                    <div>
+                        <span th:text="'[' + ${address.addressCode} + '] ' + ${address.addressInfo} + ' ' + ${address.addressDetail}">
+                            [우편번호] 주소 정보
+                        </span>
+                    </div>
                 </div>
-                <button class="address-edit-btn">수정</button>
             </div>
 
             <div class="info-text">
@@ -192,43 +202,75 @@
                 </div>
             </div>
 
-            <div class="address-select-box">
-                <div th:each="address : ${addresses}" class="address-item">
-                    <div class="address-left">
-                        <input type="radio" name="defaultAddress" th:value="${address.addressId}"
-                               th:checked="${address.addressDefault}"/>
-                        <div class="address-details">
-                            <div>
-                                <span th:text="${address.addressAlias != null ? address.addressAlias : '배송지'}">배송지</span>
-                                <span th:if="${address.addressDefault}" class="default-tag">기본배송지</span>
-                                <div><strong>김도윤 / 010-9140-6307</strong></div>
-                            </div>
-                            <div>
+            <form th:action="@{/mypage/addresses/default}" method="post">
+                <div class="address-select-box">
+                    <div th:each="address : ${addresses}" class="address-item">
+                        <div class="address-left">
+                            <input type="radio" name="addressId" th:value="${address.addressId}"
+                                   th:checked="${address.addressDefault}"/>
+                            <div class="address-details">
+                                <div>
+                                    <span th:text="${address.addressAlias != null ? address.addressAlias : '배송지'}">배송지</span>
+                                    <span th:if="${address.addressDefault}" class="default-tag">기본배송지</span>
+                                    <div>
+                                        <strong th:text="${address.addressReceiver} + ' / ' + ${address.addressReceiverPhone}">
+                                            김도윤 / 010-9140-6307
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div>
                     <span th:text="'[' + ${address.addressCode} + '] ' + ${address.addressInfo} + ' ' + ${address.addressDetail}">
                         [00000] 서울시 강남구 테헤란로 123 10층
                     </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="address-actions">
-                        <a th:href="@{/mypage/addresses/{id}(id=${address.addressId})}" class="btn-edit"
-                           th:classappend="${address.addressDefault} ? '' : 'btn-blue'">수정</a>
+                        <div class="address-actions">
+                            <a th:href="@{/mypage/addresses/{id}(id=${address.addressId})}" class="btn-edit"
+                               th:classappend="${address.addressDefault} ? '' : 'btn-blue'">수정</a>
 
-                        <form th:if="${!address.addressDefault}"
-                              th:action="@{/mypage/addresses/{id}(id=${address.addressId})}"
-                              method="post"
-                              onsubmit="return confirm('정말 삭제하시겠습니까?')">
-                            <input type="hidden" name="_method" value="delete"/>
-                            <button type="submit" class="btn-delete">삭제</button>
-                        </form>
+                            <button type="button"
+                                    th:if="${!address.addressDefault}"
+                                    class="btn-delete"
+                                    th:onclick="|handleDelete(${address.addressId})|">
+                                삭제
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-
-            <button class="submit-btn">기본 배송지로 설정</button>
+                <button type="submit" class="submit-btn">기본 배송지로 설정</button>
+            </form>
         </div>
     </section>
+    <script>
+        function handleDelete(addressId) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/mypage/addresses/${addressId}`;
+
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'delete';
+            form.appendChild(methodInput);
+
+            const csrf = document.querySelector('input[name="_csrf"]');
+            if (csrf) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_csrf';
+                csrfInput.value = csrf.value;
+                form.appendChild(csrfInput);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+
 </div>
 </body>
 </html>

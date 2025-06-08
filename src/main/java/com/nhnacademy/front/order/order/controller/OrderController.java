@@ -34,7 +34,7 @@ import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomer
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
-import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -57,6 +57,7 @@ import com.nhnacademy.front.product.category.model.dto.response.ResponseCategory
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
+import com.nhnacademy.front.review.service.ReviewService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -87,6 +88,7 @@ public class OrderController {
 
 	private final UserCategoryService userCategoryService;
 	private final MemberCouponService memberCouponService;
+	private final ReviewService reviewService;
 
 	private final ObjectMapper objectMapper;
 
@@ -258,10 +260,12 @@ public class OrderController {
 	@JwtTokenCheck
 	@GetMapping("/mypage/orders")
 	public String getMemberOrders(Model model, HttpServletRequest request,
-		@PageableDefault(page = 0, size = 10) Pageable pageable) {
-		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+		@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false) String status,
+		@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate,
+		@RequestParam(required = false) String orderCode) {
 
-		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByMemberId(pageable, memberId);
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByMemberId(pageable, memberId, status, startDate, endDate, orderCode);
 		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
 		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
 		model.addAttribute("orders", orders);
@@ -298,11 +302,14 @@ public class OrderController {
 			isChangeOfMindReturnAvailable = daysBetween <= 10;
 		}
 
+		Boolean isReviewed = reviewService.isReviewedByOrder(orderCode);
+
 		model.addAttribute("isReturnAvailable", isReturnAvailable);
 		model.addAttribute("isChangeOfMindReturnAvailable", isChangeOfMindReturnAvailable);
 		model.addAttribute("order", order);
 		model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("productAmount", productAmount);
+		model.addAttribute("isReviewed", isReviewed);
 
 		return "member/mypage/orderDetails";
 	}

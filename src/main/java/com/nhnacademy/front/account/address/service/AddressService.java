@@ -83,4 +83,11 @@ public class AddressService {
 		}
 	}
 
+	public void setDefaultAddress(String memberId, long addressId) {
+		ResponseEntity<Void> response = addressAdaptor.setDefaultAddress(memberId, addressId);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new EmptyResponseException();
+		}
+	}
+
 }
