@@ -25,20 +25,24 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperD
 import com.nhnacademy.front.order.order.service.OrderAdminService;
 import com.nhnacademy.front.order.order.service.OrderService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "관리자 주문 기능", description = "관리자의 주문 관련 기능 제공")
 @RequiredArgsConstructor
 @Controller
 public class OrderAdminController {
 	private final OrderAdminService orderAdminService;
 	private final OrderService orderService;
 
+	@Operation(summary = "관리자 전체 주문 내역 페이지", description = "관리자가 현재 모든 주문에 대한 정보를 확인 가능한 페이지 제공")
 	@JwtTokenCheck
 	@GetMapping("/admin/settings/orders")
 	public String getOrders(Model model,
 		@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false) String status,
-		@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate,
+		@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
 		@RequestParam(required = false) String orderCode, @RequestParam(required = false) String memberId) {
 
 		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderAdminService.getOrders(pageable, status, startDate, endDate, orderCode, memberId);
@@ -49,12 +53,14 @@ public class OrderAdminController {
 		return "admin/order/ordersManagement";
 	}
 
+	@Operation(summary = "관리자 배송 시작 처리", description = "관리자가 특정 주문에 대하여 배송 시작하는 요청을 처리")
 	@JwtTokenCheck
 	@PostMapping("/admin/settings/orders/{orderCode}")
 	public ResponseEntity<Void> startDelivery(@PathVariable String orderCode) {
 		return orderAdminService.startDelivery(orderCode);
 	}
 
+	@Operation(summary = "관리자 주문 내역 확인 페이지", description = "관리자가 특정 주문에 대하여 상세 정보 확인이 가능한 페이지 제공")
 	@JwtTokenCheck
 	@GetMapping("/admin/settings/orders/{orderCode}")
 	public String getOrderDetails(Model model, @PathVariable String orderCode) {
@@ -80,6 +86,7 @@ public class OrderAdminController {
 	}
 
 
+	@Operation(summary = "관리자 반품 내역 확인 페이지", description = "관리자가 전체 반품 주문에 대해 확인 가능한 페이지 제공")
 	@GetMapping("/admin/settings/return")
 	public String getReturnOrders(Model model, Pageable pageable) {
 
@@ -92,6 +99,7 @@ public class OrderAdminController {
 	}
 
 
+	@Operation(summary = "관리자 반품 상세 내역 확인 페이지", description = "관리자가 특정 반품에 대하여 상세 정보 확인이 가능한 페이지 제공")
 	@GetMapping("/admin/settings/return/{orderCode}")
 	public String getReturnOrderDetails(Model model, @PathVariable String orderCode) {
 
