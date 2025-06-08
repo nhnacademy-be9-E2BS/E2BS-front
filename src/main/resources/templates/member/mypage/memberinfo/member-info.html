@@ -137,17 +137,21 @@
                 <table class="profile-table">
                     <tr>
                         <th>아이디</th>
-                        <td th:text="${member.memberId}"></td>
+                        <td>
+                            <span th:text="${member.memberId}"></span>
+                            <input type="hidden" name="memberId" th:value="${member.memberId}"/>
+                        </td>
                     </tr>
+
                     <tr>
                         <th>새 비밀번호</th>
-                        <td><input type="password" class="form-control-inline" style="width: 100%;"
-                                   placeholder="새 비밀번호를 입력해 주세요."/></td>
+                        <td><input type="password" name="customerPassword" class="form-control-inline"
+                                   style="width: 100%;" placeholder="새 비밀번호를 입력해 주세요."/></td>
                     </tr>
                     <tr>
                         <th>새 비밀번호 확인</th>
-                        <td><input type="password" class="form-control-inline" style="width: 100%;"
-                                   placeholder="비밀번호를 한 번 더 입력해 주세요."/></td>
+                        <td><input type="password" name="customerPasswordCheck" class="form-control-inline"
+                                   style="width: 100%;" placeholder="비밀번호를 한 번 더 입력해 주세요."/></td>
                     </tr>
                     <tr>
                         <th>이름</th>
@@ -166,7 +170,7 @@
 
                 <table class="profile-table">
                     <tr>
-                        <th>생년월일/성별</th>
+                        <th>생년월일</th>
                         <td>
                             <div class="edit-container">
                                 <span th:text="${member.memberBirth}" id="birthSpan"></span>
@@ -246,6 +250,16 @@
             birthInput.setAttribute('max', today);
             birthInput.setAttribute('min', '1900-01-01');
         }
+
+        document.getElementById('edit_form').addEventListener('submit', function (e) {
+            const password = document.querySelector('input[name="customerPassword"]').value;
+            const confirmPassword = document.querySelector('input[name="customerPasswordCheck"]').value;
+
+            if (password !== confirmPassword) {
+                alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+                e.preventDefault(); // 폼 제출 막기
+            }
+        });
     </script>
 </div>
 </body>

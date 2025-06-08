@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.account.member.adaptor.MemberCouponAdaptor;
@@ -13,6 +14,7 @@ import com.nhnacademy.front.account.member.adaptor.MemberOrderAdaptor;
 import com.nhnacademy.front.account.member.adaptor.MemberPointHistoryAdaptor;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberInfoException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberRankNameException;
+import com.nhnacademy.front.account.member.exception.PasswordNotEqualsException;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberInfoDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
@@ -40,6 +42,7 @@ public class MemberMypageService {
 	private final MemberInfoAdaptor memberInfoAdaptor;
 	private final RedisTemplate<String, Object> redisTemplate;
 	private final MemberOrderAdaptor memberOrderAdaptor;
+	private final PasswordEncoder passwordEncoder;
 
 	/**
 	 * 마이페이지 총 주문 건 수
@@ -121,6 +124,16 @@ public class MemberMypageService {
 	public void updateMemberInfo(HttpServletRequest request,
 		RequestMemberInfoDTO requestMemberInfoDTO) throws FeignException {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+
+		if (Objects.nonNull(requestMemberInfoDTO.getCustomerPassword()) || Objects.nonNull(
+			requestMemberInfoDTO.getCustomerPasswordCheck())) {
+			if (!requestMemberInfoDTO.getCustomerPassword().equals(requestMemberInfoDTO.getCustomerPasswordCheck())) {
+				throw new PasswordNotEqualsException();
+			}
+
+			String customerPassword = passwordEncoder.encode(requestMemberInfoDTO.getCustomerPassword());
+			requestMemberInfoDTO.setCustomerPassword(customerPassword);
+		}
 
 		ResponseEntity<Void> response = memberInfoAdaptor.updateMemberInfo(memberId, requestMemberInfoDTO);
 		if (!response.getStatusCode().is2xxSuccessful()) {
