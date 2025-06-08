@@ -33,7 +33,7 @@ import com.nhnacademy.front.account.address.service.AddressService;
 import com.nhnacademy.front.account.customer.model.domain.Customer;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
-import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
