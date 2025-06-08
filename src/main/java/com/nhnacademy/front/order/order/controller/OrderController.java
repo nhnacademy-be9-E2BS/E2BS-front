@@ -34,7 +34,7 @@ import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomer
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
-import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
