@@ -34,7 +34,7 @@ import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomer
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
-import com.nhnacademy.front.cart.model.dto.order.RequestCartOrderDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -57,13 +57,18 @@ import com.nhnacademy.front.product.category.model.dto.response.ResponseCategory
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
+import com.nhnacademy.front.review.service.ReviewService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "비회원, 회원 주문 기능", description = "비회원, 회원 고객의 주문, 마이 페이지 주문 관련 기능 제공")
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -87,15 +92,19 @@ public class OrderController {
 
 	private final UserCategoryService userCategoryService;
 	private final MemberCouponService memberCouponService;
+	private final ReviewService reviewService;
 
 	private final ObjectMapper objectMapper;
 
 	/**
 	 * 회원 결제 주문서 작성 페이지
 	 */
+	@Operation(summary = "회원 주문서 작성 페이지", description = "회원이 상품 바로구매, 장바구니 주문하기 시 주문서 페이지 제공")
 	@JwtTokenCheck
 	@GetMapping("/members/order")
-	public String getCheckOut(Model model, @CookieValue(name = "orderCart") String encodedCart,
+	public String getCheckOut(Model model,
+		@Parameter(description = "주문 상품 정보", example = "eyJwcm9kdWN0SWRzIjpbNF0sImNhcnRRdWFudGl0aWVzIjpbMV19")
+		@CookieValue(name = "orderCart") String encodedCart,
 		HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 
 		// Base64 디코딩 → JSON → DTO 역직렬화
@@ -147,6 +156,7 @@ public class OrderController {
 	/**
 	 * 비회원 가입 또는 로그인시 선택한 장바구니 항목들에 대한 결제 주문서 작성 페이지
 	 */
+	@Operation(summary = "비회원 주문서 작성 페이지", description = "비회원이 상품 바로구매, 장바구니 주문하기 시 주문서 페이지 제공")
 	@PostMapping("/customers/order")
 	public String getCheckOutCustomerCart(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest,
 		HttpServletResponse response) {
@@ -185,6 +195,7 @@ public class OrderController {
 	/**
 	 * 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 미리 저장하는 기능
 	 */
+	@Operation(summary = "외부 API 결제 요청 시 주문서 저장", description = "외부 API 결제 요청 시 DB에 주문 정보를 저장")
 	@PostMapping("/order/tossPay")
 	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(@Validated @RequestBody RequestOrderWrapperDTO request,
 		BindingResult bindingResult) {
@@ -195,8 +206,9 @@ public class OrderController {
 	}
 
 	/**
-	 * 포인트 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 저장 및 결제 처리 기능
+	 * 포인트로만 결제 시 back에 요청하여 주문서를 저장 및 결제 처리 기능
 	 */
+	@Operation(summary = "포인트 결제 처리 ", description = "포인트로만 전체 결제를 진행할 때 주문 정보 저장, 결제 처리")
 	@JwtTokenCheck
 	@PostMapping("/order/point")
 	public ResponseEntity<ResponseOrderResultDTO> postPointCheckOut(
@@ -212,6 +224,7 @@ public class OrderController {
 	 * 결제 완료 시 이동될 페이지
 	 * 여기에서 토스에서 제공한 데이터를 back으로 요청하여 결제 승인을 진행
 	 */
+	@Operation(summary = "결제 승인 처리", description = "주문 완료 시 페이지 제공")
 	@GetMapping("/order/success")
 	public String getSuccessOrder(@RequestParam String orderId, @RequestParam String paymentKey,
 		@RequestParam long amount) {
@@ -233,6 +246,7 @@ public class OrderController {
 	 * 외부 API의 경우 결제 승인까지 완료
 	 * 포인트라면 결제 완료 시 이동하는 주문 완료 페이지
 	 */
+	@Operation(summary = "주문 완료 페이지", description = "주문 완료 페이지 제공")
 	@GetMapping("/order/confirm")
 	public String getConfirmOrder() {
 		// 추후 정보를 더 넣을지는 모름
@@ -242,6 +256,7 @@ public class OrderController {
 	/**
 	 * 주문 실패 시 이동할 페이지
 	 */
+	@Operation(summary = "주문 실패 페이지", description = "주문 실패 페이지 제공")
 	@GetMapping("/order/fail")
 	public String getFailOrder() {
 		return "payment/fail";
@@ -250,16 +265,18 @@ public class OrderController {
 	/**
 	 * 결제 모달을 끌 시 호출 할 주문서 삭제 요청
 	 */
+	@Operation(summary = "외부 결제 모달 끌 시 주문서 삭제", description = "외부 결제 모달 끌 시 DB에 저장된 주문서 제거")
 	@PostMapping("/order/cancel")
 	public ResponseEntity<Void> deleteOrder(@RequestParam String orderId) {
 		return orderService.deleteOrder(orderId);
 	}
 
+	@Operation(summary = "회원 주문 내역 조회", description = "회원의 주문 내역을 필터링 하여 확인 가능한 페이지 제공")
 	@JwtTokenCheck
 	@GetMapping("/mypage/orders")
 	public String getMemberOrders(Model model, HttpServletRequest request,
 		@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false) String status,
-		@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate,
+		@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
 		@RequestParam(required = false) String orderCode) {
 
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
@@ -273,6 +290,7 @@ public class OrderController {
 	/**
 	 * 회원이 자신의 주문 특정 내역 조회
 	 */
+	@Operation(summary = "회원 주문 상세 조회", description = "회원의 특정 주문 상세 정보를 확인하는 페이지 제공")
 	@JwtTokenCheck
 	@GetMapping("/mypage/orders/{orderCode}")
 	public String getMemberOrderDetails(Model model, @PathVariable String orderCode) {
@@ -300,11 +318,14 @@ public class OrderController {
 			isChangeOfMindReturnAvailable = daysBetween <= 10;
 		}
 
+		Boolean isReviewed = reviewService.isReviewedByOrder(orderCode);
+
 		model.addAttribute("isReturnAvailable", isReturnAvailable);
 		model.addAttribute("isChangeOfMindReturnAvailable", isChangeOfMindReturnAvailable);
 		model.addAttribute("order", order);
 		model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("productAmount", productAmount);
+		model.addAttribute("isReviewed", isReviewed);
 
 		return "member/mypage/orderDetails";
 	}
@@ -312,6 +333,7 @@ public class OrderController {
 	/**
 	 * 회원이 배송 시작 전인 특정 주문에 대해 주문을 취소하는 기능
 	 */
+	@Operation(summary = "주문 취소", description = "회원이 배송 전인 상품에 대하여 주문 취소")
 	@JwtTokenCheck
 	@DeleteMapping("/mypage/orders/{orderCode}")
 	public ResponseEntity<Void> cancelOrder(@PathVariable String orderCode) {
@@ -321,11 +343,16 @@ public class OrderController {
 	/**
 	 * 회원의 반품 요청
 	 */
+	@Operation(summary = "반품 처리", description = "회원이 단순 변심, 파손에 의한 상품에 대하여 반품 요청 처리")
 	@PostMapping("/order/return")
-	public ResponseEntity<Void> returnOrder(@RequestBody RequestOrderReturnDTO returnDTO) {
+	public ResponseEntity<Void> returnOrder(@RequestBody @Validated RequestOrderReturnDTO returnDTO, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new ValidationFailedException(bindingResult);
+		}
 		return orderService.returnOrder(returnDTO);
 	}
 
+	@Operation(summary = "반품 내역 페이지", description = "회원이 반품한 주문에 대한 내역 페이지 제공")
 	@GetMapping("/mypage/return")
 	public String getReturnOrders(Model model, HttpServletRequest request, Pageable pageable) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
@@ -338,6 +365,7 @@ public class OrderController {
 		return "member/mypage/orderReturns";
 	}
 
+	@Operation(summary = "반품 상세 내역 페이지", description = "회원이 반품 상세 정보에 대해 확인 가능한 페이지 제공")
 	@GetMapping("/mypage/return/{orderCode}")
 	public String getReturnOrderDetails(Model model, @PathVariable String orderCode) {
 
@@ -346,6 +374,7 @@ public class OrderController {
 		return "member/mypage/orderReturnDetail";
 	}
 
+	@Operation(summary = "비회원 주문 내역 확인 페이지", description = "비회원이 이메일, 비밀번호로 주문했던 내역을 확인가능한 페이지 제공")
 	@GetMapping("/customers/{customerId}/orders")
 	public String getCustomerOrders(Model model, @PathVariable long customerId, @PageableDefault(page = 0, size = 10) Pageable pageable) {
 		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByCustomerId(pageable, customerId);
@@ -357,6 +386,7 @@ public class OrderController {
 	}
 
 
+	@Operation(summary = "비회원 주문 상세 페이지", description = "비회원이 특정 주문에 대해 확인 가능한 페이지 제공")
 	@GetMapping("/customers/{customerId}/orders/{orderCode}")
 	public String getCustomerOrderDetails(Model model, @PathVariable long customerId, @PathVariable String orderCode) {
 		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);

@@ -21,7 +21,7 @@ public class OrderAdminService {
 	private final OrderAdminAdaptor orderAdminAdaptor;
 
 	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable, String status,
-		LocalDate startDate, LocalDate endDate, String orderCode, String memberId) throws FeignException {
+		String startDate, String endDate, String orderCode, String memberId) throws FeignException {
 		return orderAdminAdaptor.getOrders(pageable, status, startDate, endDate, orderCode, memberId);
 	}
 

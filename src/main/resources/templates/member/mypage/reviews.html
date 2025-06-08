@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 목록</title>
+    <title>리뷰 내역</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -113,7 +113,6 @@
                     <a th:href="@{/books/{productId}(productId=${review.productId})}" class="image-link">
                         <img th:src="${review.productThumbnail}"
                              th:alt="${review.productTitle} + ' 표지 이미지'"
-                             th:id="${'image-' + stat.index}"
                              onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                     </a>
                 </div>
@@ -130,40 +129,54 @@
                     </div>
 
                     <div class="book-meta">
-                        <div th:if="${!#strings.isEmpty(review.reviewImage)}"
+                        <div th:if="${!#strings.isEmpty(review.reviewImage)}" class="preview-container mt-2 text-center"
                              th:id="${'image-' + stat.index}">
-                            <img th:src="${review.reviewImage}" alt="리뷰 이미지" style="max-width: 150px; height: 200px;"
+                            <img th:src="${review.reviewImage}" alt="리뷰 이미지 미리보기"
+                                 style="max-width:100%; height:auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
                                  onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                         </div>
 
-                        <div>
+                        <div th:id="${'text-div-' + stat.index}">
                             <p th:id="${'text-' + stat.index}" th:text="${review.reviewContent}"></p>
                         </div>
 
                         <!-- 리뷰 수정 폼 (기본은 숨김) stat은 타임리프에서 제공하는 현재 반복 상태 정보를 담는 객체 -->
                         <div th:id="${'edit-form-' + stat.index}" style="display: none;">
-                            <form>
-                                <input type="hidden" name="reviewId" th:value="${review.reviewId}">
-                                <textarea name="reviewContent" class="form-control mb-2" rows="3"
-                                          th:text="${review.reviewContent}"></textarea>
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-body">
+                                    <form>
+                                        <input type="hidden" name="reviewId" th:value="${review.reviewId}">
 
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="updateImage" name="reviewImage">
-                                    <label class="custom-file-label" for="updateImage">수정할 파일을 선택하세요</label>
+                                        <div class="form-group mb-3">
+                                            <textarea name="reviewContent" class="form-control mb-2"
+                                                      rows="5"
+                                                      style="min-height: 150px;" placeholder="상품에 대한 솔직한 리뷰를 작성해주세요 :)"
+                                                      th:text="${review.reviewContent}"></textarea>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="updateImage" class="form-label fw-bold">이미지 업로드</label>
+                                            <input type="file" class="form-control" id="updateImage" name="reviewImage">
+                                            <div class="preview-container mt-2 text-center">
+                                                <img id="update-imagePreview" src="#" alt="리뷰 이미지 미리보기"
+                                                     style="display:none; max-width:100%; height:auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+                                                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'" />
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <button type="button" class="btn btn-success btn-sm"
+                                                    th:onclick="|submitReviewUpdate('${review.reviewId}', '${stat.index}')|">
+                                                저장
+                                            </button>
+                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                    th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">
+                                                취소
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
-
-                                <!-- 이미지 미리보기 영역 -->
-                                <div class="preview-container mb-2">
-                                    <img id="update-imagePreview" src="#" alt="이미지 미리보기" style="display:none; max-width: 350px;" />
-                                </div>
-
-                                <button type="button" class="btn btn-success btn-sm"
-                                        th:onclick="|submitReviewUpdate('${review.reviewId}', '${stat.index}')|">
-                                    저장
-                                </button>
-                                <button type="button" class="btn btn-secondary btn-sm"
-                                        th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">취소</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
