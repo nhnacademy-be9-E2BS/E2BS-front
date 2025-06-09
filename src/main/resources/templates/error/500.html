@@ -5,45 +5,35 @@
 <body>
 <div layout:fragment="content">
     <section class="login_box_area section-margin">
+        <style>
+            .error-box {
+                text-align: center;
+            }
+            .error-code {
+                font-size: 96px;
+                font-weight: 700;
+                margin: 0;
+            }
+
+            .error-message {
+                font-size: 22px;
+                margin-top: 12px;
+                color: #515154;
+            }
+
+            .description {
+                font-size: 16px;
+                margin-top: 10px;
+                color: #6e6e73;
+            }
+        </style>
+
         <div class="container">
-            <style>
-                .error-wrapper {
-                    text-align: center;
-                    padding: 60px 20px;
-                }
-
-                .error-image {
-                    width: 240px;
-                    margin-bottom: 30px;
-                }
-
-                .error-message {
-                    font-size: 24px;
-                    font-weight: bold;
-                    color: #b00020;
-                    margin-bottom: 20px;
-                }
-
-                .back-button {
-                    display: inline-block;
-                    padding: 10px 24px;
-                    background-color: #333;
-                    color: white;
-                    border-radius: 6px;
-                    font-size: 14px;
-                    text-decoration: none;
-                    transition: background-color 0.3s ease;
-                }
-
-                .back-button:hover {
-                    background-color: #555;
-                }
-            </style>
-
-            <div class="error-wrapper">
-                <img class="error-image" src="/images/error/500.png" alt="500 서버 오류 이미지">
-                <div class="error-message" th:text="${errorMessage}">서버 오류가 발생했습니다.</div>
-                <a class="back-button" href="javascript:history.back()">이전으로 돌아가기</a>
+            <div class="error-box">
+                <h1 class="error-code">500</h1>
+                <p class="error-message">서비스에 접속할 수 없습니다.</p>
+                <p class="description">지금 이 서비스와 연결할 수 없습니다.<br>잠시 후에 다시 확인해주세요.</p>
+                <button class="btn btn-secondary" onclick="location.href='/'">메인으로 돌아가기</button>
             </div>
         </div>
     </section>
