@@ -2,11 +2,9 @@ package com.nhnacademy.front.product.product.service.impl;
 
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.product.adaptor.ProductAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
@@ -35,24 +33,6 @@ public class ProductServiceImpl implements ProductService {
 			return response.getBody();
 		} catch (FeignException e) {
 			throw new ProductGetProcessException("도서 단일 조회 실패");
-		}
-	}
-
-	/**
-	 * 하나의 카테고리에 대한 product 리스트 페이징 조회
-	 */
-	@Override
-	public PageResponse<ResponseProductReadDTO> getProductsByCategoryId(Pageable pageable, long categoryId) {
-		try {
-			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productAdaptor.getProductsByCategory(
-				pageable, categoryId);
-
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
-			}
-			return response.getBody();
-		} catch (FeignException e) {
-			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
 		}
 	}
 

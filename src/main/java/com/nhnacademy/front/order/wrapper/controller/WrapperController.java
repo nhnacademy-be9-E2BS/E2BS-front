@@ -96,10 +96,10 @@ public class WrapperController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@JwtTokenCheck
-	@PutMapping("/{wrapperId}")
+	@PutMapping("/{wrapper-id}")
 	public ResponseEntity<Void> updateWrapper(@Parameter(description = "포장지 수정 DTO", required = true, schema = @Schema(implementation = RequestModifyWrapperDTO.class))
 		@Validated @RequestBody RequestModifyWrapperDTO requestModifyWrapperDTO, BindingResult bindingResult,
-		@Parameter(description = "수정할 포장지 ID", example = "1", required = true) @PathVariable Long wrapperId) {
+		@Parameter(description = "수정할 포장지 ID", example = "1", required = true) @PathVariable("wrapper-id") Long wrapperId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
