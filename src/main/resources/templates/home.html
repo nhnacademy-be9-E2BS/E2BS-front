@@ -2,319 +2,1094 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/user-layout}">
-
 <head>
+    <meta charset="UTF-8">
     <title>E2BS</title>
+
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <link href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="/css/style.css">
+
     <style>
-        .today-book-section {
-            padding: 60px 10%;
-        }
-
-        .blog_best{
-            padding: 60px 10%;
+        .tab-content {
+            min-height: 696px; /* 수능특강 섹션 기준 높이 */
+            transition: opacity 0.3s ease;
         }
 
 
-        .section-title {
-            margin-bottom: 60px;
+        .feature-banner {
+            background-color: #FFFFFF;
+            padding: 0;
+            position: relative;
+            box-sizing: border-box;
         }
 
-        .section-title h2 {
-            display: inline-block;
-            font-size: 40px;
-            font-weight: 700;
-            margin-right: 16px;
-        }
-
-        .section-title span {
-            color: #888;
-            font-size: 28px;
-        }
-
-        .today-book-container {
+        .feature-banner .banner-wrapper {
+            background-color: #FDEEE0;
+            padding: 80px 10%;
             display: flex;
-            gap: 60px;
-            align-items: flex-start;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
 
-        .main-book {
+        /* 좌/우 네비게이션 화살표 */
+        .feature-banner .banner-prev-btn,
+        .feature-banner .banner-next-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border: none;
+            background-color: rgba(0, 0, 0, 0.03);
+            border-radius: 50%;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s ease;
+            z-index: 10;
+        }
+
+        .feature-banner .banner-prev-btn:hover,
+        .feature-banner .banner-next-btn:hover {
+            background-color: rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-banner .banner-prev-btn {
+            left: 5%;
+        }
+
+        .feature-banner .banner-next-btn {
+            right: 5%;
+        }
+
+        .feature-banner .banner-prev-btn i,
+        .feature-banner .banner-next-btn i {
+            font-size: 20px;
+            color: #555555;
+        }
+
+        /* 왼쪽 텍스트 영역 (타이틀 + 서브텍스트) */
+        .feature-banner .banner-text {
+            flex: 1;
+            max-width: 45%;
+            text-align: left;
+        }
+
+        .feature-banner .banner-text h2 {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0;
+            color: #000000;
+        }
+
+        .feature-banner .banner-text p {
+            font-size: 28px;
+            margin-top: 16px;
+            color: #000000;
+        }
+
+        .feature-banner .banner-items {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 480px;
+        }
+
+        .feature-banner .banner-items .banner-item {
+            position: relative;
+        }
+
+        .feature-banner .banner-items .banner-item img {
+            width: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .banner-tab-nav {
+            display: flex;
+            margin: 0 auto;
+            max-width: 1600px;
+            border-top: 1px solid #DDDDDD;
+            border-bottom: 1px solid #DDDDDD;
+            list-style: none;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .banner-tab-nav .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 16px 0;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 500;
+            color: #333333;
+            background-color: #FFFFFF;
+            border-right: 1px solid #DDDDDD;
+            transition: background-color 0.2s;
+        }
+
+        .banner-tab-nav .tab-item:last-child {
+            border-right: none;
+        }
+
+        .banner-tab-nav .tab-item:hover {
+            background-color: #F7F7F7;
+        }
+
+        .banner-tab-nav .tab-item.active {
+            background-color: #333333;
+            color: #FFFFFF;
+            font-weight: 700;
+            border-bottom: 4px solid #333333;
+        }
+
+        .weekly-banner {
+            background-color: #fdeee0;  /* 바깥 wrapper에 칠함 */
+            padding: 80px 0;
+        }
+
+        .weekly-banner .banner-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+
+        .weekly-banner .banner-text {
+            flex: 1;
+            max-width: 45%;
+            text-align: left;
+        }
+
+        .weekly-banner .banner-text h2 {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0;
+            color: #000;
+        }
+
+        .weekly-banner .banner-text p {
+            font-size: 28px;
+            margin-top: 16px;
+            color: #000;
+        }
+
+        .weekly-banner .banner-items {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 480px;
+        }
+
+        .weekly-banner .banner-item img {
+            width: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .weekly-banner .book-title {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .weekly-banner .book-price {
+            margin-top: 4px;
+            font-size: 13px;
+            color: #444;
+            text-align: center;
+        }
+
+
+
+        /* 책 아이템 사이 세로선 */
+        .weekly-books .book-item {
+            width: 220px;
+            text-align: center;
+            border-right: 1px solid #dddddd;
+            padding: 0 16px;
+            box-sizing: border-box;
+        }
+
+        /* 마지막 책 오른쪽 경계선 제거 */
+        .weekly-books .book-item:last-child {
+            border-right: none;
+        }
+
+
+        .today-book-section {
+            margin-top: 60px;
+            padding: 80px 10%;
+            background-color: #f6f6f6;
+            position: relative;
+        }
+
+        .today-book-section .section-title {
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .today-book-section .section-title h2 {
+            display: inline-block;
+            font-size: 36px;
+            font-weight: 700;
+            margin-right: 8px;
+            color: #222222;
+        }
+
+        .today-book-section .section-title span {
+            color: #888888;
+            font-size: 20px;
+            vertical-align: middle;
+        }
+
+        .today-book-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 40px;
+            box-sizing: border-box;
+            overflow: visible;
+        }
+
+        .today-book-content {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            flex: 1;
+            max-width: 1280px;
+        }
+
+        .today-main-book {
             display: flex;
             gap: 30px;
             flex: 1.5;
             min-width: 500px;
         }
 
-        .main-book-img {
+        .today-main-book .today-main-img {
             width: 220px;
             height: auto;
             border-radius: 8px;
             object-fit: cover;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .main-book-info {
+        .today-main-book .today-main-info {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            max-width: 400px;
+            justify-content: flex-start;
+            max-width: 450px;
         }
 
-        .book-title {
+        .today-main-book .today-main-title {
             font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .book-meta {
-            font-size: 14px;
-            color: #555;
+            font-weight: 700;
             margin-bottom: 12px;
+            color: #222222;
         }
 
-        .book-meta .dot {
-            margin: 0 8px;
+        .today-main-book .today-main-meta {
+            font-size: 14px;
+            color: #555555;
+            margin-bottom: 14px;
         }
 
-        .book-desc {
+        .today-main-meta .dot {
+            margin: 0 6px;
+            color: #cccccc;
+        }
+
+        .today-main-book .today-main-desc {
             font-size: 16px;
-            color: #444;
+            color: #444444;
             line-height: 1.5;
             margin-bottom: 20px;
+            max-height: 96px;
+            overflow: hidden;
         }
 
-        .book-price {
+        .today-main-book .today-main-price {
             font-size: 18px;
             font-weight: 600;
+            color: #222222;
         }
 
-        .sub-books {
+        .today-sub-books {
             display: flex;
+            gap: 32px;
             flex: 1;
-            gap: 24px;
             justify-content: flex-end;
         }
 
-        .sub-book {
+        .today-sub-books .sub-book-item {
             text-align: center;
-            width: 180px;
+            width: 160px;
         }
 
-        .sub-book img {
+        .today-sub-books .sub-book-item img {
             width: 100%;
             border-radius: 6px;
-            background: #eee;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
 
-
-        .sub-title {
+        .today-sub-books .sub-book-title {
             font-size: 14px;
             margin-top: 8px;
+            color: #333333;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .main_best{ background-color:#f6f6f6;  padding: 60px 10%;}
+
+        .today-prev-btn,
+        .today-next-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border: none;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 50%;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .today-prev-btn:hover,
+        .today-next-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .today-prev-btn {
+            left: 0;
+        }
+
+        .today-next-btn {
+            right: 0;
+        }
+
+        .today-prev-btn i,
+        .today-next-btn i {
+            font-size: 20px;
+            color: #555555;
+        }
 
 
-        .bestseller { position: relative;  margin: 50px auto; padding: 30px 0px;
-            height: 565px;
-            overflow: hidden;}
+        .bestseller-section {
+            padding: 60px 10%; /* 위/아래 여백 40px, 좌/우 10% */
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* 섹션 제목 */
+        .bestseller-section .section-title {
+            margin-bottom: 24px; /* 타이틀과 컨텐츠 사이 간격 */
+            text-align: left;
+        }
+
+        .bestseller-section .section-title h2 {
+            display: inline-block;
+            font-size: 36px; /* 제목 글자 크기 */
+            font-weight: 700;
+            margin-right: 8px; /* 제목과 서브텍스트 사이 간격 */
+            color: #222222;
+        }
+
+        .bestseller-section .section-title span {
+            color: #888888;
+            font-size: 20px; /* 서브텍스트 글자 크기 */
+            vertical-align: middle;
+        }
+
+        /* + 버튼 (우측 상단) */
+        .bestseller-add-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px; /* 버튼 크기 */
+            height: 32px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bestseller-add-btn i {
+            font-size: 20px; /* 아이콘 크기 */
+            color: #555555;
+            transition: color 0.2s;
+        }
+
+        .bestseller-add-btn:hover i {
+            color: #000000;
+        }
+
+        .bestseller-section .category-nav {
+            display: flex;
+            gap: 30px; /* 탭 간격 */
+            align-items: center;
+            margin: 8px 0 32px 0; /* 위/아래 여백 */
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px; /* 아래 경계선과 탭 텍스트 사이 간격 */
+            font-size: 16px; /* 탭 글자 크기 */
+            box-sizing: border-box;
+        }
+
+        .bestseller-section .category-nav a {
+            text-decoration: none;
+            color: #555555;
+            padding: 4px 0;
+            transition: color 0.2s;
+        }
+
+        .bestseller-section .category-nav a:hover,
+        .bestseller-section .category-nav a.active {
+            color: #222222;
+            border-bottom: 2px solid #222222;
+            font-weight: 500;
+        }
+
+
+        .bestseller-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 40px;
+            box-sizing: border-box;
+            overflow: visible;
+        }
+
+        /* 왼쪽/오른쪽 화살표 버튼 */
+        .bestseller-prev-btn,
+        .bestseller-next-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px; /* 버튼 지름 */
+            height: 36px; /* 버튼 지름 */
+            background-color: rgba(0, 0, 0, 0.05);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: background-color 0.2s ease;
+        }
+
+        .bestseller-prev-btn:hover,
+        .bestseller-next-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .bestseller-prev-btn {
+            left: 0;
+        }
+
+        .bestseller-next-btn {
+            right: 0;
+        }
+
+        .bestseller-prev-btn i,
+        .bestseller-next-btn i {
+            font-size: 18px; /* 화살표 아이콘 크기 */
+            color: #555555;
+        }
+
+        /* 책 목록 영역 */
+        .bestseller-books {
+            display: flex;
+            gap: 10%;
+            width: 100%;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+            box-sizing: border-box;
+        }
+
+
+        .bestseller-books .book-item {
+            position: relative;
+            width: 180px; /* 책 커버 너비 */
+            text-align: center;
+            margin-bottom: 12px; /* 제목/가격과 아래 여백 */
+        }
+
+        /* 랭크 배지 */
+        .bestseller-books .book-item .rank-badge {
+            position: absolute;
+            top: -10px; /* 배지를 이미지 위로 살짝 올림 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px; /* 배지 지름 */
+            height: 30px; /* 배지 지름 */
+            line-height: 30px;
+            border-radius: 50%;
+            font-size: 14px; /* 배지 숫자 크기 */
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            z-index: 5;
+        }
+
+        /* 배지 색상: 1등 브라운, 2·4등 그레이, 3등 짙은 그레이 */
+        .bestseller-books .book-item .rank-badge.rank-1 {
+            background-color: #8c6f55;
+        }
+
+        .bestseller-books .book-item .rank-badge.rank-2,
+        .bestseller-books .book-item .rank-badge.rank-4 {
+            background-color: #7a7a7a;
+        }
+
+        .bestseller-books .book-item .rank-badge.rank-3 {
+            background-color: #555555;
+        }
+
+        /* 책 커버 */
+        .bestseller-books .book-item img {
+            width: 100%;
+            border-radius: 6px;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 책 제목 */
+        .bestseller-books .book-item .book-title {
+            margin-top: 8px; /* 이미지와 제목 사이 간격 */
+            font-size: 13px; /* 제목 글자 크기 */
+            color: #333333;
+            line-height: 1.4;
+
+            display: -webkit-box; /* 두 줄까지만 보이도록 */
+            -webkit-line-clamp: 2; /* 최대 2줄 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal; /* 줄바꿈 허용 */
+        }
+
+        /* 책 가격 */
+        .bestseller-books .book-item .book-price {
+            margin-top: 4px; /* 제목과 가격 사이 간격 */
+            font-size: 13px; /* 가격 글자 크기 */
+            color: #444444;
+        }
+
+        .free-shipping-banner {
+            background-color: #f6f6f6; /* 파란 배경 */
+            padding: 20px 0;
+        }
+
+        .free-shipping-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .free-shipping-text {
+            color: gray;
+            font-size: 30px;
+            font-weight: 600;
+        }
+
+        .free-shipping-wrapper img {
+            height: 80px;
+            object-fit:contain;
+        }
+        .review-section {
+            padding: 60px 5%;
+            background-color: #fff;
+        }
+
+        .review-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .review-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .review-bg {
+            height: 180px;
+            weight: 50px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            background-color: #333;
+        }
+
+        .review-meta {
+            padding: 16px;
+            text-align: left;
+        }
+
+        .review-meta img {
+            width: 60px;
+            height: auto;
+            float: left;
+            margin-right: 10px;
+        }
+
+        .book-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .rating {
+            color: #f0c040;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .review-count {
+            font-size: 13px;
+            color: #888;
+        }
 
 
 
     </style>
-
-
 </head>
-
 
 <body>
 <div layout:fragment="content">
+
+    <div class="tab-content" id="tab-content-0" style="display: block;">
+    <section class="feature-banner">
+        <div class="banner-wrapper-outer">
+            <!-- 배너 내부 전체 래퍼 -->
+            <div class="banner-wrapper">
+                <!-- 1) 텍스트 영역 -->
+                <div class="banner-text">
+                    <h2>2026<br/>EBS 수능특강</h2>
+                    <p>수능연계대비 필수교재</p>
+                </div>
+
+                <div class="banner-items">
+                    <div class="banner-item">
+                        <img src="https://image.aladin.co.kr/product/35532/55/cover500/8954789544_1.jpg" alt="수능특강 문학">
+                    </div>
+                    <div class="banner-item">
+                        <img src="https://image.aladin.co.kr/product/35532/62/cover500/8954789587_2.jpg" alt="수능특강 영어">
+                    </div>
+                    <div class="banner-item">
+                        <img src="https://image.aladin.co.kr/product/35532/55/cover500/s012036173_1.jpg" alt="수능특강 수학Ⅱ">
+                    </div>
+                    <div class="banner-item">
+                        <img src="https://image.aladin.co.kr/product/35532/58/cover500/8954789668_3.jpg" alt="수능특강 한국사">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+
+
+
+    <div class="tab-content" id="tab-content-1" style="display: none;">
+        <section class="feature-banner">
+            <div class="banner-wrapper">
+                <div class="banner-text">
+                    <h2>이주의 책</h2>
+                    <p>E2BS가 추천하는 이번 주의 책 4권</p>
+                </div>
+                <div class="banner-items">
+                    <div class="banner-item" th:each="book, stat : ${BestSellerList}" th:if="${stat.index < 4}">
+                        <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        <p class="book-title" th:text="${book.productTitle}">도서 제목</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-content" id="tab-content-2" style="display: none;">
+        <section class="feature-banner">
+            <div class="banner-wrapper">
+                <div class="banner-text">
+                    <h2>이슈도서</h2>
+                    <p>이번 주 화제의 이슈 도서를 만나보세요.</p>
+                </div>
+                <div class="banner-items">
+                    <div class="banner-item" th:each="book, stat : ${BestSellerList}" th:if="${stat.index < 4}">
+                        <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        <p class="book-title" th:text="${book.productTitle}">도서 제목</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==============================
+         배너 바로 아래 들어갈 탭 네비게이션
+         ============================== -->
+    <ul class="banner-tab-nav">
+        <li class="tab-item active">2025 수능특강</li>
+        <li class="tab-item">이주의_책</li>
+        <li class="tab-item">이슈도서</li>
+    </ul>
+
+    <!-- ============== “오늘의 책” 섹션 시작 ============== -->
+
     <section class="today-book-section">
+
+        <!-- 섹션 제목 -->
         <div class="section-title">
-            <h2>오늘의 책</h2>
-            <span>오늘 함께할 책을 만나보세요.</span>
+            <h2>기대신간</h2>
+            <span>새로운 책을 E2BS에서 제일 먼저 만나보세요.</span>
         </div>
+        <div class="today-book-wrapper">
 
-        <div class="today-book-container" th:if="${BlogBestList.size() > 0}">
-            <!-- 대표 도서 -->
-            <div class="main-book">
-                <img class="main-book-img" th:src="@{${BlogBestList[0].productImage}}" alt="대표도서 이미지">
-                <div class="main-book-info">
-                    <h3 class="book-title" th:text="${BlogBestList[0].productTitle}">도서 제목</h3>
-                    <p class="book-meta">
-                        <span th:text="${BlogBestList[0].contributorName}">저자</span>
-                        <span class="dot">·</span>
-                        <span th:text="${BlogBestList[0].publisherName}"></span>
-                    </p>
-                    <p class="book-desc" th:text="${BlogBestList[0].productDescription}">
+            <!-- 왼쪽 화살표 -->
+            <button class="today-prev-btn" onclick="leftTodaySlide()">
+                <i class="lnr lnr-chevron-left"></i>
+            </button>
 
-                    </p>
-                    <p class="book-price" th:text="'₩' + ${#numbers.formatInteger(BlogBestList[0].productSalePrice, 3, 'COMMA')}">가격</p>
+            <!-- 오른쪽 화살표 -->
+            <button class="today-next-btn" onclick="rightTodaySlide()">
+                <i class="lnr lnr-chevron-right"></i>
+            </button>
+
+            <div class="today-book-content" th:if="${ItemNewAllList.size() > 0}">
+                <div class="today-main-book">
+                    <img class="today-main-img"
+                         th:src="@{${ItemNewAllList[0].productImage}}"
+                         alt="대표 도서 이미지">
+
+                    <div class="today-main-info">
+                        <h3 class="today-main-title" th:text="${ItemNewAllList[0].productTitle}">
+                            도서 제목
+                        </h3>
+                        <p class="today-main-meta">
+                            <span th:text="${ItemNewAllList[0].contributorName}">저자</span>
+                            <span class="dot">·</span>
+                            <span th:text="${ItemNewAllList[0].publisherName}">출판사</span>
+                        </p>
+                        <p class="today-main-desc"
+                           th:text="${ItemNewAllList[0].productDescription}">
+                            도서 설명이 이곳에 노출됩니다.
+                        </p>
+                        <p class="today-main-price"
+                           th:text="|₩${#numbers.formatInteger(ItemNewAllList[0].productSalePrice, 3, 'COMMA')}|">
+                            17,820원
+                        </p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- 서브 도서들 -->
-            <div class="sub-books">
-                <div class="sub-book"
-                     th:each="book, stat : ${BlogBestList}"
-                     th:if="${stat.index >= 1 and stat.index <= 3}">
-                    <img th:src="@{${book.productImage}}" alt="서브 도서 이미지">
-                    <p class="sub-title" th:text="${book.productTitle}">서브 제목</p>
+                <!-- (3) 서브 도서 4권 -->
+                <div class="today-sub-books">
+                    <div class="sub-book-item"
+                         th:each="book, stat : ${ItemNewAllList}"
+                         th:if="${stat.index >= 1 and stat.index <= 4}">
+                        <img th:src="@{${book.productImage}}"
+                             alt="서브 도서 이미지">
+                        <p class="sub-book-title" th:text="${book.productTitle}">
+                            서브 도서 제목
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
 
+    <!-- ===========================
+     베스트셀러 섹션 시작
+     =========================== -->
+    <section class="bestseller-section">
+        <!-- 1) 섹션 제목 -->
+        <div class="section-title">
+            <h2>베스트셀러</h2>
+            <span>이주의 가장 인기 있는 도서를 만나보세요.</span>
+        </div>
 
-    <div class="main_best">
-        <section class="bestseller">
-            <div class="section-title">
-                <h2><a href="/books/category/1" class="title-link">베스트셀러</a></h2>
-                <span>이주의 가장 인기 있는 도서를 만나보세요.</span>
+        <!-- 3) 카테고리 네비게이션 -->
+        <nav class="category-nav">
+            <a href="#" class="active">전체</a>
+            <a href="#">소설</a>
+            <a href="#">시/에세이/기행</a>
+            <a href="#">인문/교양/철학</a>
+            <a href="#">사회/정치/법률</a>
+            <a href="#">경제/경영</a>
+            <a href="#">자기계발</a>
+            <a href="#">유아</a>
+            <a href="#">여행/취미/레저</a>
+        </nav>
+
+        <!-- 4) 좌/우 화살표 + 책 목록 래퍼 -->
+        <div class="bestseller-wrapper">
+            <!-- 왼쪽 화살표 -->
+            <button class="bestseller-prev-btn" onclick="leftBestsellerSlide()">
+                <i class="lnr lnr-chevron-left"></i>
+            </button>
+
+            <div class="bestseller-books">
+
+                <div class="book-item"
+                     th:each="product, stat : ${BestSellerList}"
+                     th:if="${stat.index < 4}">
+                    <!-- 랭크 배지 (stat.index + 1) -->
+                    <div class="rank-badge"
+                         th:classappend="' rank-' + (${stat.index} + 1)"
+                         th:text="${stat.index + 1}">
+                        1
+                    </div>
+
+
+                    <img th:src="${product.productImage}"
+                         alt="도서 이미지"/>
+
+                    <!-- 도서 제목 -->
+                    <p class="book-title"
+                       th:text="${product.productTitle}">
+                        도서 제목
+                    </p>
+
+
+                    <p class="book-price"
+                       th:text="|${#numbers.formatInteger(product.productSalePrice, 3, 'COMMA')}|" 원>
+                        17,010원
+                    </p>
+                </div>
             </div>
 
-            <div id="best_book_list_1" class="bestBookArea">
-                <div class="aw_type_box">
-                    <div class="arrow_left_best">
-                        <button class="aw_l" id="bestBnLt_1" onclick="leftBestSeller()">
-                            <span class="ns">이전</span>
-                            <span class="aw_count"></span>
-                        </button>
-                    </div>
-                    <div class="arrow_right_best">
-                        <button class="aw_r" id="bestBnRt_1">
-                            <span class="ns">다음</span>
-                            <span class="aw_count"></span>
-                        </button>
-                    </div>
-                </div>
-                <div class="swiper-container" id="bestList_1">
-                    <ul class="swiper-wrapper">
-                        <li class="swiper-slide best_book_list">
-                            <ul class="ranking_list" data-book-index="0" id="bestSellerList">
-                                <li th:each="product, chunkStat : ${BestSellerList}" th:if="${chunkStat.index} <= 5">
-                                    <div class="books">
-                                        <a th:href="@{'/books/' + ${product.productId}}" class="r_book">
-                                            <div class="book_img" >
-<!--                                                <div class="lank_num"-->
-<!--                                                     th:text="${chunkStat.index * 4 + stat.index + 1}">1-->
-<!--                                                </div>-->
-                                                <img th:src="@{${product.productImage}}" alt="도서 이미지">
-                                            </div>
-                                            <p class="best_book_list_title mt15" th:text="${product.productTitle}">
-                                                도서
-                                                제목</p>
-                                            <p class="best_book_list_title"
-                                               th:text="'₩' + ${product.productSalePrice}">
-                                                가격</p>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <div class="pagination"></div>
-                </div>
-            </div>
-
-
-
-            <section class="blog_best">
-                <div class="title_best">
-                    <h3 class="title_h3" style="margin-bottom: 60px;">
-                        <a href="/books/category/1" class="title-link">기대 신간</a>
-                        <span> E2BS에서 가장 먼저 만나보세요. </span>
-                    </h3>
-                </div>
-
-            </section>
-
-
-            <!-- 장바구니 이동 모달 -->
-            <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
-                            <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="닫기"></button>
-                        </div>
-                        <div class="modal-body">
-                            장바구니로 이동하시겠습니까?
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기</button>
-                            <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <button class="bestseller-next-btn" onclick="rightBestsellerSlide()">
+                <i class="lnr lnr-chevron-right"></i>
+            </button>
+        </div>
     </section>
+
+    <!-- ===========================
+         베스트셀러 섹션 끝
+         =========================== -->
+
+
+
+    <section class="free-shipping-banner">
+        <div class="free-shipping-wrapper">
+            <div class="free-shipping-text">
+                착한배송, 3만원 이상 무료배송
+            </div>
+            <img src="/images/free-shipping-banner.png" alt="무료배송 배너 이미지">
+        </div>
+    </section>
+
+
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script th:inline="javascript" type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.banner-tab-nav .tab-item');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach((tab, index) => {
+                tab.addEventListener('click', () => {
+                    // 탭 활성화 상태 초기화
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    // 모든 content 숨김 → 클릭한 탭에 해당하는 content만 보이게
+                    contents.forEach(c => c.style.display = 'none');
+                    const target = document.getElementById(`tab-content-${index}`);
+                    if (target) target.style.display = 'block';
+                });
+            });
+        });
+
+
+        const newBookList = /*[[${ItemNewAllList}]]*/ [];
+
+        let todayIndex = 0;
+
+        function renderTodayBook() {
+            if (newBookList.length === 0) return;
+
+            const main = newBookList[todayIndex % newBookList.length];
+            const subs = [];
+
+            for (let i = 1; i <= 3; i++) {
+                const subIdx = (todayIndex + i) % newBookList.length;
+                if (subIdx === todayIndex) continue;
+                subs.push(newBookList[subIdx]);
+            }
+
+            // 메인 도서 렌더링
+            document.querySelector('.today-main-img').src = main.productImage;
+            document.querySelector('.today-main-title').innerText = main.productTitle;
+            document.querySelector('.today-main-meta').innerText = `${main.contributorName} · ${main.publisherName}`;
+            document.querySelector('.today-main-desc').innerText = main.productDescription;
+            document.querySelector('.today-main-price').innerText = '₩' + main.productSalePrice.toLocaleString();
+
+            // 서브 도서 렌더링
+            const subContainer = document.querySelector('.today-sub-books');
+            subContainer.innerHTML = '';
+            subs.forEach(book => {
+                const item = document.createElement('div');
+                item.className = 'sub-book-item';
+
+                const img = document.createElement('img');
+                img.src = book.productImage;
+
+                const title = document.createElement('p');
+                title.className = 'sub-book-title';
+                title.innerText = book.productTitle;
+
+                item.appendChild(img);
+                item.appendChild(title);
+                subContainer.appendChild(item);
+            });
+        }
+
+        window.leftTodaySlide = function () {
+            if (newBookList.length === 0) return;
+            todayIndex = (todayIndex - 1 + newBookList.length) % newBookList.length;
+            renderTodayBook();
+        };
+
+        window.rightTodaySlide = function () {
+            if (newBookList.length === 0) return;
+            todayIndex = (todayIndex + 1) % newBookList.length;
+            renderTodayBook();
+        };
+
+        document.addEventListener('DOMContentLoaded', renderTodayBook);
+
+
+
+        const bestSellerList = /*[[${BestSellerList}]]*/ [];
+
+        let currentSlide = 0;
+        const pageSize = 4; // 한 번에 보여줄 책 개수
+
+        function renderBestsellerBooks() {
+            const container = document.querySelector('.bestseller-books');
+            container.innerHTML = '';
+
+            const startIdx = currentSlide * pageSize;
+            for (let i = startIdx; i < startIdx + pageSize; i++) {
+                if (i >= bestSellerList.length) break;
+                const product = bestSellerList[i];
+                const displayIdx = i; // 실제 데이터 인덱스
+
+                // 1) book-item div 생성
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('book-item');
+
+                // 2) rank-badge
+// 2) rank-badge
+                const badge = document.createElement('div');
+                badge.classList.add('rank-badge');
+                const rankNum = (i + 1).toString();
+                badge.innerText = rankNum;
+
+                if (rankNum === '1') badge.classList.add('rank-1');
+                else if (rankNum === '2' || rankNum === '4') badge.classList.add('rank-2'); // rank-2 == gray
+                else if (rankNum === '3') badge.classList.add('rank-3');
+                else badge.style.backgroundColor = '#999'; // 기타 순위: 중립 회색 (옵션)
+
+                itemDiv.appendChild(badge);
+
+
+                // 3) 책 이미지
+                const img = document.createElement('img');
+                img.src = product.productImage;
+                img.alt = '도서 이미지';
+                itemDiv.appendChild(img);
+
+                // 4) 책 제목
+                const titleP = document.createElement('p');
+                titleP.classList.add('book-title');
+                titleP.innerText = product.productTitle;
+                itemDiv.appendChild(titleP);
+
+                // 5) 책 가격
+                const priceP = document.createElement('p');
+                priceP.classList.add('book-price');
+                const formattedPrice = product.productSalePrice
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                priceP.innerText = '₩' + formattedPrice;
+                itemDiv.appendChild(priceP);
+
+                container.appendChild(itemDiv);
+            }
+        }
+
+        window.leftBestsellerSlide = function () {
+            const totalSlides = Math.ceil(bestSellerList.length / pageSize);
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            renderBestsellerBooks();
+        };
+
+        window.rightBestsellerSlide = function () {
+            const totalSlides = Math.ceil(bestSellerList.length / pageSize);
+            currentSlide = (currentSlide + 1) % totalSlides;
+            renderBestsellerBooks();
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            renderBestsellerBooks();
+        });
+
+        new Swiper('.review-swiper', {
+            slidesPerView: 1.2,
+            spaceBetween: 30,
+            centeredSlides: true,
+            loop: true,
+            pagination: { el: '.swiper-pagination', clickable: true },
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        });
+
+    </script>
 </div>
 
-<script type="text/javascript" th:inline="javascript">
-
-
-
-    const bestList = /*[[${BestSellerList}]]*/ [];
-    function leftBestSeller() {
-        let list = document.getElementById("bestSellerList");
-        let bookIndex = parseInt(list.dataset.bookIndex) - 1; //도서 각각 인덱스
-
-        const lastIndex = Math.floor((bestList.length - 1) / 6);
-
-        if(bookIndex < 0){
-            // 마지막 인덱스로 초기화
-            bookIndex = lastIndex;
-        }
-        list.innerHTML = "";
-
-        let book = document.createElement('li');
-
-        for(let i = bookIndex * 6; i < bookIndex * 6 + 6 ; i++){
-            if (i >= bestList.length) break;
-
-            let product = bestList[i];
-
-            let booksDiv = document.createElement('div');
-            booksDiv.classList.add('books');
-
-            let link = document.createElement('a');
-            link.classList.add('r_book');
-            link.href = '/books/${product.productId}}'
-
-            let imgDiv = document.createElement('div');
-            imgDiv.classList.add('book_img');
-
-            let img = document.createElement('img');
-            img.src = product.productImage;
-            img.alt = "도서 이미지";
-
-            imgDiv.appendChild(img);
-            link.appendChild(imgDiv);
-
-            let titleP = document.createElement('p');
-            titleP.classList.add('best_book_list_title', 'mt15');
-            titleP.textContent = product.productTitle;
-
-            let priceP = document.createElement('p');
-            titleP.classList.add('best_book_list_title');
-            titleP.textContent = product.productSalePrice;
-
-            link.appendChild(titleP);
-            link.appendChild(priceP);
-
-            booksDiv.appendChild(link);
-            book.appendChild(booksDiv);
-        }
-
-    }
-
-</script>
-
-</div>
 </body>
 </html>
