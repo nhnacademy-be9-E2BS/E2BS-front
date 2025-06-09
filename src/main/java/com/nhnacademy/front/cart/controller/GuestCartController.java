@@ -86,13 +86,16 @@ public class GuestCartController {
 
 		List<ResponseCartItemsForGuestDTO> cartItemsByGuest = guestCartService.getCartItemsByGuest(guestKey);
 
-		long totalPaymentAmount = 0;
+		long totalProductPrice = 0;
+		long totalDeliveryPrice = 0;
 		for (ResponseCartItemsForGuestDTO cartItem : cartItemsByGuest) {
-			totalPaymentAmount += cartItem.getProductTotalPrice();
+			totalProductPrice += cartItem.getProductTotalPrice();
+			totalDeliveryPrice += cartItem.getDeliveryFee().getDeliveryFeeAmount();
 		}
 
 		model.addAttribute("cartItemsByGuest", cartItemsByGuest);
-		model.addAttribute("totalPaymentAmount", totalPaymentAmount);
+		model.addAttribute("totalProductPrice", totalProductPrice);
+		model.addAttribute("totalDeliveryPrice", totalDeliveryPrice);
 
 		return "cart/guest-cart";
 	}
