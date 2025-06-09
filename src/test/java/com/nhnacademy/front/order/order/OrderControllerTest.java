@@ -34,6 +34,7 @@ import com.nhnacademy.front.account.customer.model.domain.Customer;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
+import com.nhnacademy.front.cart.service.CartService;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
@@ -94,6 +95,9 @@ class OrderControllerTest {
 
 	@MockitoBean
 	private UserCategoryService userCategoryService;
+
+	@MockitoBean
+	private CartService cartService;
 
 	@MockitoBean
 	private ReviewService reviewService;
@@ -171,6 +175,10 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("비회원 주문서 페이지 접근 확인")
 	void testGetCheckOut_customer() throws Exception {
+		RequestCartOrderDTO dto = new RequestCartOrderDTO(List.of(1L, 2L), List.of(2, 3));
+		String json = objectMapper.writeValueAsString(dto);
+		String encodedCart = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
+
 		PageResponse<ResponseWrapperDTO> wrappers = mock(PageResponse.class);
 
 		when(productService.getProducts(any())).thenReturn(new ArrayList<>());
@@ -183,10 +191,7 @@ class OrderControllerTest {
 				.with(csrf())
 				.param("customerId", "1")
 				.param("customerName", "customer")
-				.param("requestCartOrder.productIds[0]", "1")
-				.param("requestCartOrder.productIds[1]", "2")
-				.param("requestCartOrder.cartQuantities[0]", "1")
-				.param("requestCartOrder.cartQuantities[1]", "2"))
+				.cookie(new Cookie("orderCart", encodedCart)))
 			.andExpect(status().isOk())
 			.andExpect(view().name("payment/customer-checkout"));
 	}
@@ -286,7 +291,13 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("결제 완료 페이지 접근")
 	void testGetConfirmOrder() throws Exception {
-		mockMvc.perform(get("/order/confirm"))
+		RequestCartOrderDTO dto = new RequestCartOrderDTO(List.of(1L, 2L), List.of(2, 3));
+		String json = objectMapper.writeValueAsString(dto);
+		String encodedCart = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
+
+
+		mockMvc.perform(get("/order/confirm")
+				.cookie(new Cookie("orderCart", encodedCart)))
 			.andExpect(status().isOk())
 			.andExpect(view().name("payment/confirmation"));
 	}
