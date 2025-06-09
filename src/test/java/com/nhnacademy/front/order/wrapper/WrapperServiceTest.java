@@ -19,7 +19,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nhnacademy.front.common.page.PageResponse;
-import com.nhnacademy.front.order.wrapper.adaptor.WrapperAdaptor;
+import com.nhnacademy.front.order.wrapper.adaptor.AdminWrapperAdaptor;
+import com.nhnacademy.front.order.wrapper.adaptor.UserWrapperAdaptor;
 import com.nhnacademy.front.order.wrapper.exception.WrapperCreateProcessException;
 import com.nhnacademy.front.order.wrapper.exception.WrapperGetProcessException;
 import com.nhnacademy.front.order.wrapper.exception.WrapperUpdateProcessException;
@@ -36,7 +37,10 @@ class WrapperServiceTest {
 	private WrapperService wrapperService;
 
 	@Mock
-	private WrapperAdaptor wrapperAdaptor;
+	private UserWrapperAdaptor userWrapperAdaptor;
+
+	@Mock
+	private AdminWrapperAdaptor adminWrapperAdaptor;
 
 	@Test
 	@DisplayName("create wrapper - success")
@@ -50,14 +54,14 @@ class WrapperServiceTest {
 		);
 		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", mockFile, true);
 		RequestRegisterWrapperMetaDTO requestMeta = new RequestRegisterWrapperMetaDTO(1000, "Wrapper A", true);
-		when(wrapperAdaptor.postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), any(MultipartFile.class)))
+		when(adminWrapperAdaptor.postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), any(MultipartFile.class)))
 			.thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
 
 		// when
 		wrapperService.createWrapper(request);
 
 		// then
-		verify(wrapperAdaptor, times(1)).postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), eq(mockFile));
+		verify(adminWrapperAdaptor, times(1)).postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), eq(mockFile));
 	}
 
 	@Test
@@ -80,7 +84,7 @@ class WrapperServiceTest {
 		);
 		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", mockFile, true);
 		RequestRegisterWrapperMetaDTO requestMeta = new RequestRegisterWrapperMetaDTO(1000, "Wrapper A", true);
-		when(wrapperAdaptor.postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), any(MultipartFile.class)))
+		when(adminWrapperAdaptor.postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), any(MultipartFile.class)))
 			.thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
 
 		// when & then
@@ -118,14 +122,14 @@ class WrapperServiceTest {
 		ResponseEntity<PageResponse<ResponseWrapperDTO>> response =
 			new ResponseEntity<>(pageResponse, HttpStatus.OK);
 
-		when(wrapperAdaptor.getWrappersBySaleable(pageable)).thenReturn(response);
+		when(userWrapperAdaptor.getWrappersBySaleable(pageable)).thenReturn(response);
 
 		// when
 		PageResponse<ResponseWrapperDTO> result = wrapperService.getWrappersBySaleable(pageable);
 
 		// then
 		assertThat(result).isEqualTo(pageResponse);
-		verify(wrapperAdaptor, times(1)).getWrappersBySaleable(pageable);
+		verify(userWrapperAdaptor, times(1)).getWrappersBySaleable(pageable);
 	}
 
 	@Test
@@ -135,7 +139,7 @@ class WrapperServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		ResponseEntity<PageResponse<ResponseWrapperDTO>> response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-		when(wrapperAdaptor.getWrappersBySaleable(pageable)).thenReturn(response);
+		when(userWrapperAdaptor.getWrappersBySaleable(pageable)).thenReturn(response);
 
 		// when & then
 		assertThatThrownBy(() -> wrapperService.getWrappersBySaleable(pageable))
@@ -173,14 +177,14 @@ class WrapperServiceTest {
 		ResponseEntity<PageResponse<ResponseWrapperDTO>> response =
 			new ResponseEntity<>(pageResponse, HttpStatus.OK);
 
-		when(wrapperAdaptor.getWrappers(pageable)).thenReturn(response);
+		when(adminWrapperAdaptor.getWrappers(pageable)).thenReturn(response);
 
 		// when
 		PageResponse<ResponseWrapperDTO> result = wrapperService.getWrappers(pageable);
 
 		// then
 		assertThat(result).isEqualTo(pageResponse);
-		verify(wrapperAdaptor, times(1)).getWrappers(pageable);
+		verify(adminWrapperAdaptor, times(1)).getWrappers(pageable);
 	}
 
 	@Test
@@ -190,7 +194,7 @@ class WrapperServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		ResponseEntity<PageResponse<ResponseWrapperDTO>> response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-		when(wrapperAdaptor.getWrappers(pageable)).thenReturn(response);
+		when(adminWrapperAdaptor.getWrappers(pageable)).thenReturn(response);
 
 		// when & then
 		assertThatThrownBy(() -> wrapperService.getWrappers(pageable))
@@ -203,13 +207,13 @@ class WrapperServiceTest {
 		// given
 		Long wrapperId = 1L;
 		RequestModifyWrapperDTO request = new RequestModifyWrapperDTO(false);
-		when(wrapperAdaptor.putUpdateWrapper(wrapperId, request)).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
+		when(adminWrapperAdaptor.putUpdateWrapper(wrapperId, request)).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
 
 		// when
 		wrapperService.updateWrapper(wrapperId, request);
 
 		// then
-		verify(wrapperAdaptor, times(1)).putUpdateWrapper(wrapperId, request);
+		verify(adminWrapperAdaptor, times(1)).putUpdateWrapper(wrapperId, request);
 	}
 
 	@Test
@@ -237,7 +241,7 @@ class WrapperServiceTest {
 		// given
 		Long wrapperId = 1L;
 		RequestModifyWrapperDTO request = new RequestModifyWrapperDTO(false);
-		when(wrapperAdaptor.putUpdateWrapper(wrapperId, request)).thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+		when(adminWrapperAdaptor.putUpdateWrapper(wrapperId, request)).thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
 
 		// when & then
 		assertThatThrownBy(() -> wrapperService.updateWrapper(wrapperId, request))

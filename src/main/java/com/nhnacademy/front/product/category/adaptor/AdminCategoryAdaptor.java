@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.product.category.model.dto.request.RequestCategoryDTO;
 
-@FeignClient(name = "admin-category-service", url = "${product.category.admin.url}")
+@FeignClient(name = "admin-category-service", url = "${auth.product.category.url}")
 public interface AdminCategoryAdaptor {
 
 	@PostMapping
@@ -28,7 +28,4 @@ public interface AdminCategoryAdaptor {
 
 	@DeleteMapping("/{categoryId}")
 	ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") Long categoryId);
-
-	@DeleteMapping("/headerCaching")
-	ResponseEntity<Void> headerCachingClear();
 }
