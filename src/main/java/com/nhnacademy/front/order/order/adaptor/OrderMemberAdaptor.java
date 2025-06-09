@@ -29,8 +29,8 @@ public interface OrderMemberAdaptor {
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, @RequestParam String memberId,
 		@RequestParam(required = false) String stateName,
-		@RequestParam(required = false) LocalDate startDate,
-		@RequestParam(required = false) LocalDate endDate,
+		@RequestParam(required = false) String startDate,
+		@RequestParam(required = false) String endDate,
 		@RequestParam(required = false) String orderCode);
 
 	@DeleteMapping("/{orderCode}")

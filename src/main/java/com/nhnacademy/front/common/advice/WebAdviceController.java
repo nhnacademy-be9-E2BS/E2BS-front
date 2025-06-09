@@ -28,6 +28,7 @@ import com.nhnacademy.front.account.member.exception.LoginProcessException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberIdException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberInfoException;
 import com.nhnacademy.front.account.member.exception.NotFoundMemberRankNameException;
+import com.nhnacademy.front.account.member.exception.PasswordNotEqualsException;
 import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordException;
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.account.memberrank.exception.NotFoundMemberRankException;
@@ -136,6 +137,17 @@ public class WebAdviceController {
 		String errorMessage = errorMessageLoader.getMessage(code);
 
 		ModelAndView modelAndView = new ModelAndView("redirect:/register");
+		modelAndView.addObject("errorMessage", errorMessage);
+
+		return modelAndView;
+	}
+
+	@ExceptionHandler({PasswordNotEqualsException.class})
+	public ModelAndView memberInfoUpdatePasswordNotEqualsException() {
+		String code = "R400";
+		String errorMessage = errorMessageLoader.getMessage(code);
+
+		ModelAndView modelAndView = new ModelAndView("redirect:/mypage/info");
 		modelAndView.addObject("errorMessage", errorMessage);
 
 		return modelAndView;

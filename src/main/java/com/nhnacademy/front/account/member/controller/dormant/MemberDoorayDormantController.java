@@ -17,10 +17,17 @@ import com.nhnacademy.front.account.member.model.dto.request.RequestDormantDoora
 import com.nhnacademy.front.account.member.service.MemberDormantService;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "회원 휴면 상태 (Dooray)", description = "회원 로그인 시 휴면 상태 처리 기능 제공")
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -31,6 +38,12 @@ public class MemberDoorayDormantController {
 	/**
 	 * Dooray, Email 선택하는 화면 Controller
 	 */
+	@Operation(summary = "휴면 상태 처리 방법 선택 페이지", description = "휴면 상태 처리 Dooray, Email 방법 선택 화면 제공",
+		responses = {
+			@ApiResponse(responseCode = "201", description = "휴면 상태 처리 방법 선택 화면 제공"),
+			@ApiResponse(responseCode = "400", description = "휴면 상태가 아닌 경우 에러 처리",
+				content = @Content(schema = @Schema(implementation = DormantProcessingException.class)))
+		})
 	@GetMapping("/login/dormant")
 	public String getMemberDormant(HttpServletRequest request, Model model) {
 		if (request.getSession().getAttribute("dormantMemberId") == null) {
@@ -47,6 +60,7 @@ public class MemberDoorayDormantController {
 	/**
 	 * 인증번호 화면 Controller
 	 */
+	@Operation(summary = "휴면 상태 Dooray 방식 페이지", description = "휴면 상태 Dooray 방식 화면 제공")
 	@GetMapping("/dormant/dooray/{memberId}")
 	public String getMemberDormantDooray(@PathVariable("memberId") String memberId, Model model,
 		HttpServletRequest request) {
@@ -72,6 +86,7 @@ public class MemberDoorayDormantController {
 	/**
 	 * Dooray 인증 번호 전송 Controller
 	 */
+	@Operation(summary = "휴면 상태 Dooray 인증 번호 전송", description = "휴면 상태 Dooray 인증 번호 제공하는 기능")
 	@PostMapping("/dormant/dooray/{memberId}")
 	public String postDoorayAuthenticationNumber(@PathVariable("memberId") String memberId,
 		HttpServletRequest request) {
@@ -93,9 +108,21 @@ public class MemberDoorayDormantController {
 	/**
 	 * 사용자가 입력한 Dooray 인증 번호가 일치하는 지 확인하는 Controller
 	 */
+	@Operation(summary = "휴면 상태 Dooray 인증 번호가 일치하는 지 검증", description = "휴면 상태 Dooray 인증번호가 일치하는 지 검증 기능",
+		responses = {
+			@ApiResponse(responseCode = "302", description = "휴면 상태 처리 성공 후 로그인 페이지로 리다이렉션"),
+			@ApiResponse(responseCode = "400", description = "입력값 검증 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
+			@ApiResponse(responseCode = "400", description = "회원 아이디 값이 없는 경우 에러 처리",
+				content = @Content(schema = @Schema(implementation = DormantProcessingException.class))),
+			@ApiResponse(responseCode = "400", description = "인증 번호가 일치하지 않는 경우 에러 처리",
+				content = @Content(schema = @Schema(implementation = DormantDoorayNotMatchedNumberException.class))),
+			@ApiResponse(responseCode = "500", description = "회원 상태 변경 요청 및 실패 응답",
+				content = @Content(schema = @Schema(implementation = DormantProcessingException.class)))
+		})
 	@PostMapping("/dormant/dooray")
-	public String postDoorayAuthentication(
-		@Validated @ModelAttribute RequestDormantDoorayNumberDTO requestDormantDoorayNumberDTO,
+	public String postDoorayAuthentication(@Validated
+		@Parameter(description = "회원 상태 변경 요청 DTO", required = true, schema = @Schema(implementation = RequestDormantDoorayNumberDTO.class))
+		@ModelAttribute RequestDormantDoorayNumberDTO requestDormantDoorayNumberDTO,
 		BindingResult bindingResult,
 		HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {

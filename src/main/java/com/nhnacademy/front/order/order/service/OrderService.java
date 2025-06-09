@@ -62,7 +62,7 @@ public class OrderService {
 	 * 해당 회원의 주문 목록을 가져오는 메서드
 	 */
 	public ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, String memberId, String stateName,
-		LocalDate startDate, LocalDate endDate, String orderCode) throws FeignException {
+		String startDate, String endDate, String orderCode) throws FeignException {
 		return orderMemberAdaptor.getOrdersByMemberId(pageable, memberId, stateName, startDate, endDate, orderCode);
 	}
 

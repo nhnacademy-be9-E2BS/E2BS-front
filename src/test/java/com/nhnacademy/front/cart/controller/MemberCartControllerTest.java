@@ -5,6 +5,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +29,7 @@ import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -107,8 +110,8 @@ class MemberCartControllerTest {
 	void getCartsByMember() throws Exception {
 		// given
 		List<ResponseCartItemsForMemberDTO> cartItemsByMember = List.of(
-			new ResponseCartItemsForMemberDTO(1L, 1L, "상품A", 20000, "thumbnailImage", 2, 40000),
-			new ResponseCartItemsForMemberDTO(1L, 2L, "상품B", 10000, "thumbnailImage", 3, 30000)
+			new ResponseCartItemsForMemberDTO(1L, 1L, "상품A", 15000, 10000, new BigDecimal(50), new ResponseDeliveryFeeDTO(1L, 100, 1000, LocalDateTime.now()), "thumbnailImage", 2, 20000),
+			new ResponseCartItemsForMemberDTO(1L, 2L, "상품B", 15000, 10000, new BigDecimal(50), new ResponseDeliveryFeeDTO(1L, 100, 1000, LocalDateTime.now()), "thumbnailImage", 3, 30000)
 		);
 
 		when(memberCartService.getCartItemsByMember(MEMBER_ID)).thenReturn(cartItemsByMember);
@@ -121,7 +124,7 @@ class MemberCartControllerTest {
 					.with(csrf()))
 				.andExpect(status().isOk())
 				.andExpect(model().attribute("cartItemsByMember", cartItemsByMember))
-				.andExpect(model().attribute("totalPaymentAmount", 70000L))
+				.andExpect(model().attribute("totalProductPrice", 50000L))
 				.andExpect(view().name("cart/member-cart"));
 		}
 
