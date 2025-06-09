@@ -19,8 +19,8 @@ public interface OrderAdminAdaptor {
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable,
 		@RequestParam(required = false) String stateName,
-		@RequestParam(required = false) LocalDate startDate,
-		@RequestParam(required = false) LocalDate endDate,
+		@RequestParam(required = false) String startDate,
+		@RequestParam(required = false) String endDate,
 		@RequestParam(required = false) String orderCode,
 		@RequestParam(required = false) String memberId);
 

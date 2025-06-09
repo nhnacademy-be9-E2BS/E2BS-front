@@ -74,7 +74,20 @@
                               </td>
 
                               <td>
-                                  <h5 class="unit-price" th:text="${#numbers.formatInteger(cartItem.productSalePrice, 3, 'COMMA')} + '원'">30000</h5>
+                                  <div class="price-info" style="margin-top: 5px;">
+                                      <!-- 정가 + 할인률 -->
+                                      <p style="margin: 0; font-size: 0.85em; color: #888;">
+                                          <del th:text="${#numbers.formatInteger(cartItem.productRegularPrice, 3, 'COMMA')} + '원'">정가</del>
+                                          <span th:text="'↓ ' + ${cartItem.discountRate} + '%'" style="margin-left: 5px; color: #dc3545;">22%</span>
+                                      </p>
+
+                                      <!-- 판매가 강조 -->
+                                      <h5 class="unit-price"
+                                          th:text="${#numbers.formatInteger(cartItem.productSalePrice, 3, 'COMMA')} + '원'"
+                                          style="margin: 2px 0 0 0; color: #000; font-weight: bold;">판매가</h5>
+
+                                      <span style="display: none" class="unit-delivery-price" th:text="${cartItem.deliveryFee.deliveryFeeAmount}"></span>
+                                  </div>
                               </td>
 
                               <td>
@@ -120,9 +133,38 @@
                           </tr>
 
                           <tr th:if="${not #lists.isEmpty(cartItemsByMember)}">
-                              <td colspan="4" style="text-align: right"><h5>결제 예정 금액</h5></td>
-                              <td colspan="2" ><h5 class="total-payment-price" id="totalPaymentAmount"
-                                                   th:text="${#numbers.formatInteger(totalPaymentAmount, 3, 'COMMA')} + '원'">30,000원</h5></td>
+                              <td colspan="6" style="text-align: right; padding-top: 20px;">
+                                  <div style="display: flex; justify-content: flex-end; gap: 40px; align-items: center; flex-wrap: wrap; font-size: 1rem;">
+
+                                      <!-- 총 상품 금액 -->
+                                      <div style="text-align: center;">
+                                          <p style="margin: 0;">상품 합계</p>
+                                          <span class="total-product-price" id="totalProductPrice"
+                                                style="font-size: 1.3rem;" th:text="${#numbers.formatInteger(totalProductPrice, 3, 'COMMA')} + '원'">30,000원</span>
+                                      </div>
+
+                                      <div style="font-size: 1.3rem;">+</div>
+
+                                      <!-- 배송비 정보 -->
+                                      <div style="text-align: center;">
+                                          <p style="margin: 0;">배송비</p>
+                                          <span  id="totalDeliveryPrice" style="font-size: 1.3rem;" th:text="${#numbers.formatInteger(totalDeliveryPrice, 3, 'COMMA')} + '원'">5,000원</span>
+                                      </div>
+
+                                      <div style="font-size: 1.3rem;">=</div>
+
+                                      <!-- 결제 예정 금액 -->
+                                      <div style="text-align: right;">
+                                          <p style="margin: 0; font-weight: bold;">결제 예정 금액</p>
+                                          <span id="totalPaymentPrice"
+                                                style="margin: 0; color: #dc3545; font-size: 1.3rem;"
+                                                th:text="${#numbers.formatInteger(totalProductPrice + totalDeliveryPrice, 3, 'COMMA')} + '원'">
+                                            35,000원
+                                        </span>
+                                      </div>
+
+                                  </div>
+                              </td>
                           </tr>
 
                           <tr th:if="${not #lists.isEmpty(cartItemsByMember)}" class="out_button_area">
