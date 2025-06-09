@@ -17,6 +17,8 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.elasticsearch.model.dto.domain.ProductSortType;
 import com.nhnacademy.front.elasticsearch.service.ProductSearchService;
+import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
@@ -28,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "도서 검색 및 정렬", description = "엘라스틱 서치 도서 관련 API")
@@ -52,8 +55,14 @@ public class ProductSearchController {
 	@GetMapping
 	public String getProductsBySearch(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
 		@Parameter(description = "검색 키워드", required = true, in = ParameterIn.QUERY) @RequestParam String keyword,
-		@Parameter(description = "정렬 기준", in = ParameterIn.QUERY) @RequestParam(required = false) ProductSortType sort) {
-		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword, sort);
+		@Parameter(description = "정렬 기준", in = ParameterIn.QUERY) @RequestParam(required = false) ProductSortType sort,
+		@Parameter(hidden = true) HttpServletRequest request) {
+		String memberId = "";
+		if (!JwtHasToken.hasToken(request)) {
+			memberId = JwtGetMemberId.jwtGetMemberId(request);
+		}
+
+		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword, sort, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
 		model.addAttribute("products", products);
@@ -80,8 +89,14 @@ public class ProductSearchController {
 	@GetMapping("/category/{category-id}")
 	public String getProductByCategory(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
 		@Parameter(description = "조회할 카테고리 ID", required = true, in = ParameterIn.QUERY) @PathVariable("category-id") Long categoryId,
-		@Parameter(description = "정렬 기준", in = ParameterIn.QUERY) @RequestParam(required = false) ProductSortType sort) {
-		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsByCategory(pageable, categoryId, sort);
+		@Parameter(description = "정렬 기준", in = ParameterIn.QUERY) @RequestParam(required = false) ProductSortType sort,
+		@Parameter(hidden = true) HttpServletRequest request) {
+		String memberId = "";
+		if (!JwtHasToken.hasToken(request)) {
+			memberId = JwtGetMemberId.jwtGetMemberId(request);
+		}
+
+		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsByCategory(pageable, categoryId, sort, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
 		ResponseCategoryDTO category = userCategoryService.getCategoriesById(categoryId);
@@ -107,8 +122,14 @@ public class ProductSearchController {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 		})
 	@GetMapping("/best")
-	public String getBestProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
-		PageResponse<ResponseProductReadDTO> response = productSearchService.getBestProducts(pageable);
+	public String getBestProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+		@Parameter(hidden = true) HttpServletRequest request) {
+		String memberId = "";
+		if (!JwtHasToken.hasToken(request)) {
+			memberId = JwtGetMemberId.jwtGetMemberId(request);
+		}
+
+		PageResponse<ResponseProductReadDTO> response = productSearchService.getBestProducts(pageable, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
 		model.addAttribute("products", products);
@@ -126,8 +147,14 @@ public class ProductSearchController {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 		})
 	@GetMapping("/newest")
-	public String getNewestProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
-		PageResponse<ResponseProductReadDTO> response = productSearchService.getNewestProducts(pageable);
+	public String getNewestProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+		@Parameter(hidden = true) HttpServletRequest request) {
+		String memberId = "";
+		if (!JwtHasToken.hasToken(request)) {
+			memberId = JwtGetMemberId.jwtGetMemberId(request);
+		}
+
+		PageResponse<ResponseProductReadDTO> response = productSearchService.getNewestProducts(pageable, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
 		model.addAttribute("products", products);

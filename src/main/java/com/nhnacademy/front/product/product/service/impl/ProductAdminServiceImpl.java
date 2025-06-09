@@ -71,7 +71,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 */
 	@Override
 	public PageResponse<ResponseProductReadDTO> getProductsBySearch(Pageable pageable, String keyword) throws FeignException {
-		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsBySearch(pageable, keyword, null);
+		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsBySearch(pageable, keyword, null, "");
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("전체 도서 조회 실패");

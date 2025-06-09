@@ -23,9 +23,9 @@ public class ProductServiceImpl implements ProductService {
 	 * product 단일 조회 (상세 조회)
 	 */
 	@Override
-	public ResponseProductReadDTO getProduct(long productId) {
+	public ResponseProductReadDTO getProduct(long productId, String memberId) {
 		try {
-			ResponseEntity<ResponseProductReadDTO> response = productAdaptor.getProductById(productId);
+			ResponseEntity<ResponseProductReadDTO> response = productAdaptor.getProductById(productId, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
 				throw new ProductGetProcessException("도서 단일 조회 실패");

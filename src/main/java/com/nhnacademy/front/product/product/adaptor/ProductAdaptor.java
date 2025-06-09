@@ -14,7 +14,7 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductRe
 public interface ProductAdaptor {
 
 	@GetMapping("{bookId}")
-	ResponseEntity<ResponseProductReadDTO> getProductById(@PathVariable("bookId") Long bookId);
+	ResponseEntity<ResponseProductReadDTO> getProductById(@PathVariable("bookId") Long bookId, @RequestParam("memberId") String memberId);
 
 	@GetMapping("/order")
 	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
