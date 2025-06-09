@@ -8,6 +8,7 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.coupon.coupon.adaptor.CouponAdaptor;
 import com.nhnacademy.front.coupon.coupon.exception.CouponCreateProcessException;
 import com.nhnacademy.front.coupon.coupon.exception.CouponGetProcessException;
+import com.nhnacademy.front.coupon.coupon.exception.CouponUpdateProcessException;
 import com.nhnacademy.front.coupon.coupon.model.dto.request.RequestCouponDTO;
 import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 import com.nhnacademy.front.coupon.coupon.service.CouponService;
@@ -49,7 +50,10 @@ public class CouponServiceImpl implements CouponService {
 
 	@Override
 	public void updateCoupon(Long couponId) throws FeignException{
-		couponAdaptor.updateCoupon(couponId);
+		ResponseEntity<Void> response = couponAdaptor.updateCoupon(couponId);
+		if(!response.getStatusCode().is2xxSuccessful()) {
+			throw new CouponUpdateProcessException("쿠폰 상태 업데이트 실패");
+		}
 	}
 
 	@Override

@@ -10,14 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "ERROR", description = "에러 메세지 변환 및 에러 페이지 화면 제공")
 @RestController
 @RequiredArgsConstructor
 public class ErrorController {
 
 	private final ErrorMessageLoader errorMessageLoader;
 
+	@Operation(summary = "에러 코드로 메세지 조회", description = "에러 코드에 해당하는 메세지를 변환하는 기능 제공")
 	@GetMapping("/error-msg")
 	public ResponseEntity<String> getErrorMessage(@RequestParam("code") String code) {
 		String message = errorMessageLoader.getMessage(code);
@@ -25,6 +29,7 @@ public class ErrorController {
 		return ResponseEntity.ok(message);
 	}
 
+	@Operation(summary = "404 에러 페이지", description = "404 에러 코드에 해당하는 메세지 및 화면 제공")
 	@GetMapping("/error/404")
 	public String getError404(@RequestParam(value = "errorMessage") String errorMessage, Model model) {
 		if (Objects.isNull(errorMessage)) {
@@ -36,6 +41,7 @@ public class ErrorController {
 		return "error/404";
 	}
 
+	@Operation(summary = "500 에러 페이지", description = "500 에러 코드에 해당하는 메세지 및 화면 제공")
 	@GetMapping("/error/500")
 	public String getError500(@RequestParam(value = "errorMessage") String errorMessage, Model model) {
 		if (Objects.isNull(errorMessage)) {
