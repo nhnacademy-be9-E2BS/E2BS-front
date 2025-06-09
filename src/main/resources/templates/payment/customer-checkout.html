@@ -45,7 +45,7 @@
                                      onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                             </td>
                             <td style="width: 30%; max-width: 1px; border-bottom: 1px solid #ddd;">
-                                <span class="text-truncate d-inline-block"
+                                <span class="text-truncate d-inline-block product-name"
                                       style="max-width: 100%;"
                                       th:text="${product.productTitle}">
                                 </span>
@@ -202,11 +202,19 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div>
-                                        <input type="radio" id="tossPay_payment_method" name="payment_method" value="tossPay">
-                                        <label for="tossPay_payment_method">토스 결제</label>
-                                    </div>
-                                    <span>* 현재는 토스 간편 결제만 지원합니다.</span>
+                                    <input type="radio" id="tossPay_payment_method" name="payment_method" value="토스페이">
+                                    <label for="tossPay_payment_method">토스 결제</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="radio" id="phone_payment_method" name="payment_method" value="휴대폰">
+                                    <label for="phone_payment_method">휴대폰 결제</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>* 현재는 토스, 휴대폰 간편 결제만 지원합니다.</span>
                                 </td>
                             </tr>
                         </table>
@@ -318,9 +326,9 @@
                 // 결제 방식
                 let method = selected.value;
 
-                if (method === "tossPay") {
+                if (method === "토스페이" || method === "휴대폰") {
                     // 주문서 저장
-                    const response = await saveOrder(method);
+                    const response = await saveOrder();
 
                     if (await response === null) {
                         // 재고 부족, 포인트 부족, 쿠폰 사용 불가, 없는 외래키 접근 등
@@ -328,7 +336,7 @@
                         return;
                     }
 
-                    tossPayWidget(response.orderId, response.amount);
+                    tossPayWidget(response.orderId, response.amount, method);
                 } else {
                     alert("지원하지 않는 결제 수단입니다.");
                 }
@@ -370,8 +378,8 @@
             }
 
             // 백에 주문서를 저장하고 주문 코드, 결제 금액, 결제 이름을 반환하는 메서드
-            async function saveOrder(method) {
-                const response = await fetch("/order/" + method, {
+            async function saveOrder() {
+                const response = await fetch("/order/tossPay", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -444,9 +452,9 @@
                 return requestOrderWrapperDTO;
             }
 
-            function tossPayWidget(orderId, payAmount) {
+            function tossPayWidget(orderId, payAmount, method) {
                 tossPayments
-                    .requestPayment("토스페이", {
+                    .requestPayment(method, {
                         amount: payAmount,
                         orderId: orderId,
                         orderName: gerOrderName(),

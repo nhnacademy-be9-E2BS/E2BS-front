@@ -297,8 +297,8 @@ public class OrderController {
 	 */
 	@Operation(summary = "회원 주문 상세 조회", description = "회원의 특정 주문 상세 정보를 확인하는 페이지 제공")
 	@JwtTokenCheck
-	@GetMapping("/mypage/orders/{orderCode}")
-	public String getMemberOrderDetails(Model model, @Parameter(description = "주문 코드") @PathVariable String orderCode) {
+	@GetMapping("/mypage/orders/{order-code}")
+	public String getMemberOrderDetails(Model model, @Parameter(description = "주문 코드") @PathVariable(name = "order-code") String orderCode) {
 		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);
 		ResponseOrderWrapperDTO responseOrder = response.getBody();
 		ResponseOrderDTO order = responseOrder.getOrder();
@@ -340,8 +340,9 @@ public class OrderController {
 	 */
 	@Operation(summary = "주문 취소", description = "회원이 배송 전인 상품에 대하여 주문 취소")
 	@JwtTokenCheck
-	@DeleteMapping("/mypage/orders/{orderCode}")
-	public ResponseEntity<Void> cancelOrder(@Parameter(description = "주문 코드") @PathVariable String orderCode) {
+	@DeleteMapping("/mypage/orders/{order-code}")
+	public ResponseEntity<Void> cancelOrder(
+		@Parameter(description = "주문 코드") @PathVariable(name = "order-code") String orderCode) {
 		return orderService.cancelOrder(orderCode);
 	}
 
@@ -373,9 +374,9 @@ public class OrderController {
 	}
 
 	@Operation(summary = "반품 상세 내역 페이지", description = "회원이 반품 상세 정보에 대해 확인 가능한 페이지 제공")
-	@GetMapping("/mypage/return/{orderCode}")
+	@GetMapping("/mypage/return/{order-code}")
 	public String getReturnOrderDetails(Model model,
-		@Parameter(description = "주문 코드") @PathVariable String orderCode) {
+		@Parameter(description = "주문 코드") @PathVariable(name = "order-code") String orderCode) {
 
 		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
 		model.addAttribute("returnDTO", returnDTO);
@@ -383,9 +384,9 @@ public class OrderController {
 	}
 
 	@Operation(summary = "비회원 주문 내역 확인 페이지", description = "비회원이 이메일, 비밀번호로 주문했던 내역을 확인가능한 페이지 제공")
-	@GetMapping("/customers/{customerId}/orders")
+	@GetMapping("/customers/{customer-id}/orders")
 	public String getCustomerOrders(Model model,
-		@Parameter(description = "비회원 식별 번호") @PathVariable long customerId,
+		@Parameter(description = "비회원 식별 번호") @PathVariable(name = "customer-id") long customerId,
 		@PageableDefault(page = 0, size = 10) Pageable pageable) {
 		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByCustomerId(pageable, customerId);
 		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
@@ -397,10 +398,10 @@ public class OrderController {
 
 
 	@Operation(summary = "비회원 주문 상세 페이지", description = "비회원이 특정 주문에 대해 확인 가능한 페이지 제공")
-	@GetMapping("/customers/{customerId}/orders/{orderCode}")
+	@GetMapping("/customers/{customer-id}/orders/{order-code}")
 	public String getCustomerOrderDetails(Model model,
-		@Parameter(description = "비회원 식별 번호") @PathVariable long customerId,
-		@Parameter(description = "주문 코드") @PathVariable String orderCode) {
+		@Parameter(description = "비회원 식별 번호") @PathVariable(name = "customer-id") long customerId,
+		@Parameter(description = "주문 코드") @PathVariable(name = "order-code") String orderCode) {
 		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);
 		ResponseOrderWrapperDTO responseOrder = response.getBody();
 		ResponseOrderDTO order = responseOrder.getOrder();

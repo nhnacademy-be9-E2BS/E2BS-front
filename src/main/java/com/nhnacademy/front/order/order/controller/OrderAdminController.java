@@ -56,15 +56,15 @@ public class OrderAdminController {
 
 	@Operation(summary = "관리자 배송 시작 처리", description = "관리자가 특정 주문에 대하여 배송 시작하는 요청을 처리")
 	@JwtTokenCheck
-	@PostMapping("/admin/settings/orders/{orderCode}")
-	public ResponseEntity<Void> startDelivery(@Parameter(description = "주문 코드") @PathVariable String orderCode) {
+	@PostMapping("/admin/settings/orders/{order-code}")
+	public ResponseEntity<Void> startDelivery(@Parameter(description = "주문 코드") @PathVariable(name = "order-code") String orderCode) {
 		return orderAdminService.startDelivery(orderCode);
 	}
 
 	@Operation(summary = "관리자 주문 내역 확인 페이지", description = "관리자가 특정 주문에 대하여 상세 정보 확인이 가능한 페이지 제공")
 	@JwtTokenCheck
-	@GetMapping("/admin/settings/orders/{orderCode}")
-	public String getOrderDetails(Model model, @Parameter(description = "주문 코드") @PathVariable String orderCode) {
+	@GetMapping("/admin/settings/orders/{order-code}")
+	public String getOrderDetails(Model model, @Parameter(description = "주문 코드") @PathVariable(name = "order-code") String orderCode) {
 		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);
 		ResponseOrderWrapperDTO responseOrder = response.getBody();
 		ResponseOrderDTO order = responseOrder.getOrder();
@@ -101,8 +101,8 @@ public class OrderAdminController {
 
 
 	@Operation(summary = "관리자 반품 상세 내역 확인 페이지", description = "관리자가 특정 반품에 대하여 상세 정보 확인이 가능한 페이지 제공")
-	@GetMapping("/admin/settings/return/{orderCode}")
-	public String getReturnOrderDetails(Model model, @Parameter(description = "주문 코드") @PathVariable String orderCode) {
+	@GetMapping("/admin/settings/return/{order-code}")
+	public String getReturnOrderDetails(Model model, @Parameter(description = "주문 코드") @PathVariable(name = "order-code") String orderCode) {
 
 		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
 		model.addAttribute("returnDTO", returnDTO);
