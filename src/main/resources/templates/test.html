@@ -1,0 +1,41 @@
+for (let i = bookIndex * 4; i < bookIndex * 4 + 4; i++) {
+if (i >= bestList.length) break;
+
+let product = bestList[i];
+
+// .books div 생성
+let booksDiv = document.createElement('div');
+booksDiv.classList.add('books');
+
+// a 태그 생성
+let aTag = document.createElement('a');
+aTag.classList.add('r_book');
+aTag.href = `/books/${product.productId}`;
+
+// book_img div
+let imgDiv = document.createElement('div');
+imgDiv.classList.add('book_img');
+
+let img = document.createElement('img');
+img.src = product.productImage;
+img.alt = "도서 이미지";
+
+imgDiv.appendChild(img);
+aTag.appendChild(imgDiv);
+
+// 제목
+let titleP = document.createElement('p');
+titleP.classList.add('best_book_list_title', 'mt15');
+titleP.textContent = product.productTitle;
+
+// 가격
+let priceP = document.createElement('p');
+priceP.classList.add('best_book_list_title');
+priceP.textContent = `₩${product.productSalePrice}`;
+
+aTag.appendChild(titleP);
+aTag.appendChild(priceP);
+
+booksDiv.appendChild(aTag);
+book.appendChild(booksDiv);
+}

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -21,12 +20,14 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.controller.OrderAdminController;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderAdminService;
 import com.nhnacademy.front.order.order.service.OrderService;
@@ -51,6 +52,9 @@ class OrderAdminControllerTest {
 	@MockitoBean
 	private MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
 
+	@MockitoBean
+	private ErrorMessageLoader errorMessageLoader;
+
 	@BeforeEach
 	void setUp() throws Exception {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
@@ -64,14 +68,13 @@ class OrderAdminControllerTest {
 	@DisplayName("getOrders - 관리자 주문 내역 조회(필터링 없음)")
 	void testGetOrders_WithoutStatus() throws Exception {
 		// given
-		Pageable pageable = PageRequest.of(0, 10);
 		PageResponse<ResponseOrderDTO> pageResponse = new PageResponse<>();
 		pageResponse.setContent(List.of(new ResponseOrderDTO()));
 		pageResponse.setNumber(0);
 		pageResponse.setSize(10);
 		pageResponse.setTotalElements(1L);
 		ResponseEntity<PageResponse<ResponseOrderDTO>> responseEntity = ResponseEntity.ok(pageResponse);
-		when(orderAdminService.getOrders(pageable)).thenReturn(responseEntity);
+		when(orderAdminService.getOrders(any(), any(), any(), any(), any(), any())).thenReturn(responseEntity);
 
 		// when & then
 		mockMvc.perform(get("/admin/settings/orders"))
@@ -84,18 +87,17 @@ class OrderAdminControllerTest {
 	@DisplayName("getOrders - 관리자 주문 내역 조회(필터링 있음)")
 	void testGetOrders_WithStatus() throws Exception {
 		// given
-		Pageable pageable = PageRequest.of(0, 10);
 		PageResponse<ResponseOrderDTO> pageResponse = new PageResponse<>();
 		pageResponse.setContent(List.of(new ResponseOrderDTO()));
 		pageResponse.setNumber(0);
 		pageResponse.setSize(10);
 		pageResponse.setTotalElements(1L);
 		ResponseEntity<PageResponse<ResponseOrderDTO>> responseEntity = ResponseEntity.ok(pageResponse);
-		when(orderAdminService.getOrders(pageable, 1L)).thenReturn(responseEntity);
+		when(orderAdminService.getOrders(any(), any(), any(), any(), any(), any())).thenReturn(responseEntity);
 
 		// when & then
 		mockMvc.perform(get("/admin/settings/orders")
-				.param("status", "1")
+				.param("status", "WAIT")
 				.param("page", "0")
 				.param("size", "10"))
 			.andExpect(status().isOk())
@@ -148,5 +150,34 @@ class OrderAdminControllerTest {
 			.andExpect(model().attributeExists("order"))
 			.andExpect(model().attributeExists("orderDetails"))
 			.andExpect(model().attributeExists("productAmount"));
+	}
+
+	@Test
+	@DisplayName("getReturnOrders-관리자 반품 내역 조회")
+	void testGetReturnOrders() throws Exception {
+		PageResponse<ResponseOrderReturnDTO> pageResponse = new PageResponse<>();
+		pageResponse.setContent(List.of(new ResponseOrderReturnDTO()));
+		pageResponse.setNumber(0);
+		pageResponse.setSize(10);
+		pageResponse.setTotalElements(1L);
+		ResponseEntity<PageResponse<ResponseOrderReturnDTO>> responseEntity = ResponseEntity.ok(pageResponse);
+		when(orderAdminService.getReturnOrders(any(Pageable.class))).thenReturn(responseEntity);
+
+		mockMvc.perform(get("/admin/settings/return")
+				.param("page", "0")
+				.param("size", "10"))
+			.andExpect(status().isOk());
+	}
+
+
+	@Test
+	@DisplayName("getReturnOrderDetails-반품 상세 정보 조회")
+	void testGetReturnOrderDetails() throws Exception {
+		String orderCode = "TEST-ORDER-CODE";
+		ResponseEntity<ResponseOrderReturnDTO> responseEntity = ResponseEntity.ok(new ResponseOrderReturnDTO());
+		when(orderService.getReturnOrderByOrderCode(orderCode)).thenReturn(responseEntity);
+
+		mockMvc.perform(get("/admin/settings/return/" + orderCode))
+			.andExpect(status().isOk());
 	}
 }

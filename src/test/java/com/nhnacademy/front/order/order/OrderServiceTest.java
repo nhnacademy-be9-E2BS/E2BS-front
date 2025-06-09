@@ -3,6 +3,8 @@ package com.nhnacademy.front.order.order;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +17,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
+import com.nhnacademy.front.order.order.adaptor.OrderMemberAdaptor;
+import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 import com.nhnacademy.front.order.order.service.OrderService;
 
@@ -26,6 +31,9 @@ class OrderServiceTest {
 
 	@InjectMocks
 	private OrderService orderService;
+
+	@Mock
+	private OrderMemberAdaptor orderMemberAdaptor;
 
 	@Mock
 	private OrderAdaptor orderAdaptor;
@@ -56,14 +64,14 @@ class OrderServiceTest {
 		ResponseOrderResultDTO responseDTO = new ResponseOrderResultDTO();
 		ResponseEntity<ResponseOrderResultDTO> expectedResponse = ResponseEntity.ok(responseDTO);
 
-		when(orderAdaptor.postPointCreateOrder(request)).thenReturn(expectedResponse);
+		when(orderMemberAdaptor.postPointCreateOrder(request)).thenReturn(expectedResponse);
 
 		// when
 		ResponseEntity<ResponseOrderResultDTO> actualResponse = orderService.createPointOrder(request);
 
 		// then
 		assertEquals(expectedResponse, actualResponse);
-		verify(orderAdaptor).postPointCreateOrder(request);
+		verify(orderMemberAdaptor).postPointCreateOrder(request);
 	}
 
 	@Test
@@ -127,11 +135,62 @@ class OrderServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		ResponseEntity<PageResponse<ResponseOrderDTO>> response = ResponseEntity.ok(
 			new PageResponse<ResponseOrderDTO>());
-		when(orderAdaptor.getOrdersByMemberId(pageable, memberId)).thenReturn(response);
+		when(orderMemberAdaptor.getOrdersByMemberId(pageable, memberId, null, null, null, null)).thenReturn(response);
 
-		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderService.getOrdersByMemberId(pageable, memberId);
+		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderService.getOrdersByMemberId(pageable, memberId, null, null, null, null);
 		assertEquals(response, actual);
-		verify(orderAdaptor, times(1)).getOrdersByMemberId(pageable, memberId);
+		verify(orderMemberAdaptor, times(1)).getOrdersByMemberId(pageable, memberId, null, null, null, null);
+	}
+
+	@Test
+	@DisplayName("getOrdersByCustomerId - 비회원 주문 내역 조회")
+	void testGetOrdersByCustomerId() {
+		Pageable pageable = PageRequest.of(0, 10);
+		ResponseEntity<PageResponse<ResponseOrderDTO>> response = ResponseEntity.ok(
+			new PageResponse<ResponseOrderDTO>());
+		when(orderAdaptor.getOrdersByCustomerId(pageable, 1L)).thenReturn(response);
+
+		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderService.getOrdersByCustomerId(pageable, 1L);
+		assertEquals(response, actual);
+		verify(orderAdaptor, times(1)).getOrdersByCustomerId(pageable, 1L);
+	}
+
+	@Test
+	@DisplayName(("returnOrder - 반품 요청"))
+	void testReturnOrder() {
+		String orderId = "TEST-ORDER-CODE";
+		RequestOrderReturnDTO request = new RequestOrderReturnDTO(orderId, "BREAK", "BREAK");
+		ResponseEntity<Void> expectedResponse = ResponseEntity.ok().build();
+		when(orderMemberAdaptor.returnOrder(request)).thenReturn(expectedResponse);
+		ResponseEntity<Void> actualResponse = orderService.returnOrder(request);
+		assertEquals(expectedResponse, actualResponse);
+		verify(orderMemberAdaptor).returnOrder(request);
+	}
+
+
+	@Test
+	@DisplayName(("getReturnOrdersByMemberId - 특정 회원의 반품 목록 조회 요청"))
+	void testGetReturnOrdersByMemberId() {
+		PageResponse<ResponseOrderReturnDTO> pageResponse = new PageResponse<>();
+		pageResponse.setContent(List.of(new ResponseOrderReturnDTO()));
+		pageResponse.setNumber(0);
+		pageResponse.setSize(10);
+		pageResponse.setTotalElements(1L);
+		ResponseEntity<PageResponse<ResponseOrderReturnDTO>> expectedResponse = ResponseEntity.ok(pageResponse);
+		when(orderMemberAdaptor.getReturnOrdersByMemberId(any(), anyString())).thenReturn(expectedResponse);
+		ResponseEntity<PageResponse<ResponseOrderReturnDTO>> actualResponse = orderService.getReturnOrdersByMemberId(Pageable.unpaged(), "Member");
+		assertEquals(expectedResponse, actualResponse);
+		verify(orderMemberAdaptor).getReturnOrdersByMemberId(any(), anyString());
+	}
+
+	@Test
+	@DisplayName(("getReturnOrderByOrderCode - 특정 반품 상세 내역 조회 요청"))
+	void testGetReturnOrderByOrderCode() {
+		ResponseEntity<ResponseOrderReturnDTO> expectedResponse = ResponseEntity.ok(new ResponseOrderReturnDTO());
+		when(orderMemberAdaptor.getReturnOrder(anyString())).thenReturn(expectedResponse);
+		ResponseEntity<ResponseOrderReturnDTO> actualResponse = orderService.getReturnOrderByOrderCode("TEST-ORDER-CODE");
+		assertEquals(expectedResponse, actualResponse);
+		verify(orderMemberAdaptor).getReturnOrder(anyString());
 	}
 
 	@Test
@@ -139,9 +198,9 @@ class OrderServiceTest {
 	void testCancelOrder() {
 		String orderId = "TEST-ORDER-CODE";
 		ResponseEntity<Void> expectedResponse = ResponseEntity.ok().build();
-		when(orderAdaptor.cancelOrder(orderId)).thenReturn(expectedResponse);
+		when(orderMemberAdaptor.cancelOrder(orderId)).thenReturn(expectedResponse);
 		ResponseEntity<Void> actualResponse = orderService.cancelOrder(orderId);
 		assertEquals(expectedResponse, actualResponse);
-		verify(orderAdaptor).cancelOrder(orderId);
+		verify(orderMemberAdaptor).cancelOrder(orderId);
 	}
 }

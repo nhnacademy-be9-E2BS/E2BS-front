@@ -1,5 +1,7 @@
 package com.nhnacademy.front.order.order.adaptor;
 
+import java.time.LocalDate;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +17,12 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDT
 @FeignClient(name = "order-admin-service", url = "${order.admin}")
 public interface OrderAdminAdaptor {
 	@GetMapping
-	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable);
-
-	@GetMapping
 	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrders(Pageable pageable,
-		@RequestParam(required = false) Long stateId);
+		@RequestParam(required = false) String stateName,
+		@RequestParam(required = false) String startDate,
+		@RequestParam(required = false) String endDate,
+		@RequestParam(required = false) String orderCode,
+		@RequestParam(required = false) String memberId);
 
 	@PostMapping("/{orderCode}")
 	ResponseEntity<Void> startDelivery(@PathVariable String orderCode);

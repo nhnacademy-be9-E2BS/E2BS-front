@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 
-@FeignClient(name = "product-service", url = "${product.book.member.url}")
+@FeignClient(name = "product-service", url = "${product.book.url}")
 public interface ProductAdaptor {
 	@GetMapping("/category/{categoryId}")
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProductsByCategory(Pageable pageable, @PathVariable("categoryId") Long categoryId);

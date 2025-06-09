@@ -93,6 +93,9 @@
                     </span>
                     입니다.
                 </p>
+                <p>
+                    ※ 등급은 매일 새벽 04:00시에 업데이트됩니다.
+                </p>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: 60%;"></div>
                 </div>
@@ -117,8 +120,7 @@
                     </td>
                     <td th:text="${#numbers.formatInteger(rank.memberRankRequireAmount, 0, 'COMMA')} + '원 이상'"></td>
                     <td>
-                        <span th:text="'상품별 적립률 + ' + ${rank.memberRankTierBonusRate} + '% 추가 적립'"></span><br>
-                        (5만원 이상 구매 시)
+                        <span th:text="'상품별 적립률 + ' + ${rank.memberRankTierBonusRate} + '% 추가 적립'"></span>
                     </td>
                 </tr>
                 </tbody>

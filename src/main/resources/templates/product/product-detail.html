@@ -246,18 +246,22 @@
 									class="member-add-cart-btn"
 										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 									장바구니에 추가</button>
-								<button th:if="${session.isMember == null}"
-										class="guest-add-cart-btn"
-										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
-									장바구니에 추가</button>
+							<button th:if="${session.isMember == null}"
+									class="guest-add-cart-btn"
+									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
+								장바구니에 추가</button>
 
-								<button class="buy-now-btn custom-btn"
-										onclick="return submitOrder()"
-										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
-									바로구매</button>
-							</div>
+							<button class="buy-now-btn custom-btn" th:if="${session.isMember}"
+									onclick="return submitOrderMember()"
+									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
+								바로구매</button>
+							<button class="buy-now-btn custom-btn" th:if="${session.isMember == null}"
+									onclick="return submitOrderGuest()"
+									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
+								바로구매</button>
 						</div>
 					</div>
+				</div>
 			</div>
 
 		</div>
@@ -328,11 +332,6 @@
 											<div class="d-flex justify-content-between align-items-center">
 												<h4 class="mb-0" th:text="${review.customerName}">이름</h4>
 												<p class="mb-0 text-muted" th:text="${#temporals.format(review.reviewCreatedAt, 'yy-MM-dd')}">날짜</p>
-
-												<button class="btn btn-primary"
-														th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">
-													<i class="bi bi-pencil-square"></i> 수정
-												</button>
 											</div>
 
 											<div>
@@ -346,36 +345,12 @@
 										<!--<img src="/img/product/product1.png" alt="리뷰 이미지" style="max-width: 150px;">-->
 										<div th:if="${!#strings.isEmpty(review.reviewImage)}"
 											 th:id="${'image-' + stat.index}">
-											<img th:src="${review.reviewImage}" alt="리뷰 이미지" style="max-width: 350px;">
+											<img th:src="${review.reviewImage}"  style="max-width:100%; height:auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+												 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
 										</div>
 									</div>
 
 									<p th:id="${'text-' + stat.index}" th:text="${review.reviewContent}">리뷰내용</p>
-									<!-- 리뷰 수정 폼 (기본은 숨김) stat은 타임리프에서 제공하는 현재 반복 상태 정보를 담는 객체 -->
-									<div th:id="${'edit-form-' + stat.index}" style="display: none;">
-										<form th:action="@{/reviews/update}" enctype="multipart/form-data">
-											<input type="hidden" name="reviewId" th:value="${review.reviewId}">
-											<textarea name="reviewContent" class="form-control mb-2" rows="3"
-													  th:text="${review.reviewContent}"></textarea>
-
-											<div class="custom-file">
-												<input type="file" class="custom-file-input" id="updateImage" name="reviewImage">
-												<label class="custom-file-label" for="updateImage">수정할 파일을 선택하세요</label>
-											</div>
-
-											<!-- 이미지 미리보기 영역 -->
-											<div class="preview-container mb-2">
-												<img id="update-imagePreview" src="#" alt="이미지 미리보기" style="display:none; max-width: 350px;" />
-											</div>
-
-											<button type="button" class="btn btn-success btn-sm"
-													th:onclick="|submitReviewUpdate('${review.reviewId}', '${stat.index}')|">
-												저장
-											</button>
-											<button type="button" class="btn btn-secondary btn-sm"
-													th:onclick="|toggleEditForm('text-${stat.index}', 'edit-form-${stat.index}')|">취소</button>
-										</form>
-									</div>
 								</div>
 
 								<!-- 페이징 -->
@@ -414,7 +389,7 @@
 								<h4>리뷰 작성</h4>
 
 								<form th:action="@{/reviews}" method="POST" enctype="multipart/form-data" class="form-contact form-review mt-3">
-									<input type="hidden" name="productId" value="1" />
+									<input type="hidden" name="productId" th:value="${product.productId}" />
 
 									<div class="form-group">
 										<p>평점:</p>
@@ -486,27 +461,50 @@
 			}
 		});
 
-		function submitOrder() {
-			const form = document.createElement('form');
-			form.method = 'POST';
-			form.action = '/order';
+		function submitOrderMember() {
+			let productIdList = [];
+			productIdList.push([[${product.productId}]]);
+			let quantityList = [];
+			quantityList.push(document.getElementById('quantity').value);
+			const cartOrder = {
+				productIds: productIdList,
+				cartQuantities: quantityList
+			};
 
-			const productIds = document.createElement('input');
-			productIds.type = 'hidden';
-			productIds.name = 'productIds';
-			productIds.value = [[${product.productId}]];
+			// 직렬화 → Base64 인코딩
+			const jsonStr = JSON.stringify(cartOrder);
+			const encoded = btoa(unescape(encodeURIComponent(jsonStr)));  // 한글깨짐 방지
 
-			const quantities = document.createElement('input');
-			quantities.type = 'hidden';
-			quantities.name = 'cartQuantities';
-			quantities.value = document.getElementById('quantity').value;
+			// 쿠키 저장
+			document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=strict`;
 
-			form.appendChild(productIds);
-			form.appendChild(quantities);
-
-			document.body.appendChild(form);
-			form.submit();
+			// 주문서 페이지로 GET 이동
+			window.location.href = '/members/order';
 		}
+
+		function submitOrderGuest() {
+			let productIdList = [];
+			productIdList.push([[${product.productId}]]);
+			let quantityList = [];
+			quantityList.push(document.getElementById('quantity').value);
+			const cartOrder = {
+				productIds: productIdList,
+				cartQuantities: quantityList
+			};
+
+			fetch('/order/auth',{
+				method: "POST",
+				headers : {"Content-Type" : "application/json",},
+				body: JSON.stringify({productIds: productIdList, cartQuantities: quantityList})
+			}).then(res =>{
+				if (res.ok){
+					window.location.href = '/order/auth';
+				}else{
+					alert("주문 요청 중 오류가 발생했습니다.");
+				}
+			})
+		}
+
 	</script>
 
 	<!-- 사진 넘기기 -->

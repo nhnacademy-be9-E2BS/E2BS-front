@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +28,7 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductRe
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 
-@FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
+@FeignClient(name = "product-admin-service", url = "${auth.product.book.url}")
 public interface ProductAdminAdaptor {
 
 	@GetMapping

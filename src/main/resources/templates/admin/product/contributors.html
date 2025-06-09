@@ -5,47 +5,164 @@
 <div layout:fragment="content">
     <section>
         <div class="container">
-            <h2>Contributor Management</h2>
+            <style>
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 20px;
+                    font-family: 'Segoe UI', sans-serif;
+                    font-size: 14px;
+                    background-color: #fff;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                }
 
+                th {
+                    background-color: #3f51b5;
+                    color: white;
+                    font-weight: 600;
+                    padding: 14px;
+                    text-align: center;
+                }
+
+                td {
+                    padding: 14px;
+                    text-align: center;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+
+                tr:last-child td {
+                    border-bottom: none;
+                }
+
+                tr:hover {
+                    background-color: #f9f9f9;
+                }
+
+                .btn {
+                    padding: 8px 16px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 13px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.2s ease-in-out;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+
+                .btn-success {
+                    background: linear-gradient(45deg, #4caf50, #43a047);
+                    color: white;
+                }
+
+                .btn-success:hover {
+                    background: linear-gradient(45deg, #388e3c, #2e7d32);
+                    transform: scale(1.05);
+                }
+
+                .btn-secondary {
+                    background: linear-gradient(45deg, #607d8b, #546e7a);
+                    color: white;
+                }
+
+                .btn-secondary:hover {
+                    background: linear-gradient(45deg, #455a64, #37474f);
+                    transform: scale(1.05);
+                }
+
+                select {
+                    padding: 6px 12px;
+                    border: 1px solid #bbb;
+                    border-radius: 6px;
+                    font-size: 13px;
+                    background-color: #fafafa;
+                    transition: box-shadow 0.2s ease-in-out;
+                }
+
+                select:focus {
+                    outline: none;
+                    box-shadow: 0 0 0 2px #3f51b540;
+                }
+
+                .pagination {
+                    display: flex;
+                    list-style: none;
+                    padding: 0;
+                    margin-top: 30px;
+                }
+
+                .page-item {
+                    margin: 0 4px;
+                }
+
+                .page-link {
+                    display: block;
+                    padding: 8px 14px;
+                    border-radius: 6px;
+                    background-color: #f1f1f1;
+                    color: #333;
+                    text-decoration: none;
+                }
+
+                .page-item.active .page-link {
+                    background-color: #3f51b5;
+                    color: white;
+                    font-weight: 600;
+                }
+
+                .page-item.disabled .page-link {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+
+                h4 {
+                    font-family: 'Segoe UI', sans-serif;
+                }
+
+                .button-register {
+                    border-radius: 5px;
+                    background-color: darkgray;
+                }
+            </style>
+
+            <br><br>
             <!-- 등록 폼 -->
             <div class="row">
                 <div class="col-lg-8">
-                    <h4>Register New Contributor</h4>
+                    <h4>기여자 등록</h4>
                     <form class="row login_form" action="/admin/settings/contributors" method="post">
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-5 form-group">
                             <input type="text" class="form-control" name="contributorName" placeholder="기여자 이름" required>
-
-                            <label for="contributor-position">역할 선택</label>
+                        </div>
+                        <div class="col-md-4 form-group">
                             <select id="contributor-position" name="positionId" class="form-control" required>
-                                <option value="" disabled selected>선택하세요</option>
+                                <option value="" disabled selected>역할 선택</option>
                                 <option th:each="position : ${positions}"
                                         th:value="${position.positionId}"
                                         th:text="${position.positionName}">
                                 </option>
                             </select>
                         </div>
-
-                        <div class="col-md-12 form-group mt-3">
-                            <button type="submit" class="button button-register w-100">Register Position</button>
+                        <div class="col-md-2 form-group">
+                            <button type="submit" class="button button-register w-100">등록하기</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- 역할 목록 -->
+            <!-- 기여자 목록 -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <h4>Position List</h4>
-                    <table class="table table-bordered">
+                    <h4>기여자 목록</h4>
+                    <table>
                         <thead>
                         <tr>
-                            <th>기여자 아이디</th>
-                            <th>기여자 정보</th>
+                            <th>기여자 이름</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="contributor : ${contributors}">
-                            <td th:text="${contributor.contributorId}"></td>
                             <td>
                                 <form th:action="@{'/admin/settings/contributors/' + ${contributor.contributorId}}" method="post">
                                     <input type="hidden" name="_method" value="put"/>
@@ -67,7 +184,7 @@
                                         </select>
 
                                         <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
-                                        <button type="submit" class="btn btn-sm btn-primary d-none save-btn">저장</button>
+                                        <button type="submit" class="btn btn-sm btn-success d-none save-btn">저장</button>
                                         <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
                                     </div>
                                 </form>

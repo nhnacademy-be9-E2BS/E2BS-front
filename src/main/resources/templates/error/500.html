@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/user-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <style>
+                .error-wrapper {
+                    text-align: center;
+                    padding: 60px 20px;
+                }
+
+                .error-image {
+                    width: 240px;
+                    margin-bottom: 30px;
+                }
+
+                .error-message {
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #b00020;
+                    margin-bottom: 20px;
+                }
+
+                .back-button {
+                    display: inline-block;
+                    padding: 10px 24px;
+                    background-color: #333;
+                    color: white;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    text-decoration: none;
+                    transition: background-color 0.3s ease;
+                }
+
+                .back-button:hover {
+                    background-color: #555;
+                }
+            </style>
+
+            <div class="error-wrapper">
+                <img class="error-image" src="/images/error/500.png" alt="500 서버 오류 이미지">
+                <div class="error-message" th:text="${errorMessage}">서버 오류가 발생했습니다.</div>
+                <a class="back-button" href="javascript:history.back()">이전으로 돌아가기</a>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

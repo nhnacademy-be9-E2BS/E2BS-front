@@ -1,0 +1,158 @@
+<!--상품 목록-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/best-layout}">
+
+<head>
+    <style>
+        .ti-heart.liked {
+          color: red; /* 좋아요 누른 상태 */
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+  <!-- 상품 리스트 출력 -->
+  <section class="lattest-product-area pb-40 category-list">
+    <div class="row">
+      <div th:each="product : ${products}" class="col-md-6 col-lg-4">
+        <div class="card text-center card-product" th:data-product-id = "${product.productId}">
+          <div class="card-product__img">
+            <!-- 도서 이미지: productImagePaths는 List이므로 첫 번째 이미지를 사용 -->
+            <div class="card-img"
+                 th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
+              <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
+                <img th:src="${product.productImagePaths[0].productImagePath}"
+                     alt="대표 이미지"
+                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+              </a>
+              <ul class="card-product__imgOverlay">
+                <li><a th:href="@{/books/{productId}(productId=${product.productId})}" class="search-link">
+                  <button><i class="ti-search"></i></button>
+                </a></li>
+
+                <li th:if="${session.isMember}">
+                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+                <li th:if="${session.isMember == null}">
+                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
+                </li>
+
+                <li>
+                  <button class="like-button" data-liked="false">
+                    <i class="ti-heart"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- 도서 제목 -->
+          <h5 class="card-product__title">
+            <a th:href="@{/books/{productId}(productId=${product.productId})}" th:text="${product.productTitle}" class="title-link">도서 제목</a>
+          </h5>
+          <p>출판사: <span th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">출판사</span></p>
+          <!-- 판매 가격 -->
+          <span class="card-product__price" th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'">0</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- 페이지네이션 -->
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center">
+      <nav>
+        <ul class="pagination" th:if="${products.totalPages > 0}">
+          <!-- 처음 버튼 -->
+          <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=0, size=9)}"
+               th:text="'처음'">First</a>
+          </li>
+
+          <!-- 전체 페이지 번호 출력 -->
+          <li class="page-item"
+              th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+              th:classappend="${i == products.number} ? 'active'">
+            <a class="page-link"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=9)}"
+               th:text="${i + 1}">1</a>
+          </li>
+
+          <!-- 마지막 버튼 -->
+          <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=9)}"
+               th:text="'마지막'">Last</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- 장바구니 이동 모달 -->
+  <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
+          <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="닫기"></button>
+        </div>
+        <div class="modal-body">
+          장바구니로 이동하시겠습니까?
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기</button>
+          <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sidebar = document.querySelector(".sidebar-filter");
+      const toggles = sidebar.querySelectorAll(".toggle");
+
+      toggles.forEach(span => {
+        const li = span.closest("li");
+        const childUl = li.querySelector(":scope > ul");
+
+        if (!childUl) {
+          span.textContent = "🔹";
+          span.style.cursor = "default";
+          span.onclick = null;
+        } else {
+          span.textContent = "📁";
+          childUl.classList.add("d-none");
+        }
+      });
+    });
+
+    function toggleClick(element) {
+      const li = element.closest("li");
+      const childUl = li.querySelector(":scope > ul");
+
+      if (childUl) {
+        const isOpen = !childUl.classList.contains("d-none");
+        childUl.classList.toggle("d-none");
+        element.textContent = isOpen ? "📁" : "📂";
+      }
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script th:src="@{/js/like/like-add-delete.js}"></script>
+  <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
+  <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
+</div>
+</body>
+</html>

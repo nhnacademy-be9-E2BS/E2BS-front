@@ -36,27 +36,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
         updateTotalPaymentAmount();
         sendCartUpdate(productId, quantity);
-
-        console.log('productId: ' + productId);
     }
 });
 
+// 상품 합계, 배송비, 결제 예정 금액 최신화 메소드
 function updateTotalPaymentAmount() {
-    let total = 0;
-    const totalPriceElements = document.querySelectorAll('.total-price');
+    let totalProduct = 0;
+    let totalDelivery = 0;
 
-    totalPriceElements.forEach(elem => {
-        // 숫자만 받음
-        const price = parseInt(elem.textContent.replace(/[^\d]/g, ''));
-        if (!isNaN(price)) {
-            total += price;
-        }
+    $('.cart-item-checkbox:checked').each(function () {
+        const productId = $(this).data('product-id');
+        const row = $(this).closest('tr');
+
+        const priceText = row.find('.unit-price').text().replace(/[^0-9]/g, '');
+        const unitPrice = parseInt(priceText, 10) || 0;
+
+        const quantity = parseInt($('#quantity-' + productId).val(), 10) || 1;
+        totalProduct += unitPrice * quantity;
+
+        const deliveryText = row.find('.unit-delivery-price').text().replace(/[^0-9]/g, '');
+        const deliveryFee = parseInt(deliveryText, 10) || 0;
+        totalDelivery += deliveryFee;
     });
 
-    const totalPayment = document.getElementById('totalPaymentAmount');
-    if (totalPayment) {
-        totalPayment.textContent = total.toLocaleString('ko-KR') + '원'
-    }
+    $('#totalProductPrice').text(totalProduct.toLocaleString('ko-KR') + '원');
+    $('#totalDeliveryPrice').text(totalDelivery.toLocaleString('ko-KR') + '원');
+    $('#totalPaymentPrice').text((totalProduct + totalDelivery).toLocaleString('ko-KR') + '원');
 }
 
 function sendCartUpdate(productId, quantity) {
@@ -69,6 +74,14 @@ function sendCartUpdate(productId, quantity) {
             quantity: quantity
         }),
         success: function (response) {
+            console.log(typeof response);
+            console.log(response);
+
+            if (response === 0) {
+                $(`.nav-shop__circle`).hide();
+            } else {
+                $(`.nav-shop__circle`).text(response);
+            }
             console.log('장바구니 수량 업데이트 성공:', response.message);
         },
         error: function (xhr, status, error) {

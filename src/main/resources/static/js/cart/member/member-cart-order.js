@@ -26,24 +26,29 @@ $(document).ready(function () {
 });
 
 function updateTotalPayment() {
-    let total = 0;
+    let totalProduct = 0;
+    let totalDelivery = 0;
 
     $('.cart-item-checkbox:checked').each(function () {
         const productId = $(this).data('product-id');
-
-        // 단가 가져오기
         const row = $(this).closest('tr');
+
         const priceText = row.find('.unit-price').text().replace(/[^0-9]/g, '');
         const unitPrice = parseInt(priceText, 10) || 0;
 
-        // 수량 input 가져오기
         const quantity = parseInt($('#quantity-' + productId).val(), 10) || 1;
+        totalProduct += unitPrice * quantity;
 
-        total += unitPrice * quantity;
+        // 배송비는 각 체크된 항목별로 추출
+        const deliveryText = row.find('.unit-delivery-price').text().replace(/[^0-9]/g, '');
+        const deliveryFee = parseInt(deliveryText, 10) || 0;
+        totalDelivery += deliveryFee;
     });
 
-    // 총 결제 금액 영역에 반영
-    $('#totalPaymentAmount').text(total.toLocaleString('ko-KR') + '원');
+    // DOM 반영
+    $('#totalProductPrice').text(totalProduct.toLocaleString('ko-KR') + '원');
+    $('#totalDeliveryPrice').text(totalDelivery.toLocaleString('ko-KR') + '원');
+    $('#totalPaymentPrice').text((totalProduct + totalDelivery).toLocaleString('ko-KR') + '원');
 }
 
 // 체크된 상품 주문
@@ -81,14 +86,18 @@ $(document).ready(function () {
             cartQuantities: selectedCartQuantities
         };
 
+        console.log('cartOrder: ', cartOrder)
+
         // 직렬화 → Base64 인코딩
         const jsonStr = JSON.stringify(cartOrder);
         const encoded = btoa(unescape(encodeURIComponent(jsonStr)));  // 한글깨짐 방지
 
+        console.log('encoded: ' + encoded)
+
         // 쿠키 저장
-        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; httponly; secure; samesite=strict`;
+        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=strict`;
 
         // 주문서 페이지로 GET 이동
-        window.location.href = '/members/carts/order';
+        window.location.href = '/members/order';
     });
 });

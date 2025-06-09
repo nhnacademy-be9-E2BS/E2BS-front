@@ -34,6 +34,13 @@ window.addEventListener('DOMContentLoaded', function () {
                     value: responseData.customerId
                 }));
 
+                // customerName
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'customerName',
+                    value: responseData.customerName
+                }));
+
                 // productIds 배열
                 responseData.requestCartOrder.productIds.forEach((productIds, index) => {
                     form.append($('<input>', {

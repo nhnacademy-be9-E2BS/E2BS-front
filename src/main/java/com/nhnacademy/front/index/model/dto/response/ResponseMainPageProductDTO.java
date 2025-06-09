@@ -12,5 +12,8 @@ public class ResponseMainPageProductDTO {
 	private String productTitle;
 	private String contributorName;
 	private String productImage;
+	private long productRegularPrice;
 	private long productSalePrice;
+	private String productDescription;
+	private String publisherName;
 }

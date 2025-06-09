@@ -13,7 +13,7 @@ import com.nhnacademy.front.account.address.exception.SaveAddressFailedException
 import com.nhnacademy.front.account.address.exception.UpdateAddressFailedException;
 import com.nhnacademy.front.account.address.model.dto.request.RequestMemberAddressSaveDTO;
 import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAddressDTO;
-import com.nhnacademy.front.common.exception.EmptyResponseException;
+import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +29,11 @@ public class AddressService {
 
 		ResponseEntity<List<ResponseMemberAddressDTO>> response = addressAdaptor.getMemberAddresses(memberId);
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new GetAddressFailedException("회원의 배송지 정보를 가져오지 못했습니다.");
+			throw new GetAddressFailedException();
 		}
 
 		if (Objects.isNull(response.getBody())) {
-			throw new EmptyResponseException("회원의 배송지 정보를 가져오지 못했습니다.");
+			throw new EmptyResponseException();
 		}
 
 		return response.getBody();
@@ -47,7 +47,7 @@ public class AddressService {
 		);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new SaveAddressFailedException("입력하신 배송지 정보를 저장하지 못했습니다.");
+			throw new SaveAddressFailedException();
 		}
 	}
 
@@ -55,11 +55,11 @@ public class AddressService {
 		ResponseEntity<ResponseMemberAddressDTO> response = addressAdaptor.getAddress(memberId, addressId);
 
 		if (Objects.isNull(response.getBody())) {
-			throw new EmptyResponseException("배송지 정보를 가져오지 못했습니다.");
+			throw new EmptyResponseException();
 		}
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new EmptyResponseException("배송지 정보를 가져오지 못했습니다.");
+			throw new EmptyResponseException();
 		}
 
 		return response.getBody();
@@ -71,7 +71,7 @@ public class AddressService {
 			requestMemberAddressSaveDTO);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new UpdateAddressFailedException("배송지를 수정하지 못했습니다.");
+			throw new UpdateAddressFailedException();
 		}
 	}
 
@@ -79,7 +79,14 @@ public class AddressService {
 		ResponseEntity<Void> response = addressAdaptor.deleteAddress(memberId, addressId);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new DeleteAddressFailedException("배송지를 삭제하지 못했습니다.");
+			throw new DeleteAddressFailedException();
+		}
+	}
+
+	public void setDefaultAddress(String memberId, long addressId) {
+		ResponseEntity<Void> response = addressAdaptor.setDefaultAddress(memberId, addressId);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new EmptyResponseException();
 		}
 	}
 

@@ -90,4 +90,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		authService.postAuthCreateJwtToken(tokenDTO, response, request);
 		chain.doFilter(request, response);
 	}
+
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException failed) throws IOException, ServletException {
+
+		String errorMessage = URLEncoder.encode("아이디 또는 비밀번호가 일치하지 않습니다.", StandardCharsets.UTF_8);
+		response.sendRedirect("/login?error=" + errorMessage);
+
+	}
 }

@@ -3,6 +3,8 @@ package com.nhnacademy.front.order.order;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.adaptor.OrderAdminAdaptor;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
+import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.service.OrderAdminService;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,11 +36,11 @@ class OrderAdminServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		ResponseEntity<PageResponse<ResponseOrderDTO>> response = ResponseEntity.ok(
 			new PageResponse<ResponseOrderDTO>());
-		when(orderAdminAdaptor.getOrders(pageable)).thenReturn(response);
+		when(orderAdminAdaptor.getOrders(any(), any(), any(), any(), any(), any())).thenReturn(response);
 
-		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderAdminService.getOrders(pageable);
+		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderAdminService.getOrders(pageable, "", "", "", "", "");
 		assertEquals(response, actual);
-		verify(orderAdminAdaptor, times(1)).getOrders(pageable);
+		verify(orderAdminAdaptor, times(1)).getOrders(any(), any(), any(), any(), any(), any());
 
 	}
 
@@ -47,11 +50,11 @@ class OrderAdminServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		ResponseEntity<PageResponse<ResponseOrderDTO>> response = ResponseEntity.ok(
 			new PageResponse<ResponseOrderDTO>());
-		when(orderAdminAdaptor.getOrders(pageable, 5L)).thenReturn(response);
+		when(orderAdminAdaptor.getOrders(any(), any(), any(), any(), any(), any())).thenReturn(response);
 
-		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderAdminService.getOrders(pageable, 5L);
+		ResponseEntity<PageResponse<ResponseOrderDTO>> actual = orderAdminService.getOrders(pageable, "WAIT", "","","","");
 		assertEquals(response, actual);
-		verify(orderAdminAdaptor, times(1)).getOrders(pageable, 5L);
+		verify(orderAdminAdaptor, times(1)).getOrders(any(), any(), any(), any(), any(), any());
 	}
 
 	@Test
@@ -69,6 +72,27 @@ class OrderAdminServiceTest {
 		// then
 		assertEquals(expectedResponse, actualResponse);
 		verify(orderAdminAdaptor).startDelivery(orderCode);
+
+	}
+
+	@Test
+	@DisplayName("getReturnOrders - 반품 전체 내역 조회")
+	void testGetReturnOrders() {
+		// given
+		PageResponse<ResponseOrderReturnDTO> pageResponse = new PageResponse<>();
+		pageResponse.setContent(List.of(new ResponseOrderReturnDTO()));
+		pageResponse.setNumber(0);
+		pageResponse.setSize(10);
+		pageResponse.setTotalElements(1L);
+		ResponseEntity<PageResponse<ResponseOrderReturnDTO>> expectedResponse = ResponseEntity.ok(pageResponse);
+		when(orderAdminAdaptor.getReturnOrders(any())).thenReturn(expectedResponse);
+
+		// when
+		ResponseEntity<PageResponse<ResponseOrderReturnDTO>> actualResponse = orderAdminService.getReturnOrders(Pageable.unpaged());
+
+		// then
+		assertEquals(expectedResponse, actualResponse);
+		verify(orderAdminAdaptor).getReturnOrders(any());
 
 	}
 }

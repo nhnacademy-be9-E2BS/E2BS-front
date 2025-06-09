@@ -13,7 +13,7 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 
-@FeignClient(name = "publisher-service", url = "${product.publisher.url}")
+@FeignClient(name = "publisher-service", url = "${auth.product.publisher.url}")
 public interface PublisherAdaptor {
 
 	@GetMapping

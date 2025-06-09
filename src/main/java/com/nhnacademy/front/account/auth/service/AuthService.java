@@ -36,7 +36,7 @@ public class AuthService {
 			ResponseEntity<ResponseJwtTokenDTO> responseJwtTokenDTO = authAdaptor.postAuth(requestJwtTokenDTO);
 
 			if (Objects.isNull(responseJwtTokenDTO)) {
-				throw new SaveJwtTokenProcessException("JWT 토큰을 생성하지 못했습니다.");
+				throw new SaveJwtTokenProcessException();
 			}
 
 			/**
@@ -69,7 +69,7 @@ public class AuthService {
 			request.setAttribute("access-refresh", token);
 
 		} catch (FeignException ex) {
-			throw new SaveJwtTokenProcessException("JWT 토큰을 생성하지 못했습니다.");
+			throw new SaveJwtTokenProcessException();
 		}
 
 	}

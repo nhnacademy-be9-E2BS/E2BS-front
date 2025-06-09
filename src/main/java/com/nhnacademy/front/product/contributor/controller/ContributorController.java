@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.nhnacademy.front.common.exception.ValidationFailedException;
+import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.product.contributor.dto.request.RequestContributorDTO;
@@ -74,6 +74,7 @@ public class ContributorController {
 		contributorService.getContributor(contributorId);
 		return "admin/product/contributors";
 	}
+
 	/**기여자 전체 조회
 	 */
 	@GetMapping()
@@ -87,7 +88,6 @@ public class ContributorController {
 		model.addAttribute("contributors", contributors);
 		return "admin/product/contributors";
 	}
-
 
 }
 

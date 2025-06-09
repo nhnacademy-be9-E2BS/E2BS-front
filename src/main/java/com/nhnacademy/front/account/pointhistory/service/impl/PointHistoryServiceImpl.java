@@ -22,9 +22,10 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 	@Override
 	public PageResponse<ResponsePointHistoryDTO> getPointHistoryByMemberId(String memberId, Pageable pageable) throws
 		FeignException {
-		ResponseEntity<PageResponse<ResponsePointHistoryDTO>> response = pointHistoryAdaptor.getPointHistoryByMemberId(memberId, pageable);
-		if(!response.getStatusCode().is2xxSuccessful()) {
-			throw new PointHistoryGetException("회원 아이디로 포인트 내역 조회 실패");
+		ResponseEntity<PageResponse<ResponsePointHistoryDTO>> response = pointHistoryAdaptor.getPointHistoryByMemberId(
+			memberId, pageable);
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw new PointHistoryGetException();
 		}
 		return response.getBody();
 	}
