@@ -34,9 +34,7 @@ public class HomeController {
 		}
 		model.addAttribute("today", LocalDate.now());
 		model.addAttribute("BestSellerList", bestSellerList);
-		model.addAttribute("BlogBestList", indexService.getBlogBestProducts());
 		model.addAttribute("ItemNewAllList", indexService.getNewItemsProducts());
-		model.addAttribute("NewSpecialItemsList", indexService.getNewSpecialItemsProducts());
 
 		return "home";
 	}
