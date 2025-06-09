@@ -32,7 +32,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 			response.sendRedirect(
 				"/customer/login?error=" + URLEncoder.encode(loginErrorMessage, StandardCharsets.UTF_8));
 		} else {
-			response.sendRedirect("/login?error=" + URLEncoder.encode(loginErrorMessage, StandardCharsets.UTF_8));
+			response.sendRedirect(
+				"/members/login?error=" + URLEncoder.encode(loginErrorMessage, StandardCharsets.UTF_8));
 		}
 
 	}

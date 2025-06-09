@@ -61,8 +61,8 @@ public class MemberDoorayDormantController {
 	 * 인증번호 화면 Controller
 	 */
 	@Operation(summary = "휴면 상태 Dooray 방식 페이지", description = "휴면 상태 Dooray 방식 화면 제공")
-	@GetMapping("/dormant/dooray/{memberId}")
-	public String getMemberDormantDooray(@PathVariable("memberId") String memberId, Model model,
+	@GetMapping("/dormant/dooray/{member-id}")
+	public String getMemberDormantDooray(@PathVariable("member-id") String memberId, Model model,
 		HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		Integer remainingSeconds = 0;
@@ -87,8 +87,8 @@ public class MemberDoorayDormantController {
 	 * Dooray 인증 번호 전송 Controller
 	 */
 	@Operation(summary = "휴면 상태 Dooray 인증 번호 전송", description = "휴면 상태 Dooray 인증 번호 제공하는 기능")
-	@PostMapping("/dormant/dooray/{memberId}")
-	public String postDoorayAuthenticationNumber(@PathVariable("memberId") String memberId,
+	@PostMapping("/dormant/dooray/{member-id}")
+	public String postDoorayAuthenticationNumber(@PathVariable("member-id") String memberId,
 		HttpServletRequest request) {
 		// 6자리 무작위 값을 생성해서 redis 에 저장하는 메서드
 		String authenticationNumber = memberDormantService.createDoorayAuthenticationNumber(memberId);

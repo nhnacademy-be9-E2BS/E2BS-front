@@ -60,10 +60,10 @@ management:
 
 member:
   login:
-    url: http://localhost:10232/api/login
+    url: http://localhost:10232/api/members/login
 
   register:
-    url: http://localhost:10232/api/register
+    url: http://localhost:10232/api/members/register
 
   state:
     url: http://localhost:10232/api/members

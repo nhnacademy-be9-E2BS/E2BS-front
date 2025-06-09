@@ -112,7 +112,7 @@
                     <div class="login_box_img">
                         <div class="hover">
                             <h4>아직 아이디가 없으신가요?</h4>
-                            <a class="button button-account" href="/register">회원가입 하기</a>
+                            <a class="button button-account" href="/members/register">회원가입 하기</a>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,9 @@
                                            onblur="this.placeholder = '비밀번호 입력하세요'" required>
                                 </div>
                                 <div class="col-md-12 form-group">
-                                    <button type="submit" onclick="guestOrderLogin()" class="button button-login w-100">조회하기</button>
+                                    <button type="submit" onclick="guestOrderLogin()" class="button button-login w-100">
+                                        조회하기
+                                    </button>
                                 </div>
                             </div>
                             <span>※비회원으로 주문하신 내역이 있는 분만 이용이 가능합니다.</span>
@@ -179,30 +181,30 @@
 
         <!--비회원 로그인 및 창 이동-->
         <script>
-            function guestOrderLogin(){
+            function guestOrderLogin() {
                 const guestEmail = document.getElementById('guestEmail').value;
                 const guestPassword = document.getElementById('guestPassword').value;
-                if(guestEmail === ""){
+                if (guestEmail === "") {
                     alert("이메일을 입력해주세요");
                     return;
                 }
-                if(guestPassword === ""){
+                if (guestPassword === "") {
                     alert("비밀번호를 적어주세요");
                     return;
                 }
 
-                fetch("/customers/order/login",{
+                fetch("/customers/order/login", {
                     method: "POST",
-                    headers : {"Content-Type": "application/json",},
+                    headers: {"Content-Type": "application/json",},
                     body: JSON.stringify({customerEmail: guestEmail, customerPassword: guestPassword})
-                }).then(res =>{
-                    if(res.ok){
+                }).then(res => {
+                    if (res.ok) {
                         return res.json();
-                    }else{
+                    } else {
                         alert("이메일과 비밀번호를 다시 확인해주세요.");
                     }
                 }).then(data => {
-                    window.location.href = "/customers/"+ data +"/orders";
+                    window.location.href = "/customers/" + data + "/orders";
                 })
             }
         </script>
