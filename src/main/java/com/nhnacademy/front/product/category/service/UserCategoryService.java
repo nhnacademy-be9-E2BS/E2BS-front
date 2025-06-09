@@ -68,6 +68,9 @@ public class UserCategoryService {
 		}
 	}
 
+	/**
+	 * order 전용 - product id 리스트로 각 category id 리스트 조회
+	 */
 	public List<ResponseCategoryIdsDTO> getCategoriesByProductIds(List<Long> productIds) {
 		try {
 			ResponseEntity<List<ResponseCategoryIdsDTO>> response = userCategoryAdaptor.getCategoriesByProductIds(productIds);
