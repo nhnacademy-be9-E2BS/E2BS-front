@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartOrderDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestMergeCartItemDTO;
 
 @FeignClient(name = "cart-adaptor", url = "${cart.url}")
@@ -23,5 +24,11 @@ public interface CartAdaptor {
 	 */
 	@PostMapping("/merge")
 	ResponseEntity<Integer> mergeCartItemsToMemberFromGuest(@RequestBody RequestMergeCartItemDTO requestDto);
-
+	
+	/**
+	 * 주문 완료한 상품 항목을 장바구니에서 삭제
+	 */
+	@PostMapping("/orders")
+	ResponseEntity<Integer> deleteOrderCompleteCartItems(@RequestBody RequestDeleteCartOrderDTO requestDto);
+	
 }
