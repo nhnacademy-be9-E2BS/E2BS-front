@@ -103,8 +103,7 @@ public class OrderController {
 	@JwtTokenCheck
 	@GetMapping("/members/order")
 	public String getCheckOut(Model model,
-		@Parameter(description = "주문 상품 정보", example = "eyJwcm9kdWN0SWRzIjpbNF0sImNhcnRRdWFudGl0aWVzIjpbMV19")
-		@CookieValue(name = "orderCart") String encodedCart,
+		@Parameter(description = "주문 상품 정보") @CookieValue(name = "orderCart") String encodedCart,
 		HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 
 		// Base64 디코딩 → JSON → DTO 역직렬화
@@ -158,7 +157,8 @@ public class OrderController {
 	 */
 	@Operation(summary = "비회원 주문서 작성 페이지", description = "비회원이 상품 바로구매, 장바구니 주문하기 시 주문서 페이지 제공")
 	@PostMapping("/customers/order")
-	public String getCheckOutCustomerCart(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest,
+	public String getCheckOutCustomerCart(Model model,
+		@Parameter(description = "주문 상품 정보 및 비회원 정보") @ModelAttribute ResponseCustomerRegisterDTO orderRequest,
 		HttpServletResponse response) {
 		// 회원 결제에서 쿠폰, 포인트, 주소만 제외
 		List<Integer> quantities = orderRequest.getRequestCartOrder().getCartQuantities();
@@ -197,7 +197,8 @@ public class OrderController {
 	 */
 	@Operation(summary = "외부 API 결제 요청 시 주문서 저장", description = "외부 API 결제 요청 시 DB에 주문 정보를 저장")
 	@PostMapping("/order/tossPay")
-	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(@Validated @RequestBody RequestOrderWrapperDTO request,
+	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(
+		@Parameter(description = "주문 상품 정보") @Validated @RequestBody RequestOrderWrapperDTO request,
 		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
@@ -212,7 +213,7 @@ public class OrderController {
 	@JwtTokenCheck
 	@PostMapping("/order/point")
 	public ResponseEntity<ResponseOrderResultDTO> postPointCheckOut(
-		@Validated @RequestBody RequestOrderWrapperDTO request,
+		@Parameter(description = "주문 상품 정보") @Validated @RequestBody RequestOrderWrapperDTO request,
 		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
@@ -226,8 +227,10 @@ public class OrderController {
 	 */
 	@Operation(summary = "결제 승인 처리", description = "주문 완료 시 페이지 제공")
 	@GetMapping("/order/success")
-	public String getSuccessOrder(@RequestParam String orderId, @RequestParam String paymentKey,
-		@RequestParam long amount) {
+	public String getSuccessOrder(
+		@Parameter(description = "주문 코드") @RequestParam String orderId,
+		@Parameter(description = "외부 API에서 발급된 결제 키") @RequestParam String paymentKey,
+		@Parameter(description = "결제 금액") @RequestParam long amount) {
 		// 결제 승인 요청
 		ResponseEntity<Void> response = orderService.confirmOrder(orderId, paymentKey, amount);
 
@@ -249,7 +252,6 @@ public class OrderController {
 	@Operation(summary = "주문 완료 페이지", description = "주문 완료 페이지 제공")
 	@GetMapping("/order/confirm")
 	public String getConfirmOrder() {
-		// 추후 정보를 더 넣을지는 모름
 		return "payment/confirmation";
 	}
 
@@ -267,7 +269,7 @@ public class OrderController {
 	 */
 	@Operation(summary = "외부 결제 모달 끌 시 주문서 삭제", description = "외부 결제 모달 끌 시 DB에 저장된 주문서 제거")
 	@PostMapping("/order/cancel")
-	public ResponseEntity<Void> deleteOrder(@RequestParam String orderId) {
+	public ResponseEntity<Void> deleteOrder(@Parameter(description = "주문 코드") @RequestParam String orderId) {
 		return orderService.deleteOrder(orderId);
 	}
 
@@ -275,12 +277,15 @@ public class OrderController {
 	@JwtTokenCheck
 	@GetMapping("/mypage/orders")
 	public String getMemberOrders(Model model, HttpServletRequest request,
-		@PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(required = false) String status,
-		@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
-		@RequestParam(required = false) String orderCode) {
+		@PageableDefault(page = 0, size = 10) Pageable pageable,
+		@Parameter(description = "주문 상태") @RequestParam(required = false) String status,
+		@Parameter(description = "주문 일자 검색 시작 일", example = "2025-01-01") @RequestParam(required = false) String startDate,
+		@Parameter(description = "주문 일자 검색 끝 일", example = "2025-12-01") @RequestParam(required = false) String endDate,
+		@Parameter(description = "주문 코드") @RequestParam(required = false) String orderCode) {
 
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
-		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByMemberId(pageable, memberId, status, startDate, endDate, orderCode);
+		ResponseEntity<PageResponse<ResponseOrderDTO>> response =
+			orderService.getOrdersByMemberId(pageable, memberId, status, startDate, endDate, orderCode);
 		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
 		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
 		model.addAttribute("orders", orders);
@@ -293,7 +298,7 @@ public class OrderController {
 	@Operation(summary = "회원 주문 상세 조회", description = "회원의 특정 주문 상세 정보를 확인하는 페이지 제공")
 	@JwtTokenCheck
 	@GetMapping("/mypage/orders/{orderCode}")
-	public String getMemberOrderDetails(Model model, @PathVariable String orderCode) {
+	public String getMemberOrderDetails(Model model, @Parameter(description = "주문 코드") @PathVariable String orderCode) {
 		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);
 		ResponseOrderWrapperDTO responseOrder = response.getBody();
 		ResponseOrderDTO order = responseOrder.getOrder();
@@ -336,7 +341,7 @@ public class OrderController {
 	@Operation(summary = "주문 취소", description = "회원이 배송 전인 상품에 대하여 주문 취소")
 	@JwtTokenCheck
 	@DeleteMapping("/mypage/orders/{orderCode}")
-	public ResponseEntity<Void> cancelOrder(@PathVariable String orderCode) {
+	public ResponseEntity<Void> cancelOrder(@Parameter(description = "주문 코드") @PathVariable String orderCode) {
 		return orderService.cancelOrder(orderCode);
 	}
 
@@ -345,7 +350,9 @@ public class OrderController {
 	 */
 	@Operation(summary = "반품 처리", description = "회원이 단순 변심, 파손에 의한 상품에 대하여 반품 요청 처리")
 	@PostMapping("/order/return")
-	public ResponseEntity<Void> returnOrder(@RequestBody @Validated RequestOrderReturnDTO returnDTO, BindingResult bindingResult) {
+	public ResponseEntity<Void> returnOrder(
+		@Parameter(description = "반품 요청 정보") @RequestBody @Validated RequestOrderReturnDTO returnDTO,
+		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -367,7 +374,8 @@ public class OrderController {
 
 	@Operation(summary = "반품 상세 내역 페이지", description = "회원이 반품 상세 정보에 대해 확인 가능한 페이지 제공")
 	@GetMapping("/mypage/return/{orderCode}")
-	public String getReturnOrderDetails(Model model, @PathVariable String orderCode) {
+	public String getReturnOrderDetails(Model model,
+		@Parameter(description = "주문 코드") @PathVariable String orderCode) {
 
 		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
 		model.addAttribute("returnDTO", returnDTO);
@@ -376,7 +384,9 @@ public class OrderController {
 
 	@Operation(summary = "비회원 주문 내역 확인 페이지", description = "비회원이 이메일, 비밀번호로 주문했던 내역을 확인가능한 페이지 제공")
 	@GetMapping("/customers/{customerId}/orders")
-	public String getCustomerOrders(Model model, @PathVariable long customerId, @PageableDefault(page = 0, size = 10) Pageable pageable) {
+	public String getCustomerOrders(Model model,
+		@Parameter(description = "비회원 식별 번호") @PathVariable long customerId,
+		@PageableDefault(page = 0, size = 10) Pageable pageable) {
 		ResponseEntity<PageResponse<ResponseOrderDTO>> response = orderService.getOrdersByCustomerId(pageable, customerId);
 		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
 		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
@@ -388,7 +398,9 @@ public class OrderController {
 
 	@Operation(summary = "비회원 주문 상세 페이지", description = "비회원이 특정 주문에 대해 확인 가능한 페이지 제공")
 	@GetMapping("/customers/{customerId}/orders/{orderCode}")
-	public String getCustomerOrderDetails(Model model, @PathVariable long customerId, @PathVariable String orderCode) {
+	public String getCustomerOrderDetails(Model model,
+		@Parameter(description = "비회원 식별 번호") @PathVariable long customerId,
+		@Parameter(description = "주문 코드") @PathVariable String orderCode) {
 		ResponseEntity<ResponseOrderWrapperDTO> response = orderService.getOrderByOrderCode(orderCode);
 		ResponseOrderWrapperDTO responseOrder = response.getBody();
 		ResponseOrderDTO order = responseOrder.getOrder();
