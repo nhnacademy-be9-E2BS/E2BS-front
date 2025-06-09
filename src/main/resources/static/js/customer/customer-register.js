@@ -41,24 +41,6 @@ window.addEventListener('DOMContentLoaded', function () {
                     value: responseData.customerName
                 }));
 
-                // productIds 배열
-                responseData.requestCartOrder.productIds.forEach((productIds, index) => {
-                    form.append($('<input>', {
-                        type: 'hidden',
-                        name: 'requestCartOrder.productIds[' + index + ']',
-                        value: productIds
-                    }));
-                });
-
-                // cartQuantities 배열
-                responseData.requestCartOrder.cartQuantities.forEach((cartQuantities, index) => {
-                    form.append($('<input>', {
-                        type: 'hidden',
-                        name: 'requestCartOrder.cartQuantities[' + index + ']',
-                        value: cartQuantities
-                    }));
-                });
-
                 // 페이지에 폼 추가 후 제출
                 $('body').append(form);
                 form.submit();

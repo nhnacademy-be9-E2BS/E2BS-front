@@ -7,6 +7,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -35,13 +37,17 @@ import com.nhnacademy.front.account.member.model.dto.request.RequestMemberIdDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartOrderDTO;
+import com.nhnacademy.front.cart.service.CartService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.common.util.GuestCookieUtil;
 import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrderCouponDTO;
 import com.nhnacademy.front.coupon.membercoupon.service.MemberCouponService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
@@ -92,9 +98,13 @@ public class OrderController {
 
 	private final UserCategoryService userCategoryService;
 	private final MemberCouponService memberCouponService;
+	private final CartService cartService;
 	private final ReviewService reviewService;
 
 	private final ObjectMapper objectMapper;
+
+	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
+
 
 	/**
 	 * 회원 결제 주문서 작성 페이지
@@ -105,17 +115,11 @@ public class OrderController {
 	public String getCheckOut(Model model,
 		@Parameter(description = "주문 상품 정보", example = "eyJwcm9kdWN0SWRzIjpbNF0sImNhcnRRdWFudGl0aWVzIjpbMV19")
 		@CookieValue(name = "orderCart") String encodedCart,
-		HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		HttpServletRequest request) throws JsonProcessingException {
 
 		// Base64 디코딩 → JSON → DTO 역직렬화
 		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
 		RequestCartOrderDTO orderRequest = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
-
-		// 쿠키 삭제
-		Cookie deleteCookie = new Cookie("orderCart", null);
-		deleteCookie.setPath("/");
-		deleteCookie.setMaxAge(0);
-		response.addCookie(deleteCookie);
 
 		List<Integer> quantities = orderRequest.getCartQuantities();
 		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getProductIds());
@@ -158,32 +162,29 @@ public class OrderController {
 	 */
 	@Operation(summary = "비회원 주문서 작성 페이지", description = "비회원이 상품 바로구매, 장바구니 주문하기 시 주문서 페이지 제공")
 	@PostMapping("/customers/order")
-	public String getCheckOutCustomerCart(Model model, @ModelAttribute ResponseCustomerRegisterDTO orderRequest,
-		HttpServletResponse response) {
+	public String getCheckOutCustomerCart(@Parameter(description = "주문 상품 정보", example = "eyJwcm9kdWN0SWRzIjpbNF0sImNhcnRRdWFudGl0aWVzIjpbMV19")
+		                                  @CookieValue(name = "orderCart") String encodedCart, Model model,
+		                                  @Parameter(description = "고객 정보", required = true) @ModelAttribute ResponseCustomerRegisterDTO customerRequest)
+		                                  throws JsonProcessingException {
 		// 회원 결제에서 쿠폰, 포인트, 주소만 제외
-		List<Integer> quantities = orderRequest.getRequestCartOrder().getCartQuantities();
-		List<ResponseProductReadDTO> products = productService.getProducts(
-			orderRequest.getRequestCartOrder().getProductIds());
+		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
+		RequestCartOrderDTO orderRequest = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
+
+		List<Integer> quantities = orderRequest.getCartQuantities();
+		List<ResponseProductReadDTO> products = productService.getProducts(orderRequest.getProductIds());
 		List<ResponseWrapperDTO> wrappers = wrapperService.getWrappersBySaleable(Pageable.unpaged()).getContent();
 
-		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(
-			orderRequest.getRequestCartOrder().getProductIds());
+		List<ResponseCategoryIdsDTO> categories = userCategoryService.getCategoriesByProductIds(orderRequest.getProductIds());
 		Map<Long, List<Long>> productCategoryMap = new HashMap<>();
 		for (ResponseCategoryIdsDTO dto : categories) {
 			productCategoryMap.put(dto.getProductId(), dto.getCategoryIds());
 		}
 
-		// 쿠키 삭제
-		Cookie deleteCookie = new Cookie("orderCart", null);
-		deleteCookie.setPath("/");
-		deleteCookie.setMaxAge(0);
-		response.addCookie(deleteCookie);
-
 		model.addAttribute("products", products);
 		model.addAttribute("quantities", quantities);
 		model.addAttribute("wrappers", wrappers);
-		model.addAttribute("customerId", orderRequest.getCustomerId());
-		model.addAttribute("customerName", orderRequest.getCustomerName());
+		model.addAttribute("customerId", customerRequest.getCustomerId());
+		model.addAttribute("customerName", customerRequest.getCustomerName());
 		model.addAttribute("productCategories", productCategoryMap);
 		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
 		model.addAttribute("tossClientKey", tossClientKey);
@@ -227,7 +228,7 @@ public class OrderController {
 	@Operation(summary = "결제 승인 처리", description = "주문 완료 시 페이지 제공")
 	@GetMapping("/order/success")
 	public String getSuccessOrder(@RequestParam String orderId, @RequestParam String paymentKey,
-		@RequestParam long amount) {
+		                          @RequestParam long amount) {
 		// 결제 승인 요청
 		ResponseEntity<Void> response = orderService.confirmOrder(orderId, paymentKey, amount);
 
@@ -248,8 +249,35 @@ public class OrderController {
 	 */
 	@Operation(summary = "주문 완료 페이지", description = "주문 완료 페이지 제공")
 	@GetMapping("/order/confirm")
-	public String getConfirmOrder() {
-		// 추후 정보를 더 넣을지는 모름
+	public String getConfirmOrder(@Parameter(description = "주문 상품 정보", example = "eyJwcm9kdWN0SWRzIjpbNF0sImNhcnRRdWFudGl0aWVzIjpbMV19")
+		                          @CookieValue(name = "orderCart") String encodedCart,
+								  @Parameter(hidden = true) HttpServletRequest request,
+		                          @Parameter(hidden = true) HttpServletResponse response) throws JsonProcessingException {
+		// 완료된 선택된 장바구니 데이터 지운 후
+		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
+		RequestCartOrderDTO orderRequest = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
+
+		String memberId = "";
+		String guestKey = "";
+		if (JwtHasToken.hasToken(request)) {
+			memberId = JwtGetMemberId.jwtGetMemberId(request);
+		} else {
+			guestKey = GuestCookieUtil.getGuestKey(request);
+			if (Objects.isNull(guestKey)) {
+				guestKey = UUID.randomUUID().toString();
+				GuestCookieUtil.setGuestCookie(response, guestKey);
+			}
+		}
+
+		Integer cartItemsCounts = cartService.deleteOrderCompleteCartItems(new RequestDeleteCartOrderDTO(memberId, guestKey, orderRequest.getProductIds(), orderRequest.getCartQuantities()));
+		request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
+
+		// 쿠키 삭제
+		Cookie deleteCookie = new Cookie("orderCart", null);
+		deleteCookie.setPath("/");
+		deleteCookie.setMaxAge(0);
+		response.addCookie(deleteCookie);
+
 		return "payment/confirmation";
 	}
 

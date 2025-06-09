@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +56,8 @@ public class CustomerController {
 	@Operation(summary = "비회원 장바구니 항목 쿠키 저장", description = "비회원이 주문할 장바구니 항목을 세션이 아닌 쿠키에 저장합니다.")
 	@ApiResponse(responseCode = "200", description = "성공적으로 쿠키에 저장됨")
 	@PostMapping("/order/auth")
-	public ResponseEntity<Void> redirectGuestAuth(@Parameter(description = "장바구니 항목", required = true) @Valid @RequestBody RequestCartOrderDTO requestCartOrderDTO, @Parameter(hidden = true) BindingResult bindingResult,
+	public ResponseEntity<Void> redirectGuestAuth(@Parameter(description = "장바구니 항목", required = true) @Valid @RequestBody RequestCartOrderDTO requestCartOrderDTO,
+		                                          @Parameter(hidden = true) BindingResult bindingResult,
 		                                          @Parameter(hidden = true) HttpServletResponse response) throws JsonProcessingException {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
@@ -78,38 +78,30 @@ public class CustomerController {
 	@Operation(summary = "비회원 회원가입", description = "비회원이 주문 전 회원가입을 진행합니다.")
 	@ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(schema = @Schema(implementation = ResponseCustomerRegisterDTO.class)))
 	@PostMapping("/customers/register")
-	public ResponseEntity<ResponseCustomerRegisterDTO> register(@Parameter(description = "장바구니 항목이 인코딩된 쿠키", required = true) @CookieValue(name = "orderCart") String encodedCart,
-		                                                        @Parameter(description = "회원가입 요청 DTO", required = true) @Validated @RequestBody RequestCustomerRegisterDTO requestCustomerRegisterDTO,
-		                                                        @Parameter(hidden = true) BindingResult bindingResult) throws JsonProcessingException {
+	public ResponseEntity<ResponseCustomerRegisterDTO> register(@Parameter(description = "회원가입 요청 DTO", required = true) @Validated @RequestBody RequestCustomerRegisterDTO requestCustomerRegisterDTO,
+		                                                        @Parameter(hidden = true) BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		ResponseCustomerDTO customer = customerService.customerRegister(requestCustomerRegisterDTO);
 
-		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
-		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
-
-		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(), customer.getCustomerId(), requestCartOrderDTO);
+		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(), customer.getCustomerId());
 		return ResponseEntity.ok(response);
 	}
 
 	@Operation(summary = "비회원 로그인 요청 (DTO 포함 응답)", description = "비회원이 장바구니 주문 전에 로그인합니다. 요청에 포함된 쿠키로 장바구니 정보를 복원합니다.")
 	@ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = ResponseCustomerRegisterDTO.class)))
 	@PostMapping("/customers/login")
-	public ResponseEntity<ResponseCustomerRegisterDTO> login(@Parameter(description = "장바구니 항목이 인코딩된 쿠키", required = true) @CookieValue(name = "orderCart") String encodedCart,
-		                                                     @Parameter(description = "비회원 로그인 요청 DTO", required = true) @Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO,
-		                                                     @Parameter(hidden = true) BindingResult bindingResult) throws JsonProcessingException {
+	public ResponseEntity<ResponseCustomerRegisterDTO> loginByCart(@Parameter(description = "비회원 로그인 요청 DTO", required = true) @Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO,
+		                                                           @Parameter(hidden = true) BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		ResponseCustomerDTO customer = customerService.customerLogin(requestCustomerLoginDTO);
 
-		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
-		RequestCartOrderDTO requestCartOrderDTO = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
-
-		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(), customer.getCustomerId(), requestCartOrderDTO);
+		ResponseCustomerRegisterDTO response = new ResponseCustomerRegisterDTO(customer.getCustomerName(), customer.getCustomerId());
 		return ResponseEntity.ok(response);
 	}
 
