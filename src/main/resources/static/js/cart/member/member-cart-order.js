@@ -95,7 +95,9 @@ $(document).ready(function () {
         console.log('encoded: ' + encoded)
 
         // 쿠키 저장
-        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=strict`;
+        // samesite=strict 은 Cross-site 요청에는 절대 전송되지 않음
+        // samesite=lax: 대부분의 브라우저에서 GET 기반 리디렉션에 쿠키 허용
+        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=lax`;
 
         // 주문서 페이지로 GET 이동
         window.location.href = '/members/order';
