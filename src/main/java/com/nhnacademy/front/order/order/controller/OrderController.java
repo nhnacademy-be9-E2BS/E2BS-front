@@ -162,8 +162,7 @@ public class OrderController {
 	 */
 	@Operation(summary = "비회원 주문서 작성 페이지", description = "비회원이 상품 바로구매, 장바구니 주문하기 시 주문서 페이지 제공")
 	@PostMapping("/customers/order")
-	public String getCheckOutCustomerCart(@Parameter(description = "주문 상품 정보", example = "eyJwcm9kdWN0SWRzIjpbNF0sImNhcnRRdWFudGl0aWVzIjpbMV19")
-		                                  @CookieValue(name = "orderCart") String encodedCart, Model model,
+	public String getCheckOutCustomerCart(@Parameter(description = "주문 상품 정보") @CookieValue(name = "orderCart") String encodedCart, Model model,
 		                                  @Parameter(description = "고객 정보", required = true) @ModelAttribute ResponseCustomerRegisterDTO customerRequest)
 		                                  throws JsonProcessingException {
 		// 회원 결제에서 쿠폰, 포인트, 주소만 제외
@@ -252,7 +251,7 @@ public class OrderController {
 	 */
 	@Operation(summary = "주문 완료 페이지", description = "주문 완료 페이지 제공")
 	@GetMapping("/order/confirm")
-	public String getConfirmOrder(@Parameter(description = "주문 상품 정보", example = "eyJwcm9kdWN0SWRzIjpbNF0sImNhcnRRdWFudGl0aWVzIjpbMV19")
+	public String getConfirmOrder(@Parameter(description = "주문 상품 정보")
 		                          @CookieValue(name = "orderCart") String encodedCart,
 								  @Parameter(hidden = true) HttpServletRequest request,
 		                          @Parameter(hidden = true) HttpServletResponse response) throws JsonProcessingException {
