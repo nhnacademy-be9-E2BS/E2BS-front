@@ -26,6 +26,7 @@ import com.nhnacademy.front.cart.service.GuestCartService;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @ActiveProfiles("dev")
@@ -93,6 +94,10 @@ class GuestCartControllerTest {
 		ResponseCartItemsForGuestDTO requestDto = new ResponseCartItemsForGuestDTO();
 		requestDto.setProductTotalPrice(5000L);
 
+		ResponseDeliveryFeeDTO deliveryFeeDTO = new ResponseDeliveryFeeDTO();
+		deliveryFeeDTO.setDeliveryFeeAmount(0L);
+		requestDto.setDeliveryFee(deliveryFeeDTO);
+
 		when(guestCartService.getCartItemsByGuest(anyString())).thenReturn(List.of(requestDto));
 
 		// when & then
@@ -100,7 +105,7 @@ class GuestCartControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("cart/guest-cart"))
 			.andExpect(model().attributeExists("cartItemsByGuest"))
-			.andExpect(model().attribute("totalPaymentAmount", 5000L));
+			.andExpect(model().attribute("totalProductPrice", 5000L));
 	}
 
 	// @Test

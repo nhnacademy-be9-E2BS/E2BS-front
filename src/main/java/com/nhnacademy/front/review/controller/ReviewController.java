@@ -26,8 +26,6 @@ import com.nhnacademy.front.review.model.dto.response.ResponseReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseMemberReviewDTO;
-import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
-import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 import com.nhnacademy.front.review.service.ReviewService;
 
@@ -85,25 +83,6 @@ public class ReviewController {
 
 		ResponseUpdateReviewDTO body = reviewService.updateReview(reviewId, requestDto);
 		return ResponseEntity.ok(body);
-	}
-
-	@Operation(summary = "상품 리뷰 목록 조회", description = "특정 상품에 대한 리뷰 목록을 페이징하여 조회합니다.")
-	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "리뷰 목록 조회 성공")
-	})
-	@GetMapping("/products/{productId}/reviews")
-	public String getReviewsByProduct(@Parameter(description = "상품 ID", required = true) @PathVariable long productId,
-		                              @Parameter(hidden = true) @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable,
-		                              @Parameter(hidden = true) Model model) {
-		ResponseReviewInfoDTO reviewInfo = reviewService.getReviewInfo(productId);
-		PageResponse<ResponseReviewPageDTO> response = reviewService.getReviewsByProduct(productId, pageable);
-
-		model.addAttribute("reviewsByProduct", PageResponseConverter.toPage(response));
-		model.addAttribute("totalGradeAvg", reviewInfo.getTotalGradeAvg());
-		model.addAttribute("totalCount", reviewInfo.getTotalCount());
-		model.addAttribute("starCounts", reviewInfo.getStarCounts());
-
-		return "review/product-detail";
 	}
 
 	@JwtTokenCheck

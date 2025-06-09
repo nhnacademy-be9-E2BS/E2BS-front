@@ -78,12 +78,16 @@ public class MemberCartController {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		List<ResponseCartItemsForMemberDTO> cartItemsByMember = memberCartService.getCartItemsByMember(memberId);
 
-		long totalPaymentAmount = cartItemsByMember.stream()
-			.mapToLong(ResponseCartItemsForMemberDTO::getProductTotalPrice)
-			.sum();
+		long totalProductPrice = 0;
+		long totalDeliveryPrice = 0;
+		for (ResponseCartItemsForMemberDTO cartItem : cartItemsByMember) {
+			totalProductPrice += cartItem.getProductTotalPrice();
+			totalDeliveryPrice += cartItem.getDeliveryFee().getDeliveryFeeAmount();
+		}
 
 		model.addAttribute("cartItemsByMember", cartItemsByMember);
-		model.addAttribute("totalPaymentAmount", totalPaymentAmount);
+		model.addAttribute("totalProductPrice", totalProductPrice);
+		model.addAttribute("totalDeliveryPrice", totalDeliveryPrice);
 
 		return "cart/member-cart";
 	}
