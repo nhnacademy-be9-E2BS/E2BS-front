@@ -92,10 +92,10 @@ public class AdminCategoryController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@JwtTokenCheck
-	@PostMapping("/{categoryId}")
+	@PostMapping("/{category-id}")
 	public ResponseEntity<Void> createChildCategory(@Parameter(description = "카테고리 등록 및 수정 모델", required = true, schema = @Schema(implementation = RequestCategoryDTO.class))
 		@Validated @RequestBody RequestCategoryDTO request, BindingResult bindingResult,
-		@Parameter(description = "등록할 카테고리의 상위 카테고리 ID", example = "1", required = true) @PathVariable Long categoryId) {
+		@Parameter(description = "등록할 카테고리의 상위 카테고리 ID", example = "1", required = true) @PathVariable("category-id") Long categoryId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -115,10 +115,10 @@ public class AdminCategoryController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@JwtTokenCheck
-	@PutMapping("/{categoryId}")
+	@PutMapping("/{category-id}")
 	public ResponseEntity<Void> updateCategory(@Parameter(description = "카테고리 등록 및 수정 모델", required = true, schema = @Schema(implementation = RequestCategoryDTO.class))
 		@Validated @RequestBody RequestCategoryDTO request, BindingResult bindingResult,
-		@Parameter(description = "수정할 카테고리 ID", example = "1", required = true) @PathVariable Long categoryId) {
+		@Parameter(description = "수정할 카테고리 ID", example = "1", required = true) @PathVariable("category-id") Long categoryId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -137,8 +137,8 @@ public class AdminCategoryController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@JwtTokenCheck
-	@DeleteMapping("/{categoryId}")
-	public ResponseEntity<Void> deleteCategory(@Parameter(description = "삭제할 카테고리 ID", example = "5", required = true) @PathVariable Long categoryId) {
+	@DeleteMapping("/{category-id}")
+	public ResponseEntity<Void> deleteCategory(@Parameter(description = "삭제할 카테고리 ID", example = "5", required = true) @PathVariable("category-id") Long categoryId) {
 		adminCategoryService.deleteCategory(categoryId);
 		return ResponseEntity.ok().build();
 	}

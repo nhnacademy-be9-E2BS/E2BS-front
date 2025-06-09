@@ -122,7 +122,7 @@
 
                             <!-- 자식 카테고리 -->
                             <ul th:if="${#lists.size(category.children) > 0}" class="ms-4 mt-2">
-                                <th:block th:replace="admin/product/categoryFragment :: categoryFragment(category=${category})" />
+                                <th:block th:replace="admin/product/category-fragment :: category-fragment(category=${category})" />
                             </ul>
                         </li>
                     </ul>

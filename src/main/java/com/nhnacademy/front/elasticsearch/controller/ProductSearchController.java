@@ -77,9 +77,9 @@ public class ProductSearchController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터", content = @Content(schema = @Schema(implementation = ProductSortType.class))),
 		})
-	@GetMapping("/category/{categoryId}")
-	public String getProduct(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
-		@Parameter(description = "조회할 카테고리 ID", required = true, in = ParameterIn.QUERY) @PathVariable Long categoryId,
+	@GetMapping("/category/{category-id}")
+	public String getProductByCategory(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+		@Parameter(description = "조회할 카테고리 ID", required = true, in = ParameterIn.QUERY) @PathVariable("category-id") Long categoryId,
 		@Parameter(description = "정렬 기준", in = ParameterIn.QUERY) @RequestParam(required = false) ProductSortType sort) {
 		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsByCategory(pageable, categoryId, sort);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);

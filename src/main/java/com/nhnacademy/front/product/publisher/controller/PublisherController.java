@@ -94,10 +94,10 @@ public class PublisherController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@JwtTokenCheck
-	@PutMapping("/{publisherId}")
+	@PutMapping("/{publisher-id}")
 	public ResponseEntity<Void> updatePublisher(@Parameter(description = "출판사 등록 및 수정 DTO", required = true, schema = @Schema(implementation = RequestPublisherDTO.class))
 		@Validated @RequestBody RequestPublisherDTO requestPublisherDTO, BindingResult bindingResult,
-		@Parameter(description = "수정할 출판사 ID", example = "1", required = true) @PathVariable Long publisherId) {
+		@Parameter(description = "수정할 출판사 ID", example = "1", required = true) @PathVariable("publisher-id") Long publisherId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
