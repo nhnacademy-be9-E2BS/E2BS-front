@@ -48,7 +48,8 @@ public class ProductController {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 		})
 	@GetMapping("/{bookId}")
-	public String getProduct(@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable Long bookId, Model model,
+	public String getProduct(
+		@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable Long bookId, Model model,
 		@Parameter(description = "페이징 정보") @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
 		// 상품 상세
 		ResponseProductReadDTO response = productService.getProduct(bookId);
@@ -63,7 +64,8 @@ public class ProductController {
 		ResponseDeliveryFeeDTO deliveryFee = deliveryFeeSevice.getCurrentDeliveryFee();
 
 		// 적용 중인 할인률 계산
-		long discountRate = (long)(((double)(response.getProductRegularPrice() - response.getProductSalePrice()) / response.getProductRegularPrice()) * 100);
+		long discountRate = (long)(((double)(response.getProductRegularPrice() - response.getProductSalePrice())
+			/ response.getProductRegularPrice()) * 100);
 
 		model.addAttribute("reviewsByProduct", reviewsByProduct);
 		model.addAttribute("totalGradeAvg", reviewInfo.getTotalGradeAvg());
@@ -84,8 +86,9 @@ public class ProductController {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 		})
 	@GetMapping("/category/{categoryId}")
-	public String getProduct(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 9) Pageable pageable,
-		@Parameter(description = "조회할 카테고리 ID", example = "1", required = true) @PathVariable Long categoryId, Model model) {
+	public String getProduct(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable,
+		@Parameter(description = "조회할 카테고리 ID", example = "1", required = true) @PathVariable Long categoryId,
+		Model model) {
 		PageResponse<ResponseProductReadDTO> response = productService.getProductsByCategoryId(pageable, categoryId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 

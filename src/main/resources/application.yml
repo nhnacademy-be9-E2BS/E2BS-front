@@ -116,8 +116,7 @@ product:
 
     url: http://localhost:10232/api/admin/contributors
 
-  tag:
-    url: http://localhost:10232/api/admin/tags
+
 
   category:
     url: http://localhost:10232/api/categories
@@ -191,6 +190,9 @@ auth:
 
     book:
       url: http://localhost:10232/api/auth/admin/books
+
+    tag:
+      url: http://localhost:10232/api/auth/admin/tags
 
 dooray:
   authentication:

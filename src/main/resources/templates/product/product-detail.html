@@ -113,6 +113,9 @@
 			color: gold;
 			transition: color 0.2s ease;
 		}
+		.error-text {
+			color: #c64d4d;
+		}
 	</style>
 </head>
 <body>
@@ -165,100 +168,109 @@
 						</div>
 						<hr>
 
-						<!-- 가격 -->
-						<div th:if="${product.productRegularPrice != product.productSalePrice}">
-							<div class="row">
-								<span class="col-2">정가</span>
-								<del class="col-10" th:text="${#numbers.formatInteger(product.productRegularPrice, 0, 'COMMA')} + '원'"></del>
-							</div>
 
-							<div class="row">
-								<span class="col-2">판매가</span>
-								<div class="col-10" style="color: #ea5759;">
-									<span th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'"
-										  style="font-weight: bold; font-size: large;"></span>
-									<span th:text="'['+${discountRate}+'% 할인]'"></span>
+							<!-- 가격 -->
+							<div th:if="${product.productRegularPrice != product.productSalePrice}">
+								<div class="row">
+									<span class="col-2">정가</span>
+									<del class="col-10" th:text="${#numbers.formatInteger(product.productRegularPrice, 0, 'COMMA')} + '원'"></del>
+								</div>
+
+								<div class="row">
+									<span class="col-2">판매가</span>
+									<div class="col-10" style="color: #ea5759;">
+										<span th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'"
+											  style="font-weight: bold; font-size: large;"></span>
+										<span th:text="'['+${discountRate}+'% 할인]'"></span>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div th:if="${product.productRegularPrice == product.productSalePrice}">
+							<div th:if="${product.productRegularPrice == product.productSalePrice}">
+								<div class="row">
+									<span class="col-2">정가</span>
+									<h4 class="col-10" th:text="${#numbers.formatInteger(product.productRegularPrice, 0, 'COMMA')} + '원'"
+									style="font-weight: bold;"></h4>
+								</div>
+							</div>
+
+							<br>
+
 							<div class="row">
-								<span class="col-2">정가</span>
-								<h4 class="col-10" th:text="${#numbers.formatInteger(product.productRegularPrice, 0, 'COMMA')} + '원'"
-								style="font-weight: bold;"></h4>
+								<span class="col-2">배송료</span>
+								<div class="col-10">
+									<span th:text="${T(java.lang.String).format('%,d',deliveryFee.deliveryFeeAmount)}+'원'"></span><br>
+									<span th:text="${T(java.lang.String).format('%,d',deliveryFee.deliveryFeeFreeAmount)} + '원 이상 구매 시 무료 배송'"></span>
+								</div>
 							</div>
-						</div>
 
-						<br>
-
-						<div class="row">
-							<span class="col-2">배송료</span>
-							<div class="col-10">
-								<span th:text="${T(java.lang.String).format('%,d',deliveryFee.deliveryFeeAmount)}+'원'"></span><br>
-								<span th:text="${T(java.lang.String).format('%,d',deliveryFee.deliveryFeeFreeAmount)} + '원 이상 구매 시 무료 배송'"></span>
+							<hr>
+							<!--상품 카테고리 ,태그 정보-->
+							<div class="row">
+								<span class="col-2">태그</span>
+								<div class="col-10">
+									<span th:each="tag, tagStat : ${product.tags}">
+										<span  th:text="${tag.tagName}"></span>
+										<span th:if="${!tagStat.last}">, </span>
+									</span>
+								</div>
 							</div>
-						</div>
+	<!--						<div class="row">-->
+	<!--							<span class="col-2">카테고리</span>-->
+	<!--							<div class="col-10">-->
+	<!--								<span th:each="category, categoryStat : ${product.categories}">-->
+	<!--									<span  th:text="${category.categoryName}"></span>-->
+	<!--									<span th:if="${!categoryStat.last}"> > </span>-->
+	<!--								</span>-->
+	<!--							</div>-->
+	<!--						</div>-->
 
-						<hr>
-						<!--상품 카테고리 ,태그 정보-->
-						<div class="row">
-							<span class="col-2">태그</span>
-							<div class="col-10">
-								<span th:each="tag, tagStat : ${product.tags}">
-									<span  th:text="${tag.tagName}"></span>
-									<span th:if="${!tagStat.last}">, </span>
-								</span>
+							<hr>
+						<div th:if="${product.productState.productStateId == 3}">
+							<h2 class="error-text">삭제된 도서입니다</h2>
+						</div>
+						<div th:if="${product.productState.productStateId == 2 || product.productState.productStateId == 4}">
+							<h2 class="error-text">품절/절판된 도서입니다</h2>
+						</div>
+						<div th:if="${product.productState.productStateId == 1}">
+							<ul class="list">
+								<!-- 재고 -->
+								<li>
+									<span>재고</span> :
+									<span th:text="${product.productStock} + ' 개'"></span>
+								</li>
+							</ul>
+							<div class="product_count">
+								<label for="quantity">수량:</label>
+								<input type="number" name="qty" id="quantity"
+									   th:value="${product.productStock > 0 ? 1 : 0}"
+									   title="수량"
+									   class="input-text qty"
+									   min="1"
+									   th:max="${product.productStock}"
+									   oninput="validateQuantity()" />
+								<button type="button" class="increase" onclick="adjustQuantity(1)"><i class="lnr lnr-chevron-up"></i></button>
+								<button type="button" class="reduced" onclick="adjustQuantity(-1)"><i class="lnr lnr-chevron-down"></i></button>
 							</div>
-						</div>
-<!--						<div class="row">-->
-<!--							<span class="col-2">카테고리</span>-->
-<!--							<div class="col-10">-->
-<!--								<span th:each="category, categoryStat : ${product.categories}">-->
-<!--									<span  th:text="${category.categoryName}"></span>-->
-<!--									<span th:if="${!categoryStat.last}"> > </span>-->
-<!--								</span>-->
-<!--							</div>-->
-<!--						</div>-->
-
-						<hr>
-						<ul class="list">
-							<!-- 재고 -->
-							<li>
-								<span>재고</span> :
-								<span th:text="${product.productStock} + ' 개'"></span>
-							</li>
-						</ul>
-						<div class="product_count">
-							<label for="quantity">수량:</label>
-							<input type="number" name="qty" id="quantity"
-								   th:value="${product.productStock > 0 ? 1 : 0}"
-								   title="수량"
-								   class="input-text qty"
-								   min="1"
-								   th:max="${product.productStock}"
-								   oninput="validateQuantity()" />
-							<button type="button" class="increase" onclick="adjustQuantity(1)"><i class="lnr lnr-chevron-up"></i></button>
-							<button type="button" class="reduced" onclick="adjustQuantity(-1)"><i class="lnr lnr-chevron-down"></i></button>
-						</div>
-						<div class="button-container">
-							<!-- 장바구니 추가 -->
-							<button th:if="${session.isMember}"
-									class="member-add-cart-btn"
+							<div class="button-container">
+								<!-- 장바구니 추가 -->
+								<button th:if="${session.isMember}"
+										class="member-add-cart-btn"
+											style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
+										장바구니에 추가</button>
+								<button th:if="${session.isMember == null}"
+										class="guest-add-cart-btn"
 										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 									장바구니에 추가</button>
-							<button th:if="${session.isMember == null}"
-									class="guest-add-cart-btn"
-									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
-								장바구니에 추가</button>
 
-							<button class="buy-now-btn custom-btn" th:if="${session.isMember}"
-									onclick="return submitOrderMember()"
-									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
-								바로구매</button>
-							<button class="buy-now-btn custom-btn" th:if="${session.isMember == null}"
-									onclick="return submitOrderGuest()"
-									style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
-								바로구매</button>
+								<button class="buy-now-btn custom-btn" th:if="${session.isMember}"
+										onclick="return submitOrderMember()"
+										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
+									바로구매</button>
+								<button class="buy-now-btn custom-btn" th:if="${session.isMember == null}"
+										onclick="return submitOrderGuest()"
+										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
+									바로구매</button>
+							</div>
 						</div>
 					</div>
 				</div>
