@@ -195,7 +195,6 @@ class ProductAdminServiceTest {
 	@DisplayName("update product - fail")
 	void update_product_fail_test() {
 		// given
-		long productId = 1L;
 		MockMultipartFile mockFile1 = new MockMultipartFile("productImage", "test-image.jpg", "image/jpeg",
 			"dummy image content".getBytes());
 		MockMultipartFile mockFile2 = new MockMultipartFile("productImage", "test-image.jpg", "image/jpeg",
@@ -205,10 +204,6 @@ class ProductAdminServiceTest {
 		RequestProductDTO request = new RequestProductDTO(
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 100, productImage,
-			List.of(1L), List.of(1L), List.of(1L));
-		RequestProductMetaDTO requestMeta = new RequestProductMetaDTO(
-			1L, 1L, "title", "content", "description", LocalDate.now(),
-			"978-89-12345-01-1", 10000L, 8000L, true, 100,
 			List.of(1L), List.of(1L), List.of(1L));
 
 		when(productAdminAdaptor.putUpdateProduct(anyLong(), any(RequestProductMetaDTO.class), anyList()))
