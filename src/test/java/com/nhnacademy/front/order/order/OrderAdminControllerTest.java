@@ -79,7 +79,7 @@ class OrderAdminControllerTest {
 		// when & then
 		mockMvc.perform(get("/admin/settings/orders"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("admin/order/ordersManagement"))
+			.andExpect(view().name("admin/order/orders-management"))
 			.andExpect(model().attributeExists("orders"));
 	}
 
@@ -101,7 +101,7 @@ class OrderAdminControllerTest {
 				.param("page", "0")
 				.param("size", "10"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("admin/order/ordersManagement"))
+			.andExpect(view().name("admin/order/orders-management"))
 			.andExpect(model().attributeExists("orders"));
 	}
 
@@ -146,7 +146,7 @@ class OrderAdminControllerTest {
 		// when & then
 		mockMvc.perform(get("/admin/settings/orders/" + orderCode))
 			.andExpect(status().isOk())
-			.andExpect(view().name("admin/order/orderDetailsManagement"))
+			.andExpect(view().name("admin/order/order-details-management"))
 			.andExpect(model().attributeExists("order"))
 			.andExpect(model().attributeExists("orderDetails"))
 			.andExpect(model().attributeExists("productAmount"));

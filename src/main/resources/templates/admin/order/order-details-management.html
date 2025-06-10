@@ -1,0 +1,177 @@
+<!--관리자 페이지 - 특정 주문 내역 조회-->
+
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/admin-layout}">
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="m-0">주문 조회</h2>
+
+                <button class="btn btn-outline-secondary" th:if="${order.state.equals('WAIT')} and ${order.paid}"
+                        th:attr="data-code=${order.orderCode}"
+                        onclick="startDelivery(this.dataset.code)">배송 시작
+                </button>
+            </div>
+
+            <!-- 조회 영역 -->
+            <div class="card p-4">
+                <h4 class="mb-3">주문 정보</h4>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th>주문 코드</th>
+                        <td th:text="${order.orderCode}">ORD123456</td>
+                        <th>주문 상태</th>
+                        <td th:switch="${order.state}">
+                            <span th:case="'WAIT'">배송 대기</span>
+                            <span th:case="'CANCEL'">주문 취소</span>
+                            <span th:case="'DELIVERY'">배송 중</span>
+                            <span th:case="'RETURN'">반품</span>
+                            <span th:case="'COMPLETE'">배송 완료</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>결제 여부</th>
+                        <td th:switch="${order.paid}">
+                            <span th:case="true">결제 완료</span>
+                            <span th:case="false">결제 대기</span>
+                        </td>
+                        <th>주문 금액</th>
+                        <td th:text="${T(java.lang.String).format('%,d',order.paymentAmount + order.pointAmount)}">
+                            35000
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>주문 일시</th>
+                        <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <th>희망 수령일</th>
+                        <td th:text="${order.receiveDate}"></td>
+                    </tr>
+                    <tr>
+                        <th>구매자 ID</th>
+                        <td colspan="3">
+                            <span th:text="${order.memberId}"></span>
+                            <span th:if="!${order.member}">(비회원)</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h4 class="mt-5 mb-3">수령자 정보</h4>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th rowspan="2">수령자 이름</th>
+                        <td rowspan="2" th:text="${order.receiverName}"></td>
+                        <th>휴대전화번호</th>
+                        <td th:text="${order.receiverPhone}"></td>
+                    </tr>
+                    <tr>
+                        <th>전화번호</th>
+                        <td th:text="${order.receiverTel}"></td>
+                    </tr>
+                    <tr>
+                        <th>주소</th>
+                        <td colspan="3">
+                            <span th:text="'[' + ${order.addressCode} + ']'"></span>
+                            <span th:text="${order.addressInfo}"></span>
+                            <span th:text="${order.addressDetail}"></span>
+                            <span th:text="${order.addressExtra}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>메모</th>
+                        <td colspan="3" th:text="${order.memo}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h4 class="mt-5 mb-3">주문 내역</h4>
+                <table class="table table-bordered">
+                    <tr>
+                        <th style="width: 60%;">상품명</th>
+                        <th>단일 가격</th>
+                        <th>수량</th>
+                        <th>포장지</th>
+                    </tr>
+                    <tr th:each="orderDetail:${orderDetails}">
+                        <td class="text-truncate" style="max-width: 1px;">
+                            <a class="d-inline-block text-truncate" style="max-width: 100%;"
+                               th:href="'/books/'+${orderDetail.productId}"
+                               th:text="${orderDetail.productName}">
+                            </a>
+                        </td>
+                        <td th:text="${T(java.lang.String).format('%,d',orderDetail.orderDetailPerPrice)}"></td>
+                        <td th:text="${orderDetail.orderQuantity}"></td>
+                        <td th:if="${orderDetail.wrapperId} == null">포장 없음</td>
+                        <td th:if="${orderDetail.wrapperId} != null">
+                            <span th:text="${orderDetail.wrapperName}+'(개당 '+${T(java.lang.String).format('%,d',orderDetail.wrapperPrice)}+')'"></span>
+                        </td>
+                    </tr>
+                </table>
+
+
+                <h4 class="mt-5 mb-3">결제 내역</h4>
+                <table class="table">
+                    <tr>
+                        <th>상품 금액</th>
+                        <td th:text="${T(java.lang.String).format('%,d',productAmount)}"></td>
+                    </tr>
+                    <tr>
+                        <th>배송비</th>
+                        <td>
+                            <span th:if="${productAmount} >= ${order.deliveryFeeFreeAmount}">0</span>
+                            <span th:if="${productAmount} < ${order.deliveryFeeFreeAmount}"
+                                  th:text="${T(java.lang.String).format('%,d',order.deliveryFeeAmount)}"></span>
+                        </td>
+                    </tr>
+                    <tr th:if="${order.pointAmount} != 0">
+                        <th>포인트 사용</th>
+                        <td th:text="'-'+${T(java.lang.String).format('%,d',order.pointAmount)}"></td>
+                    </tr>
+                    <tr th:if="${order.memberCouponId != null}">
+                        <th>쿠폰 할인</th>
+                        <td>
+                            <span th:if="${productAmount} >= ${order.deliveryFeeFreeAmount}"
+                                  th:text="'-' + ${T(java.lang.String).format('%,d', productAmount - order.pointAmount - order.paymentAmount)}"></span>
+
+                            <span th:if="${productAmount} < ${order.deliveryFeeFreeAmount}"
+                                  th:text="'-' + ${T(java.lang.String).format('%,d', productAmount + order.deliveryFeeAmount - order.pointAmount - order.paymentAmount)}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>총 결제 금액</th>
+                        <td>
+                            <span th:text="${T(java.lang.String).format('%,d',order.paymentAmount)}"></span>
+                            <span th:if="${order.paymentMethod != null}"
+                                  th:text="'('+${order.paymentMethod}+')'"></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+        <script>
+            function startDelivery(orderCode) {
+                fetch("/admin/settings/orders/" + orderCode, {
+                    method: "POST",
+                    headers: {},
+                    body: {}
+                }).then(res => {
+                    if (res.ok) {
+                        window.location.reload();
+                    } else {
+                        alert("배송 시작을 실패했습니다.");
+                    }
+                })
+            }
+        </script>
+    </section>
+</div>
+</body>
+</html>

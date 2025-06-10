@@ -9,8 +9,6 @@ import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiS
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
-import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
@@ -28,14 +26,8 @@ public interface ProductAdminService {
 	//관리자 - 도서 수정
 	void updateProduct(long productId, RequestProductDTO request);
 
-	//관리자 - 재고 수동 수정
-	void updateProductStock(long productId, RequestProductStockUpdateDTO request);
-
 	//관리자 - 판매가 수정
 	void updateProductSalePrice(long productId, RequestProductSalePriceUpdateDTO request);
-
-	//Coupon전용 - Sale중인 전체 도서 페이지로 조회
-	PageResponse<ResponseProductCouponDTO> getProductsToCoupon(Pageable pageable);
 
 	PageResponse<ResponseProductsApiSearchDTO> getProductsApi(RequestProductApiSearchDTO request, Pageable pageable);
 
