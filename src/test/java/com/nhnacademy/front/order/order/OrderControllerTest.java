@@ -94,10 +94,10 @@ class OrderControllerTest {
 	private MemberCouponService memberCouponService;
 
 	@MockitoBean
-	private UserCategoryService userCategoryService;
+	private CartService cartService;
 
 	@MockitoBean
-	private CartService cartService;
+	private UserCategoryService userCategoryService;
 
 	@MockitoBean
 	private ReviewService reviewService;
@@ -175,23 +175,26 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("비회원 주문서 페이지 접근 확인")
 	void testGetCheckOut_customer() throws Exception {
-		RequestCartOrderDTO dto = new RequestCartOrderDTO(List.of(1L, 2L), List.of(2, 3));
-		String json = objectMapper.writeValueAsString(dto);
-		String encodedCart = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
-
 		PageResponse<ResponseWrapperDTO> wrappers = mock(PageResponse.class);
 
 		when(productService.getProducts(any())).thenReturn(new ArrayList<>());
 		when(wrapperService.getWrappersBySaleable(Pageable.unpaged())).thenReturn(wrappers);
 		when(wrappers.getContent()).thenReturn(new ArrayList<>());
 
+		String orderCart = "{\"productIds\":[1,2],\"cartQuantities\":[1,2]}";
+		String encodedCart = Base64.getEncoder().encodeToString(orderCart.getBytes(StandardCharsets.UTF_8));
+
 
 		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(mock(ResponseDeliveryFeeDTO.class));
 		mockMvc.perform(post("/customers/order")
 				.with(csrf())
+				.cookie(new Cookie("orderCart", encodedCart)) // 쿠키 추가
 				.param("customerId", "1")
 				.param("customerName", "customer")
-				.cookie(new Cookie("orderCart", encodedCart)))
+				.param("requestCartOrder.productIds[0]", "1")
+				.param("requestCartOrder.productIds[1]", "2")
+				.param("requestCartOrder.cartQuantities[0]", "1")
+				.param("requestCartOrder.cartQuantities[1]", "2"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("payment/customer-checkout"));
 	}
@@ -291,9 +294,8 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("결제 완료 페이지 접근")
 	void testGetConfirmOrder() throws Exception {
-		RequestCartOrderDTO dto = new RequestCartOrderDTO(List.of(1L, 2L), List.of(2, 3));
-		String json = objectMapper.writeValueAsString(dto);
-		String encodedCart = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
+		String orderCart = "{\"productIds\":[1,2],\"cartQuantities\":[1,2]}";
+		String encodedCart = Base64.getEncoder().encodeToString(orderCart.getBytes(StandardCharsets.UTF_8));
 
 
 		mockMvc.perform(get("/order/confirm")

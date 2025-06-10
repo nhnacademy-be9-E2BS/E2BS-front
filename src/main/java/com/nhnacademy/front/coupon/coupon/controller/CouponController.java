@@ -77,7 +77,7 @@ public class CouponController {
 		PageResponse<ResponseProductReadDTO> productDTO = productAdminService.getProducts(pageable);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(productDTO);
 		if(keyword != null) {
-			PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword, null);
+			PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword, null, "");
 			products = PageResponseConverter.toPage(response);
 			log.info(String.valueOf(products.getTotalElements()));
 		}
