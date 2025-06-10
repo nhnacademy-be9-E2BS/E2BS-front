@@ -32,10 +32,10 @@ public interface PointPolicyAdaptor {
 	@GetMapping("/bookPolicy")
 	ResponseEntity<List<ResponsePointPolicyDTO>> getBookPointPolicies();
 
-	@PutMapping("/{pointPolicyId}/activate")
-	ResponseEntity<Void> activatePointPolicy(@PathVariable("pointPolicyId") Long pointPolicyId);
+	@PutMapping("/{point-policy-id}/activate")
+	ResponseEntity<Void> activatePointPolicy(@PathVariable("point-policy-id") Long pointPolicyId);
 
-	@PutMapping("/{pointPolicyId}")
-	ResponseEntity<Void> updatePointPolicy(@PathVariable("pointPolicyId") Long pointPolicyId, @RequestBody RequestPointPolicyUpdateDTO request);
+	@PutMapping("/{point-policy-id}")
+	ResponseEntity<Void> updatePointPolicy(@PathVariable("point-policy-id") Long pointPolicyId, @RequestBody RequestPointPolicyUpdateDTO request);
 
 }

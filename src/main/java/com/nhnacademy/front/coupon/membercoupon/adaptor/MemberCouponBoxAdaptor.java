@@ -12,15 +12,15 @@ import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseMembe
 @FeignClient(name = "member-coupon-box", url = "${auth.member.mypage.url}")
 public interface MemberCouponBoxAdaptor {
 
-	@GetMapping("/{memberId}/coupons")
-	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@PathVariable String memberId,
+	@GetMapping("/{member-id}/coupons")
+	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@PathVariable("member-id") String memberId,
 		Pageable pageable);
 
-	@GetMapping("/{memberId}/couponsUsable")
-	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getUsableMemberCouponsByMemberId(@PathVariable String memberId,
+	@GetMapping("/{member-id}/couponsUsable")
+	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getUsableMemberCouponsByMemberId(@PathVariable("member-id") String memberId,
 		Pageable pageable);
 
-	@GetMapping("/{memberId}/couponsUnusable")
-	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getUnusableMemberCouponsByMemberId(@PathVariable String memberId,
+	@GetMapping("/{member-id}/couponsUnusable")
+	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getUnusableMemberCouponsByMemberId(@PathVariable("member-id") String memberId,
 		Pageable pageable);
 }

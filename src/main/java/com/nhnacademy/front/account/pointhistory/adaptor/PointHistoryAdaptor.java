@@ -12,6 +12,6 @@ import com.nhnacademy.front.common.page.PageResponse;
 @FeignClient(name = "point-history-service", url = "${auth.member.mypage.url}")
 public interface PointHistoryAdaptor {
 
-	@GetMapping("/{memberId}/pointHistory")
-	ResponseEntity<PageResponse<ResponsePointHistoryDTO>> getPointHistoryByMemberId(@PathVariable("memberId") String memberId, Pageable pageable);
+	@GetMapping("/{member-id}/pointHistory")
+	ResponseEntity<PageResponse<ResponsePointHistoryDTO>> getPointHistoryByMemberId(@PathVariable("member-id") String memberId, Pageable pageable);
 }
