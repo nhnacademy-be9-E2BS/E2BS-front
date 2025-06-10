@@ -42,7 +42,7 @@ public class DeliveryFeeController {
 		PageResponse<ResponseDeliveryFeeDTO> pageResponse = response.getBody();
 		Page<ResponseDeliveryFeeDTO> deliveryFees = PageResponseConverter.toPage(pageResponse);
 		model.addAttribute("deliveryFees", deliveryFees);
-		return "admin/order/deliveryFeeManagement";
+		return "admin/order/delivery-fee-management";
 	}
 
 	/**

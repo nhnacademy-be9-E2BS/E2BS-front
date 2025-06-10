@@ -399,7 +399,7 @@ class OrderControllerTest {
 		// when & then
 		mockMvc.perform(get("/mypage/orders/" + orderCode))
 			.andExpect(status().isOk())
-			.andExpect(view().name("member/mypage/orderDetails"))
+			.andExpect(view().name("member/mypage/order-details"))
 			.andExpect(model().attributeExists("order"))
 			.andExpect(model().attributeExists("orderDetails"))
 			.andExpect(model().attributeExists("productAmount"));
@@ -433,7 +433,7 @@ class OrderControllerTest {
 		// when & then
 		mockMvc.perform(get("/customers/1/orders/" + orderCode))
 			.andExpect(status().isOk())
-			.andExpect(view().name("customer/orderDetails"))
+			.andExpect(view().name("customer/order-details"))
 			.andExpect(model().attributeExists("order"))
 			.andExpect(model().attributeExists("orderDetails"))
 			.andExpect(model().attributeExists("productAmount"));

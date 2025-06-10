@@ -144,7 +144,7 @@ order:
 
   delivery:
     admin:
-      url: http://localhost:10232/api/admin/deliveryFee
+      url: http://localhost:10232/api/auth/admin/deliveryFee
 
     user:
       url: http://localhost:10232/api/deliveryFee
