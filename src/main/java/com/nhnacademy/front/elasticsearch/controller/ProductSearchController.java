@@ -1,6 +1,8 @@
 package com.nhnacademy.front.elasticsearch.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
@@ -53,7 +55,8 @@ public class ProductSearchController {
 			@ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터", content = @Content(schema = @Schema(implementation = ProductSortType.class))),
 		})
 	@GetMapping
-	public String getProductsBySearch(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+	public String getProductsBySearch(
+		@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
 		@Parameter(description = "검색 키워드", required = true, in = ParameterIn.QUERY) @RequestParam String keyword,
 		@Parameter(description = "정렬 기준", in = ParameterIn.QUERY) @RequestParam(required = false) ProductSortType sort,
 		@Parameter(hidden = true) HttpServletRequest request) {
@@ -62,12 +65,13 @@ public class ProductSearchController {
 			memberId = JwtGetMemberId.jwtGetMemberId(request);
 		}
 
-		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword, sort, memberId);
+		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword,
+			sort, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
 		model.addAttribute("products", products);
 		model.addAttribute("keyword", keyword);
-		if(Objects.isNull(sort)) {
+		if (Objects.isNull(sort)) {
 			model.addAttribute("sort", ProductSortType.NO_SORT.toString());
 		} else {
 			model.addAttribute("sort", sort.toString());
@@ -87,7 +91,8 @@ public class ProductSearchController {
 			@ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터", content = @Content(schema = @Schema(implementation = ProductSortType.class))),
 		})
 	@GetMapping("/category/{category-id}")
-	public String getProductByCategory(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+	public String getProductByCategory(
+		@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
 		@Parameter(description = "조회할 카테고리 ID", required = true, in = ParameterIn.QUERY) @PathVariable("category-id") Long categoryId,
 		@Parameter(description = "정렬 기준", in = ParameterIn.QUERY) @RequestParam(required = false) ProductSortType sort,
 		@Parameter(hidden = true) HttpServletRequest request) {
@@ -96,14 +101,21 @@ public class ProductSearchController {
 			memberId = JwtGetMemberId.jwtGetMemberId(request);
 		}
 
-		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsByCategory(pageable, categoryId, sort, memberId);
+		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsByCategory(pageable, categoryId,
+			sort, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
+		List<Long> discountRates = new ArrayList<>();
 		ResponseCategoryDTO category = userCategoryService.getCategoriesById(categoryId);
-
+		for (ResponseProductReadDTO dto : products) {
+			long discountRate = (long)(((double)(dto.getProductRegularPrice() - dto.getProductSalePrice())
+				/ dto.getProductRegularPrice()) * 100);
+			discountRates.add(discountRate);
+		}
 		model.addAttribute("products", products);
 		model.addAttribute("rootCategory", category);
-		if(Objects.isNull(sort)) {
+		model.addAttribute("discountRates", discountRates);
+		if (Objects.isNull(sort)) {
 			model.addAttribute("sort", ProductSortType.NO_SORT.toString());
 		} else {
 			model.addAttribute("sort", sort.toString());
@@ -122,7 +134,8 @@ public class ProductSearchController {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 		})
 	@GetMapping("/best")
-	public String getBestProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+	public String getBestProducts(
+		@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
 		@Parameter(hidden = true) HttpServletRequest request) {
 		String memberId = "";
 		if (JwtHasToken.hasToken(request)) {
@@ -147,7 +160,8 @@ public class ProductSearchController {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 		})
 	@GetMapping("/newest")
-	public String getNewestProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+	public String getNewestProducts(
+		@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
 		@Parameter(hidden = true) HttpServletRequest request) {
 		String memberId = "";
 		if (JwtHasToken.hasToken(request)) {

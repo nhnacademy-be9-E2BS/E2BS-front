@@ -71,7 +71,8 @@ public class ProductController {
 		ResponseDeliveryFeeDTO deliveryFee = deliveryFeeSevice.getCurrentDeliveryFee();
 
 		// 적용 중인 할인률 계산
-		long discountRate = (long)(((double)(response.getProductRegularPrice() - response.getProductSalePrice()) / response.getProductRegularPrice()) * 100);
+		long discountRate = (long)(((double)(response.getProductRegularPrice() - response.getProductSalePrice())
+			/ response.getProductRegularPrice()) * 100);
 
 		model.addAttribute("reviewsByProduct", reviewsByProduct);
 		model.addAttribute("totalGradeAvg", reviewInfo.getTotalGradeAvg());
