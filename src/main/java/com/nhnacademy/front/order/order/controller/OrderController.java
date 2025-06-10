@@ -360,7 +360,7 @@ public class OrderController {
 		model.addAttribute("productAmount", productAmount);
 		model.addAttribute("isReviewed", isReviewed);
 
-		return "member/mypage/orderDetails";
+		return "member/mypage/order-details";
 	}
 
 	/**
@@ -398,7 +398,7 @@ public class OrderController {
 		Page<ResponseOrderReturnDTO> returns = PageResponseConverter.toPage(response.getBody());
 		model.addAttribute("returns", returns);
 
-		return "member/mypage/orderReturns";
+		return "member/mypage/order-returns";
 	}
 
 	@Operation(summary = "반품 상세 내역 페이지", description = "회원이 반품 상세 정보에 대해 확인 가능한 페이지 제공")
@@ -408,7 +408,7 @@ public class OrderController {
 
 		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
 		model.addAttribute("returnDTO", returnDTO);
-		return "member/mypage/orderReturnDetail";
+		return "member/mypage/order-return-detail";
 	}
 
 	@Operation(summary = "비회원 주문 내역 확인 페이지", description = "비회원이 이메일, 비밀번호로 주문했던 내역을 확인가능한 페이지 제공")
@@ -460,6 +460,6 @@ public class OrderController {
 		model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("productAmount", productAmount);
 
-		return "customer/orderDetails";
+		return "customer/order-details";
 	}
 }
