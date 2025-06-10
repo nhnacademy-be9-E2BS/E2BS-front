@@ -86,15 +86,16 @@ public class MemberCartController {
 			totalProductPrice += cartItem.getProductTotalPrice();
 		}
 
-		long totalDeliveryPrice = 0;
+		long currentDeliveryPrice = 0;
 		ResponseDeliveryFeeDTO currentDeliveryFee = deliveryFeeSevice.getCurrentDeliveryFee();
-		if (totalDeliveryPrice < currentDeliveryFee.getDeliveryFeeFreeAmount()) {
-			totalDeliveryPrice = currentDeliveryFee.getDeliveryFeeAmount();
+		if (totalProductPrice < currentDeliveryFee.getDeliveryFeeFreeAmount()) {
+			currentDeliveryPrice = currentDeliveryFee.getDeliveryFeeAmount();
 		}
 
 		model.addAttribute("cartItemsByMember", cartItemsByMember);
 		model.addAttribute("totalProductPrice", totalProductPrice);
-		model.addAttribute("totalDeliveryPrice", totalDeliveryPrice);
+		model.addAttribute("currentDeliveryPrice", currentDeliveryPrice);
+		model.addAttribute("currentDeliveryFee", currentDeliveryFee);
 
 		return "cart/member-cart";
 	}

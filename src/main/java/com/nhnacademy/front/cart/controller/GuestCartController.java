@@ -105,7 +105,6 @@ public class GuestCartController {
 		model.addAttribute("currentDeliveryPrice", currentDeliveryPrice);
 		model.addAttribute("currentDeliveryFee", currentDeliveryFee);
 
-
 		return "cart/guest-cart";
 	}
 
