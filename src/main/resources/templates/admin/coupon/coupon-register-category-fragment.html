@@ -22,7 +22,7 @@
 
         <!-- 자식 카테고리 -->
         <ul th:if="${#lists.size(child.children) > 0}" class="ms-4 mt-2">
-            <th:block th:replace="admin/coupon/coupon-register-category-fragment :: categoryFragment(category=${child})" />
+            <th:block th:replace="admin/coupon/coupon-register-category-fragment :: category-fragment(category=${child})" />
         </ul>
     </li>
 </th:block>
