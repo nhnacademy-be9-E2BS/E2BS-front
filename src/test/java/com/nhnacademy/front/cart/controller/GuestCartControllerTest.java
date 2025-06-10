@@ -96,7 +96,6 @@ class GuestCartControllerTest {
 
 		ResponseDeliveryFeeDTO deliveryFeeDTO = new ResponseDeliveryFeeDTO();
 		deliveryFeeDTO.setDeliveryFeeAmount(0L);
-		requestDto.setDeliveryFee(deliveryFeeDTO);
 
 		when(guestCartService.getCartItemsByGuest(anyString())).thenReturn(List.of(requestDto));
 

@@ -86,7 +86,8 @@
                                         th:text="${#numbers.formatInteger(cartItem.productSalePrice, 3, 'COMMA')} + '원'"
                                         style="margin: 2px 0 0 0; color: #000; font-weight: bold;">판매가</h5>
 
-                                    <span style="display: none" class="unit-delivery-price" th:text="${cartItem.deliveryFee.deliveryFeeAmount}"></span>
+                                    <span style="display: none" class="current-delivery-price" th:text="${currentDeliveryPrice}"></span>
+                                    <span style="display: none" class="current-delivery-free-amount" th:text="${currentDeliveryFee.deliveryFeeFreeAmount}"></span>
                                 </div>
                             </td>
 
@@ -147,7 +148,7 @@
                                     <!-- 배송비 정보 -->
                                     <div style="text-align: center;">
                                         <p style="margin: 0;">배송비</p>
-                                        <span  id="totalDeliveryPrice" style="font-size: 1.3rem;" th:text="${#numbers.formatInteger(totalDeliveryPrice, 3, 'COMMA')} + '원'">5,000원</span>
+                                        <span  id="totalDeliveryPrice" style="font-size: 1.3rem;" th:text="${#numbers.formatInteger(currentDeliveryPrice, 3, 'COMMA')} + '원'">5,000원</span>
                                     </div>
 
                                     <div style="font-size: 1.3rem;">=</div>
@@ -157,7 +158,7 @@
                                         <p style="margin: 0; font-weight: bold;">결제 예정 금액</p>
                                         <span id="totalPaymentPrice"
                                             style="margin: 0; color: #dc3545; font-size: 1.3rem;"
-                                            th:text="${#numbers.formatInteger(totalProductPrice + totalDeliveryPrice, 3, 'COMMA')} + '원'">
+                                            th:text="${#numbers.formatInteger(totalProductPrice + currentDeliveryPrice, 3, 'COMMA')} + '원'">
                                             35,000원
                                         </span>
                                     </div>

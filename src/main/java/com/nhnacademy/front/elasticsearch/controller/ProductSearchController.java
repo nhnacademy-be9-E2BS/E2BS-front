@@ -17,8 +17,6 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.elasticsearch.model.dto.domain.ProductSortType;
 import com.nhnacademy.front.elasticsearch.service.ProductSearchService;
-import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
-import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
@@ -58,9 +56,6 @@ public class ProductSearchController {
 		@Parameter(description = "정렬 기준", in = ParameterIn.QUERY) @RequestParam(required = false) ProductSortType sort,
 		@Parameter(hidden = true) HttpServletRequest request) {
 		String memberId = "";
-		if (!JwtHasToken.hasToken(request)) {
-			memberId = JwtGetMemberId.jwtGetMemberId(request);
-		}
 
 		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword, sort, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
@@ -92,9 +87,6 @@ public class ProductSearchController {
 		@Parameter(description = "정렬 기준", in = ParameterIn.QUERY) @RequestParam(required = false) ProductSortType sort,
 		@Parameter(hidden = true) HttpServletRequest request) {
 		String memberId = "";
-		if (!JwtHasToken.hasToken(request)) {
-			memberId = JwtGetMemberId.jwtGetMemberId(request);
-		}
 
 		PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsByCategory(pageable, categoryId, sort, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
@@ -125,9 +117,6 @@ public class ProductSearchController {
 	public String getBestProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
 		@Parameter(hidden = true) HttpServletRequest request) {
 		String memberId = "";
-		if (!JwtHasToken.hasToken(request)) {
-			memberId = JwtGetMemberId.jwtGetMemberId(request);
-		}
 
 		PageResponse<ResponseProductReadDTO> response = productSearchService.getBestProducts(pageable, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
@@ -150,9 +139,6 @@ public class ProductSearchController {
 	public String getNewestProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
 		@Parameter(hidden = true) HttpServletRequest request) {
 		String memberId = "";
-		if (!JwtHasToken.hasToken(request)) {
-			memberId = JwtGetMemberId.jwtGetMemberId(request);
-		}
 
 		PageResponse<ResponseProductReadDTO> response = productSearchService.getNewestProducts(pageable, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
