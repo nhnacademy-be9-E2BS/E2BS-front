@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="categoryFragment(category)">
+<th:block th:fragment="category-fragment(category)">
     <li th:each="child : ${category.children}" class="mb-2">
         <div class="d-flex justify-content-between align-items-start">
             <!-- 들여쓰기 + 텍스트 -->
@@ -22,7 +22,7 @@
 
         <!-- 자식 카테고리 -->
         <ul th:if="${#lists.size(child.children) > 0}" class="ms-4 mt-2">
-            <th:block th:replace="admin/coupon/coupon-register-categoryFragment :: categoryFragment(category=${child})" />
+            <th:block th:replace="admin/coupon/coupon-register-category-fragment :: category-fragment(category=${child})" />
         </ul>
     </li>
 </th:block>
