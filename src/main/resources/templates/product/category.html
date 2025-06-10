@@ -40,6 +40,22 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        .fa-star {
+            color: #ccc;
+            transition: color 0.2s ease;
+        }
+
+        .fa-star.filled {
+            color: gold;
+            transition: color 0.2s ease;
+        }
+
+        .list {
+            padding: 0;
+            display: flex; /* 가로 배치 */
+            gap: 5px; /* 별 사이 간격 */
+        }
     </style>
 </head>
 
@@ -68,7 +84,7 @@
 
         <!-- 상품 리스트 출력 -->
 
-        <ul class="book-list" th:each="product : ${products}">
+        <ul class="book-list" th:each="product, iterStat : ${products}">
             <li class="book-card" th:data-product-id="${product.productId}">
                 <div>
                     <!-- 도서 이미지: productImagePaths는 List이므로 첫 번째 이미지를 사용 -->
@@ -93,10 +109,10 @@
                         <!--                            </li>-->
 
                         <!--                            <li>-->
-<!--                        <button class="like-button" th:data-liked="${product.liked}">-->
-<!--                            <i class="ti-heart"-->
-<!--                               th:classappend="${product.liked} ? ' liked' : ''"></i>-->
-<!--                        </button>-->
+                        <!--                        <button class="like-button" th:data-liked="${product.liked}">-->
+                        <!--                            <i class="ti-heart"-->
+                        <!--                               th:classappend="${product.liked} ? ' liked' : ''"></i>-->
+                        <!--                        </button>-->
                         <!--                            </li>-->
                         <!--                        </ul>-->
                     </div>
@@ -108,13 +124,41 @@
                         <a th:href="@{/books/{productId}(productId=${product.productId})}"
                            th:text="${product.productTitle}" class="title-link">도서 제목</a>
                     </h5>
-                    <p>출판사: <span
-                            th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">출판사</span>
+                    <div>
+								<span style="color: #bbb;">
+									<span th:text="${product.publisher.publisherName}"></span> |
+									<span th:each="contributor, stat : ${product.contributors}">
+										<span th:text="|${contributor.contributorName} (${contributor.positionName})|"/>
+										<span th:unless="${stat.last}" th:text="'| '"/>
+									</span>|
+									<span th:text="${product.productPublishedAt}"></span>
+								</span>
+                    </div>
+                    <!-- 가격 -->
+                    <div th:if="${product.productRegularPrice != product.productSalePrice}">
+                        <del class="col-10"
+                             th:text="${#numbers.formatInteger(product.productRegularPrice, 0, 'COMMA')} + '원'"></del>
+                        <span style="color: #000000;"> → </span>
+                        <span class="col-10" style="color: #ea5759;">
 
-                    </p>
-                    <!-- 판매 가격 -->
-                    <span class="card-product__price"
-                          th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'">0</span>
+										<span th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'"
+                                              style="font-weight: bold; font-size: large;"></span>
+                            <span th:text="'('+${discountRates[iterStat.index]}+'%↓)'"></span>
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <ul class="list">
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+
+                        <p id="selectedRating"></p>
+                        <input type="hidden" name="reviewGrade" id="ratingInput" th:value="${product.avgRating}"/>
+                    </div>
                 </div>
             </li>
         </ul>
@@ -212,6 +256,7 @@
     <script th:src="@{/js/like/like-add-delete.js}"></script>
     <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
     <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
+    <script th:src="@{/js/review/star-count.js}"></script>
 </div>
 </body>
 </html>
