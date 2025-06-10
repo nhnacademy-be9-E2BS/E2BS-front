@@ -38,34 +38,46 @@ document.addEventListener('DOMContentLoaded', function () {
             totalPriceElement.textContent = totalPrice.toLocaleString('ko-KR') + '원'
         }
 
-        updateTotalPaymentAmount();
+        updateTotalPayment();
         sendCartUpdate(productId, cartItemsId, quantity);
     }
 });
 
 // 상품 합계, 배송비, 결제 예정 금액 최신화 메소드
-function updateTotalPaymentAmount() {
+function updateTotalPayment() {
     let totalProduct = 0;
-    let totalDelivery = 0;
+
+    const currentDeliveryPrice = parseInt($('.delivery-price').first().text().replace(/[^0-9]/g, ''), 10) || 0;
+    const deliveryFreeAmount = parseInt($('.current-delivery-free-amount').first().text().replace(/[^0-9]/g, ''), 10) || 0;
 
     $('.cart-item-checkbox:checked').each(function () {
+        // row가 DOM에 남아있지 않으면 무시
+        if (!document.body.contains(this)) return;
+
         const productId = $(this).data('product-id');
         const row = $(this).closest('tr');
+        const unitPrice = parseInt(row.find('.unit-price').text().replace(/[^0-9]/g, ''), 10);
+        const quantity = parseInt($('#quantity-' + productId).val(), 10) || 0;
 
-        const priceText = row.find('.unit-price').text().replace(/[^0-9]/g, '');
-        const unitPrice = parseInt(priceText, 10) || 0;
-
-        const quantity = parseInt($('#quantity-' + productId).val(), 10) || 1;
         totalProduct += unitPrice * quantity;
-
-        const deliveryText = row.find('.unit-delivery-price').text().replace(/[^0-9]/g, '');
-        const deliveryFee = parseInt(deliveryText, 10) || 0;
-        totalDelivery += deliveryFee;
     });
+
+    console.log($('.cart-item-checkbox:checked').map((i, el) => el.id).get());
+    console.log('총상품금액:', totalProduct);
+    console.log('무료배송 기준금액:', deliveryFreeAmount);
+    console.log('배송비:', currentDeliveryPrice);
+
+    const totalDelivery = (totalProduct > 0 && totalProduct < deliveryFreeAmount) ? currentDeliveryPrice : 0;
 
     $('#totalProductPrice').text(totalProduct.toLocaleString('ko-KR') + '원');
     $('#totalDeliveryPrice').text(totalDelivery.toLocaleString('ko-KR') + '원');
     $('#totalPaymentPrice').text((totalProduct + totalDelivery).toLocaleString('ko-KR') + '원');
+
+    if ($('tbody .delete-item-btn').length === 0) {
+        $('.total-product-price').closest('tr').hide();
+        $('.out_button_area').hide();
+        $('tbody').append('<tr><td colspan="6" style="text-align:center;">장바구니가 비어 있습니다.</td></tr>');
+    }
 }
 
 
