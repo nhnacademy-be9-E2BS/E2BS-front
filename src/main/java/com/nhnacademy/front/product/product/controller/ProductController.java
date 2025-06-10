@@ -54,7 +54,7 @@ public class ProductController {
 		@Parameter(description = "페이징 정보") @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable,
 		@Parameter(hidden = true) HttpServletRequest request) {
 		String memberId = "";
-		if (!JwtHasToken.hasToken(request)) {
+		if (JwtHasToken.hasToken(request)) {
 			memberId = JwtGetMemberId.jwtGetMemberId(request);
 		}
 

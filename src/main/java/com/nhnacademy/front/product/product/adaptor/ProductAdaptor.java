@@ -13,8 +13,8 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductRe
 @FeignClient(name = "product-service", url = "${product.book.url}")
 public interface ProductAdaptor {
 
-	@GetMapping("{bookId}")
-	ResponseEntity<ResponseProductReadDTO> getProductById(@PathVariable("bookId") Long bookId, @RequestParam("memberId") String memberId);
+	@GetMapping("{book-id}")
+	ResponseEntity<ResponseProductReadDTO> getProductById(@PathVariable("book-id") Long bookId, @RequestParam("memberId") String memberId);
 
 	@GetMapping("/order")
 	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
