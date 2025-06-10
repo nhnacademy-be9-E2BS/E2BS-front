@@ -19,8 +19,6 @@ import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiS
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductMetaDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
-import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
@@ -73,7 +71,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	 */
 	@Override
 	public PageResponse<ResponseProductReadDTO> getProductsBySearch(Pageable pageable, String keyword) throws FeignException {
-		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsBySearch(pageable, keyword, null);
+		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsBySearch(pageable, keyword, null, "");
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductGetProcessException("전체 도서 조회 실패");
@@ -100,18 +98,6 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 	}
 
 	/**
-	 * 도서 재고 수정
-	 */
-	@Override
-	public void updateProductStock(long productId, RequestProductStockUpdateDTO request) throws FeignException {
-		ResponseEntity<Void> response = productAdminAdaptor.putUpdateProductStock(productId, request);
-
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductUpdateProcessException("도서 재고 수정 실패");
-		}
-	}
-
-	/**
 	 * 도서 판매가 수정
 	 */
 	@Override
@@ -121,20 +107,6 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new ProductUpdateProcessException("도서 판매가 수정 실패");
 		}
-	}
-
-	/**
-	 * Coupon 전용 - Sale중인 전체 도서 페이지로 조회
-	 */
-	@Override
-	public PageResponse<ResponseProductCouponDTO> getProductsToCoupon(Pageable pageable) throws FeignException {
-		ResponseEntity<PageResponse<ResponseProductCouponDTO>> response = productAdminAdaptor.getProductsToCoupon(
-			pageable);
-
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("coupon 전용 Sale 상태 도서 리스트 조회 실패");
-		}
-		return response.getBody();
 	}
 
 	/**

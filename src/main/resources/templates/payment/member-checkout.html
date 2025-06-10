@@ -311,11 +311,19 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div>
-                                        <input type="radio" id="tossPay_payment_method" name="payment_method" value="tossPay">
-                                        <label for="tossPay_payment_method">토스 결제</label>
-                                    </div>
-                                    <span>* 현재는 토스 간편 결제, 포인트로 전액 결제만 지원합니다.</span>
+                                    <input type="radio" id="tossPay_payment_method" name="payment_method" value="토스페이">
+                                    <label for="tossPay_payment_method">토스 결제</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="radio" id="phone_payment_method" name="payment_method" value="휴대폰">
+                                    <label for="phone_payment_method">휴대폰 결제</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>* 현재는 토스, 휴대폰 간편 결제, 포인트로 전액 결제만 지원합니다.</span>
                                 </td>
                             </tr>
                         </table>
@@ -475,16 +483,16 @@
                 }
 
                 // 결제 방식
-                let method = "point";
+                let method = "포인트";
                 if(selected !== null){
                     method = selected.value;
                 }
 
 
                 // 결제 금액이 0원이면 외부 결제로 결제 방지
-                if (method === "tossPay" && !(payAmount === 0)) {
+                if ((method === "토스페이" || method === "휴대폰") && !(payAmount === 0)) {
                     // 주문서 저장
-                    const response = await saveOrder(method);
+                    const response = await saveOrder("tossPay");
 
                     if (await response === null) {
                         // 재고 부족, 포인트 부족, 쿠폰 사용 불가, 없는 외래키 접근 등
@@ -492,14 +500,14 @@
                         return;
                     }
 
-                    tossPayWidget(response.orderId, response.amount);
-                } else {
+                    tossPayWidget(response.orderId, response.amount, method);
+                } else if(method === "포인트") {
                     // 포인트 결제 로직
                     if (payAmount !== 0) {
                         alert("사용 포인트가 부족합니다.");
                     } else {
                         // 결제 진행
-                        const response = await saveOrder(method);
+                        const response = await saveOrder("point");
                         // 응답의 data가 null이 아니면 정상 저장 된거이므로 성공 url이동
                         // null이면 주문 처리 실패니까 실패 url로 리다이렉트
                         // 프론트에서는 포인트가 충분했으나 DB에서는 부족한 경우
@@ -509,7 +517,8 @@
                             window.location.href = "/order/fail"
                         }
                     }
-
+                } else {
+                    alert("지원하지 않는 결제 수단입니다.");
                 }
             });
 
@@ -639,9 +648,9 @@
                 return requestOrderWrapperDTO;
             }
 
-            function tossPayWidget(orderId, payAmount) {
+            function tossPayWidget(orderId, payAmount, method) {
                 tossPayments
-                    .requestPayment("토스페이", {
+                    .requestPayment(method, {
                         amount: payAmount,
                         orderId: orderId,
                         orderName: gerOrderName(),
@@ -747,7 +756,7 @@
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.innerText = `${current.getMonth() + 1}월 ${current.getDate()}일(${weekdays[day]})`;
-                    btn.classList.add("btn", "btn-secondary");
+                    btn.classList.add("btn", "btn-outline-secondary");
 
                     const selectedDate = new Date(current);
 

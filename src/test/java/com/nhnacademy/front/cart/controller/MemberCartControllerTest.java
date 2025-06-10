@@ -30,6 +30,7 @@ import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -46,6 +47,9 @@ class MemberCartControllerTest {
 
 	@MockitoBean
 	private MemberCartService memberCartService;
+
+	@MockitoBean
+	private DeliveryFeeSevice deliveryFeeSevice;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -110,11 +114,14 @@ class MemberCartControllerTest {
 	void getCartsByMember() throws Exception {
 		// given
 		List<ResponseCartItemsForMemberDTO> cartItemsByMember = List.of(
-			new ResponseCartItemsForMemberDTO(1L, 1L, "상품A", 15000, 10000, new BigDecimal(50), new ResponseDeliveryFeeDTO(1L, 100, 1000, LocalDateTime.now()), "thumbnailImage", 2, 20000),
-			new ResponseCartItemsForMemberDTO(1L, 2L, "상품B", 15000, 10000, new BigDecimal(50), new ResponseDeliveryFeeDTO(1L, 100, 1000, LocalDateTime.now()), "thumbnailImage", 3, 30000)
+			new ResponseCartItemsForMemberDTO(1L, 1L, "상품A", 15000, 10000, new BigDecimal(50), "thumbnailImage", 2, 20000),
+			new ResponseCartItemsForMemberDTO(1L, 2L, "상품B", 15000, 10000, new BigDecimal(50), "thumbnailImage", 3, 30000)
 		);
 
+		ResponseDeliveryFeeDTO deliveryFeeDTO = new ResponseDeliveryFeeDTO(1L, 3000, 50000, LocalDateTime.now());
+
 		when(memberCartService.getCartItemsByMember(MEMBER_ID)).thenReturn(cartItemsByMember);
+		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(deliveryFeeDTO);
 
 		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
 			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);

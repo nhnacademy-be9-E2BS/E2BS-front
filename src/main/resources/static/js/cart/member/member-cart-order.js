@@ -25,32 +25,6 @@ $(document).ready(function () {
     updateTotalPayment();
 });
 
-function updateTotalPayment() {
-    let totalProduct = 0;
-    let totalDelivery = 0;
-
-    $('.cart-item-checkbox:checked').each(function () {
-        const productId = $(this).data('product-id');
-        const row = $(this).closest('tr');
-
-        const priceText = row.find('.unit-price').text().replace(/[^0-9]/g, '');
-        const unitPrice = parseInt(priceText, 10) || 0;
-
-        const quantity = parseInt($('#quantity-' + productId).val(), 10) || 1;
-        totalProduct += unitPrice * quantity;
-
-        // 배송비는 각 체크된 항목별로 추출
-        const deliveryText = row.find('.unit-delivery-price').text().replace(/[^0-9]/g, '');
-        const deliveryFee = parseInt(deliveryText, 10) || 0;
-        totalDelivery += deliveryFee;
-    });
-
-    // DOM 반영
-    $('#totalProductPrice').text(totalProduct.toLocaleString('ko-KR') + '원');
-    $('#totalDeliveryPrice').text(totalDelivery.toLocaleString('ko-KR') + '원');
-    $('#totalPaymentPrice').text((totalProduct + totalDelivery).toLocaleString('ko-KR') + '원');
-}
-
 // 체크된 상품 주문
 $(document).ready(function () {
     $('#order-btn').click(function (e) {
@@ -95,7 +69,9 @@ $(document).ready(function () {
         console.log('encoded: ' + encoded)
 
         // 쿠키 저장
-        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=strict`;
+        // samesite=strict 은 Cross-site 요청에는 절대 전송되지 않음
+        // samesite=lax: 대부분의 브라우저에서 GET 기반 리디렉션에 쿠키 허용
+        document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=lax`;
 
         // 주문서 페이지로 GET 이동
         window.location.href = '/members/order';

@@ -10,6 +10,9 @@ $(document).ready(function () {
         const method = liked ? 'DELETE' : 'POST';
         const icon = button.find('i');
 
+        console.log('product-id: ', productId);
+        console.log('liked: ', liked);
+
         $.ajax({
             type: method,
             url: `/products/${productId}/likes`,

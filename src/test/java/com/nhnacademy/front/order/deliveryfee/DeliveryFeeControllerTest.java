@@ -75,7 +75,7 @@ public class DeliveryFeeControllerTest {
 
 		// then
 		result.andExpect(status().isOk())
-			.andExpect(view().name("admin/order/deliveryFeeManagement"))
+			.andExpect(view().name("admin/order/delivery-fee-management"))
 			.andExpect(model().attributeExists("deliveryFees"));
 	}
 

@@ -21,6 +21,8 @@ import com.nhnacademy.front.cart.service.MemberCartService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberCartController {
 
 	private final MemberCartService memberCartService;
+	private final DeliveryFeeSevice deliveryFeeSevice;
 	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
 
 
@@ -79,15 +82,20 @@ public class MemberCartController {
 		List<ResponseCartItemsForMemberDTO> cartItemsByMember = memberCartService.getCartItemsByMember(memberId);
 
 		long totalProductPrice = 0;
-		long totalDeliveryPrice = 0;
 		for (ResponseCartItemsForMemberDTO cartItem : cartItemsByMember) {
 			totalProductPrice += cartItem.getProductTotalPrice();
-			totalDeliveryPrice += cartItem.getDeliveryFee().getDeliveryFeeAmount();
+		}
+
+		long currentDeliveryPrice = 0;
+		ResponseDeliveryFeeDTO currentDeliveryFee = deliveryFeeSevice.getCurrentDeliveryFee();
+		if (totalProductPrice < currentDeliveryFee.getDeliveryFeeFreeAmount()) {
+			currentDeliveryPrice = currentDeliveryFee.getDeliveryFeeAmount();
 		}
 
 		model.addAttribute("cartItemsByMember", cartItemsByMember);
 		model.addAttribute("totalProductPrice", totalProductPrice);
-		model.addAttribute("totalDeliveryPrice", totalDeliveryPrice);
+		model.addAttribute("currentDeliveryPrice", currentDeliveryPrice);
+		model.addAttribute("currentDeliveryFee", currentDeliveryFee);
 
 		return "cart/member-cart";
 	}

@@ -63,8 +63,9 @@
                                 </li>
 
                                 <li>
-                                    <button class="like-button" data-liked="false">
-                                        <i class="ti-heart"></i>
+                                    <button class="like-button" th:data-liked="${product.liked}">
+                                        <i class="ti-heart"
+                                           th:classappend="${product.liked} ? ' liked' : ''"></i>
                                     </button>
                                 </li>
                             </ul>

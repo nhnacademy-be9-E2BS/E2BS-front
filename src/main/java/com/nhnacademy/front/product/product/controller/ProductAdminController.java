@@ -103,12 +103,12 @@ public class ProductAdminController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@JwtTokenCheck
-	@GetMapping("/register/{bookId}")
-	public String getProductsById(@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable Long bookId,
+	@GetMapping("/register/{book-id}")
+	public String getProductsById(@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId,
 		Model model, @Parameter(description = "페이징 정보") Pageable pageable) {
 		model.addAttribute("bookId", bookId);
 
-		ResponseProductReadDTO response = productService.getProduct(bookId);
+		ResponseProductReadDTO response = productService.getProduct(bookId, "");
 		model.addAttribute("product", response);
 
 		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(pageable);
@@ -195,10 +195,10 @@ public class ProductAdminController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@JwtTokenCheck
-	@PutMapping("/register/{bookId}")
+	@PutMapping("/register/{book-id}")
 	public String updateProduct(@Parameter(description = "도서 등록 및 수정 DTO", required = true, schema = @Schema(implementation = RequestProductDTO.class))
 		@Validated @ModelAttribute RequestProductDTO request, BindingResult bindingResult,
-		@Parameter(description = "수정할 도서 ID", example = "1", required = true) @PathVariable Long bookId) {
+		@Parameter(description = "수정할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -218,10 +218,10 @@ public class ProductAdminController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@JwtTokenCheck
-	@PutMapping("/{bookId}/salePrice")
+	@PutMapping("/{book-id}/salePrice")
 	public String updateProduct(@Parameter(description = "도서 판매가 수정 DTO", required = true, schema = @Schema(implementation = RequestProductSalePriceUpdateDTO.class))
 		@Validated @RequestBody RequestProductSalePriceUpdateDTO request, BindingResult bindingResult,
-		@Parameter(description = "수정할 도서 ID", example = "1", required = true) @PathVariable Long bookId) {
+		@Parameter(description = "수정할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
