@@ -8,171 +8,255 @@
 <head>
     <style>
         .ti-heart.liked {
-          color: red; /* 좋아요 누른 상태 */
+            color: red; /* 좋아요 누른 상태 */
+        }
+
+        .book-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .content {
+            width: 100%;
+        }
+
+        .book-card {
+            display: flex;
+            align-items: stretch;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            margin-bottom: 24px;
+            min-height: 150px;
+        }
+
+        .card-product__title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* 최대 3줄 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fa-star {
+            color: #ccc;
+            transition: color 0.2s ease;
+        }
+
+        .fa-star.filled {
+            color: gold;
+            transition: color 0.2s ease;
+        }
+
+        .list {
+            padding: 0;
+            display: flex; /* 가로 배치 */
+            gap: 5px; /* 별 사이 간격 */
         }
     </style>
 </head>
 
 <body>
 <div layout:fragment="content">
-  <!-- Start Filter Bar -->
-  <div class="filter-bar d-flex flex-wrap align-items-center">
-    <div class="sorting">
-      <form method="get" th:action="@{'/books/search/category/' + ${rootCategory.categoryId}}">
-      <label for="sort-select"></label>
-        <select id="sort-select" name="sort" onchange="this.form.submit()">
-          <option th:value="NO_SORT" th:selected="${sort == 'NO_SORT'}">정렬안함</option>
-          <option th:value="LATEST" th:selected="${sort == 'LATEST'}">최신순</option>
-          <option th:value="POPULARITY" th:selected="${sort == 'POPULARITY'}">인기순</option>
-          <option th:value="LOW_PRICE" th:selected="${sort == 'LOW_PRICE'}">낮은가격순</option>
-          <option th:value="HIGH_PRICE" th:selected="${sort == 'HIGH_PRICE'}">높은가격순</option>
-          <option th:value="RATING" th:selected="${sort == 'RATING'}">평점순</option>
-          <option th:value="REVIEW_COUNT" th:selected="${sort == 'REVIEW_COUNT'}">리뷰순</option>
-        </select>
-      </form>
-    </div>
-  </div>
-  <!-- End Filter Bar -->
-
-
-  <!-- 상품 리스트 출력 -->
-  <section class="lattest-product-area pb-40 category-list">
-    <div class="row">
-      <div th:each="product : ${products}" class="col-md-6 col-lg-4">
-        <div class="card text-center card-product" th:data-product-id = "${product.productId}">
-          <div class="card-product__img">
-            <!-- 도서 이미지: productImagePaths는 List이므로 첫 번째 이미지를 사용 -->
-            <div class="card-img"
-                 th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
-              <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
-                <img th:src="${product.productImagePaths[0].productImagePath}"
-                     alt="대표 이미지"
-                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
-              </a>
-              <ul class="card-product__imgOverlay">
-                <li><a th:href="@{/books/{productId}(productId=${product.productId})}" class="search-link">
-                  <button><i class="ti-search"></i></button>
-                </a></li>
-
-                <li th:if="${session.isMember}">
-                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-                <li th:if="${session.isMember == null}">
-                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-
-                <li>
-                  <button class="like-button" th:data-liked="${product.liked}">
-                    <i class="ti-heart"
-                       th:classappend="${product.liked} ? ' liked' : ''"></i>
-                  </button>
-                </li>
-              </ul>
+    <div class="content">
+        <!-- Start Filter Bar -->
+        <div class="filter-bar d-flex flex-wrap align-items-center">
+            <div class="sorting">
+                <form method="get" th:action="@{'/books/search/category/' + ${rootCategory.categoryId}}">
+                    <label for="sort-select"></label>
+                    <select id="sort-select" name="sort" onchange="this.form.submit()">
+                        <option th:value="NO_SORT" th:selected="${sort == 'NO_SORT'}">정렬안함</option>
+                        <option th:value="LATEST" th:selected="${sort == 'LATEST'}">최신순</option>
+                        <option th:value="POPULARITY" th:selected="${sort == 'POPULARITY'}">인기순</option>
+                        <option th:value="LOW_PRICE" th:selected="${sort == 'LOW_PRICE'}">낮은가격순</option>
+                        <option th:value="HIGH_PRICE" th:selected="${sort == 'HIGH_PRICE'}">높은가격순</option>
+                        <option th:value="RATING" th:selected="${sort == 'RATING'}">평점순</option>
+                        <option th:value="REVIEW_COUNT" th:selected="${sort == 'REVIEW_COUNT'}">리뷰순</option>
+                    </select>
+                </form>
             </div>
-          </div>
         </div>
-        <div class="card-body">
-          <!-- 도서 제목 -->
-          <h5 class="card-product__title">
-            <a th:href="@{/books/{productId}(productId=${product.productId})}" th:text="${product.productTitle}" class="title-link">도서 제목</a>
-          </h5>
-          <p>출판사: <span th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">출판사</span></p>
-          <!-- 판매 가격 -->
-          <span class="card-product__price" th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'">0</span>
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- End Filter Bar -->
 
 
-  <!-- 페이지네이션 -->
-  <div class="row">
-    <div class="col-12 d-flex justify-content-center">
-      <nav>
-        <ul class="pagination" th:if="${products.totalPages > 0}">
-          <!-- 처음 버튼 -->
-          <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
-            <a class="page-link"
-               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=0, size=9)}"
-               th:text="'처음'">First</a>
-          </li>
+        <!-- 상품 리스트 출력 -->
 
-          <!-- 전체 페이지 번호 출력 -->
-          <li class="page-item"
-              th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
-              th:classappend="${i == products.number} ? 'active'">
-            <a class="page-link"
-               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=9)}"
-               th:text="${i + 1}">1</a>
-          </li>
+        <ul class="book-list" th:each="product, iterStat : ${products}">
+            <li class="book-card" th:data-product-id="${product.productId}">
+                <div>
+                    <!-- 도서 이미지: productImagePaths는 List이므로 첫 번째 이미지를 사용 -->
+                    <div class="card-img"
+                         th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
+                        <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
+                            <img th:src="${product.productImagePaths[0].productImagePath}"
+                                 alt="대표 이미지"
+                                 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+                        </a>
+                        <!--                        <ul class="card-product__imgOverlay">-->
+                        <!--                            <li><a th:href="@{/books/{productId}(productId=${product.productId})}"-->
+                        <!--                                   class="search-link">-->
+                        <!--                                <button><i class="ti-search"></i></button>-->
+                        <!--                            </a></li>-->
 
-          <!-- 마지막 버튼 -->
-          <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
-            <a class="page-link"
-               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=9)}"
-               th:text="'마지막'">Last</a>
-          </li>
+                        <!--                            <li th:if="${session.isMember}">-->
+                        <!--                                <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>-->
+                        <!--                            </li>-->
+                        <!--                            <li th:if="${session.isMember == null}">-->
+                        <!--                                <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>-->
+                        <!--                            </li>-->
+
+                        <!--                            <li>-->
+                        <!--                        <button class="like-button" th:data-liked="${product.liked}">-->
+                        <!--                            <i class="ti-heart"-->
+                        <!--                               th:classappend="${product.liked} ? ' liked' : ''"></i>-->
+                        <!--                        </button>-->
+                        <!--                            </li>-->
+                        <!--                        </ul>-->
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- 도서 제목 -->
+                    <h5 class="card-product__title">
+                        <a th:href="@{/books/{productId}(productId=${product.productId})}"
+                           th:text="${product.productTitle}" class="title-link">도서 제목</a>
+                    </h5>
+                    <div>
+								<span style="color: #bbb;">
+									<span th:text="${product.publisher.publisherName}"></span> |
+									<span th:each="contributor, stat : ${product.contributors}">
+										<span th:text="|${contributor.contributorName} (${contributor.positionName})|"/>
+										<span th:unless="${stat.last}" th:text="'| '"/>
+									</span>|
+									<span th:text="${product.productPublishedAt}"></span>
+								</span>
+                    </div>
+                    <!-- 가격 -->
+                    <div th:if="${product.productRegularPrice != product.productSalePrice}">
+                        <del class="col-10"
+                             th:text="${#numbers.formatInteger(product.productRegularPrice, 0, 'COMMA')} + '원'"></del>
+                        <span style="color: #000000;"> → </span>
+                        <span class="col-10" style="color: #ea5759;">
+
+										<span th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'"
+                                              style="font-weight: bold; font-size: large;"></span>
+                            <span th:text="'('+${discountRates[iterStat.index]}+'%↓)'"></span>
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <ul class="list">
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+
+                        <p id="selectedRating"></p>
+                        <input type="hidden" name="reviewGrade" id="ratingInput" th:value="${product.avgRating}"/>
+                    </div>
+                </div>
+            </li>
         </ul>
-      </nav>
+
+
+        <!-- 페이지네이션 -->
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <nav>
+                    <ul class="pagination" th:if="${products.totalPages > 0}">
+                        <!-- 처음 버튼 -->
+                        <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=0, size=10)}"
+                               th:text="'처음'">First</a>
+                        </li>
+
+                        <!-- 전체 페이지 번호 출력 -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+                            th:classappend="${i == products.number} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=10)}"
+                               th:text="${i + 1}">1</a>
+                        </li>
+
+                        <!-- 마지막 버튼 -->
+                        <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=10)}"
+                               th:text="'마지막'">Last</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- 장바구니 이동 모달 -->
+        <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
+                        <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal"
+                                aria-label="닫기"></button>
+                    </div>
+                    <div class="modal-body">
+                        장바구니로 이동하시겠습니까?
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기
+                        </button>
+                        <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- 장바구니 이동 모달 -->
-  <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
-          <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="닫기"></button>
-        </div>
-        <div class="modal-body">
-          장바구니로 이동하시겠습니까?
-        </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const sidebar = document.querySelector(".sidebar-filter");
+            const toggles = sidebar.querySelectorAll(".toggle");
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기</button>
-          <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
-        </div>
-      </div>
-    </div>
-  </div>
+            toggles.forEach(span => {
+                const li = span.closest("li");
+                const childUl = li.querySelector(":scope > ul");
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const sidebar = document.querySelector(".sidebar-filter");
-      const toggles = sidebar.querySelectorAll(".toggle");
+                if (!childUl) {
+                    span.textContent = "🔹";
+                    span.style.cursor = "default";
+                    span.onclick = null;
+                } else {
+                    span.textContent = "📁";
+                    childUl.classList.add("d-none");
+                }
+            });
+        });
 
-      toggles.forEach(span => {
-        const li = span.closest("li");
-        const childUl = li.querySelector(":scope > ul");
+        function toggleClick(element) {
+            const li = element.closest("li");
+            const childUl = li.querySelector(":scope > ul");
 
-        if (!childUl) {
-          span.textContent = "🔹";
-          span.style.cursor = "default";
-          span.onclick = null;
-        } else {
-          span.textContent = "📁";
-          childUl.classList.add("d-none");
+            if (childUl) {
+                const isOpen = !childUl.classList.contains("d-none");
+                childUl.classList.toggle("d-none");
+                element.textContent = isOpen ? "📁" : "📂";
+            }
         }
-      });
-    });
+    </script>
 
-    function toggleClick(element) {
-      const li = element.closest("li");
-      const childUl = li.querySelector(":scope > ul");
-
-      if (childUl) {
-        const isOpen = !childUl.classList.contains("d-none");
-        childUl.classList.toggle("d-none");
-        element.textContent = isOpen ? "📁" : "📂";
-      }
-    }
-  </script>
-
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script th:src="@{/js/like/like-add-delete.js}"></script>
-  <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
-  <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/like/like-add-delete.js}"></script>
+    <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
+    <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
+    <script th:src="@{/js/review/star-count.js}"></script>
 </div>
 </body>
 </html>
