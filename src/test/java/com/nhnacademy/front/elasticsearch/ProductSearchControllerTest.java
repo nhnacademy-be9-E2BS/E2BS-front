@@ -45,7 +45,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = ProductSearchController.class)
 @ActiveProfiles("dev")
-public class ProductSearchControllerTest {
+class ProductSearchControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
