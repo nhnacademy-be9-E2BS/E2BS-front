@@ -108,7 +108,7 @@ public class ProductAdminController {
 		Model model, @Parameter(description = "페이징 정보") Pageable pageable) {
 		model.addAttribute("bookId", bookId);
 
-		ResponseProductReadDTO response = productService.getProduct(bookId);
+		ResponseProductReadDTO response = productService.getProduct(bookId, "");
 		model.addAttribute("product", response);
 
 		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(pageable);
@@ -126,7 +126,6 @@ public class ProductAdminController {
 		List<ResponseProductStateDTO> states = productStateService.getProductStates();
 		model.addAttribute("states", states);
 
-		model.addAttribute("product", response);
 		return "admin/product/books/register";
 	}
 
@@ -159,6 +158,7 @@ public class ProductAdminController {
 
 		List<ResponseProductStateDTO> states = productStateService.getProductStates();
 		model.addAttribute("states", states);
+
 		return "admin/product/books/register";
 	}
 

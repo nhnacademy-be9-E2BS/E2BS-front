@@ -5,7 +5,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +29,9 @@ import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
+
+import jakarta.servlet.http.Cookie;
 
 @WithMockUser(username = "admin", roles = "ADMIN")
 @ActiveProfiles("dev")
@@ -38,6 +43,9 @@ class GuestCartControllerTest {
 
 	@MockitoBean
 	private GuestCartService guestCartService;
+
+	@MockitoBean
+	private DeliveryFeeSevice deliveryFeeSevice;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -88,24 +96,32 @@ class GuestCartControllerTest {
 	}
 
 	@Test
-	@DisplayName("GET /guests/carts - 게스트 장바구니 목록 조회 테스트")
-	void getCartsByGuest() throws Exception {
+	@DisplayName("GET /guests/carts - 게스트 장바구니 조회 테스트")
+	void guestGetCartItems() throws Exception {
 		// given
-		ResponseCartItemsForGuestDTO requestDto = new ResponseCartItemsForGuestDTO();
-		requestDto.setProductTotalPrice(5000L);
+		String guestKey = UUID.randomUUID().toString();
+		Cookie guestCookie = new Cookie("guestKey", guestKey);
 
-		ResponseDeliveryFeeDTO deliveryFeeDTO = new ResponseDeliveryFeeDTO();
-		deliveryFeeDTO.setDeliveryFeeAmount(0L);
-		requestDto.setDeliveryFee(deliveryFeeDTO);
+		List<ResponseCartItemsForGuestDTO> dummyCartItems = List.of();
 
-		when(guestCartService.getCartItemsByGuest(anyString())).thenReturn(List.of(requestDto));
+		ResponseDeliveryFeeDTO deliveryFeeDTO = new ResponseDeliveryFeeDTO(1L, 3000, 50000, LocalDateTime.now());
+
+		when(guestCartService.getCartItemsByGuest(guestKey)).thenReturn(dummyCartItems);
+		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(deliveryFeeDTO);
 
 		// when & then
-		mockMvc.perform(get("/guests/carts").session(session))
+		mockMvc.perform(get("/guests/carts")
+				.cookie(guestCookie)
+				.with(csrf()))
 			.andExpect(status().isOk())
 			.andExpect(view().name("cart/guest-cart"))
 			.andExpect(model().attributeExists("cartItemsByGuest"))
-			.andExpect(model().attribute("totalProductPrice", 5000L));
+			.andExpect(model().attributeExists("totalProductPrice"))
+			.andExpect(model().attributeExists("currentDeliveryPrice"))
+			.andExpect(model().attributeExists("currentDeliveryFee"));
+
+		verify(guestCartService).getCartItemsByGuest(guestKey);
+		verify(deliveryFeeSevice).getCurrentDeliveryFee();
 	}
 
 	// @Test

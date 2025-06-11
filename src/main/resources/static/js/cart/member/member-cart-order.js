@@ -25,32 +25,6 @@ $(document).ready(function () {
     updateTotalPayment();
 });
 
-function updateTotalPayment() {
-    let totalProduct = 0;
-    let totalDelivery = 0;
-
-    $('.cart-item-checkbox:checked').each(function () {
-        const productId = $(this).data('product-id');
-        const row = $(this).closest('tr');
-
-        const priceText = row.find('.unit-price').text().replace(/[^0-9]/g, '');
-        const unitPrice = parseInt(priceText, 10) || 0;
-
-        const quantity = parseInt($('#quantity-' + productId).val(), 10) || 1;
-        totalProduct += unitPrice * quantity;
-
-        // 배송비는 각 체크된 항목별로 추출
-        const deliveryText = row.find('.unit-delivery-price').text().replace(/[^0-9]/g, '');
-        const deliveryFee = parseInt(deliveryText, 10) || 0;
-        totalDelivery += deliveryFee;
-    });
-
-    // DOM 반영
-    $('#totalProductPrice').text(totalProduct.toLocaleString('ko-KR') + '원');
-    $('#totalDeliveryPrice').text(totalDelivery.toLocaleString('ko-KR') + '원');
-    $('#totalPaymentPrice').text((totalProduct + totalDelivery).toLocaleString('ko-KR') + '원');
-}
-
 // 체크된 상품 주문
 $(document).ready(function () {
     $('#order-btn').click(function (e) {

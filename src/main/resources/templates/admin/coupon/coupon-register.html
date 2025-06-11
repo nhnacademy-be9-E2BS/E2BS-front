@@ -214,8 +214,8 @@
                                                                 onclick="selectCategory(this)">선택</button>
                                                     </div>
                                                 </div>
-                                                <ul th:if="${#lists.size(category.children) > 0}" class="ms-4 mt-2">
-                                                    <th:block th:replace="admin/coupon/coupon-register-categoryFragment :: categoryFragment(category=${category})" />
+                                                <ul th:if="${category.children != null and #lists.size(category.children) > 0}" class="ms-4 mt-2">
+                                                    <th:block th:replace="admin/coupon/coupon-register-category-fragment :: category-fragment(category=${category})" />
                                                 </ul>
                                             </li>
                                         </ul>

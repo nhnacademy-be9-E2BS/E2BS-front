@@ -18,25 +18,37 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.nhnacademy.front.common.page.PageResponse;
+import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
+import com.nhnacademy.front.review.adaptor.MemberReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ProductReviewAdaptor;
 import com.nhnacademy.front.review.adaptor.ReviewAdaptor;
 import com.nhnacademy.front.review.exception.ReviewProcessException;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewMetaDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseMemberReviewDTO;
+import com.nhnacademy.front.review.model.dto.response.ResponseReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 import com.nhnacademy.front.review.service.impl.ReviewServiceImpl;
 
+import feign.FeignException;
+
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceImplTest {
+
+	@Mock
+	private MemberReviewAdaptor memberReviewAdaptor;
 
 	@Mock
 	private ProductReviewAdaptor productReviewAdaptor;
 
 	@Mock
 	private ReviewAdaptor reviewAdaptor;
+
+	@Mock
+	private OrderAdaptor orderAdaptor;
 
 	@InjectMocks
 	private ReviewServiceImpl reviewService;
@@ -66,7 +78,22 @@ class ReviewServiceImplTest {
 		RequestCreateReviewDTO request = new RequestCreateReviewDTO(1L, null, "memberId", "좋아요", 5, mockImage);
 
 		when(reviewAdaptor.createReview(meta, mockImage))
-			.thenReturn(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
+			.thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+
+		// when & then
+		assertThrows(ReviewProcessException.class, () -> reviewService.createReview(request));
+	}
+
+	@Test
+	@DisplayName("리뷰 생성 실패 - FeignException")
+	void createReview_Fail_FeignException() {
+		// given
+		RequestCreateReviewMetaDTO meta = new RequestCreateReviewMetaDTO(1L, null, "memberId", "좋아요", 5);
+		MockMultipartFile mockImage = new MockMultipartFile("image", "image.jpg", "image/jpeg", "data".getBytes());
+		RequestCreateReviewDTO request = new RequestCreateReviewDTO(1L, null, "memberId", "좋아요", 5, mockImage);
+
+		when(reviewAdaptor.createReview(meta, mockImage))
+			.thenThrow(mock(FeignException.class));
 
 		// when & then
 		assertThrows(ReviewProcessException.class, () -> reviewService.createReview(request));
@@ -166,4 +193,78 @@ class ReviewServiceImplTest {
 		assertThrows(ReviewProcessException.class, () -> reviewService.getReviewInfo(productId));
 	}
 
+	@Test
+	@DisplayName("회원 리뷰 목록 조회 테스트")
+	void getReviewsByMember() {
+		// given
+		PageResponse<ResponseMemberReviewDTO> page = new PageResponse<>();
+		when(memberReviewAdaptor.getReviewsByMember(any(), any())).thenReturn(ResponseEntity.ok(page));
+
+		// when
+		PageResponse<ResponseMemberReviewDTO> result = reviewService.getReviewsByMember("mem1", Pageable.ofSize(5));
+
+		// then
+		assertEquals(result, page);
+	}
+
+	@Test
+	@DisplayName("회원 리뷰 목록 조회 테스트 - 실패(HTTP 오류)")
+	void getReviewsByMember_Fail_ReviewProcessException() {
+		// given
+		when(memberReviewAdaptor.getReviewsByMember(any(), any()))
+			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+		// when & then
+		assertThrows(ReviewProcessException.class, () -> reviewService.getReviewsByMember(any(), any()));
+	}
+
+	@Test
+	@DisplayName("리뷰 여부 조회 테스트")
+	void isReviewedByOrder() {
+		// given
+		when(orderAdaptor.isReviewedByOrder(any())).thenReturn(ResponseEntity.ok(true));
+
+		// when
+		Boolean result = reviewService.isReviewedByOrder("orderCode");
+
+		// then
+		assertTrue(result);
+	}
+
+	@Test
+	@DisplayName("리뷰 여부 조회 테스트 - 실패(HTTP오류)")
+	void isReviewedByOrder_Fail_FailException() {
+		// given
+		when(orderAdaptor.isReviewedByOrder(any()))
+			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+		// when & then
+		assertThrows(ReviewProcessException.class, () -> reviewService.isReviewedByOrder(any()));
+	}
+
+	@Test
+	@DisplayName("주문 상세 ID로 리뷰 조회 테스트")
+	void findReviewByOrderDetailId() {
+		// given
+		ResponseReviewDTO dto = new ResponseReviewDTO();
+		when(reviewAdaptor.findReviewByOrderDetailId(anyLong())).thenReturn(ResponseEntity.ok(dto));
+
+		// when
+		ResponseReviewDTO result = reviewService.findReviewByOrderDetailId(1L);
+
+		// then
+		assertEquals(result, dto);
+	}
+
+	@Test
+	@DisplayName("주문 상세 ID로 리뷰 조회 테스트 - 실패(HTTP오류)")
+	void findReviewByOrderDetailId_Fail_FailException() {
+		// given
+		when(reviewAdaptor.findReviewByOrderDetailId(anyLong()))
+			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+		// when & then
+		assertThrows(ReviewProcessException.class, () -> reviewService.findReviewByOrderDetailId(anyLong()));
+	}
+	
 }

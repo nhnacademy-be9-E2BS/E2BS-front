@@ -23,9 +23,9 @@ public class ProductServiceImpl implements ProductService {
 	 * product 단일 조회 (상세 조회)
 	 */
 	@Override
-	public ResponseProductReadDTO getProduct(long productId) {
+	public ResponseProductReadDTO getProduct(long productId, String memberId) {
 		try {
-			ResponseEntity<ResponseProductReadDTO> response = productAdaptor.getProductById(productId);
+			ResponseEntity<ResponseProductReadDTO> response = productAdaptor.getProductById(productId, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
 				throw new ProductGetProcessException("도서 단일 조회 실패");
@@ -36,17 +36,20 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
-
 	/**
 	 * order 전용 - 도서 여러권 리스트 조회
 	 */
 	@Override
-	public List<ResponseProductReadDTO> getProducts(List<Long> productIds) throws FeignException {
-		ResponseEntity<List<ResponseProductReadDTO>> response = productAdaptor.getProducts(productIds);
+	public List<ResponseProductReadDTO> getProducts(List<Long> productIds) {
+		try {
+			ResponseEntity<List<ResponseProductReadDTO>> response = productAdaptor.getProducts(productIds);
 
-		if (!response.getStatusCode().is2xxSuccessful()) {
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new ProductGetProcessException("order 전용 리스트 조회 실패");
+			}
+			return response.getBody();
+		} catch (FeignException e) {
 			throw new ProductGetProcessException("order 전용 리스트 조회 실패");
 		}
-		return response.getBody();
 	}
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,7 +24,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
@@ -31,6 +31,8 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.elasticsearch.controller.ProductSearchController;
 import com.nhnacademy.front.elasticsearch.model.dto.domain.ProductSortType;
 import com.nhnacademy.front.elasticsearch.service.ProductSearchService;
+import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
@@ -38,10 +40,12 @@ import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublish
 import com.nhnacademy.front.product.state.model.dto.domain.ProductStateName;
 import com.nhnacademy.front.product.state.model.dto.response.ResponseProductStateDTO;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @WithMockUser(username = "admin", roles = "ADMIN")
 @WebMvcTest(controllers = ProductSearchController.class)
 @ActiveProfiles("dev")
-public class ProductSearchControllerTest {
+class ProductSearchControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -66,9 +70,6 @@ public class ProductSearchControllerTest {
 		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
 
-	@Autowired
-	private ObjectMapper objectMapper;
-
 	@Test
 	@DisplayName("검색어로 도서 조회 - sorting")
 	void get_products_by_search_sorting_test() throws Exception {
@@ -79,11 +80,11 @@ public class ProductSearchControllerTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		String keyword = "title";
@@ -107,22 +108,31 @@ public class ProductSearchControllerTest {
 			sortInfo, true, 2, false
 		);
 
-		when(productSearchService.getProductsBySearch(any(Pageable.class), anyString(), any(ProductSortType.class)))
+		when(productSearchService.getProductsBySearch(any(Pageable.class), anyString(), any(ProductSortType.class), anyString()))
 			.thenReturn(pageResponse);
 
-		// when & then
-		mockMvc.perform(get("/books/search")
-				.param("page", "0")
-				.param("size", "10")
-				.param("keyword", keyword)
-				.param("sort", sort.toString())
-				.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(view().name("product/search"))
-			.andExpect(model().attributeExists("products"))
-			.andExpect(model().attributeExists("keyword"))
-			.andExpect(model().attributeExists("sort"))
-			.andExpect(model().attribute("sort", sort.toString()));
+		try (
+			MockedStatic<JwtHasToken> mockedHasToken = mockStatic(JwtHasToken.class);
+			MockedStatic<JwtGetMemberId> mockedGetMemberId = mockStatic(JwtGetMemberId.class)
+		) {
+			mockedHasToken.when(() -> JwtHasToken.hasToken(any(HttpServletRequest.class))).thenReturn(true);
+			mockedGetMemberId.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class)))
+				.thenReturn("mockMemberId");
+
+			// when & then
+			mockMvc.perform(get("/books/search")
+					.param("page", "0")
+					.param("size", "10")
+					.param("keyword", keyword)
+					.param("sort", sort.toString())
+					.accept(MediaType.TEXT_HTML))
+				.andExpect(status().isOk())
+				.andExpect(view().name("product/search"))
+				.andExpect(model().attributeExists("products"))
+				.andExpect(model().attributeExists("keyword"))
+				.andExpect(model().attributeExists("sort"))
+				.andExpect(model().attribute("sort", sort.toString()));
+		}
 	}
 
 	@Test
@@ -135,11 +145,11 @@ public class ProductSearchControllerTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		String keyword = "title";
@@ -162,7 +172,7 @@ public class ProductSearchControllerTest {
 			sortInfo, true, 2, false
 		);
 
-		when(productSearchService.getProductsBySearch(any(Pageable.class), anyString(), isNull()))
+		when(productSearchService.getProductsBySearch(any(Pageable.class), anyString(), isNull(), anyString()))
 			.thenReturn(pageResponse);
 
 		// when & then
@@ -189,11 +199,11 @@ public class ProductSearchControllerTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		ProductSortType sort = ProductSortType.LATEST;
@@ -216,7 +226,7 @@ public class ProductSearchControllerTest {
 			sortInfo, true, 2, false
 		);
 
-		when(productSearchService.getProductsByCategory(any(Pageable.class), anyLong(), any(ProductSortType.class)))
+		when(productSearchService.getProductsByCategory(any(Pageable.class), anyLong(), any(ProductSortType.class), anyString()))
 			.thenReturn(pageResponse);
 		when(userCategoryService.getCategoriesById(anyLong())).thenReturn(categoryADTO);
 
@@ -244,11 +254,11 @@ public class ProductSearchControllerTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
@@ -269,21 +279,30 @@ public class ProductSearchControllerTest {
 			sortInfo, true, 2, false
 		);
 
-		when(productSearchService.getProductsByCategory(any(Pageable.class), anyLong(), isNull()))
+		when(productSearchService.getProductsByCategory(any(Pageable.class), anyLong(), isNull(), anyString()))
 			.thenReturn(pageResponse);
 		when(userCategoryService.getCategoriesById(anyLong())).thenReturn(categoryADTO);
 
-		// when & then
-		mockMvc.perform(get("/books/search/category/1")
-				.param("page", "0")
-				.param("size", "10")
-				.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(view().name("product/category"))
-			.andExpect(model().attributeExists("products"))
-			.andExpect(model().attributeExists("rootCategory"))
-			.andExpect(model().attributeExists("sort"))
-			.andExpect(model().attribute("sort", ProductSortType.NO_SORT.toString()));
+		try (
+			MockedStatic<JwtHasToken> mockedHasToken = mockStatic(JwtHasToken.class);
+			MockedStatic<JwtGetMemberId> mockedGetMemberId = mockStatic(JwtGetMemberId.class)
+		) {
+			mockedHasToken.when(() -> JwtHasToken.hasToken(any(HttpServletRequest.class))).thenReturn(true);
+			mockedGetMemberId.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class)))
+				.thenReturn("mockMemberId");
+
+			// when & then
+			mockMvc.perform(get("/books/search/category/1")
+					.param("page", "0")
+					.param("size", "10")
+					.accept(MediaType.TEXT_HTML))
+				.andExpect(status().isOk())
+				.andExpect(view().name("product/category"))
+				.andExpect(model().attributeExists("products"))
+				.andExpect(model().attributeExists("rootCategory"))
+				.andExpect(model().attributeExists("sort"))
+				.andExpect(model().attribute("sort", ProductSortType.NO_SORT.toString()));
+		}
 	}
 
 	@Test
@@ -296,14 +315,15 @@ public class ProductSearchControllerTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		Pageable pageable = PageRequest.of(0, 10);
+		String memberId = "";
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
 		sortInfo.setEmpty(true);
@@ -323,7 +343,7 @@ public class ProductSearchControllerTest {
 			sortInfo, true, 2, false
 		);
 
-		Mockito.when(productSearchService.getBestProducts(pageable)).thenReturn(pageResponse);
+		Mockito.when(productSearchService.getBestProducts(pageable, memberId)).thenReturn(pageResponse);
 
 		// when & then
 		mockMvc.perform(get("/books/search/best")
@@ -345,14 +365,15 @@ public class ProductSearchControllerTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		Pageable pageable = PageRequest.of(0, 10);
+		String memberId = "";
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
 		sortInfo.setEmpty(true);
@@ -372,7 +393,7 @@ public class ProductSearchControllerTest {
 			sortInfo, true, 2, false
 		);
 
-		Mockito.when(productSearchService.getNewestProducts(pageable)).thenReturn(pageResponse);
+		Mockito.when(productSearchService.getNewestProducts(pageable, memberId)).thenReturn(pageResponse);
 
 		// when & then
 		mockMvc.perform(get("/books/search/newest")

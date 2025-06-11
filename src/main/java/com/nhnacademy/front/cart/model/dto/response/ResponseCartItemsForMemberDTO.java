@@ -33,9 +33,6 @@ public class ResponseCartItemsForMemberDTO {
 	@Schema(description = "상품 할인률", example = "10")
 	private BigDecimal discountRate;
 
-	@Schema(description = "배송비 정책 정보")
-	private ResponseDeliveryFeeDTO deliveryFee;
-
 	@Schema(description = "상품 이미지 경로", example = "/images/products/java.jpg")
 	private String productImagePath;
 

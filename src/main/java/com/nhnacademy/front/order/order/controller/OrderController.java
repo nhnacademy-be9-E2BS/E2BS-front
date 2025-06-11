@@ -43,7 +43,7 @@ import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
-import com.nhnacademy.front.common.util.GuestCookieUtil;
+import com.nhnacademy.front.common.util.CookieUtil;
 import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrderCouponDTO;
 import com.nhnacademy.front.coupon.membercoupon.service.MemberCouponService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
@@ -51,11 +51,13 @@ import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.request.RequestPaymentApproveDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
+import com.nhnacademy.front.order.order.resolver.PaymentQueryParamResolverFactory;
 import com.nhnacademy.front.order.order.service.OrderService;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
@@ -68,7 +70,6 @@ import com.nhnacademy.front.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -104,6 +105,8 @@ public class OrderController {
 	private final ObjectMapper objectMapper;
 
 	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
+
+	private final PaymentQueryParamResolverFactory paymentResolverFactory;
 
 
 	/**
@@ -196,7 +199,7 @@ public class OrderController {
 	 * 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 미리 저장하는 기능
 	 */
 	@Operation(summary = "외부 API 결제 요청 시 주문서 저장", description = "외부 API 결제 요청 시 DB에 주문 정보를 저장")
-	@PostMapping("/order/tossPay")
+	@PostMapping("/order/payment")
 	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(
 		@Parameter(description = "주문 상품 정보") @Validated @RequestBody RequestOrderWrapperDTO request,
 		BindingResult bindingResult) {
@@ -227,12 +230,11 @@ public class OrderController {
 	 */
 	@Operation(summary = "결제 승인 처리", description = "주문 완료 시 페이지 제공")
 	@GetMapping("/order/success")
-	public String getSuccessOrder(
-		@Parameter(description = "주문 코드") @RequestParam String orderId,
-		@Parameter(description = "외부 API에서 발급된 결제 키") @RequestParam String paymentKey,
-		@Parameter(description = "결제 금액") @RequestParam long amount) {
+	public String getSuccessOrder(HttpServletRequest request) {
+		RequestPaymentApproveDTO approveRequest = paymentResolverFactory.resolve(request);
+
 		// 결제 승인 요청
-		ResponseEntity<Void> response = orderService.confirmOrder(orderId, paymentKey, amount);
+		ResponseEntity<Void> response = orderService.confirmOrder(approveRequest);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
 			// 결제 성공창으로 리다이렉트
@@ -240,7 +242,7 @@ public class OrderController {
 		} else {
 			// 결제 실패 창으로 리다이렉트
 			// 외부 API 결제 승인 실패 시 저장된 주문서를 제거하도록 요청
-			orderService.deleteOrder(orderId);
+			orderService.deleteOrder(request.getParameter("orderId"));
 			return "redirect:/order/fail";
 		}
 	}
@@ -264,10 +266,10 @@ public class OrderController {
 		if (JwtHasToken.hasToken(request)) {
 			memberId = JwtGetMemberId.jwtGetMemberId(request);
 		} else {
-			guestKey = GuestCookieUtil.getGuestKey(request);
+			guestKey = CookieUtil.getCookieValue("guestKey", request);
 			if (Objects.isNull(guestKey)) {
 				guestKey = UUID.randomUUID().toString();
-				GuestCookieUtil.setGuestCookie(response, guestKey);
+				CookieUtil.setCookie("guestKey", response, guestKey);
 			}
 		}
 
@@ -275,10 +277,7 @@ public class OrderController {
 		request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
 
 		// 쿠키 삭제
-		Cookie deleteCookie = new Cookie("orderCart", null);
-		deleteCookie.setPath("/");
-		deleteCookie.setMaxAge(0);
-		response.addCookie(deleteCookie);
+		CookieUtil.clearCookie("orderCart", response);
 
 		return "payment/confirmation";
 	}
@@ -360,7 +359,7 @@ public class OrderController {
 		model.addAttribute("productAmount", productAmount);
 		model.addAttribute("isReviewed", isReviewed);
 
-		return "member/mypage/orderDetails";
+		return "member/mypage/order-details";
 	}
 
 	/**
@@ -398,7 +397,7 @@ public class OrderController {
 		Page<ResponseOrderReturnDTO> returns = PageResponseConverter.toPage(response.getBody());
 		model.addAttribute("returns", returns);
 
-		return "member/mypage/orderReturns";
+		return "member/mypage/order-returns";
 	}
 
 	@Operation(summary = "반품 상세 내역 페이지", description = "회원이 반품 상세 정보에 대해 확인 가능한 페이지 제공")
@@ -408,7 +407,7 @@ public class OrderController {
 
 		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
 		model.addAttribute("returnDTO", returnDTO);
-		return "member/mypage/orderReturnDetail";
+		return "member/mypage/order-return-detail";
 	}
 
 	@Operation(summary = "비회원 주문 내역 확인 페이지", description = "비회원이 이메일, 비밀번호로 주문했던 내역을 확인가능한 페이지 제공")
@@ -460,6 +459,6 @@ public class OrderController {
 		model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("productAmount", productAmount);
 
-		return "customer/orderDetails";
+		return "customer/order-details";
 	}
 }

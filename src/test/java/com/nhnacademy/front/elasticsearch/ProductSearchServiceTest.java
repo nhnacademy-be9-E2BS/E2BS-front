@@ -49,16 +49,17 @@ class ProductSearchServiceTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		Pageable pageable = PageRequest.of(0, 10);
 		String keyword = "title";
 		ProductSortType sort = ProductSortType.LATEST;
+		String memberId = "";
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
 		sortInfo.setEmpty(true);
@@ -81,14 +82,14 @@ class ProductSearchServiceTest {
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response =
 			new ResponseEntity<>(pageResponse, HttpStatus.OK);
 
-		when(productSearchAdaptor.getProductsBySearch(pageable, keyword, sort)).thenReturn(response);
+		when(productSearchAdaptor.getProductsBySearch(pageable, keyword, sort, memberId)).thenReturn(response);
 
 		// when
-		PageResponse<ResponseProductReadDTO> result = productSearchService.getProductsBySearch(pageable, keyword, sort);
+		PageResponse<ResponseProductReadDTO> result = productSearchService.getProductsBySearch(pageable, keyword, sort, memberId);
 
 		// then
 		assertThat(result).isEqualTo(pageResponse);
-		verify(productSearchAdaptor, times(1)).getProductsBySearch(pageable, keyword, sort);
+		verify(productSearchAdaptor, times(1)).getProductsBySearch(pageable, keyword, sort, memberId);
 	}
 
 	@Test
@@ -98,14 +99,15 @@ class ProductSearchServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		String keyword = "title";
 		ProductSortType sort = ProductSortType.LATEST;
+		String memberId = "";
 
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response =
 			new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-		when(productSearchAdaptor.getProductsBySearch(pageable, keyword, sort)).thenReturn(response);
+		when(productSearchAdaptor.getProductsBySearch(pageable, keyword, sort, memberId)).thenReturn(response);
 
 		// when & then
-		assertThatThrownBy(() -> productSearchService.getProductsBySearch(pageable, keyword, sort))
+		assertThatThrownBy(() -> productSearchService.getProductsBySearch(pageable, keyword, sort, memberId))
 			.isInstanceOf(ProductGetProcessException.class);
 	}
 
@@ -116,11 +118,12 @@ class ProductSearchServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		String keyword = "title";
 		ProductSortType sort = ProductSortType.LATEST;
+		String memberId = "";
 
-		when(productSearchAdaptor.getProductsBySearch(pageable, keyword, sort)).thenThrow(FeignException.class);
+		when(productSearchAdaptor.getProductsBySearch(pageable, keyword, sort, memberId)).thenThrow(FeignException.class);
 
 		// when & then
-		assertThatThrownBy(() -> productSearchService.getProductsBySearch(pageable, keyword, sort))
+		assertThatThrownBy(() -> productSearchService.getProductsBySearch(pageable, keyword, sort, memberId))
 			.isInstanceOf(ProductGetProcessException.class);
 	}
 
@@ -134,16 +137,17 @@ class ProductSearchServiceTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		Pageable pageable = PageRequest.of(0, 10);
 		Long categoryId = 1L;
 		ProductSortType sort = ProductSortType.LATEST;
+		String memberId = "";
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
 		sortInfo.setEmpty(true);
@@ -166,14 +170,14 @@ class ProductSearchServiceTest {
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response =
 			new ResponseEntity<>(pageResponse, HttpStatus.OK);
 
-		when(productSearchAdaptor.getProductsByCategory(pageable, categoryId, sort)).thenReturn(response);
+		when(productSearchAdaptor.getProductsByCategory(pageable, categoryId, sort, memberId)).thenReturn(response);
 
 		// when
-		PageResponse<ResponseProductReadDTO> result = productSearchService.getProductsByCategory(pageable, categoryId, sort);
+		PageResponse<ResponseProductReadDTO> result = productSearchService.getProductsByCategory(pageable, categoryId, sort, memberId);
 
 		// then
 		assertThat(result).isEqualTo(pageResponse);
-		verify(productSearchAdaptor, times(1)).getProductsByCategory(pageable, categoryId, sort);
+		verify(productSearchAdaptor, times(1)).getProductsByCategory(pageable, categoryId, sort, memberId);
 	}
 
 	@Test
@@ -183,14 +187,15 @@ class ProductSearchServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		Long categoryId = 1L;
 		ProductSortType sort = ProductSortType.LATEST;
+		String memberId = "";
 
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response =
 			new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-		when(productSearchAdaptor.getProductsByCategory(pageable, categoryId, sort)).thenReturn(response);
+		when(productSearchAdaptor.getProductsByCategory(pageable, categoryId, sort, memberId)).thenReturn(response);
 
 		// when & then
-		assertThatThrownBy(() -> productSearchService.getProductsByCategory(pageable, categoryId, sort))
+		assertThatThrownBy(() -> productSearchService.getProductsByCategory(pageable, categoryId, sort, memberId))
 			.isInstanceOf(ProductGetProcessException.class);
 	}
 
@@ -201,11 +206,12 @@ class ProductSearchServiceTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		Long categoryId = 1L;
 		ProductSortType sort = ProductSortType.LATEST;
+		String memberId = "";
 
-		when(productSearchAdaptor.getProductsByCategory(pageable, categoryId, sort)).thenThrow(FeignException.class);
+		when(productSearchAdaptor.getProductsByCategory(pageable, categoryId, sort, memberId)).thenThrow(FeignException.class);
 
 		// when & then
-		assertThatThrownBy(() -> productSearchService.getProductsByCategory(pageable, categoryId, sort))
+		assertThatThrownBy(() -> productSearchService.getProductsByCategory(pageable, categoryId, sort, memberId))
 			.isInstanceOf(ProductGetProcessException.class);
 	}
 
@@ -219,14 +225,15 @@ class ProductSearchServiceTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		Pageable pageable = PageRequest.of(0, 10);
+		String memberId = "";
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
 		sortInfo.setEmpty(true);
@@ -249,14 +256,14 @@ class ProductSearchServiceTest {
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response =
 			new ResponseEntity<>(pageResponse, HttpStatus.OK);
 
-		when(productSearchAdaptor.getBestProducts(pageable)).thenReturn(response);
+		when(productSearchAdaptor.getBestProducts(pageable, memberId)).thenReturn(response);
 
 		// when
-		PageResponse<ResponseProductReadDTO> result = productSearchService.getBestProducts(pageable);
+		PageResponse<ResponseProductReadDTO> result = productSearchService.getBestProducts(pageable, memberId);
 
 		// then
 		assertThat(result).isEqualTo(pageResponse);
-		verify(productSearchAdaptor, times(1)).getBestProducts(pageable);
+		verify(productSearchAdaptor, times(1)).getBestProducts(pageable, memberId);
 	}
 
 	@Test
@@ -264,13 +271,14 @@ class ProductSearchServiceTest {
 	void get_best_products_fail1_test() {
 		// given
 		Pageable pageable = PageRequest.of(0, 10);
+		String memberId = "";
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response =
 			new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-		when(productSearchAdaptor.getBestProducts(pageable)).thenReturn(response);
+		when(productSearchAdaptor.getBestProducts(pageable, memberId)).thenReturn(response);
 
 		// when & then
-		assertThatThrownBy(() -> productSearchService.getBestProducts(pageable))
+		assertThatThrownBy(() -> productSearchService.getBestProducts(pageable, memberId))
 			.isInstanceOf(ProductGetProcessException.class);
 	}
 
@@ -279,10 +287,11 @@ class ProductSearchServiceTest {
 	void get_best_products_fail2_test() {
 		// given
 		Pageable pageable = PageRequest.of(0, 10);
-		when(productSearchAdaptor.getBestProducts(pageable)).thenThrow(FeignException.class);
+		String memberId = "";
+		when(productSearchAdaptor.getBestProducts(pageable, memberId)).thenThrow(FeignException.class);
 
 		// when & then
-		assertThatThrownBy(() -> productSearchService.getBestProducts(pageable))
+		assertThatThrownBy(() -> productSearchService.getBestProducts(pageable, memberId))
 			.isInstanceOf(ProductGetProcessException.class);
 	}
 
@@ -296,14 +305,15 @@ class ProductSearchServiceTest {
 		ResponseProductReadDTO responseA = new ResponseProductReadDTO(1L, productStateDTO, publisherDTO, "title A",
 			"content A", "description A",
 			LocalDate.now(), "978-89-12345-01-1", 10000, 8000, true, 1000, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 3.0, 2, false, 10);
 		ResponseProductReadDTO responseB = new ResponseProductReadDTO(2L, productStateDTO, publisherDTO, "title B",
 			"content B", "description B",
 			LocalDate.now(), "978-89-12345-01-2", 9000, 7000, false, 500, new ArrayList<>(), new ArrayList<>(),
-			List.of(categoryADTO), new ArrayList<>());
+			List.of(categoryADTO), new ArrayList<>(), 4.3, 7, false, 10);
 		List<ResponseProductReadDTO> dtos = List.of(responseA, responseB);
 
 		Pageable pageable = PageRequest.of(0, 10);
+		String memberId = "";
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
 		sortInfo.setEmpty(true);
@@ -326,14 +336,14 @@ class ProductSearchServiceTest {
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response =
 			new ResponseEntity<>(pageResponse, HttpStatus.OK);
 
-		when(productSearchAdaptor.getNewestProducts(pageable)).thenReturn(response);
+		when(productSearchAdaptor.getNewestProducts(pageable, memberId)).thenReturn(response);
 
 		// when
-		PageResponse<ResponseProductReadDTO> result = productSearchService.getNewestProducts(pageable);
+		PageResponse<ResponseProductReadDTO> result = productSearchService.getNewestProducts(pageable, memberId);
 
 		// then
 		assertThat(result).isEqualTo(pageResponse);
-		verify(productSearchAdaptor, times(1)).getNewestProducts(pageable);
+		verify(productSearchAdaptor, times(1)).getNewestProducts(pageable, memberId);
 	}
 
 	@Test
@@ -341,13 +351,14 @@ class ProductSearchServiceTest {
 	void get_newest_products_fail1_test() {
 		// given
 		Pageable pageable = PageRequest.of(0, 10);
+		String memberId = "";
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response =
 			new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-		when(productSearchAdaptor.getNewestProducts(pageable)).thenReturn(response);
+		when(productSearchAdaptor.getNewestProducts(pageable, memberId)).thenReturn(response);
 
 		// when & then
-		assertThatThrownBy(() -> productSearchService.getNewestProducts(pageable))
+		assertThatThrownBy(() -> productSearchService.getNewestProducts(pageable, memberId))
 			.isInstanceOf(ProductGetProcessException.class);
 	}
 
@@ -356,10 +367,11 @@ class ProductSearchServiceTest {
 	void get_newest_products_fail2_test() {
 		// given
 		Pageable pageable = PageRequest.of(0, 10);
-		when(productSearchAdaptor.getNewestProducts(pageable)).thenThrow(FeignException.class);
+		String memberId = "";
+		when(productSearchAdaptor.getNewestProducts(pageable, memberId)).thenThrow(FeignException.class);
 
 		// when & then
-		assertThatThrownBy(() -> productSearchService.getNewestProducts(pageable))
+		assertThatThrownBy(() -> productSearchService.getNewestProducts(pageable, memberId))
 			.isInstanceOf(ProductGetProcessException.class);
 	}
 }

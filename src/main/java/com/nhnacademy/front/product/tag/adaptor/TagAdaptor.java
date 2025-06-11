@@ -14,7 +14,7 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
 
-@FeignClient(name = "tag-service", url = "${product.tag.url}")
+@FeignClient(name = "tag-service", url = "${auth.product.tag.url}")
 public interface TagAdaptor {
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseTagDTO>> getTags(Pageable pageable);

@@ -1,11 +1,18 @@
 // 상품 장바구니에 추가
 $(document).ready(function () {
     $('.guest-add-cart-btn').click(function () {
-        const card = $(this).closest('.card-product');
+        let card = $(this).closest('.card-product');
+        if (card.length === 0) {
+            card = $(this).closest('.book-card');
+        }
+
         const productId = card.data('product-id');
         let quantity = $('#quantity').val();
         if (isNaN(quantity)) {
-            quantity = 1;
+            quantity = $('#quantity__' + productId).val();
+            if (isNaN(quantity)) {
+                quantity = 1;
+            }
         }
 
         $.ajax({
@@ -18,14 +25,6 @@ $(document).ready(function () {
                     quantity: quantity
                 }
             ),
-            beforeSend: function(xhr) {
-                // CSRF 토큰이 있을 경우 설정 (Spring Security 사용 시)
-                // const token = $('meta[name="_csrf"]').attr('content');
-                // const header = $('meta[name="_csrf_header"]').attr('content');
-                // if (token && header) {
-                //     xhr.setRequestHeader(header, token);
-                // }
-            },
             success: function (response) {
                 console.log(typeof response);
                 console.log(response);

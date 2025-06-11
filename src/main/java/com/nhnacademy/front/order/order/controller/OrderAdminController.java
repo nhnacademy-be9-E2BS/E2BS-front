@@ -51,7 +51,7 @@ public class OrderAdminController {
 		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
 		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
 		model.addAttribute("orders", orders);
-		return "admin/order/ordersManagement";
+		return "admin/order/orders-management";
 	}
 
 	@Operation(summary = "관리자 배송 시작 처리", description = "관리자가 특정 주문에 대하여 배송 시작하는 요청을 처리")
@@ -83,7 +83,7 @@ public class OrderAdminController {
 		model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("productAmount", productAmount);
 
-		return "admin/order/orderDetailsManagement";
+		return "admin/order/order-details-management";
 	}
 
 
@@ -96,7 +96,7 @@ public class OrderAdminController {
 		Page<ResponseOrderReturnDTO> returns = PageResponseConverter.toPage(response.getBody());
 		model.addAttribute("returns", returns);
 
-		return "admin/order/orderReturns";
+		return "admin/order/order-returns";
 	}
 
 
@@ -106,6 +106,6 @@ public class OrderAdminController {
 
 		ResponseOrderReturnDTO returnDTO = orderService.getReturnOrderByOrderCode(orderCode).getBody();
 		model.addAttribute("returnDTO", returnDTO);
-		return "admin/order/orderReturnDetail";
+		return "admin/order/order-return-detail";
 	}
 }

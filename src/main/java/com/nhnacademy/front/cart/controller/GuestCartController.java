@@ -22,7 +22,9 @@ import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForGuestDTO;
 import com.nhnacademy.front.cart.service.GuestCartService;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
-import com.nhnacademy.front.common.util.GuestCookieUtil;
+import com.nhnacademy.front.common.util.CookieUtil;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,6 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class GuestCartController {
 
 	private final GuestCartService guestCartService;
+	private final DeliveryFeeSevice deliveryFeeSevice;
 	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
 
 
@@ -59,13 +62,13 @@ public class GuestCartController {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		String guestKey = GuestCookieUtil.getGuestKey(request);
-		if (Objects.isNull(guestKey)) {
-			guestKey = UUID.randomUUID().toString();
-			GuestCookieUtil.setGuestCookie(response, guestKey);
+		String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
+		if (Objects.isNull(guestCookieValue)) {
+			guestCookieValue = UUID.randomUUID().toString();
+			CookieUtil.setCookie("guestKey", response, guestCookieValue);
 		}
 
-		requestDto.setSessionId(guestKey);
+		requestDto.setSessionId(guestCookieValue);
 
 		int cartItemsCounts = guestCartService.createCartItemForGuest(requestDto);
 		request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
@@ -78,24 +81,29 @@ public class GuestCartController {
 	@GetMapping("/guests/carts")
 	public String getCartsByGuest(@Parameter(hidden = true) HttpServletRequest request, @Parameter(hidden = true) HttpServletResponse response,
 		                          @Parameter(hidden = true) Model model) {
-		String guestKey = GuestCookieUtil.getGuestKey(request);
-		if (Objects.isNull(guestKey)) {
-			guestKey = UUID.randomUUID().toString();
-			GuestCookieUtil.setGuestCookie(response, guestKey);
+		String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
+		if (Objects.isNull(guestCookieValue)) {
+			guestCookieValue = UUID.randomUUID().toString();
+			CookieUtil.setCookie("guestKey", response, guestCookieValue);
 		}
 
-		List<ResponseCartItemsForGuestDTO> cartItemsByGuest = guestCartService.getCartItemsByGuest(guestKey);
+		List<ResponseCartItemsForGuestDTO> cartItemsByGuest = guestCartService.getCartItemsByGuest(guestCookieValue);
 
 		long totalProductPrice = 0;
-		long totalDeliveryPrice = 0;
 		for (ResponseCartItemsForGuestDTO cartItem : cartItemsByGuest) {
 			totalProductPrice += cartItem.getProductTotalPrice();
-			totalDeliveryPrice += cartItem.getDeliveryFee().getDeliveryFeeAmount();
+		}
+
+		long currentDeliveryPrice = 0;
+		ResponseDeliveryFeeDTO currentDeliveryFee = deliveryFeeSevice.getCurrentDeliveryFee();
+		if (totalProductPrice < currentDeliveryFee.getDeliveryFeeFreeAmount()) {
+			currentDeliveryPrice = currentDeliveryFee.getDeliveryFeeAmount();
 		}
 
 		model.addAttribute("cartItemsByGuest", cartItemsByGuest);
 		model.addAttribute("totalProductPrice", totalProductPrice);
-		model.addAttribute("totalDeliveryPrice", totalDeliveryPrice);
+		model.addAttribute("currentDeliveryPrice", currentDeliveryPrice);
+		model.addAttribute("currentDeliveryFee", currentDeliveryFee);
 
 		return "cart/guest-cart";
 	}
@@ -114,13 +122,13 @@ public class GuestCartController {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		String guestKey = GuestCookieUtil.getGuestKey(request);
-		if (Objects.isNull(guestKey)) {
-			guestKey = UUID.randomUUID().toString();
-			GuestCookieUtil.setGuestCookie(response, guestKey);
+		String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
+		if (Objects.isNull(guestCookieValue)) {
+			guestCookieValue = UUID.randomUUID().toString();
+			CookieUtil.setCookie("guestKey", response, guestCookieValue);
 		}
 
-		requestDto.setSessionId(guestKey);
+		requestDto.setSessionId(guestCookieValue);
 
 		int cartItemsCounts = guestCartService.updateCartItemForGuest(requestDto);
 		request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
@@ -142,13 +150,13 @@ public class GuestCartController {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		String guestKey = GuestCookieUtil.getGuestKey(request);
-		if (Objects.isNull(guestKey)) {
-			guestKey = UUID.randomUUID().toString();
-			GuestCookieUtil.setGuestCookie(response, guestKey);
+		String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
+		if (Objects.isNull(guestCookieValue)) {
+			guestCookieValue = UUID.randomUUID().toString();
+			CookieUtil.setCookie("guestKey", response, guestCookieValue);
 		}
 
-		requestDto.setSessionId(guestKey);
+		requestDto.setSessionId(guestCookieValue);
 		guestCartService.deleteCartItemForGuest(requestDto);
 
 		Integer cartItemsCounts = (Integer)request.getSession().getAttribute(CART_ITEMS_COUNTS);
@@ -162,13 +170,13 @@ public class GuestCartController {
 	@DeleteMapping("/guests/carts")
 	public ResponseEntity<Void> deleteCartForGuest(@Parameter(hidden = true) HttpServletRequest request,
 		                                           @Parameter(hidden = true) HttpServletResponse response) {
-		String guestKey = GuestCookieUtil.getGuestKey(request);
-		if (Objects.isNull(guestKey)) {
-			guestKey = UUID.randomUUID().toString();
-			GuestCookieUtil.setGuestCookie(response, guestKey);
+		String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
+		if (Objects.isNull(guestCookieValue)) {
+			guestCookieValue = UUID.randomUUID().toString();
+			CookieUtil.setCookie("guestKey", response, guestCookieValue);
 		}
 
-		guestCartService.deleteCartForGuest(guestKey);
+		guestCartService.deleteCartForGuest(guestCookieValue);
 		request.getSession().setAttribute(CART_ITEMS_COUNTS, 0);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

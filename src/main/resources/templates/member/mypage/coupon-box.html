@@ -154,7 +154,7 @@
 
                                     <a th:if="${coupon.categoryName != null}"
                                        th:text="${coupon.categoryName} + ' (카테고리)'"
-                                       th:href="@{/books/category/{id}(id=${coupon.categoryId})}"
+                                       th:href="@{/books/search/category/{id}(id=${coupon.categoryId})}"
                                        style="display: inline-block; max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                        th:title="${coupon.categoryName} + ' (카테고리)'"></a>
 

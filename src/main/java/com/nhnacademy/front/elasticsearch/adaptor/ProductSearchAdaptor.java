@@ -17,10 +17,10 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductRe
 @FeignClient(name = "product-search-service", url = "${search.product.url}")
 public interface ProductSearchAdaptor {
 	@GetMapping("/search")
-	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProductsBySearch(Pageable pageable, @RequestParam String keyword, @RequestParam(required = false) ProductSortType sort);
+	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProductsBySearch(Pageable pageable, @RequestParam String keyword, @RequestParam(required = false) ProductSortType sort, @RequestParam String memberId);
 
 	@GetMapping("/category/{categoryId}")
-	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProductsByCategory(Pageable pageable, @PathVariable Long categoryId, @RequestParam(required = false) ProductSortType sort);
+	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProductsByCategory(Pageable pageable, @PathVariable Long categoryId, @RequestParam(required = false) ProductSortType sort, @RequestParam String memberId);
 
 	@GetMapping("/main/best")
 	ResponseEntity<List<ResponseMainPageProductDTO>> getBestProductsByMain();
@@ -29,8 +29,8 @@ public interface ProductSearchAdaptor {
 	ResponseEntity<List<ResponseMainPageProductDTO>> getNewestProductsByMain();
 
 	@GetMapping("/best")
-	ResponseEntity<PageResponse<ResponseProductReadDTO>> getBestProducts(Pageable pageable);
+	ResponseEntity<PageResponse<ResponseProductReadDTO>> getBestProducts(Pageable pageable, @RequestParam String memberId);
 
 	@GetMapping("/newest")
-	ResponseEntity<PageResponse<ResponseProductReadDTO>> getNewestProducts(Pageable pageable);
+	ResponseEntity<PageResponse<ResponseProductReadDTO>> getNewestProducts(Pageable pageable, @RequestParam String memberId);
 }
