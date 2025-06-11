@@ -253,7 +253,14 @@
                 </div>
 
                 <!-- 오른쪽 버튼 영역 추가 시작 -->
-                <div class="button-area">
+
+                <div th:if="${product.productState.productStateId == 3}">
+                    <h2 class="error-text">삭제</h2>
+                </div>
+                <div th:if="${product.productState.productStateId == 2 || product.productState.productStateId == 4}">
+                    <h2 class="error-text">품절/절판</h2>
+                </div>
+                <div class="button-area" th:if="${product.productState.productStateId == 1}">
                     <div class="quantity-controls" style="align-items: flex-end;">
                         <label>수량:</label>
                         <!-- 수정: 회색 칸 제거, 텍스트로 변경 -->
