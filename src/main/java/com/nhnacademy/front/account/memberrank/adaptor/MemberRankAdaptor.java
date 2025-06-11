@@ -12,7 +12,7 @@ import com.nhnacademy.front.account.memberrank.model.dto.response.ResponseMember
 @FeignClient(name = "member-rank-adaptor", url = "${auth.member.mypage.url}")
 public interface MemberRankAdaptor {
 
-	@GetMapping("/{memberId}/rank")
-	ResponseEntity<List<ResponseMemberRankDTO>> getMemberRank(@PathVariable("memberId") String memberId);
+	@GetMapping("/{member-id}/rank")
+	ResponseEntity<List<ResponseMemberRankDTO>> getMemberRank(@PathVariable("member-id") String memberId);
 
 }

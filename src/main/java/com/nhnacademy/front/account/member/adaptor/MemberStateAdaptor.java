@@ -10,7 +10,7 @@ import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberStat
 @FeignClient(name = "member-state-adaptor", url = "${member.state.url}")
 public interface MemberStateAdaptor {
 
-	@GetMapping("/{memberId}/memberstate")
-	ResponseEntity<ResponseMemberStateDTO> getMemberState(@PathVariable("memberId") String memberId);
+	@GetMapping("/{member-id}/memberstate")
+	ResponseEntity<ResponseMemberStateDTO> getMemberState(@PathVariable("member-id") String memberId);
 
 }
