@@ -51,11 +51,13 @@ import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.request.RequestPaymentApproveDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
+import com.nhnacademy.front.order.order.resolver.PaymentQueryParamResolverFactory;
 import com.nhnacademy.front.order.order.service.OrderService;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
@@ -103,6 +105,8 @@ public class OrderController {
 	private final ObjectMapper objectMapper;
 
 	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
+
+	private final PaymentQueryParamResolverFactory paymentResolverFactory;
 
 
 	/**
@@ -195,7 +199,7 @@ public class OrderController {
 	 * 결제하기 버튼을 눌렀을 때 back에 요청하여 주문서를 미리 저장하는 기능
 	 */
 	@Operation(summary = "외부 API 결제 요청 시 주문서 저장", description = "외부 API 결제 요청 시 DB에 주문 정보를 저장")
-	@PostMapping("/order/tossPay")
+	@PostMapping("/order/payment")
 	public ResponseEntity<ResponseOrderResultDTO> postCheckOut(
 		@Parameter(description = "주문 상품 정보") @Validated @RequestBody RequestOrderWrapperDTO request,
 		BindingResult bindingResult) {
@@ -226,12 +230,11 @@ public class OrderController {
 	 */
 	@Operation(summary = "결제 승인 처리", description = "주문 완료 시 페이지 제공")
 	@GetMapping("/order/success")
-	public String getSuccessOrder(
-		@Parameter(description = "주문 코드") @RequestParam String orderId,
-		@Parameter(description = "외부 API에서 발급된 결제 키") @RequestParam String paymentKey,
-		@Parameter(description = "결제 금액") @RequestParam long amount) {
+	public String getSuccessOrder(HttpServletRequest request) {
+		RequestPaymentApproveDTO approveRequest = paymentResolverFactory.resolve(request);
+
 		// 결제 승인 요청
-		ResponseEntity<Void> response = orderService.confirmOrder(orderId, paymentKey, amount);
+		ResponseEntity<Void> response = orderService.confirmOrder(approveRequest);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
 			// 결제 성공창으로 리다이렉트
@@ -239,7 +242,7 @@ public class OrderController {
 		} else {
 			// 결제 실패 창으로 리다이렉트
 			// 외부 API 결제 승인 실패 시 저장된 주문서를 제거하도록 요청
-			orderService.deleteOrder(orderId);
+			orderService.deleteOrder(request.getParameter("orderId"));
 			return "redirect:/order/fail";
 		}
 	}
