@@ -22,11 +22,11 @@ public interface CouponAdaptor {
 	@GetMapping
 	ResponseEntity<PageResponse<ResponseCouponDTO>> getCoupons(Pageable pageable);
 
-	@GetMapping("/{couponId}")
-	ResponseEntity<ResponseCouponDTO> getCoupon(@PathVariable Long couponId);
+	@GetMapping("/{coupon-id}")
+	ResponseEntity<ResponseCouponDTO> getCoupon(@PathVariable("coupon-id") Long couponId);
 
-	@PutMapping("/{couponId}")
-	ResponseEntity<Void> updateCoupon(@PathVariable Long couponId);
+	@PutMapping("/{coupon-id}")
+	ResponseEntity<Void> updateCoupon(@PathVariable("coupon-id") Long couponId);
 
 	@GetMapping("/isActive")
 	ResponseEntity<PageResponse<ResponseCouponDTO>> getCouponsIsActive(Pageable pageable);

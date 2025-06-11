@@ -30,6 +30,6 @@ public interface CouponPolicyAdaptor {
 	/**
 	 * 관리자 쿠폰 정책 단건 조회
 	 */
-	@GetMapping("/{couponPolicyId}")
-	ResponseEntity<ResponseCouponPolicyDTO> getCouponPolicy(@PathVariable Long couponPolicyId);
+	@GetMapping("/{coupon-policy-id}")
+	ResponseEntity<ResponseCouponPolicyDTO> getCouponPolicy(@PathVariable("coupon-policy-id") Long couponPolicyId);
 }

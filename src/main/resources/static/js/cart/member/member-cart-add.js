@@ -1,11 +1,18 @@
 // 회원 상품 장바구니에 추가
 $(document).ready(function () {
     $('.member-add-cart-btn').click(function () {
-        const card = $(this).closest('.card-product');
+        let card = $(this).closest('.card-product');
+        if (card.length === 0) {
+            card = $(this).closest('.book-card');
+        }
+
         const productId = card.data('product-id');
         let quantity = $('#quantity').val();
         if (isNaN(quantity)) {
-            quantity = 1;
+            quantity = $('#quantity__' + productId).val();
+            if (isNaN(quantity)) {
+                quantity = 1;
+            }
         }
 
         $.ajax({

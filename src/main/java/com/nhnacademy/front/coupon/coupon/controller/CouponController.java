@@ -132,10 +132,10 @@ public class CouponController {
 	 */
 	@Operation(summary = "쿠폰 단건 조회", description = "연결된 쿠폰 정보를 ID로 조회")
 	@JwtTokenCheck
-	@GetMapping("/{couponId}")
+	@GetMapping("/{coupon-id}")
 	public String getCoupon(
 		@Parameter(description = "쿠폰 ID", example = "1")
-		@PathVariable Long couponId, Model model) {
+		@PathVariable("coupon-id") Long couponId, Model model) {
 		ResponseCouponDTO response = couponServiceImpl.getCoupon(couponId);
 
 		model.addAttribute("coupon", response);
@@ -152,10 +152,10 @@ public class CouponController {
 		@ApiResponse(responseCode = "400", description = "쿠폰 활성 상태 변경 실패")
 	})
 	@JwtTokenCheck
-	@PutMapping("/{couponId}")
+	@PutMapping("/{coupon-id}")
 	public ResponseEntity<Void> updateCoupon(
 		@Parameter(description = "쿠폰 ID", example = "1")
-		@PathVariable Long couponId) {
+		@PathVariable("coupon-id") Long couponId) {
 		couponServiceImpl.updateCoupon(couponId);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

@@ -4,10 +4,46 @@
       layout:decorate="~{layouts/admin-layout}">
 <body>
 <div layout:fragment="content">
-    <section class="section-margin">
+    <section>
         <div class="container">
-            <h2>Coupon Policy Detail</h2>
-            <table class="table table-bordered">
+            <!-- Header Box -->
+            <div style="border: 1px solid #ddd; border-radius: 6px; padding: 24px; margin-bottom: 32px;">
+                <h3 style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">
+                    쿠폰 정책 상세 정보
+                    <span style="font-size: 14px; color: #888; font-weight: normal;">| 쿠폰 정책의 상세 정보를 확인할 수 있습니다.</span>
+                </h3>
+            </div>
+
+            <!-- Table 스타일 -->
+            <style>
+                .detail-table th, .detail-table td {
+                    text-align: left;
+                    vertical-align: middle;
+                    font-size: 15px;
+                    padding: 12px;
+                    border: 1px solid #eee;
+                }
+
+                .detail-table th {
+                    width: 180px;
+                    background-color: #fafafa;
+                    font-weight: 600;
+                    color: #555;
+                }
+
+                .detail-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background: #fff;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+                    margin-bottom: 32px;
+                }
+            </style>
+
+            <!-- Coupon Policy Detail Table -->
+            <table class="detail-table">
                 <tbody>
                 <tr>
                     <th>쿠폰정책명</th>
@@ -35,7 +71,11 @@
                 </tr>
                 </tbody>
             </table>
-            <a class="btn btn-secondary mt-3" th:href="@{/admin/settings/couponPolicies}">목록으로</a>
+
+            <!-- Back Button -->
+            <div>
+                <a class="btn btn-sm btn-secondary" th:href="@{/admin/settings/couponPolicies}">← 목록으로</a>
+            </div>
         </div>
     </section>
 </div>

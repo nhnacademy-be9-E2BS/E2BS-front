@@ -94,10 +94,10 @@ public class CouponPolicyController {
 		}
 	)
 	@JwtTokenCheck
-	@GetMapping("/{couponPolicyId}")
+	@GetMapping("/{coupon-policy-id}")
 	public String getCouponPolicyById(
 		@Parameter(description = "쿠폰 정책 ID", example = "1")
-		@PathVariable Long couponPolicyId,
+		@PathVariable("coupon-policy-id") Long couponPolicyId,
 		Model model) {
 
 		ResponseCouponPolicyDTO responseDTO = couponPolicyServiceImpl.getCouponPolicyById(couponPolicyId);

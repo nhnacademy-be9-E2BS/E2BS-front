@@ -11,10 +11,20 @@
             color: red; /* 좋아요 누른 상태 */
         }
 
+        .card-img {
+            align-items: center;
+            justify-content: center;
+            margin-right: 25px;
+            margin-top: 30px;
+            margin-left: 7px;
+        }
+
         .book-list {
             list-style: none;
             padding: 0;
             margin: 0;
+            margin-top: 30px;
+
         }
 
         .content {
@@ -44,11 +54,25 @@
         .fa-star {
             color: #ccc;
             transition: color 0.2s ease;
+            background: none;
+            -webkit-background-clip: initial;
+            -webkit-text-fill-color: initial;
         }
 
         .fa-star.filled {
             color: gold;
-            transition: color 0.2s ease;
+        }
+
+        .fa-star.partial {
+            background: linear-gradient(
+                    to right,
+                    gold var(--fill-percent, 0%),
+                    #ccc var(--fill-percent, 0%)
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
         }
 
         .list {
@@ -56,6 +80,69 @@
             display: flex; /* 가로 배치 */
             gap: 5px; /* 별 사이 간격 */
         }
+
+        .book-desc {
+            margin-top: 8px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.5;
+            /* 2줄 말줄임표 처리 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 최대 2줄 */
+            -webkit-box-orient: vertical;
+            word-break: break-all; /* 줄바꿈/말줄임 안정성 ↑ */
+        }
+
+        .card-float {
+            margin-top: 30px;
+        }
+
+        .button-area {
+            right: 20px;
+            top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            padding: 10px; /* 추가: 여백 추가로 깔끔함 */
+        }
+
+        .button-area button {
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 125px;
+            margin-left: 50px;
+            border: none;
+            border-radius: 5px; /* 둥근 모서리 */
+        }
+
+        .increase, .reduced {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .increase:hover, .reduced:hover {
+            background: transparent none;
+        }
+
+        .increase i, .reduced i {
+            font-size: 14px;
+        }
+
+        .quantity-btn { /* 추가: 수량 조절 버튼 스타일 */
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 5px; /* 수정: 패딩 조정으로 회색 칸 제거 */
+        }
+
     </style>
 </head>
 
@@ -92,47 +179,27 @@
                          th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
                         <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
                             <img th:src="${product.productImagePaths[0].productImagePath}"
-                                 alt="대표 이미지"
+                                 alt="대표 이미지" style="width: 130px; height: auto; "
                                  onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                         </a>
-                        <!--                        <ul class="card-product__imgOverlay">-->
-                        <!--                            <li><a th:href="@{/books/{productId}(productId=${product.productId})}"-->
-                        <!--                                   class="search-link">-->
-                        <!--                                <button><i class="ti-search"></i></button>-->
-                        <!--                            </a></li>-->
-
-                        <!--                            <li th:if="${session.isMember}">-->
-                        <!--                                <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>-->
-                        <!--                            </li>-->
-                        <!--                            <li th:if="${session.isMember == null}">-->
-                        <!--                                <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>-->
-                        <!--                            </li>-->
-
-                        <!--                            <li>-->
-                        <!--                        <button class="like-button" th:data-liked="${product.liked}">-->
-                        <!--                            <i class="ti-heart"-->
-                        <!--                               th:classappend="${product.liked} ? ' liked' : ''"></i>-->
-                        <!--                        </button>-->
-                        <!--                            </li>-->
-                        <!--                        </ul>-->
                     </div>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body card-float">
                     <!-- 도서 제목 -->
                     <h5 class="card-product__title">
                         <a th:href="@{/books/{productId}(productId=${product.productId})}"
                            th:text="${product.productTitle}" class="title-link">도서 제목</a>
                     </h5>
                     <div>
-								<span style="color: #bbb;">
-									<span th:text="${product.publisher.publisherName}"></span> |
-									<span th:each="contributor, stat : ${product.contributors}">
-										<span th:text="|${contributor.contributorName} (${contributor.positionName})|"/>
-										<span th:unless="${stat.last}" th:text="'| '"/>
-									</span>|
-									<span th:text="${product.productPublishedAt}"></span>
-								</span>
+                        <span style="color: #bbb;">
+                            <span th:text="${product.publisher.publisherName}"></span> |
+                            <span th:each="contributor, stat : ${product.contributors}">
+                                <span th:text="|${contributor.contributorName} (${contributor.positionName})|"/>
+                                <span th:unless="${stat.last}" th:text="'| '"/>
+                            </span>|
+                            <span th:text="${product.productPublishedAt}"></span>
+                        </span>
                     </div>
                     <!-- 가격 -->
                     <div th:if="${product.productRegularPrice != product.productSalePrice}">
@@ -147,19 +214,68 @@
                         </span>
                     </div>
 
+                    <!-- 별점 및 리뷰-->
                     <div class="form-group">
-                        <ul class="list">
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
+                        <ul class="list" th:data-rating="${product.avgRating != null ? product.avgRating : 0}">
+                            <li th:each="i : ${#numbers.sequence(1,5)}">
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li style="color: #000000;"
+                                th:text="${product.avgRating} + '&nbsp&nbsp&nbsp&nbsp&nbsp리뷰'"></li>
+                            <li th:text="'('+${product.reviewCount}+')'"></li>
                         </ul>
+                    </div>
 
-                        <p id="selectedRating"></p>
-                        <input type="hidden" name="reviewGrade" id="ratingInput" th:value="${product.avgRating}"/>
+                    <!--설명-->
+                    <div class="book-desc">
+                        <p th:utext="${product.productDescription}"></p>
                     </div>
                 </div>
+
+                <!-- 오른쪽 버튼 영역 추가 시작 -->
+
+                <div th:if="${product.productState.productStateId == 3}">
+                    <h2 class="error-text">삭제</h2>
+                </div>
+                <div th:if="${product.productState.productStateId == 2 || product.productState.productStateId == 4}">
+                    <h2 class="error-text">품절/절판</h2>
+                </div>
+                <div class="button-area" th:if="${product.productState.productStateId == 1}">
+                    <div class="quantity-controls" style="align-items: flex-end;">
+                        <label>수량:</label>
+                        <!-- 수정: 회색 칸 제거, 텍스트로 변경 -->
+                        <input type="number"
+                               class="quantity-input"
+                               th:id="'quantity__' + ${product.productId}"
+                               th:value="${product.productStock > 0 ? 1 : 0}"
+                               th:max="${product.productStock}"
+                               min="1">
+                        <!-- 수정: 회색 칸 제거, 텍스트로 변경 -->
+                    </div>
+                    <button th:if="${session.isMember}"
+                            th:onclick="'return submitOrderMember(' + ${product.productId} + ')'"
+                            style="background-color: #163B63FF; color: white;">
+                        바로구매
+                    </button>
+                    <button th:if="${session.isMember == null}"
+                            th:onclick="'return submitOrderGuest(' + ${product.productId} + ')'"
+                            style="background-color: #163B63FF; color: white;">
+                        바로구매
+                    </button>
+
+                    <button th:class="${session.isMember} ? 'member-add-cart-btn' : 'guest-add-cart-btn'"
+                            style="background-color: #007BFF; color: white;">
+                        쇼핑카트 담기
+                    </button>
+
+                    <button class="like-button"
+                            th:data-liked="${product.liked}"
+                            style="background-color: #e1e1e1; color: black; font-size: 12px;"
+                            th:text="${product.liked} ? '위시리스트 취소' : '위시리스트 담기'">
+                    </button>
+                </div>
+                <!-- 오른쪽 버튼 영역 추가 끝 -->
+
             </li>
         </ul>
 
@@ -220,6 +336,7 @@
         </div>
     </div>
 
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const sidebar = document.querySelector(".sidebar-filter");
@@ -250,13 +367,85 @@
                 element.textContent = isOpen ? "📁" : "📂";
             }
         }
+
+        <!--주문 하기 시 DTO 전송-->
+        function submitOrderMember(productId) {
+            const quantityInput = document.getElementById(`quantity__${productId}`);
+            const quantity = quantityInput.value;
+
+            const cartOrder = {
+                productIds: [productId],
+                cartQuantities: [quantity]
+            };
+
+            const jsonStr = JSON.stringify(cartOrder);
+            const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+
+            document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=lax`;
+            window.location.href = '/members/order';
+        }
+
+        function submitOrderGuest(productId) {
+            const quantityInput = document.getElementById(`quantity__${productId}`);
+            const quantity = quantityInput.value;
+
+            fetch('/order/auth', {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    productIds: [productId],
+                    cartQuantities: [quantity]
+                })
+            }).then(res => {
+                if (res.ok) {
+                    window.location.href = '/order/auth';
+                } else {
+                    alert("주문 요청 중 오류가 발생했습니다.");
+                }
+            });
+        }
     </script>
 
+    <script>
+        function adjustQuantity(event, change, button) { <!-- 수정: 함수 매개변수와 로직 변경 -->
+            event.preventDefault(); // 기본 이벤트 방지
+            const input = button.parentElement.querySelector('.quantity-input');
+            const maxStock = parseInt(input.getAttribute('th:max')) || 999; // Thymeleaf 속성에서 최대 재고 가져오기
+            let currentValue = parseInt(input.value) || 1;
+
+            const newValue = currentValue + change;
+
+            if (newValue >= 1 && newValue <= maxStock) {
+                input.value = newValue;
+            } else if (newValue < 1) {
+                input.value = 1;
+                alert('수량은 1개 이상이어야 합니다.');
+            } else if (newValue > maxStock) {
+                input.value = maxStock;
+                alert('재고 수량(' + maxStock + '개)을 초과할 수 없습니다.');
+            }
+        }
+
+        // 입력값 유효성 검사
+        document.addEventListener('input', function (e) { <!-- 추가: 입력값 유효성 검사 -->
+            if (e.target.classList.contains('quantity-input')) {
+                const maxStock = parseInt(e.target.getAttribute('th:max')) || 999;
+                let value = parseInt(e.target.value) || 1;
+
+                if (value < 1) {
+                    e.target.value = 1;
+                    alert('수량은 1개 이상이어야 합니다.');
+                } else if (value > maxStock) {
+                    e.target.value = maxStock;
+                    alert('재고 수량(' + maxStock + '개)을 초과할 수 없습니다.');
+                }
+            }
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:src="@{/js/like/like-add-delete.js}"></script>
     <script th:src="@{/js/cart/member/member-cart-add.js}"></script>
     <script th:src="@{/js/cart/guest/guest-cart-add.js}"></script>
-    <script th:src="@{/js/review/star-count.js}"></script>
 </div>
 </body>
 </html>

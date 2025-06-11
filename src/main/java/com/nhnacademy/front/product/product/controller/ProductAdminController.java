@@ -126,7 +126,6 @@ public class ProductAdminController {
 		List<ResponseProductStateDTO> states = productStateService.getProductStates();
 		model.addAttribute("states", states);
 
-		model.addAttribute("product", response);
 		return "admin/product/books/register";
 	}
 
@@ -159,6 +158,7 @@ public class ProductAdminController {
 
 		List<ResponseProductStateDTO> states = productStateService.getProductStates();
 		model.addAttribute("states", states);
+
 		return "admin/product/books/register";
 	}
 
