@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/register")
+@RequestMapping("/members/register")
 public class MemberRegisterController {
 
 	private final MemberService memberService;

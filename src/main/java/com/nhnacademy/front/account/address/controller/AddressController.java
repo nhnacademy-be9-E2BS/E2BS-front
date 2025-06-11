@@ -57,8 +57,8 @@ public class AddressController {
 
 	@Operation(summary = "회원 배송지 세부 폼 페이지", description = "회원 배송지 세부 정보 화면 제공")
 	@JwtTokenCheck
-	@GetMapping("/{addressId}")
-	public String getUpdateMemberAddress(@PathVariable("addressId") long addressId,
+	@GetMapping("/{address-id}")
+	public String getUpdateMemberAddress(@PathVariable("address-id") long addressId,
 		HttpServletRequest request, Model model) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		ResponseMemberAddressDTO address = addressService.getAddressByAddressId(memberId, addressId);
@@ -76,12 +76,12 @@ public class AddressController {
 			@ApiResponse(responseCode = "500", description = "요청에 따른 응답 실패", content = @Content(schema = @Schema(implementation = UpdateAddressFailedException.class)))
 		})
 	@JwtTokenCheck
-	@PutMapping("/{addressId}")
+	@PutMapping("/{address-id}")
 	public String updateMemberAddress(@Validated
 		@Parameter(description = "배송지 세부 정보 수정 요청 DTO", required = true, schema = @Schema(implementation = RequestMemberAddressSaveDTO.class))
 		@ModelAttribute RequestMemberAddressSaveDTO requestMemberAddressSaveDTO,
 		BindingResult bindingResult,
-		@PathVariable("addressId") long addressId,
+		@PathVariable("address-id") long addressId,
 		HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
@@ -98,8 +98,8 @@ public class AddressController {
 			@ApiResponse(responseCode = "500", description = "요청에 따른 응답 실패", content = @Content(schema = @Schema(implementation = DeleteAddressFailedException.class)))
 		})
 	@JwtTokenCheck
-	@DeleteMapping("/{addressId}")
-	public String deleteAddress(@PathVariable("addressId") long addressId, HttpServletRequest request) {
+	@DeleteMapping("/{address-id}")
+	public String deleteAddress(@PathVariable("address-id") long addressId, HttpServletRequest request) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		addressService.deleteAddress(memberId, addressId);
 

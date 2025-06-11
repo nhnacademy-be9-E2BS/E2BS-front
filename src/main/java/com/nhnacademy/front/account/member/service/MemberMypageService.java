@@ -89,11 +89,7 @@ public class MemberMypageService {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 
 		ResponseEntity<ResponseMemberInfoDTO> memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
-		if (!memberInfoDTO.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberRankNameException();
-		}
-
-		if (Objects.isNull(memberInfoDTO.getBody())) {
+		if (!memberInfoDTO.getStatusCode().is2xxSuccessful() || Objects.isNull(memberInfoDTO.getBody())) {
 			throw new NotFoundMemberRankNameException();
 		}
 
@@ -107,11 +103,7 @@ public class MemberMypageService {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 
 		ResponseEntity<ResponseMemberInfoDTO> memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
-		if (!memberInfoDTO.getStatusCode().is2xxSuccessful()) {
-			throw new NotFoundMemberInfoException();
-		}
-
-		if (Objects.isNull(memberInfoDTO.getBody())) {
+		if (!memberInfoDTO.getStatusCode().is2xxSuccessful() || Objects.isNull(memberInfoDTO.getBody())) {
 			throw new NotFoundMemberInfoException();
 		}
 

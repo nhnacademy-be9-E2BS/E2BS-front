@@ -24,11 +24,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private static final String ROOT_URL = "/";
-	private static final String LOGIN_URL = "/login";
+	private static final String LOGIN_URL = "/members/login";
 	private static final String PROCESS_LOGIN_URL = "/member/login";
 	private static final String LOGOUT_URL = "/logout";
 	private static final String ADMIN_LOGIN_URL = "/admin/login";
-	private static final String REGISTER_URL = "/register";
+	private static final String REGISTER_URL = "/members/register";
 	private static final String ACTUATOR_HEALTH = "/actuator/health";
 
 	private final AuthService authService;
@@ -50,7 +50,7 @@ public class SecurityConfig {
 		CustomAuthenticationFailureHandler customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
 
 		http.csrf(AbstractHttpConfigurer::disable);
-		http.securityMatcher("/member/login", "/login", "/register", "/logout");
+		http.securityMatcher("/members/login", "/member/login", "/members/register", "/logout");
 		/**
 		 *  권한있는 회원만 접근 가능한 URL 설정
 		 */

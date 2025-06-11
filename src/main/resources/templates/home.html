@@ -156,7 +156,7 @@
         }
 
         .weekly-banner {
-            background-color: #fdeee0;  /* 바깥 wrapper에 칠함 */
+            background-color: #fdeee0; /* 바깥 wrapper에 칠함 */
             padding: 80px 0;
         }
 
@@ -220,7 +220,6 @@
             color: #444;
             text-align: center;
         }
-
 
 
         /* 책 아이템 사이 세로선 */
@@ -631,8 +630,9 @@
 
         .free-shipping-wrapper img {
             height: 80px;
-            object-fit:contain;
+            object-fit: contain;
         }
+
         .review-section {
             padding: 60px 5%;
             background-color: #fff;
@@ -695,7 +695,6 @@
         }
 
 
-
     </style>
 </head>
 
@@ -703,35 +702,38 @@
 <div layout:fragment="content">
 
     <div class="tab-content" id="tab-content-0" style="display: block;">
-    <section class="feature-banner">
-        <div class="banner-wrapper-outer">
-            <!-- 배너 내부 전체 래퍼 -->
-            <div class="banner-wrapper">
-                <!-- 1) 텍스트 영역 -->
-                <div class="banner-text">
-                    <h2>2026<br/>EBS 수능특강</h2>
-                    <p>수능연계대비 필수교재</p>
-                </div>
+        <section class="feature-banner">
+            <div class="banner-wrapper-outer">
+                <!-- 배너 내부 전체 래퍼 -->
+                <div class="banner-wrapper">
+                    <!-- 1) 텍스트 영역 -->
+                    <div class="banner-text">
+                        <h2>2026<br/>EBS 수능특강</h2>
+                        <p>수능연계대비 필수교재</p>
+                    </div>
 
-                <div class="banner-items">
-                    <div class="banner-item">
-                        <img src="https://image.aladin.co.kr/product/35532/55/cover500/8954789544_1.jpg" alt="수능특강 문학">
-                    </div>
-                    <div class="banner-item">
-                        <img src="https://image.aladin.co.kr/product/35532/62/cover500/8954789587_2.jpg" alt="수능특강 영어">
-                    </div>
-                    <div class="banner-item">
-                        <img src="https://image.aladin.co.kr/product/35532/55/cover500/s012036173_1.jpg" alt="수능특강 수학Ⅱ">
-                    </div>
-                    <div class="banner-item">
-                        <img src="https://image.aladin.co.kr/product/35532/58/cover500/8954789668_3.jpg" alt="수능특강 한국사">
+                    <div class="banner-items">
+                        <div class="banner-item">
+                            <img src="https://image.aladin.co.kr/product/35532/55/cover500/8954789544_1.jpg"
+                                 alt="수능특강 문학">
+                        </div>
+                        <div class="banner-item">
+                            <img src="https://image.aladin.co.kr/product/35532/62/cover500/8954789587_2.jpg"
+                                 alt="수능특강 영어">
+                        </div>
+                        <div class="banner-item">
+                            <img src="https://image.aladin.co.kr/product/35532/55/cover500/s012036173_1.jpg"
+                                 alt="수능특강 수학Ⅱ">
+                        </div>
+                        <div class="banner-item">
+                            <img src="https://image.aladin.co.kr/product/35532/58/cover500/8954789668_3.jpg"
+                                 alt="수능특강 한국사">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
     </div>
-
 
 
     <div class="tab-content" id="tab-content-1" style="display: none;">
@@ -772,8 +774,8 @@
          배너 바로 아래 들어갈 탭 네비게이션
          ============================== -->
     <ul class="banner-tab-nav">
-        <li class="tab-item active">2025 수능특강</li>
-        <li class="tab-item">이주의_책</li>
+        <li class="tab-item active">2026 수능특강</li>
+        <li class="tab-item">이주의 책</li>
         <li class="tab-item">이슈도서</li>
     </ul>
 
@@ -912,7 +914,6 @@
          =========================== -->
 
 
-
     <section class="free-shipping-banner">
         <div class="free-shipping-wrapper">
             <div class="free-shipping-text">
@@ -921,7 +922,6 @@
             <img src="/images/free-shipping-banner.png" alt="무료배송 배너 이미지">
         </div>
     </section>
-
 
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -1001,7 +1001,6 @@
         };
 
         document.addEventListener('DOMContentLoaded', renderTodayBook);
-
 
 
         const bestSellerList = /*[[${BestSellerList}]]*/ [];
@@ -1084,8 +1083,8 @@
             spaceBetween: 30,
             centeredSlides: true,
             loop: true,
-            pagination: { el: '.swiper-pagination', clickable: true },
-            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            pagination: {el: '.swiper-pagination', clickable: true},
+            navigation: {nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev'},
         });
 
     </script>

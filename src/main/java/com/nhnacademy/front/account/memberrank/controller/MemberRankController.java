@@ -13,6 +13,7 @@ import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.account.member.service.MemberService;
 import com.nhnacademy.front.account.memberrank.model.dto.response.ResponseMemberRankDTO;
 import com.nhnacademy.front.account.memberrank.service.MemberRankService;
+import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
 import com.nhnacademy.front.home.service.HomeService;
@@ -47,6 +48,7 @@ public class MemberRankController {
 			@ApiResponse(responseCode = "500", description = "마이페이지 회원 등급 요청 및 실패 응답",
 				content = @Content(schema = @Schema(implementation = NotFoundMemberRankNameException.class)))
 		})
+	@JwtTokenCheck
 	@GetMapping
 	public String getMemberRank(HttpServletRequest request, Model model) {
 		ResponseHomeMemberNameDTO responseHomeMemberNameDTO = homeService.getMemberNameFromHome(request);
