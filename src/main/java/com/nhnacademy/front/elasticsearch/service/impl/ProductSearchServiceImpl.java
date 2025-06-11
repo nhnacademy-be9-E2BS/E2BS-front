@@ -31,11 +31,11 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsBySearch(pageable, keyword, sort, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("검색어로 도서 리스트 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("검색어로 도서 리스트 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 
@@ -50,11 +50,11 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsByCategory(pageable, categoryId, sort, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 
@@ -67,11 +67,11 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getBestProducts(pageable, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 
@@ -84,11 +84,11 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getNewestProducts(pageable, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 }

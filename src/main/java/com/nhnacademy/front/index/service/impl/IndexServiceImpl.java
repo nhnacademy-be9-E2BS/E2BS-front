@@ -22,7 +22,7 @@ public class IndexServiceImpl implements IndexService {
 
 	private List<ResponseMainPageProductDTO> handleResponse(ResponseEntity<List<ResponseMainPageProductDTO>> response) {
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("도서 조회 실패");
+			throw new ProductGetProcessException();
 		}
 		return response.getBody();
 	}
