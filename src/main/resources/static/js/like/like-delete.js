@@ -2,7 +2,11 @@ $(document).ready(function () {
     // 좋아요 버튼 클릭 시
     $('.like-button').on('click', function () {
         // 부모 요소에서 productId 와 liked 추출
-        const card = $(this).closest('.card-product');
+        let card = $(this).closest('.card-product');
+        if (card.length === 0) {
+            card = $(this).closest('.book-card');
+        }
+
         const productId = card.data('product-id');
 
         $.ajax({

@@ -6,6 +6,8 @@
       layout:decorate="~{layouts/mypage-layout}">
 
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         .fa-heart.liked {
             color: red;
@@ -14,6 +16,20 @@
         .fa-star.filled {
             color: gold;
             transition: color 0.2s ease;
+        }
+
+        .text-ellipsis {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            display: block;
+            max-width: 350px; /* 원하는 길이에 맞게 조절 */
+        }
+
+        .card-img {
+            display: flex;
+            justify-content: center; /* 가로 중앙 정렬 */
+            align-items: center;     /* 세로 중앙 정렬 (필요시) */
         }
     </style>
 </head>
@@ -28,13 +44,17 @@
                 <div class="card text-center card-product" th:data-product-id = "${likeProduct.productId}">
                     <div class="card-product__img">
                         <!-- 도서 이미지 -->
-                        <div class="card-img"
-                             th:if="${likeProduct.productThumbnail != null}">
-                            <img th:src="${likeProduct.productThumbnail}"
-                                 alt="대표 이미지"
-                                 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+                        <div class="card-img">
+                            <a th:href="@{/books/{productId}(productId=${likeProduct.productId})}" class="image-link">
+                                <img th:src="${likeProduct.productThumbnail}"
+                                     alt="대표 이미지"
+                                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+                            </a>
+
                             <ul class="card-product__imgOverlay">
-                                <li><button><i class="ti-search"></i></button></li>
+                                <li><a th:href="@{/books/{productId}(productId=${likeProduct.productId})}" class="search-link">
+                                    <button><i class="ti-search"></i></button>
+                                </a></li>
 
                                 <li th:if="${session.isMember}">
                                     <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
@@ -43,10 +63,8 @@
                                     <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
                                 </li>
 
-                                <li><button class="like-button" data-liked="false">
-                                    <!--                      <i class="ti-heart"-->
-                                    <!--                                     th:classappend="${product.liked} ? ' liked' : ''"></i>-->
-                                    <i class="ti-heart"></i>
+                                <li><button class="like-button" data-liked="true">
+                                    <i class="fas fa-heart liked"></i>
                                 </button></li>
                             </ul>
                         </div>
@@ -54,7 +72,7 @@
                 </div>
                 <div class="card-body">
                     <!-- 도서 제목 -->
-                    <h5 th:text="${likeProduct.productTitle}" class="card-product__title">도서 제목</h5>
+                    <h5 th:text="${likeProduct.productTitle}" class="card-product__title text-ellipsis">도서 제목</h5>
                     <p>출판사: <span th:text="${likeProduct.publisherName != null ? likeProduct.publisherName : '출판사 정보 없음'}">출판사</span></p>
 
                     <!-- 평점, 리뷰 개수, 좋아요 개수 -->
