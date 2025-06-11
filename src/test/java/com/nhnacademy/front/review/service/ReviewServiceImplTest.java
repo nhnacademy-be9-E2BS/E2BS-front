@@ -70,8 +70,8 @@ class ReviewServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("리뷰 생성 실패 - HTTP 오류 반환")
-	void createReview_Fail_ReviewProcessException() {
+	@DisplayName("리뷰 생성 테스트 - 실패(HTTP 응답 실패)")
+	void createReview_Fail_StatusNot2xx() {
 		// given
 		RequestCreateReviewMetaDTO meta = new RequestCreateReviewMetaDTO(1L, null, "memberId", "좋아요", 5);
 		MockMultipartFile mockImage = new MockMultipartFile("image", "image.jpg", "image/jpeg", "data".getBytes());
@@ -85,7 +85,7 @@ class ReviewServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("리뷰 생성 실패 - FeignException")
+	@DisplayName("리뷰 생성 테스트 - 실패(FeignException)")
 	void createReview_Fail_FeignException() {
 		// given
 		RequestCreateReviewMetaDTO meta = new RequestCreateReviewMetaDTO(1L, null, "memberId", "좋아요", 5);
@@ -118,14 +118,28 @@ class ReviewServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("리뷰 수정 테스트 - 실패(HTTP 오류)")
-	void updateReview_Fail_ReviewProcessException() {
+	@DisplayName("리뷰 수정 테스트 - 실패(HTTP 응답 실패)")
+	void updateReview_Fail_StatusNot2xx() {
 		// given
 		long reviewId = 1L;
 		RequestUpdateReviewDTO request = new RequestUpdateReviewDTO("수정된 내용", null);
 
 		when(reviewAdaptor.updateReview(eq(reviewId), eq("수정된 내용"), any()))
 			.thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+
+		// when & then
+		assertThrows(ReviewProcessException.class, () -> reviewService.updateReview(reviewId, request));
+	}
+
+	@Test
+	@DisplayName("리뷰 수정 테스트 - 실패(FeignException)")
+	void updateReview_Fail_FeignException() {
+		// given
+		long reviewId = 1L;
+		RequestUpdateReviewDTO request = new RequestUpdateReviewDTO("내용", null);
+
+		when(reviewAdaptor.updateReview(eq(reviewId), eq("내용"), any()))
+			.thenThrow(mock(FeignException.class));
 
 		// when & then
 		assertThrows(ReviewProcessException.class, () -> reviewService.updateReview(reviewId, request));
@@ -150,14 +164,28 @@ class ReviewServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("상품 리뷰 목록 조회 테스트 - 실패(HTTP 오류)")
-	void getReviewsByProduct_Fail_ReviewProcessException() {
+	@DisplayName("상품 리뷰 목록 조회 테스트 - 실패(HTTP 응답 실패)")
+	void getReviewsByProduct_Fail_StatusNot2xx() {
 		// given
 		long productId = 1L;
 		Pageable pageable = PageRequest.of(0, 5);
 
 		when(productReviewAdaptor.getReviewsByProduct(anyLong(), any(PageRequest.class)))
 			.thenReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+
+		// when & then
+		assertThrows(ReviewProcessException.class, () -> reviewService.getReviewsByProduct(productId, pageable));
+	}
+
+	@Test
+	@DisplayName("상품 리뷰 목록 조회 테스트 - 실패(FeignException)")
+	void getReviewsByProduct_Fail_FeignException() {
+		// given
+		long productId = 1L;
+		Pageable pageable = PageRequest.of(0, 5);
+
+		when(productReviewAdaptor.getReviewsByProduct(eq(productId), eq(pageable)))
+			.thenThrow(mock(FeignException.class));
 
 		// when & then
 		assertThrows(ReviewProcessException.class, () -> reviewService.getReviewsByProduct(productId, pageable));
@@ -181,13 +209,26 @@ class ReviewServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("상품 리뷰 정보 조회 테스트 - 실패(HTTP 오류)")
-	void getReviewInfo_Fail_ReviewProcessException() {
+	@DisplayName("상품 리뷰 정보 조회 테스트 - 실패(HTTP 응답 실패)")
+	void getReviewInfo_Fail_StatusNot2xx() {
 		// given
 		long productId = 1L;
 
 		when(productReviewAdaptor.getReviewInfo(productId))
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+		// when & then
+		assertThrows(ReviewProcessException.class, () -> reviewService.getReviewInfo(productId));
+	}
+
+	@Test
+	@DisplayName("상품 리뷰 정보 조회 테스트 - 실패(FeignException)")
+	void getReviewInfo_Fail_FeignException() {
+		// given
+		long productId = 1L;
+
+		when(productReviewAdaptor.getReviewInfo(productId))
+			.thenThrow(mock(FeignException.class));
 
 		// when & then
 		assertThrows(ReviewProcessException.class, () -> reviewService.getReviewInfo(productId));
@@ -232,14 +273,25 @@ class ReviewServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("리뷰 여부 조회 테스트 - 실패(HTTP오류)")
-	void isReviewedByOrder_Fail_FailException() {
+	@DisplayName("리뷰 여부 조회 테스트 - 실패(HTTP 응답 실패)")
+	void isReviewedByOrder_Fail_StatusNot2xx() {
 		// given
 		when(orderAdaptor.isReviewedByOrder(any()))
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
 		assertThrows(ReviewProcessException.class, () -> reviewService.isReviewedByOrder(any()));
+	}
+
+	@Test
+	@DisplayName("리뷰 여부 조회 테스트 - 실패(FeignException)")
+	void isReviewedByOrder_Fail_FeignException() {
+		// given
+		when(orderAdaptor.isReviewedByOrder(any()))
+			.thenThrow(mock(FeignException.class));
+
+		// when & then
+		assertThrows(ReviewProcessException.class, () -> reviewService.isReviewedByOrder("orderCode"));
 	}
 
 	@Test
@@ -257,14 +309,25 @@ class ReviewServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("주문 상세 ID로 리뷰 조회 테스트 - 실패(HTTP오류)")
-	void findReviewByOrderDetailId_Fail_FailException() {
+	@DisplayName("주문 상세 ID로 리뷰 조회 테스트 - 실패(HTTP 응답 실패)")
+	void findReviewByOrderDetailId_Fail_StatusNot2xx() {
 		// given
 		when(reviewAdaptor.findReviewByOrderDetailId(anyLong()))
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
 		assertThrows(ReviewProcessException.class, () -> reviewService.findReviewByOrderDetailId(anyLong()));
+	}
+
+	@Test
+	@DisplayName("주문 상세 ID로 리뷰 조회 테스트 - 실패(FeignException)")
+	void findReviewByOrderDetailId_Fail_FeignException() {
+		// given
+		when(reviewAdaptor.findReviewByOrderDetailId(anyLong()))
+			.thenThrow(mock(FeignException.class));
+
+		// when & then
+		assertThrows(ReviewProcessException.class, () -> reviewService.findReviewByOrderDetailId(1L));
 	}
 	
 }
