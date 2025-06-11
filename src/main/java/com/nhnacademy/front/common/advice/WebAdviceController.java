@@ -41,7 +41,18 @@ import com.nhnacademy.front.common.error.exception.NotMatchedLoginPasswordExcept
 import com.nhnacademy.front.common.error.exception.ServerErrorException;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
+import com.nhnacademy.front.order.wrapper.exception.WrapperCreateProcessException;
+import com.nhnacademy.front.order.wrapper.exception.WrapperGetProcessException;
+import com.nhnacademy.front.order.wrapper.exception.WrapperUpdateProcessException;
+import com.nhnacademy.front.product.category.exception.CategoryCreateProcessException;
+import com.nhnacademy.front.product.category.exception.CategoryDeleteProcessException;
+import com.nhnacademy.front.product.category.exception.CategoryGetProcessException;
+import com.nhnacademy.front.product.category.exception.CategoryNotFoundException;
+import com.nhnacademy.front.product.category.exception.CategoryUpdateProcessException;
 import com.nhnacademy.front.product.like.exception.LikeProcessException;
+import com.nhnacademy.front.product.publisher.exception.PublisherCreateProcessException;
+import com.nhnacademy.front.product.publisher.exception.PublisherGetProcessException;
+import com.nhnacademy.front.product.publisher.exception.PublisherUpdateProcessException;
 import com.nhnacademy.front.review.exception.ReviewProcessException;
 
 import lombok.RequiredArgsConstructor;
@@ -97,7 +108,11 @@ public class WebAdviceController {
 		SaveJwtTokenProcessException.class,
 		DormantProcessingException.class, NotFoundMemberRankNameException.class, NotFoundMemberInfoException.class,
 		RegisterProcessException.class, GetMemberStateFailedException.class, PaycoProcessingException.class,
-		PointHistoryGetException.class
+		PointHistoryGetException.class,
+		WrapperCreateProcessException.class, WrapperGetProcessException.class, WrapperUpdateProcessException.class,
+		PublisherCreateProcessException.class, PublisherGetProcessException.class, PublisherUpdateProcessException.class,
+		CategoryCreateProcessException.class, CategoryGetProcessException.class, CategoryNotFoundException.class,
+		CategoryUpdateProcessException.class, CategoryDeleteProcessException.class,
 	})
 	public ModelAndView systemException500() {
 		String code = "F500";
