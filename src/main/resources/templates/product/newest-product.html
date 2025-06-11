@@ -6,116 +6,317 @@
       layout:decorate="~{layouts/newest-layout}">
 
 <head>
-    <style>
-        .ti-heart.liked {
-          color: red; /* 좋아요 누른 상태 */
-        }
-    </style>
+  <style>
+    .ti-heart.liked {
+      color: red; /* 좋아요 누른 상태 */
+    }
+
+    .card-img {
+      align-items: center;
+      justify-content: center;
+      margin-right: 25px;
+      margin-top: 30px;
+      margin-left: 7px;
+    }
+
+    .book-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      margin-top: 30px;
+
+    }
+
+    .content {
+      width: 100%;
+    }
+
+    .book-card {
+      display: flex;
+      align-items: stretch;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      margin-bottom: 24px;
+      min-height: 150px;
+    }
+
+    .card-product__title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3; /* 최대 3줄 */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fa-star {
+      color: #ccc;
+      transition: color 0.2s ease;
+      background: none;
+      -webkit-background-clip: initial;
+      -webkit-text-fill-color: initial;
+    }
+
+    .fa-star.filled {
+      color: gold;
+    }
+
+    .fa-star.partial {
+      background: linear-gradient(
+              to right,
+              gold var(--fill-percent, 0%),
+              #ccc var(--fill-percent, 0%)
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+
+    .list {
+      padding: 0;
+      display: flex; /* 가로 배치 */
+      gap: 5px; /* 별 사이 간격 */
+    }
+
+    .book-desc {
+      margin-top: 8px;
+      color: #444;
+      font-size: 15px;
+      line-height: 1.5;
+      /* 2줄 말줄임표 처리 */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* 최대 2줄 */
+      -webkit-box-orient: vertical;
+      word-break: break-all; /* 줄바꿈/말줄임 안정성 ↑ */
+    }
+
+    .card-float {
+      margin-top: 30px;
+    }
+
+    .button-area {
+      right: 20px;
+      top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 10px; /* 추가: 여백 추가로 깔끔함 */
+    }
+
+    .button-area button {
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      width: 125px;
+      margin-left: 50px;
+      border: none;
+      border-radius: 5px; /* 둥근 모서리 */
+    }
+
+    .increase, .reduced {
+      background-color: #f5f5f5;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .increase:hover, .reduced:hover {
+      background: transparent none;
+    }
+
+    .increase i, .reduced i {
+      font-size: 14px;
+    }
+
+    .quantity-btn { /* 추가: 수량 조절 버튼 스타일 */
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0 5px; /* 수정: 패딩 조정으로 회색 칸 제거 */
+    }
+
+  </style>
 </head>
 
 <body>
 <div layout:fragment="content">
+  <div class="content">
 
-  <!-- 상품 리스트 출력 -->
-  <section class="lattest-product-area pb-40 category-list">
-    <div class="row">
-      <div th:each="product : ${products}" class="col-md-6 col-lg-4">
-        <div class="card text-center card-product" th:data-product-id = "${product.productId}">
-          <div class="card-product__img">
-            <!-- 도서 이미지: productImagePaths는 List이므로 첫 번째 이미지를 사용 -->
-            <div class="card-img"
-                 th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
-              <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
-                <img th:src="${product.productImagePaths[0].productImagePath}"
-                     alt="대표 이미지"
-                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
-              </a>
-              <ul class="card-product__imgOverlay">
-                <li><a th:href="@{/books/{productId}(productId=${product.productId})}" class="search-link">
-                  <button><i class="ti-search"></i></button>
-                </a></li>
+    <!-- 상품 리스트 출력 -->
 
-                <li th:if="${session.isMember}">
-                  <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
-                <li th:if="${session.isMember == null}">
-                  <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
-                </li>
+    <ul class="book-list" th:each="product, iterStat : ${products}">
+      <li class="book-card" th:data-product-id="${product.productId}">
+        <div>
+          <!-- 도서 이미지: productImagePaths는 List이므로 첫 번째 이미지를 사용 -->
+          <div class="card-img"
+               th:if="${product.productImagePaths != null and !#lists.isEmpty(product.productImagePaths)}">
+            <a th:href="@{/books/{productId}(productId=${product.productId})}" class="image-link">
+              <img th:src="${product.productImagePaths[0].productImagePath}"
+                   alt="대표 이미지" style="width: 130px; height: auto; "
+                   onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
+            </a>
+            <!--                        <ul class="card-product__imgOverlay">-->
+            <!--                            <li><a th:href="@{/books/{productId}(productId=${product.productId})}"-->
+            <!--                                   class="search-link">-->
+            <!--                                <button><i class="ti-search"></i></button>-->
+            <!--                            </a></li>-->
 
-                <li>
-                  <button class="like-button" data-liked="false">
-                    <i class="ti-heart"></i>
-                  </button>
-                </li>
-              </ul>
-            </div>
+            <!--                            <li th:if="${session.isMember}">-->
+            <!--                                <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>-->
+            <!--                            </li>-->
+            <!--                            <li th:if="${session.isMember == null}">-->
+            <!--                                <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>-->
+            <!--                            </li>-->
+
+            <!--                            <li>-->
+            <!--                        <button class="like-button" th:data-liked="${product.liked}">-->
+            <!--                            <i class="ti-heart"-->
+            <!--                               th:classappend="${product.liked} ? ' liked' : ''"></i>-->
+            <!--                        </button>-->
+            <!--                            </li>-->
+            <!--                        </ul>-->
           </div>
         </div>
-        <div class="card-body">
+
+        <div class="card-body card-float">
           <!-- 도서 제목 -->
           <h5 class="card-product__title">
-            <a th:href="@{/books/{productId}(productId=${product.productId})}" th:text="${product.productTitle}" class="title-link">도서 제목</a>
+            <a th:href="@{/books/{productId}(productId=${product.productId})}"
+               th:text="${product.productTitle}" class="title-link">도서 제목</a>
           </h5>
-          <p>출판사: <span th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">출판사</span></p>
-          <!-- 판매 가격 -->
-          <span class="card-product__price" th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'">0</span>
+          <div>
+								<span style="color: #bbb;">
+									<span th:text="${product.publisher.publisherName}"></span> |
+									<span th:each="contributor, stat : ${product.contributors}">
+										<span th:text="|${contributor.contributorName} (${contributor.positionName})|"/>
+										<span th:unless="${stat.last}" th:text="'| '"/>
+									</span>|
+									<span th:text="${product.productPublishedAt}"></span>
+								</span>
+          </div>
+          <!-- 가격 -->
+          <div th:if="${product.productRegularPrice != product.productSalePrice}">
+            <del class="col-10"
+                 th:text="${#numbers.formatInteger(product.productRegularPrice, 0, 'COMMA')} + '원'"></del>
+            <span style="color: #000000;"> → </span>
+            <span class="col-10" style="color: #ea5759;">
+
+										<span th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')} + '원'"
+                                              style="font-weight: bold; font-size: large;"></span>
+                            <span th:text="'('+${discountRates[iterStat.index]}+'%↓)'"></span>
+                        </span>
+          </div>
+
+          <!-- 별점 및 리뷰-->
+          <div class="form-group">
+            <ul class="list" th:data-rating="${product.avgRating != null ? product.avgRating : 0}">
+              <li th:each="i : ${#numbers.sequence(1,5)}">
+                <i class="fa fa-star"></i>
+              </li>
+              <li style="color: #000000;"
+                  th:text="${product.avgRating} + '&nbsp&nbsp&nbsp&nbsp&nbsp리뷰'"></li>
+              <li th:text="'('+${product.reviewCount}+')'"></li>
+            </ul>
+          </div>
+
+          <!--설명-->
+          <div class="book-desc">
+            <p th:utext="${product.productDescription}"></p>
+          </div>
+        </div>
+
+        <!-- 오른쪽 버튼 영역 추가 시작 -->
+
+        <div th:if="${product.productState.productStateId == 3}">
+          <h2 class="error-text">삭제</h2>
+        </div>
+        <div th:if="${product.productState.productStateId == 2 || product.productState.productStateId == 4}">
+          <h2 class="error-text">품절/절판</h2>
+        </div>
+        <div class="button-area" th:if="${product.productState.productStateId == 1}">
+          <div class="quantity-controls" style="align-items: flex-end;">
+            <label>수량:</label>
+            <!-- 수정: 회색 칸 제거, 텍스트로 변경 -->
+            <input type="number" class="quantity-input"
+                   th:value="${product.productStock > 0 ? 1 : 0}"
+                   th:max="${product.productStock}"
+                   min="1">
+            <!-- 수정: 회색 칸 제거, 텍스트로 변경 -->
+          </div>
+          <button style="background-color: #163B63FF; color: white;">바로구매</button>
+          <button style="background-color: #007BFF; color: white;">쇼핑카트 담기</button>
+          <button style="background-color: #e1e1e1; color: black;">위시리스트</button>
+        </div>
+        <!-- 오른쪽 버튼 영역 추가 끝 -->
+
+      </li>
+    </ul>
+
+
+    <!-- 페이지네이션 -->
+    <div class="row">
+      <div class="col-12 d-flex justify-content-center">
+        <nav>
+          <ul class="pagination" th:if="${products.totalPages > 0}">
+            <!-- 처음 버튼 -->
+            <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
+              <a class="page-link"
+                 th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=0, size=10)}"
+                 th:text="'처음'">First</a>
+            </li>
+
+            <!-- 전체 페이지 번호 출력 -->
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+                th:classappend="${i == products.number} ? 'active'">
+              <a class="page-link"
+                 th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=10)}"
+                 th:text="${i + 1}">1</a>
+            </li>
+
+            <!-- 마지막 버튼 -->
+            <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
+              <a class="page-link"
+                 th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=10)}"
+                 th:text="'마지막'">Last</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- 장바구니 이동 모달 -->
+    <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
+            <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal"
+                    aria-label="닫기"></button>
+          </div>
+          <div class="modal-body">
+            장바구니로 이동하시겠습니까?
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기
+            </button>
+            <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
+          </div>
         </div>
       </div>
     </div>
-  </section>
-
-
-  <!-- 페이지네이션 -->
-  <div class="row">
-    <div class="col-12 d-flex justify-content-center">
-      <nav>
-        <ul class="pagination" th:if="${products.totalPages > 0}">
-          <!-- 처음 버튼 -->
-          <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
-            <a class="page-link"
-               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=0, size=9)}"
-               th:text="'처음'">First</a>
-          </li>
-
-          <!-- 전체 페이지 번호 출력 -->
-          <li class="page-item"
-              th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
-              th:classappend="${i == products.number} ? 'active'">
-            <a class="page-link"
-               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=9)}"
-               th:text="${i + 1}">1</a>
-          </li>
-
-          <!-- 마지막 버튼 -->
-          <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
-            <a class="page-link"
-               th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=9)}"
-               th:text="'마지막'">Last</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
   </div>
 
-  <!-- 장바구니 이동 모달 -->
-  <div class="modal fade" id="cartConfirmModal" tabindex="-1" aria-labelledby="cartConfirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="cartConfirmModalLabel">장바구니에 담았습니다</h5>
-          <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="닫기"></button>
-        </div>
-        <div class="modal-body">
-          장바구니로 이동하시겠습니까?
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="continueBtn" data-bs-dismiss="modal">계속 쇼핑하기</button>
-          <button type="button" class="btn btn-primary" id="goToCartBtn">장바구니로 이동</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -149,6 +350,42 @@
     }
   </script>
 
+  <script>
+    function adjustQuantity(event, change, button) { <!-- 수정: 함수 매개변수와 로직 변경 -->
+      event.preventDefault(); // 기본 이벤트 방지
+      const input = button.parentElement.querySelector('.quantity-input');
+      const maxStock = parseInt(input.getAttribute('th:max')) || 999; // Thymeleaf 속성에서 최대 재고 가져오기
+      let currentValue = parseInt(input.value) || 1;
+
+      const newValue = currentValue + change;
+
+      if (newValue >= 1 && newValue <= maxStock) {
+        input.value = newValue;
+      } else if (newValue < 1) {
+        input.value = 1;
+        alert('수량은 1개 이상이어야 합니다.');
+      } else if (newValue > maxStock) {
+        input.value = maxStock;
+        alert('재고 수량(' + maxStock + '개)을 초과할 수 없습니다.');
+      }
+    }
+
+    // 입력값 유효성 검사
+    document.addEventListener('input', function (e) { <!-- 추가: 입력값 유효성 검사 -->
+      if (e.target.classList.contains('quantity-input')) {
+        const maxStock = parseInt(e.target.getAttribute('th:max')) || 999;
+        let value = parseInt(e.target.value) || 1;
+
+        if (value < 1) {
+          e.target.value = 1;
+          alert('수량은 1개 이상이어야 합니다.');
+        } else if (value > maxStock) {
+          e.target.value = maxStock;
+          alert('재고 수량(' + maxStock + '개)을 초과할 수 없습니다.');
+        }
+      }
+    });
+  </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script th:src="@{/js/like/like-add-delete.js}"></script>
   <script th:src="@{/js/cart/member/member-cart-add.js}"></script>

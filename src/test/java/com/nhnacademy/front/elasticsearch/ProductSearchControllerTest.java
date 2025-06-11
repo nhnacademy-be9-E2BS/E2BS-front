@@ -130,6 +130,7 @@ class ProductSearchControllerTest {
 				.andExpect(view().name("product/search"))
 				.andExpect(model().attributeExists("products"))
 				.andExpect(model().attributeExists("keyword"))
+				.andExpect(model().attributeExists("discountRates"))
 				.andExpect(model().attributeExists("sort"))
 				.andExpect(model().attribute("sort", sort.toString()));
 		}
@@ -185,6 +186,7 @@ class ProductSearchControllerTest {
 			.andExpect(view().name("product/search"))
 			.andExpect(model().attributeExists("products"))
 			.andExpect(model().attributeExists("keyword"))
+			.andExpect(model().attributeExists("discountRates"))
 			.andExpect(model().attributeExists("sort"))
 			.andExpect(model().attribute("sort", ProductSortType.NO_SORT.toString()));
 	}
@@ -240,6 +242,7 @@ class ProductSearchControllerTest {
 			.andExpect(view().name("product/category"))
 			.andExpect(model().attributeExists("products"))
 			.andExpect(model().attributeExists("rootCategory"))
+			.andExpect(model().attributeExists("discountRates"))
 			.andExpect(model().attributeExists("sort"))
 			.andExpect(model().attribute("sort", sort.toString()));
 	}
@@ -300,6 +303,7 @@ class ProductSearchControllerTest {
 				.andExpect(view().name("product/category"))
 				.andExpect(model().attributeExists("products"))
 				.andExpect(model().attributeExists("rootCategory"))
+				.andExpect(model().attributeExists("discountRates"))
 				.andExpect(model().attributeExists("sort"))
 				.andExpect(model().attribute("sort", ProductSortType.NO_SORT.toString()));
 		}
@@ -352,7 +356,8 @@ class ProductSearchControllerTest {
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(view().name("product/best-product"))
-			.andExpect(model().attributeExists("products"));
+			.andExpect(model().attributeExists("products"))
+			.andExpect(model().attributeExists("discountRates"));
 	}
 
 	@Test
@@ -403,6 +408,7 @@ class ProductSearchControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("product/newest-product"))
 			.andExpect(model().attributeExists("products"))
-			.andExpect(model().attributeExists("todayDate"));
+			.andExpect(model().attributeExists("todayDate"))
+			.andExpect(model().attributeExists("discountRates"));
 	}
 }
