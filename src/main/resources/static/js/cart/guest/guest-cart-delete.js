@@ -19,14 +19,6 @@ $(document).ready(function () {
                 productId: productId,
                 sessionId: ""
             }),
-            beforeSend: function(xhr) {
-                // CSRF 토큰이 있을 경우 설정 (Spring Security 사용 시)
-                // const token = $('meta[name="_csrf"]').attr('content');
-                // const header = $('meta[name="_csrf_header"]').attr('content');
-                // if (token && header) {
-                //     xhr.setRequestHeader(header, token);
-                // }
-            },
             success: function (response) {
                 console.log(typeof response);
                 console.log(response);
