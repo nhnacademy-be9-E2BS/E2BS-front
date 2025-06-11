@@ -206,15 +206,15 @@
                                     <label for="tossPay_payment_method">토스 결제</label>
                                 </td>
                             </tr>
+<!--                            <tr>-->
+<!--                                <td>-->
+<!--                                    <input type="radio" id="phone_payment_method" name="payment_method" value="휴대폰">-->
+<!--                                    <label for="phone_payment_method">휴대폰 결제</label>-->
+<!--                                </td>-->
+<!--                            </tr>-->
                             <tr>
                                 <td>
-                                    <input type="radio" id="phone_payment_method" name="payment_method" value="휴대폰">
-                                    <label for="phone_payment_method">휴대폰 결제</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span>* 현재는 토스, 휴대폰 간편 결제만 지원합니다.</span>
+                                    <span>* 현재는 토스 간편 결제만 지원합니다.</span>
                                 </td>
                             </tr>
                         </table>
@@ -326,7 +326,7 @@
                 // 결제 방식
                 let method = selected.value;
 
-                if (method === "토스페이" || method === "휴대폰") {
+                if (method === "토스페이") {
                     // 주문서 저장
                     const response = await saveOrder();
 
@@ -379,7 +379,7 @@
 
             // 백에 주문서를 저장하고 주문 코드, 결제 금액, 결제 이름을 반환하는 메서드
             async function saveOrder() {
-                const response = await fetch("/order/tossPay", {
+                const response = await fetch("/order/payment", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
