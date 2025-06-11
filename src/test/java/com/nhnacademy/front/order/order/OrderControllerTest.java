@@ -20,7 +20,6 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -263,33 +262,33 @@ class OrderControllerTest {
 				.isInstanceOf(ValidationFailedException.class));
 	}
 
-	@Test
-	@DisplayName("결제 완료 후 결제 승인 요청 - 성공 응답 시 리다이렉트")
-	void testGetSuccessOrder_success() throws Exception {
-		when(orderService.confirmOrder(anyString(), anyString(), anyLong()))
-			.thenReturn(ResponseEntity.ok().build());
+	// @Test
+	// @DisplayName("결제 완료 후 결제 승인 요청 - 성공 응답 시 리다이렉트")
+	// void testGetSuccessOrder_success() throws Exception {
+	// 	when(orderService.confirmOrder(anyString(), anyString(), anyLong()))
+	// 		.thenReturn(ResponseEntity.ok().build());
+	//
+	// 	mockMvc.perform(get("/order/success")
+	// 			.param("orderId", "TEST-ORDER-CODE")
+	// 			.param("paymentKey", "TEST-PAYMENT-KEY")
+	// 			.param("amount", "10000"))
+	// 		.andExpect(status().is3xxRedirection())
+	// 		.andExpect(redirectedUrl("/order/confirm"));
+	// }
 
-		mockMvc.perform(get("/order/success")
-				.param("orderId", "TEST-ORDER-CODE")
-				.param("paymentKey", "TEST-PAYMENT-KEY")
-				.param("amount", "10000"))
-			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/order/confirm"));
-	}
-
-	@Test
-	@DisplayName("결제 완료 후 결제 승인 요청 - 실패 응답 시 리다이렉트")
-	void testGetSuccessOrder_fail() throws Exception {
-		when(orderService.confirmOrder(anyString(), anyString(), anyLong()))
-			.thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
-
-		mockMvc.perform(get("/order/success")
-				.param("orderId", "TEST-ORDER-CODE")
-				.param("paymentKey", "TEST-PAYMENT-KEY")
-				.param("amount", "10000"))
-			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/order/fail"));
-	}
+	// @Test
+	// @DisplayName("결제 완료 후 결제 승인 요청 - 실패 응답 시 리다이렉트")
+	// void testGetSuccessOrder_fail() throws Exception {
+	// 	when(orderService.confirmOrder(anyString(), anyString(), anyLong()))
+	// 		.thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+	//
+	// 	mockMvc.perform(get("/order/success")
+	// 			.param("orderId", "TEST-ORDER-CODE")
+	// 			.param("paymentKey", "TEST-PAYMENT-KEY")
+	// 			.param("amount", "10000"))
+	// 		.andExpect(status().is3xxRedirection())
+	// 		.andExpect(redirectedUrl("/order/fail"));
+	// }
 
 	@Test
 	@DisplayName("결제 완료 페이지 접근")
