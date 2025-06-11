@@ -149,7 +149,7 @@ public class MemberDoorayDormantController {
 		session.removeAttribute("dormantCnt");
 		session.removeAttribute("memberState");
 
-		return "redirect:/login";
+		return "redirect:/members/login";
 	}
 
 }

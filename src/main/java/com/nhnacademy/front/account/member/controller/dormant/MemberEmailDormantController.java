@@ -120,7 +120,7 @@ public class MemberEmailDormantController {
 		session.removeAttribute("dormantCnt");
 		session.removeAttribute("memberState");
 
-		return "redirect:/login";
+		return "redirect:/members/login";
 	}
 
 }
