@@ -102,10 +102,10 @@ public class PointPolicyController {
 		}
 	)
 	@JwtTokenCheck
-	@PutMapping("/admin/settings/pointPolicies/{pointPolicyId}/activate")
+	@PutMapping("/admin/settings/pointPolicies/{point-policy-id}/activate")
 	public ResponseEntity<Void> activatePointPolicy(
 		@Parameter(description = "포인트 정책 ID", example = "1")
-		@PathVariable("pointPolicyId") Long pointPolicyId) {
+		@PathVariable("point-policy-id") Long pointPolicyId) {
 		pointPolicyService.activatePointPolicy(pointPolicyId);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -118,10 +118,10 @@ public class PointPolicyController {
 			@ApiResponse(responseCode = "400", description = "입력값 검증 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class)))
 		}
 	)
-	@PutMapping("/admin/settings/pointPolicies/{pointPolicyId}")
+	@PutMapping("/admin/settings/pointPolicies/{point-policy-id}")
 	public ResponseEntity<Void> updatePointPolicy(
 		@Parameter(description = "포인트 정책 ID", example = "1")
-		@PathVariable("pointPolicyId") Long pointPolicyId,
+		@PathVariable("point-policy-id") Long pointPolicyId,
 		@Parameter(description = "포인트 정책 수정 요청 DTO", required = true, schema = @Schema(implementation = RequestPointPolicyUpdateDTO.class))
 		@Validated @ModelAttribute RequestPointPolicyUpdateDTO request,
 		BindingResult bindingResult) {

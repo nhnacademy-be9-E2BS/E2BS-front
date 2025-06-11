@@ -16,7 +16,6 @@ import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
-import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
@@ -37,7 +36,6 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 
 	private final ProductService productService;
-	private final UserCategoryService userCategoryService;
 	private final ReviewService reviewService;
 	private final DeliveryFeeSevice deliveryFeeSevice;
 

@@ -13,6 +13,6 @@ import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrder
 @FeignClient(name = "member-coupon-order-service", url = "${coupon.order.url}")
 public interface MemberCouponOrderAdaptor {
 
-	@GetMapping("/{memberId}/coupons")
-	ResponseEntity<List<ResponseOrderCouponDTO>> getCouponsInOrder(@PathVariable("memberId") String memberId, @RequestParam List<Long> request);
+	@GetMapping("/{member-id}/coupons")
+	ResponseEntity<List<ResponseOrderCouponDTO>> getCouponsInOrder(@PathVariable("member-id") String memberId, @RequestParam List<Long> request);
 }

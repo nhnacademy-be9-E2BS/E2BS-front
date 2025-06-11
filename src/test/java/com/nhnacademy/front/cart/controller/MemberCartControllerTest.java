@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,8 @@ import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -44,6 +47,9 @@ class MemberCartControllerTest {
 
 	@MockitoBean
 	private MemberCartService memberCartService;
+
+	@MockitoBean
+	private DeliveryFeeSevice deliveryFeeSevice;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -112,7 +118,10 @@ class MemberCartControllerTest {
 			new ResponseCartItemsForMemberDTO(1L, 2L, "상품B", 15000, 10000, new BigDecimal(50), "thumbnailImage", 3, 30000)
 		);
 
+		ResponseDeliveryFeeDTO deliveryFeeDTO = new ResponseDeliveryFeeDTO(1L, 3000, 50000, LocalDateTime.now());
+
 		when(memberCartService.getCartItemsByMember(MEMBER_ID)).thenReturn(cartItemsByMember);
+		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(deliveryFeeDTO);
 
 		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
 			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
