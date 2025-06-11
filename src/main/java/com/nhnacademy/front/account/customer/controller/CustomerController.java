@@ -20,6 +20,7 @@ import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomer
 import com.nhnacademy.front.account.customer.service.CustomerService;
 import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
+import com.nhnacademy.front.common.util.CookieUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,6 +29,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -66,12 +68,7 @@ public class CustomerController {
 		String cartJson = objectMapper.writeValueAsString(requestCartOrderDTO);
 		String encodedCart = Base64.getEncoder().encodeToString(cartJson.getBytes(StandardCharsets.UTF_8));
 
-		Cookie cartCookie = new Cookie("orderCart", encodedCart);
-		cartCookie.setPath("/");
-		cartCookie.setHttpOnly(true);
-		cartCookie.setMaxAge(60 * 30);
-		response.addCookie(cartCookie);
-
+		CookieUtil.setCookie("orderCart", response, encodedCart);
 		return ResponseEntity.ok().build();
 	}
 

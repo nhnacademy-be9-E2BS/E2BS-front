@@ -43,7 +43,7 @@ import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
-import com.nhnacademy.front.common.util.GuestCookieUtil;
+import com.nhnacademy.front.common.util.CookieUtil;
 import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrderCouponDTO;
 import com.nhnacademy.front.coupon.membercoupon.service.MemberCouponService;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
@@ -70,7 +70,6 @@ import com.nhnacademy.front.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -267,10 +266,10 @@ public class OrderController {
 		if (JwtHasToken.hasToken(request)) {
 			memberId = JwtGetMemberId.jwtGetMemberId(request);
 		} else {
-			guestKey = GuestCookieUtil.getGuestKey(request);
+			guestKey = CookieUtil.getCookieValue("guestKey", request);
 			if (Objects.isNull(guestKey)) {
 				guestKey = UUID.randomUUID().toString();
-				GuestCookieUtil.setGuestCookie(response, guestKey);
+				CookieUtil.setCookie("guestKey", response, guestKey);
 			}
 		}
 
@@ -278,10 +277,7 @@ public class OrderController {
 		request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
 
 		// 쿠키 삭제
-		Cookie deleteCookie = new Cookie("orderCart", null);
-		deleteCookie.setPath("/");
-		deleteCookie.setMaxAge(0);
-		response.addCookie(deleteCookie);
+		CookieUtil.clearCookie("orderCart", response);
 
 		return "payment/confirmation";
 	}
