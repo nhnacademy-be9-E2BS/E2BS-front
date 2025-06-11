@@ -20,6 +20,7 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -53,6 +54,7 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDT
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
+import com.nhnacademy.front.order.order.resolver.PaymentQueryParamResolverFactory;
 import com.nhnacademy.front.order.order.service.OrderService;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
@@ -100,6 +102,9 @@ class OrderControllerTest {
 
 	@MockitoBean
 	private ReviewService reviewService;
+
+	@MockitoBean
+	private PaymentQueryParamResolverFactory paramResolverFactory;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -209,7 +214,7 @@ class OrderControllerTest {
 		when(orderService.createOrder(any(RequestOrderWrapperDTO.class)))
 			.thenReturn(ResponseEntity.ok(responseDTO));
 
-		mockMvc.perform(post("/order/tossPay")
+		mockMvc.perform(post("/order/payment")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))
 				.with(csrf()))
@@ -221,7 +226,7 @@ class OrderControllerTest {
 	void testPostCheckOutFail() throws Exception {
 		RequestOrderWrapperDTO request = new RequestOrderWrapperDTO();
 
-		mockMvc.perform(post("/order/tossPay")
+		mockMvc.perform(post("/order/payment")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))
 				.with(csrf()))
@@ -262,33 +267,33 @@ class OrderControllerTest {
 				.isInstanceOf(ValidationFailedException.class));
 	}
 
-	// @Test
-	// @DisplayName("결제 완료 후 결제 승인 요청 - 성공 응답 시 리다이렉트")
-	// void testGetSuccessOrder_success() throws Exception {
-	// 	when(orderService.confirmOrder(anyString(), anyString(), anyLong()))
-	// 		.thenReturn(ResponseEntity.ok().build());
-	//
-	// 	mockMvc.perform(get("/order/success")
-	// 			.param("orderId", "TEST-ORDER-CODE")
-	// 			.param("paymentKey", "TEST-PAYMENT-KEY")
-	// 			.param("amount", "10000"))
-	// 		.andExpect(status().is3xxRedirection())
-	// 		.andExpect(redirectedUrl("/order/confirm"));
-	// }
+	@Test
+	@DisplayName("결제 완료 후 결제 승인 요청 - 성공 응답 시 리다이렉트")
+	void testGetSuccessOrder_success() throws Exception {
+		when(orderService.confirmOrder(any()))
+			.thenReturn(ResponseEntity.ok().build());
 
-	// @Test
-	// @DisplayName("결제 완료 후 결제 승인 요청 - 실패 응답 시 리다이렉트")
-	// void testGetSuccessOrder_fail() throws Exception {
-	// 	when(orderService.confirmOrder(anyString(), anyString(), anyLong()))
-	// 		.thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
-	//
-	// 	mockMvc.perform(get("/order/success")
-	// 			.param("orderId", "TEST-ORDER-CODE")
-	// 			.param("paymentKey", "TEST-PAYMENT-KEY")
-	// 			.param("amount", "10000"))
-	// 		.andExpect(status().is3xxRedirection())
-	// 		.andExpect(redirectedUrl("/order/fail"));
-	// }
+		mockMvc.perform(get("/order/success")
+				.param("orderId", "TEST-ORDER-CODE")
+				.param("paymentKey", "TEST-PAYMENT-KEY")
+				.param("amount", "10000"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(redirectedUrl("/order/confirm"));
+	}
+
+	@Test
+	@DisplayName("결제 완료 후 결제 승인 요청 - 실패 응답 시 리다이렉트")
+	void testGetSuccessOrder_fail() throws Exception {
+		when(orderService.confirmOrder(any()))
+			.thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+
+		mockMvc.perform(get("/order/success")
+				.param("orderId", "TEST-ORDER-CODE")
+				.param("paymentKey", "TEST-PAYMENT-KEY")
+				.param("amount", "10000"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(redirectedUrl("/order/fail"));
+	}
 
 	@Test
 	@DisplayName("결제 완료 페이지 접근")

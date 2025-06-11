@@ -20,6 +20,7 @@ import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
 import com.nhnacademy.front.order.order.adaptor.OrderMemberAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.request.RequestPaymentApproveDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
@@ -73,25 +74,26 @@ class OrderServiceTest {
 		assertEquals(expectedResponse, actualResponse);
 		verify(orderMemberAdaptor).postPointCreateOrder(request);
 	}
-	//
-	// @Test
-	// @DisplayName("confirmOrder - 결제 승인")
-	// void testConfirmOrder() {
-	// 	// given
-	// 	String orderId = "TEST-ORDER-CODE";
-	// 	String paymentKey = "TEST-PAYMENT-KEY";
-	// 	long amount = 9999L;
-	// 	ResponseEntity<Void> expectedResponse = ResponseEntity.ok().build();
-	//
-	// 	when(orderAdaptor.confirmOrder(orderId, paymentKey, amount)).thenReturn(expectedResponse);
-	//
-	// 	// when
-	// 	ResponseEntity<Void> actualResponse = orderService.confirmOrder(orderId, paymentKey, amount);
-	//
-	// 	// then
-	// 	assertEquals(expectedResponse, actualResponse);
-	// 	verify(orderAdaptor).confirmOrder(orderId, paymentKey, amount);
-	// }
+
+	@Test
+	@DisplayName("confirmOrder - 결제 승인")
+	void testConfirmOrder() {
+		// given
+		String orderId = "TEST-ORDER-CODE";
+		String paymentKey = "TEST-PAYMENT-KEY";
+		long amount = 9999L;
+		RequestPaymentApproveDTO approveRequest = new RequestPaymentApproveDTO(orderId, paymentKey, amount, "TOSS");
+		ResponseEntity<Void> expectedResponse = ResponseEntity.ok().build();
+
+		when(orderAdaptor.confirmOrder(approveRequest)).thenReturn(expectedResponse);
+
+		// when
+		ResponseEntity<Void> actualResponse = orderService.confirmOrder(approveRequest);
+
+		// then
+		assertEquals(expectedResponse, actualResponse);
+		verify(orderAdaptor).confirmOrder(approveRequest);
+	}
 
 	@Test
 	@DisplayName("deleteOrder - 주문서 삭제")

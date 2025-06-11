@@ -243,7 +243,7 @@ public class OrderController {
 		} else {
 			// 결제 실패 창으로 리다이렉트
 			// 외부 API 결제 승인 실패 시 저장된 주문서를 제거하도록 요청
-			orderService.deleteOrder(approveRequest.getOrderId());
+			orderService.deleteOrder(request.getParameter("orderId"));
 			return "redirect:/order/fail";
 		}
 	}
