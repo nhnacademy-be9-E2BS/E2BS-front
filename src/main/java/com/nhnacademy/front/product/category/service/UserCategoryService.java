@@ -48,7 +48,7 @@ public class UserCategoryService {
 		try {
 			List<ResponseCategoryDTO> allCategories = getCachedCategories();
 
-			if (allCategories == null) {
+			if (allCategories.isEmpty()) {
 				ResponseEntity<List<ResponseCategoryDTO>> response = userCategoryAdaptor.getAllCategories();
 
 				if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
@@ -89,7 +89,7 @@ public class UserCategoryService {
 	 */
 	private List<ResponseCategoryDTO> getCachedCategories() {
 		if (!Boolean.TRUE.equals(redisTemplate.hasKey("Categories::all"))) {
-			return null;
+			return List.of();
 		}
 
 		Object cached = redisTemplate.opsForValue().get("Categories::all");

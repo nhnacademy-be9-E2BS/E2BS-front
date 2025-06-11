@@ -53,7 +53,6 @@ class WrapperServiceTest {
 			"image-content".getBytes()
 		);
 		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", mockFile, true);
-		RequestRegisterWrapperMetaDTO requestMeta = new RequestRegisterWrapperMetaDTO(1000, "Wrapper A", true);
 		when(adminWrapperAdaptor.postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), any(MultipartFile.class)))
 			.thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
 
@@ -83,7 +82,6 @@ class WrapperServiceTest {
 			"image-content".getBytes()
 		);
 		RequestRegisterWrapperDTO request = new RequestRegisterWrapperDTO(1000, "Wrapper A", mockFile, true);
-		RequestRegisterWrapperMetaDTO requestMeta = new RequestRegisterWrapperMetaDTO(1000, "Wrapper A", true);
 		when(adminWrapperAdaptor.postCreateWrapper(any(RequestRegisterWrapperMetaDTO.class), any(MultipartFile.class)))
 			.thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
 
