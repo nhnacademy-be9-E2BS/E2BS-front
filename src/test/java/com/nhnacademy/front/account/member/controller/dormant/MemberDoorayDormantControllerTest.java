@@ -91,12 +91,12 @@ class MemberDoorayDormantControllerTest {
 
 		// Given
 		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("remainingCnt", 1);
+		session.setAttribute("remainingCnt", 0);
 
 		// When
 
 		// Then
-		mockMvc.perform(get("/member/dormant/dooray/user"))
+		mockMvc.perform(get("/member/dormant/dooray/user").session(session))
 			.andExpect(status().isOk())
 			.andExpect(view().name("member/dormant/dormant-dooray"));
 
