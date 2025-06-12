@@ -714,26 +714,34 @@
 
                     <div class="banner-items">
                         <div class="banner-item">
-                            <img src="https://image.aladin.co.kr/product/35532/55/cover500/8954789544_1.jpg"
-                                 alt="수능특강 문학">
-                            <a href="https://e2bs.shop/books/25"></a>
+                            <a th:href="@{/books/25}">
+                                <img src="https://image.aladin.co.kr/product/35532/55/cover500/8954789544_1.jpg"
+                                     alt="수능특강 문학">
+                            </a>
                         </div>
                         <div class="banner-item">
-                            <img src="https://image.aladin.co.kr/product/35532/62/cover500/8954789587_2.jpg"
-                                 alt="수능특강 영어">
-                            <a href="https://e2bs.shop/books/26"></a>
+                            <a th:href="@{/books/26}">
+
+                                <img src="https://image.aladin.co.kr/product/35532/62/cover500/8954789587_2.jpg"
+                                     alt="수능특강 영어">
+                            </a>
 
                         </div>
                         <div class="banner-item">
-                            <img src="https://image.aladin.co.kr/product/35532/55/cover500/s012036173_1.jpg"
-                                 alt="수능특강 수학Ⅱ">
-                            <a href="https://e2bs.shop/books/27"></a>
+                            <a th:href="@{/books/27}">
+
+                                <img src="https://image.aladin.co.kr/product/35532/55/cover500/s012036173_1.jpg"
+                                     alt="수능특강 수학Ⅱ">
+                            </a>
+
 
                         </div>
                         <div class="banner-item">
-                            <img src="https://image.aladin.co.kr/product/35532/58/cover500/8954789668_3.jpg"
-                                 alt="수능특강 한국사">
-                            <a href="https://e2bs.shop/books/28"></a>
+                            <a th:href="@{/books/28}">
+
+                                <img src="https://image.aladin.co.kr/product/35532/58/cover500/8954789668_3.jpg"
+                                     alt="수능특강 한국사">
+                            </a>
 
                         </div>
                     </div>
@@ -752,7 +760,9 @@
                 </div>
                 <div class="banner-items">
                     <div class="banner-item" th:each="book, stat : ${BestSellerList}" th:if="${stat.index < 4}">
-                        <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        <a th:href="@{/books/{productId}(productId=${book.productId})}">
+                            <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        </a>
                         <p class="book-title" th:text="${book.productTitle}">도서 제목</p>
                     </div>
                 </div>
@@ -769,7 +779,9 @@
                 </div>
                 <div class="banner-items">
                     <div class="banner-item" th:each="book, stat : ${BestSellerList}" th:if="${stat.index < 4}">
-                        <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        <a th:href="@{/books/{productId}(productId=${book.productId})}">
+                            <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        </a>
                         <p class="book-title" th:text="${book.productTitle}">도서 제목</p>
                     </div>
                 </div>
@@ -809,11 +821,10 @@
 
             <div class="today-book-content" th:if="${ItemNewAllList.size() > 0}">
                 <div class="today-main-book">
-                    <img class="today-main-img"
-                         th:src="@{${ItemNewAllList[0].productImage}}"
-                         alt="대표 도서 이미지">
-
                     <a th:href="@{/books/{productId}(productId=${ItemNewAllList[0].productId})}">
+                        <img class="today-main-img"
+                             th:src="@{${ItemNewAllList[0].productImage}}"
+                             alt="대표 도서 이미지">
                     </a>
 
                     <div class="today-main-info">
@@ -842,9 +853,11 @@
                     <div class="sub-book-item"
                          th:each="book, stat : ${ItemNewAllList}"
                          th:if="${stat.index >= 1 and stat.index <= 4}">
-                        <img th:src="@{${book.productImage}}"
-                             alt="서브 도서 이미지">
-                        <a th:href="@{/books/{productId}(productId=${book.productId})}"> </a>
+                        <a th:href="@{/books/{productId}(productId=${book.productId})}">
+
+                            <img th:src="@{${book.productImage}}"
+                                 alt="서브 도서 이미지">
+                        </a>
                         <p class="sub-book-title" th:text="${book.productTitle}">
                             서브 도서 제목
                         </p>
@@ -862,7 +875,7 @@
         <!-- 1) 섹션 제목 -->
         <div class="section-title">
             <h2>베스트</h2>
-            <span>이주의 가장 인기 있는 도서를 만나보세요.</span>
+            <span>E2BS에서 베스트 도서를 만나보세요.</span>
         </div>
 
         <!-- 3) 카테고리 네비게이션 -->
@@ -888,12 +901,13 @@
                          th:text="${stat.index + 1}">
                         1
                     </div>
+                    <a th:href="@{/books/{productId}(productId=${product.productId})}">
 
 
                     <img th:src="${product.productImage}"
                          alt="도서 이미지"/>
+                    </a>
 
-                    <a th:href="@{/books/{productId}(productId=${product.productId})}"> </a>
 
                     <!-- 도서 제목 -->
                     <p class="book-title"
