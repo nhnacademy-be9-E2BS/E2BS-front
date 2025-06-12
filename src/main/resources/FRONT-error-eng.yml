@@ -1,0 +1,8 @@
+errors:
+  F001: Invalid request.
+  F002: Authentication required.
+  F500: A server error has occurred.
+  A403: Unauthorized access. Please log in.
+  C403: Email or password does not match.
+  M403: Username or password does not match.
+  R400: Passwords do not match.

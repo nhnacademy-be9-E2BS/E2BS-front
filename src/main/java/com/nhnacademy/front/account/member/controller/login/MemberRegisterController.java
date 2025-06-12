@@ -59,7 +59,7 @@ public class MemberRegisterController {
 
 		memberService.createMember(requestRegisterMemberDTO);
 
-		return "redirect:/login";
+		return "redirect:/members/login";
 	}
 
 }

@@ -9,6 +9,7 @@
             .error-box {
                 text-align: center;
             }
+
             .error-code {
                 font-size: 96px;
                 font-weight: 700;
@@ -31,8 +32,14 @@
         <div class="container">
             <div class="error-box">
                 <h1 class="error-code">405</h1>
-                <p class="error-message">허용되지 않은 요청 방식입니다.</p>
-                <p class="description">해당 경로는 요청하신 방식으로 접근할 수 없습니다.<br>요청 방식을 다시 확인해 주세요.</p>
+                <p class="error-message"
+                   th:text="${errorMessage != null} ? ${errorMessage} : '서비스에 접속할 수 없습니다.'">
+                    허용되지 않은 요청 방식입니다.
+                </p>
+                <p class="description">
+                    해당 경로는 요청하신 방식으로 접근할 수 없습니다.<br>
+                    요청 방식을 다시 확인해 주세요.
+                </p>
                 <button class="btn btn-secondary" onclick="location.href='/'">메인으로 돌아가기</button>
             </div>
         </div>

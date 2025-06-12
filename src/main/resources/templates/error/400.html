@@ -9,6 +9,7 @@
             .error-box {
                 text-align: center;
             }
+
             .error-code {
                 font-size: 96px;
                 font-weight: 700;
@@ -31,8 +32,14 @@
         <div class="container">
             <div class="error-box">
                 <h1 class="error-code">400</h1>
-                <p class="error-message">잘못된 요청입니다.</p>
-                <p class="description">요청에 문제가 있거나 서버가 요청을 이해하지 못했습니다.<br>요청을 다시 확인하고 시도해주세요.</p>
+                <p class="error-message"
+                   th:text="${errorMessage != null} ? ${errorMessage} : '서비스에 접속할 수 없습니다.'">
+                    잘못된 요청입니다.
+                </p>
+                <p class="description">
+                    요청에 문제가 있거나 서버가 요청을 이해하지 못했습니다.<br>
+                    요청을 다시 확인하고 시도해주세요.
+                </p>
                 <button class="btn btn-secondary" onclick="location.href='/'">메인으로 돌아가기</button>
             </div>
         </div>
