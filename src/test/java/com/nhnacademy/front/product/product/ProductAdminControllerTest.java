@@ -45,6 +45,7 @@ import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiS
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.service.ProductAdminService;
 import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
@@ -621,6 +622,83 @@ class ProductAdminControllerTest {
 			.andExpect(model().attributeExists("categories"))
 			.andExpect(model().attributeExists("tags"));
 	}
+
+	@Test
+	@DisplayName("알라딘 쿼리 기반 도서 등록 뷰 - success")
+	void aladdin_query_register_view_success_test() throws Exception {
+		// given
+		List<ResponseCategoryDTO> categories = List.of(new ResponseCategoryDTO(1L, "category", null));
+		when(adminCategoryService.getCategories()).thenReturn(categories);
+
+		PageResponse<ResponseTagDTO> tagPage = new PageResponse<>();
+		tagPage.setContent(List.of(new ResponseTagDTO(1L, "tag")));
+		when(tagService.getTags(Pageable.unpaged())).thenReturn(tagPage);
+
+		// when & then
+		mockMvc.perform(post("/admin/settings/books/aladdin/register/list")
+				.param("productTitle", "쿼리도서")
+				.param("productIsbn", "978-89-12345-01-3")
+				.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(view().name("admin/product/books/books-api-register-query"))
+			.andExpect(model().attributeExists("book"))
+			.andExpect(model().attributeExists("categories"))
+			.andExpect(model().attributeExists("tags"));
+	}
+
+	@Test
+	@DisplayName("알라딘 QueryType 검색 - success")
+	void aladdin_query_type_search_success_test() throws Exception {
+		// given
+		PageResponse.PageableInfo pageableInfo = new PageResponse.PageableInfo();
+		pageableInfo.setPageNumber(2);
+		pageableInfo.setPageSize(10);
+		pageableInfo.setOffset(20);
+		pageableInfo.setPaged(true);
+		pageableInfo.setUnpaged(false);
+
+		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
+		sortInfo.setEmpty(true);
+		sortInfo.setSorted(false);
+		sortInfo.setUnsorted(true);
+
+		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> pageResponse = new PageResponse<>();
+		pageResponse.setContent(List.of());
+		pageResponse.setPageable(pageableInfo);
+		pageResponse.setSort(sortInfo);
+		pageResponse.setTotalElements(0);
+		pageResponse.setTotalPages(0);
+		pageResponse.setNumber(2);
+		pageResponse.setSize(10);
+		pageResponse.setNumberOfElements(0);
+		pageResponse.setFirst(true);
+		pageResponse.setLast(true);
+		pageResponse.setEmpty(true);
+
+		when(productAdminService.getProductsApi(any(RequestProductApiSearchByQueryTypeDTO.class), any(Pageable.class)))
+			.thenReturn(pageResponse);
+
+		// when & then
+		mockMvc.perform(get("/admin/settings/books/aladdin/list")
+				.param("queryType", "BESTSELLER")
+				.param("page", "2")
+				.param("size", "10"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("admin/product/books/books-api-search-query"))
+			.andExpect(model().attributeExists("products"))
+			.andExpect(model().attribute("queryType", "BESTSELLER"));
+	}
+
+
+	@Test
+	@DisplayName("알라딘 도서 검색창 뷰 조회 - success")
+	void aladdin_search_form_view_test() throws Exception {
+		mockMvc.perform(get("/admin/settings/books/search"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("admin/product/search"));
+	}
+
+
 
 
 
