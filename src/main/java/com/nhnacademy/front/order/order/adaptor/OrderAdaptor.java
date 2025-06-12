@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.request.RequestPaymentApproveDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
@@ -18,15 +19,14 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperD
 @FeignClient(name = "order-service", url = "${order.order.url}")
 public interface OrderAdaptor {
 
-	@PostMapping("/create/tossPay")
+	@PostMapping("/create/payment")
 	ResponseEntity<ResponseOrderResultDTO> postCreateOrder(@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO);
 
 	@PostMapping("/cancel")
 	ResponseEntity<Void> deleteOrder(@RequestParam String orderId);
 
 	@PostMapping("/confirm")
-	ResponseEntity<Void> confirmOrder(@RequestParam String orderId, @RequestParam String paymentKey,
-		@RequestParam long amount);
+	ResponseEntity<Void> confirmOrder(@RequestBody RequestPaymentApproveDTO approveRequest);
 
 	@GetMapping("/{orderCode}")
 	ResponseEntity<ResponseOrderWrapperDTO> getOrderByOrderCode(@PathVariable String orderCode);

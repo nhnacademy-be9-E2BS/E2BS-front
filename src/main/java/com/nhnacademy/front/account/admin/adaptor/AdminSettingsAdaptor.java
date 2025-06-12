@@ -29,15 +29,15 @@ public interface AdminSettingsAdaptor {
 	ResponseEntity<PageResponse<ResponseAdminSettingsMembersDTO>> getAdminSettingsMembers(
 		@SpringQueryMap Pageable pageable);
 
-	@PostMapping("/members/{memberId}")
-	ResponseEntity<Void> updateAdminSettingsMemberState(@PathVariable("memberId") String memberId,
+	@PostMapping("/members/{member-id}")
+	ResponseEntity<Void> updateAdminSettingsMemberState(@PathVariable("member-id") String memberId,
 		@RequestBody RequestAdminSettingsMemberStateDTO requestAdminSettingsMemberStateDTO);
 
-	@PutMapping("/members/{memberId}")
-	ResponseEntity<Void> updateAdminSettingsMemberRole(@PathVariable("memberId") String memberId);
+	@PutMapping("/members/{member-id}")
+	ResponseEntity<Void> updateAdminSettingsMemberRole(@PathVariable("member-id") String memberId);
 
-	@DeleteMapping("/members/{memberId}")
-	ResponseEntity<Void> deleteAdminSettingsMember(@PathVariable("memberId") String memberId);
+	@DeleteMapping("/members/{member-id}")
+	ResponseEntity<Void> deleteAdminSettingsMember(@PathVariable("member-id") String memberId);
 
 	@GetMapping("/customers")
 	ResponseEntity<PageResponse<ResponseAdminSettingsNonMembersDTO>> getAdminSettingsNonMembers(

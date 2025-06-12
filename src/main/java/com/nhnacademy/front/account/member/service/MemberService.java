@@ -67,16 +67,9 @@ public class MemberService {
 	public String getMemberName(HttpServletRequest request) throws FeignException {
 
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
-		if (Objects.isNull(memberId)) {
-			return null;
-		}
 
 		ResponseEntity<ResponseMemberInfoDTO> memberInfoDTO = memberInfoAdaptor.getMemberInfo(memberId);
-		if (!memberInfoDTO.getStatusCode().is2xxSuccessful()) {
-			return null;
-		}
-
-		if (Objects.isNull(memberInfoDTO.getBody())) {
+		if (!memberInfoDTO.getStatusCode().is2xxSuccessful() || Objects.isNull(memberInfoDTO.getBody())) {
 			return null;
 		}
 

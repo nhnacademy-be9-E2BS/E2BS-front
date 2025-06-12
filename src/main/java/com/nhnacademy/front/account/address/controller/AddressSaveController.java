@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "회원 배송지 정보 입력", description = "회원 배송지 정보 입력 및 저장 기능 제공")
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/mypage/addresses/save")
+@RequestMapping("/mypage/addresses/form")
 public class AddressSaveController {
 
 	private final AddressService addressService;

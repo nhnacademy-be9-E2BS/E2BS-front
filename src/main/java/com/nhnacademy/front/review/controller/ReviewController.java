@@ -75,12 +75,7 @@ public class ReviewController {
 	})
 	@PutMapping("/reviews/{reviewId}")
 	public ResponseEntity<ResponseUpdateReviewDTO> updateReview(@Parameter(description = "리뷰 ID", required = true) @PathVariable long reviewId,
-		                                                        @Parameter(description = "리뷰 수정 요청 DTO", required = true) @Validated @ModelAttribute RequestUpdateReviewDTO requestDto,
-		                                                        @Parameter(hidden = true) BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			throw new ValidationFailedException(bindingResult);
-		}
-
+		                                                        @Parameter(description = "리뷰 수정 요청 DTO", required = true) @ModelAttribute RequestUpdateReviewDTO requestDto) {
 		ResponseUpdateReviewDTO body = reviewService.updateReview(reviewId, requestDto);
 		return ResponseEntity.ok(body);
 	}

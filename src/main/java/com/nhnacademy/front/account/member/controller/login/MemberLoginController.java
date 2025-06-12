@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Tag(name = "로그인", description = "로그인 페이지 및 기능 제공")
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/members/login")
 public class MemberLoginController {
 
 	/**

@@ -11,10 +11,10 @@ import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberEmai
 @FeignClient(name = "member-dormant-adaptor", url = "${member.dormant.url}")
 public interface MemberDormantAdaptor {
 
-	@PostMapping("/members/{memberId}/dooray")
-	ResponseEntity<Void> changeDormantMemberStateActive(@PathVariable("memberId") String memberId);
+	@PostMapping("/members/{member-id}/dooray")
+	ResponseEntity<Void> changeDormantMemberStateActive(@PathVariable("member-id") String memberId);
 
-	@GetMapping("/members/{memberId}")
-	ResponseEntity<ResponseMemberEmailDTO> getMemberEmail(@PathVariable("memberId") String memberId);
+	@GetMapping("/members/{member-id}")
+	ResponseEntity<ResponseMemberEmailDTO> getMemberEmail(@PathVariable("member-id") String memberId);
 
 }

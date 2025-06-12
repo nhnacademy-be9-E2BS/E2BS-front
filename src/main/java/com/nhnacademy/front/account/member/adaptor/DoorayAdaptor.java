@@ -10,8 +10,9 @@ import com.nhnacademy.front.account.member.model.dto.request.RequestDoorayAuthen
 @FeignClient(name = "dooray-adaptor", url = "${dooray.authentication.url}")
 public interface DoorayAdaptor {
 
-	@PostMapping("/{serviceId}/{botId}/{botToken}")
+	@PostMapping("/{service-id}/{bot-id}/{bot-token}")
 	String sendDoorayAuthenticationNumber(@RequestBody RequestDoorayAuthenticationDTO requestDoorayAuthenticationDTO,
-		@PathVariable String serviceId, @PathVariable String botId, @PathVariable String botToken);
+		@PathVariable("service-id") String serviceId, @PathVariable("bot-id") String botId,
+		@PathVariable("bot-token") String botToken);
 
 }

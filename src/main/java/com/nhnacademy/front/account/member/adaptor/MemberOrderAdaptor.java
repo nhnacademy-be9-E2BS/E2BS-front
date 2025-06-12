@@ -13,10 +13,11 @@ import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberRece
 @FeignClient(name = "member-order-adaptor", url = "${auth.member.mypage.url}")
 public interface MemberOrderAdaptor {
 
-	@GetMapping("/{memberId}/orders/counts")
-	ResponseEntity<ResponseMemberOrderDTO> getMemberOrdersCnt(@PathVariable("memberId") String memberId);
+	@GetMapping("/{member-id}/orders/counts")
+	ResponseEntity<ResponseMemberOrderDTO> getMemberOrdersCnt(@PathVariable("member-id") String memberId);
 
-	@GetMapping("/{memberId}/orders")
-	ResponseEntity<List<ResponseMemberRecentOrderDTO>> getMemberRecentOrders(@PathVariable("memberId") String memberId);
+	@GetMapping("/{member-id}/orders")
+	ResponseEntity<List<ResponseMemberRecentOrderDTO>> getMemberRecentOrders(
+		@PathVariable("member-id") String memberId);
 
 }
