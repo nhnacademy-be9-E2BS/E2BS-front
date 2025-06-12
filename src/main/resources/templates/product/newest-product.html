@@ -115,8 +115,20 @@
       cursor: pointer;
       width: 125px;
       margin-left: 50px;
-      border: none;
       border-radius: 5px; /* 둥근 모서리 */
+    }
+
+    .out-btn {
+      background-color: #ffffff;
+      color: #d83e3e;
+      border: 1px solid #d83e3e; /* 빨간색 테두리 */
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      width: 125px;
+      margin-left: 50px;
+      border-radius: 5px;
+      align-items: center;
     }
 
     .increase, .reduced {
@@ -163,26 +175,6 @@
                    alt="대표 이미지" style="width: 130px; height: auto; "
                    onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
             </a>
-            <!--                        <ul class="card-product__imgOverlay">-->
-            <!--                            <li><a th:href="@{/books/{productId}(productId=${product.productId})}"-->
-            <!--                                   class="search-link">-->
-            <!--                                <button><i class="ti-search"></i></button>-->
-            <!--                            </a></li>-->
-
-            <!--                            <li th:if="${session.isMember}">-->
-            <!--                                <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>-->
-            <!--                            </li>-->
-            <!--                            <li th:if="${session.isMember == null}">-->
-            <!--                                <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>-->
-            <!--                            </li>-->
-
-            <!--                            <li>-->
-            <!--                        <button class="like-button" th:data-liked="${product.liked}">-->
-            <!--                            <i class="ti-heart"-->
-            <!--                               th:classappend="${product.liked} ? ' liked' : ''"></i>-->
-            <!--                        </button>-->
-            <!--                            </li>-->
-            <!--                        </ul>-->
           </div>
         </div>
 
@@ -193,14 +185,14 @@
                th:text="${product.productTitle}" class="title-link">도서 제목</a>
           </h5>
           <div>
-								<span style="color: #bbb;">
-									<span th:text="${product.publisher.publisherName}"></span> |
-									<span th:each="contributor, stat : ${product.contributors}">
-										<span th:text="|${contributor.contributorName} (${contributor.positionName})|"/>
-										<span th:unless="${stat.last}" th:text="'| '"/>
-									</span>|
-									<span th:text="${product.productPublishedAt}"></span>
-								</span>
+                        <span style="color: #bbb;">
+                            <span th:text="${product.publisher.publisherName}"></span> |
+                            <span th:each="contributor, stat : ${product.contributors}">
+                                <span th:text="|${contributor.contributorName} (${contributor.positionName})|"/>
+                                <span th:unless="${stat.last}" th:text="'| '"/>
+                            </span>|
+                            <span th:text="${product.productPublishedAt}"></span>
+                        </span>
           </div>
           <!-- 가격 -->
           <div th:if="${product.productRegularPrice != product.productSalePrice}">
@@ -235,25 +227,51 @@
 
         <!-- 오른쪽 버튼 영역 추가 시작 -->
 
-        <div th:if="${product.productState.productStateId == 3}">
-          <h2 class="error-text">삭제</h2>
+        <div th:if="${product.productState.productStateId == 3}"
+             class="button-area">
+          <button class="out-btn">
+            삭제된 도서
+          </button>
         </div>
-        <div th:if="${product.productState.productStateId == 2 || product.productState.productStateId == 4}">
-          <h2 class="error-text">품절/절판</h2>
+        <div th:if="${product.productState.productStateId == 2 || product.productState.productStateId == 4}"
+             class="button-area">
+          <button class="out-btn">
+            품절/절판
+          </button>
         </div>
         <div class="button-area" th:if="${product.productState.productStateId == 1}">
           <div class="quantity-controls" style="align-items: flex-end;">
             <label>수량:</label>
             <!-- 수정: 회색 칸 제거, 텍스트로 변경 -->
-            <input type="number" class="quantity-input"
+            <input type="number"
+                   class="quantity-input"
+                   th:id="'quantity__' + ${product.productId}"
                    th:value="${product.productStock > 0 ? 1 : 0}"
                    th:max="${product.productStock}"
                    min="1">
             <!-- 수정: 회색 칸 제거, 텍스트로 변경 -->
           </div>
-          <button style="background-color: #163B63FF; color: white;">바로구매</button>
-          <button style="background-color: #007BFF; color: white;">쇼핑카트 담기</button>
-          <button style="background-color: #e1e1e1; color: black;">위시리스트</button>
+          <button th:if="${session.isMember}"
+                  th:onclick="'return submitOrderMember(' + ${product.productId} + ')'"
+                  style="background-color: #163B63FF; color: white; border: none;">
+            바로구매
+          </button>
+          <button th:if="${session.isMember == null}"
+                  th:onclick="'return submitOrderGuest(' + ${product.productId} + ')'"
+                  style="background-color: #163B63FF; color: white; border: none;">
+            바로구매
+          </button>
+
+          <button th:class="${session.isMember} ? 'member-add-cart-btn' : 'guest-add-cart-btn'"
+                  style="background-color: #007BFF; color: white; border: none;">
+            쇼핑카트 담기
+          </button>
+
+          <button class="like-button"
+                  th:data-liked="${product.liked}"
+                  style="background-color: #e1e1e1; color: black; font-size: 12px; border: none;"
+                  th:text="${product.liked} ? '위시리스트 취소' : '위시리스트 담기'">
+          </button>
         </div>
         <!-- 오른쪽 버튼 영역 추가 끝 -->
 
@@ -269,7 +287,7 @@
             <!-- 처음 버튼 -->
             <li class="page-item" th:classappend="${!products.hasPrevious()} ? 'disabled'">
               <a class="page-link"
-                 th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=0, size=10)}"
+                 th:href="@{/books/search/newest(page=0, size=10)}"
                  th:text="'처음'">First</a>
             </li>
 
@@ -278,14 +296,14 @@
                 th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
                 th:classappend="${i == products.number} ? 'active'">
               <a class="page-link"
-                 th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${i}, size=10)}"
+                 th:href="@{/books/search/newest(page=${i}, size=10)}"
                  th:text="${i + 1}">1</a>
             </li>
 
             <!-- 마지막 버튼 -->
             <li class="page-item" th:classappend="${!products.hasNext()} ? 'disabled'">
               <a class="page-link"
-                 th:href="@{/books/search/category/{categoryId}(categoryId=${categoryId}, page=${products.totalPages - 1}, size=10)}"
+                 th:href="@{/books/search/newest(page=${products.totalPages - 1}, size=10)}"
                  th:text="'마지막'">Last</a>
             </li>
           </ul>
@@ -348,6 +366,67 @@
         element.textContent = isOpen ? "📁" : "📂";
       }
     }
+
+    <!--주문 하기 시 DTO 전송-->
+    function submitOrderMember(productId) {
+      const quantityInput = document.getElementById(`quantity__${productId}`);
+      const quantity = quantityInput.value;
+
+      const cartOrder = {
+        productIds: [productId],
+        cartQuantities: [quantity]
+      };
+
+      const jsonStr = JSON.stringify(cartOrder);
+      const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+
+      document.cookie = `orderCart=${encoded}; path=/; max-age=${60 * 30}; secure; samesite=lax`;
+      window.location.href = '/members/order';
+    }
+
+    function submitOrderGuest(productId) {
+      const quantityInput = document.getElementById(`quantity__${productId}`);
+      const quantity = quantityInput.value;
+
+      fetch('/order/auth', {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          productIds: [productId],
+          cartQuantities: [quantity]
+        })
+      }).then(res => {
+        if (res.ok) {
+          window.location.href = '/order/auth';
+        } else {
+          alert("주문 요청 중 오류가 발생했습니다.");
+        }
+      });
+    }
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const ratingLists = document.querySelectorAll('.list[data-rating]');
+
+      ratingLists.forEach(list => {
+        const rating = parseFloat(list.getAttribute('data-rating')); // 별점 값 (예: 3.5)
+        const stars = list.querySelectorAll('.fa-star'); // 별 아이콘들
+
+        stars.forEach((star, index) => {
+          const starValue = index + 1; // 별의 위치 (1, 2, 3, 4, 5)
+          if (starValue <= Math.floor(rating)) {
+            // 별점이 정수 부분보다 작거나 같은 별은 완전히 채움
+            star.classList.add('filled');
+          } else if (starValue === Math.ceil(rating) && rating % 1 !== 0) {
+            // 소수점 부분이 있는 경우, 해당 별을 부분적으로 채움
+            const fillPercent = (rating % 1) * 100; // 소수점 비율 (예: 0.5 → 50%)
+            star.classList.add('partial');
+            star.style.setProperty('--fill-percent', `${fillPercent}%`);
+          }
+        });
+      });
+    });
   </script>
 
   <script>

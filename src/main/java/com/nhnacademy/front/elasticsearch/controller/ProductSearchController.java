@@ -44,7 +44,7 @@ public class ProductSearchController {
 	private final ProductSearchService productSearchService;
 	private final UserCategoryService userCategoryService;
 
-	private static final String productString = "product";
+	private static final String productString = "products";
 
 	/**
 	 * 사용자 - 검색창에 검색어를 입력하여 도서 리스트 조회 (페이징)
