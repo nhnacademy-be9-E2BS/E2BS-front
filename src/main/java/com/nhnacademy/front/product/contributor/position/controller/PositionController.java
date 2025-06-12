@@ -22,8 +22,10 @@ import com.nhnacademy.front.product.contributor.position.dto.request.RequestPosi
 import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePositionDTO;
 import com.nhnacademy.front.product.contributor.position.service.PositionService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "역할(관리자)", description = "관리자 기여자의 역할 관련 API")
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/settings/positions")
