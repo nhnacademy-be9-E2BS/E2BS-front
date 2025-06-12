@@ -22,6 +22,8 @@ import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.service.impl.MemberCartServiceImpl;
 
+import feign.FeignException;
+
 @ExtendWith(MockitoExtension.class)
 class MemberCartServiceImplTest {
 
@@ -50,6 +52,23 @@ class MemberCartServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("회원 장바구니 조회 테스트 - 실패(HTTP 응답 실패)")
+	void getCartItemsByCustomer_Fail_StatusNot2xx() {
+		// given
+		String memberId = "id123";
+		ResponseEntity<List<ResponseCartItemsForMemberDTO>> responseEntity =
+			ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+		when(memberCartAdaptor.getCartItemsByMember(memberId)).thenReturn(responseEntity);
+
+		// when & then
+		assertThatThrownBy(() -> memberCartService.getCartItemsByMember(memberId))
+			.isInstanceOf(CartProcessException.class)
+			.hasMessageContaining("회원 장바구니 조회 실패");
+	}
+
+
+	@Test
 	@DisplayName("회원 장바구니 항목 추가 테스트")
 	void createCartItemForCustomer() {
 		// given
@@ -63,8 +82,8 @@ class MemberCartServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("회원 장바구니 항목 추가 - 실패(FeignException 발생)")
-	void createCartItemForCustomer_Fail_FeignException() {
+	@DisplayName("회원 장바구니 항목 추가 - 실패(Http 응답 실패)")
+	void createCartItemForCustomer_Fail_StatusNot2xx() {
 		// given
 		RequestAddCartItemsDTO requestDto = new RequestAddCartItemsDTO();
 		ResponseEntity<Integer> responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -74,6 +93,18 @@ class MemberCartServiceImplTest {
 		// when & then
 		assertThatThrownBy(() -> memberCartService.createCartItemForMember(requestDto))
 			.isInstanceOf(CartProcessException.class);
+	}
+
+	@Test
+	@DisplayName("회원 장바구니 항목 추가 테스트 - 실패(FeignException)")
+	void createCartItemForCustomer_Fail_FeignException() {
+		// given
+		RequestAddCartItemsDTO dto = new RequestAddCartItemsDTO();
+		when(memberCartAdaptor.createCartItemForMember(dto)).thenThrow(FeignException.class);
+
+		// when & then
+		assertThatThrownBy(() -> memberCartService.createCartItemForMember(dto))
+			.isInstanceOf(FeignException.class);
 	}
 
 	@Test
@@ -91,6 +122,37 @@ class MemberCartServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("회원 장바구니 수량 변경 테스트 - 실패(HTTP 응답 실패)")
+	void updateCartItemForCustomer_Fail_StatusNot2xx() {
+		// given
+		long cartItemId = 1L;
+		RequestUpdateCartItemsDTO dto = new RequestUpdateCartItemsDTO();
+		ResponseEntity<Integer> response = ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+		when(memberCartAdaptor.updateCartItemForMember(eq(cartItemId), eq(dto))).thenReturn(response);
+
+		// when & then
+		assertThatThrownBy(() -> memberCartService.updateCartItemForMember(cartItemId, dto))
+			.isInstanceOf(CartProcessException.class)
+			.hasMessageContaining("회원 장바구니 항목 수량 변경 실패");
+	}
+
+	@Test
+	@DisplayName("회원 장바구니 수량 변경 테스트 - 실패(FeignException)")
+	void updateCartItemForCustomer_Fail_FeignException() {
+		// given
+		long cartItemId = 1L;
+		RequestUpdateCartItemsDTO dto = new RequestUpdateCartItemsDTO();
+
+		when(memberCartAdaptor.updateCartItemForMember(eq(cartItemId), eq(dto)))
+			.thenThrow(FeignException.class);
+
+		// when & then
+		assertThatThrownBy(() -> memberCartService.updateCartItemForMember(cartItemId, dto))
+			.isInstanceOf(FeignException.class);
+	}
+
+	@Test
 	@DisplayName("회원 장바구니 항목 삭제 테스트")
 	void deleteCartItemForCustomer() {
 		// given
@@ -100,6 +162,70 @@ class MemberCartServiceImplTest {
 		// when & then
 		assertThatCode(() -> memberCartService.deleteCartItemForMember(cartItemId))
 			.doesNotThrowAnyException();
+	}
+
+	@Test
+	@DisplayName("회원 장바구니 항목 삭제 테스트 - 실패(HTTP 응답 실패)")
+	void deleteCartItemForCustomer_Fail_StatusNot2xx() {
+		// given
+		long cartItemId = 1L;
+		ResponseEntity<Void> response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		when(memberCartAdaptor.deleteCartItemForMember(cartItemId)).thenReturn(response);
+
+		// when & then
+		assertThatThrownBy(() -> memberCartService.deleteCartItemForMember(cartItemId))
+			.isInstanceOf(CartProcessException.class)
+			.hasMessageContaining("회원 장바구니 항목 삭제 실패");
+	}
+
+	@Test
+	@DisplayName("회원 장바구니 항목 삭제 테스트 - 실패(FeignException)")
+	void deleteCartItemForCustomer_Fail_FeignException() {
+		// given
+		long cartItemId = 1L;
+		when(memberCartAdaptor.deleteCartItemForMember(cartItemId)).thenThrow(FeignException.class);
+
+		// when & then
+		assertThatThrownBy(() -> memberCartService.deleteCartItemForMember(cartItemId))
+			.isInstanceOf(FeignException.class);
+	}
+
+	@Test
+	@DisplayName("회원 장바구니 전체 삭제 테스트")
+	void deleteCartForCustomer() {
+		// given
+		String memberId = "id123";
+		when(memberCartAdaptor.deleteCartForMember(memberId)).thenReturn(ResponseEntity.noContent().build());
+
+		// when & then
+		assertThatCode(() -> memberCartService.deleteCartForMember(memberId))
+			.doesNotThrowAnyException();
+	}
+
+	@Test
+	@DisplayName("회원 장바구니 전체 삭제 테스트 - 실패(HTTP 응답 실패)")
+	void deleteCartForCustomer_Fail_StatusNot2xx() {
+		// given
+		String memberId = "id123";
+		ResponseEntity<Void> response = ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
+		when(memberCartAdaptor.deleteCartForMember(memberId)).thenReturn(response);
+
+		// when & then
+		assertThatThrownBy(() -> memberCartService.deleteCartForMember(memberId))
+			.isInstanceOf(CartProcessException.class)
+			.hasMessageContaining("회원 장바구니 전체 삭제 실패");
+	}
+
+	@Test
+	@DisplayName("회원 장바구니 전체 삭제 테스트 - 실패(FeignException)")
+	void deleteCartForCustomer_Fail_FeignExceptionThrown() {
+		// given
+		String memberId = "id123";
+		when(memberCartAdaptor.deleteCartForMember(memberId)).thenThrow(FeignException.class);
+
+		// when & then
+		assertThatThrownBy(() -> memberCartService.deleteCartForMember(memberId))
+			.isInstanceOf(FeignException.class);
 	}
 
 }

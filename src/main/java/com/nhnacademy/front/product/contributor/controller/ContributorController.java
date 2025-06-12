@@ -26,8 +26,10 @@ import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePo
 import com.nhnacademy.front.product.contributor.position.service.PositionService;
 import com.nhnacademy.front.product.contributor.service.ContributorService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "기여자(관리자)", description = "관리자 기여자 관련 API")
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/settings/contributors")
