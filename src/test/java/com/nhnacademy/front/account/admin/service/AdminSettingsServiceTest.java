@@ -23,7 +23,6 @@ import com.nhnacademy.front.account.admin.exception.AdminSettingsFailedException
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberDeleteFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
-import com.nhnacademy.front.account.admin.exception.AdminSettingsNonMembersFailedException;
 import com.nhnacademy.front.account.admin.model.domain.DailySummary;
 import com.nhnacademy.front.account.admin.model.domain.MonthlySummary;
 import com.nhnacademy.front.account.admin.model.domain.WeeklySummary;
@@ -32,8 +31,6 @@ import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettin
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMonthlySummaryDTO;
-import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
-import com.nhnacademy.front.account.customer.model.domain.Customer;
 import com.nhnacademy.front.account.memberstate.model.domain.MemberState;
 import com.nhnacademy.front.common.page.PageResponse;
 
@@ -334,51 +331,6 @@ class AdminSettingsServiceTest {
 			adminSettingsService.deleteAdminSettingsMember("user");
 		});
 
-	}
-
-	@Test
-	@DisplayName("비회원 목록 조회 메서드 테스트")
-	void getAdminSettingsNonMembersTest() {
-
-		// Given
-		List<ResponseAdminSettingsNonMembersDTO> content = List.of(
-			new ResponseAdminSettingsNonMembersDTO(new Customer())
-		);
-		PageResponse<ResponseAdminSettingsNonMembersDTO> pageResponse = new PageResponse<>();
-		pageResponse.setContent(content);
-		pageResponse.setNumber(0);
-		pageResponse.setSize(10);
-		pageResponse.setTotalElements(1L);
-
-		// When
-		Pageable pageable = PageRequest.of(0, 10);
-
-		when(adminSettingsAdaptor.getAdminSettingsNonMembers(pageable))
-			.thenReturn(ResponseEntity.ok(pageResponse));
-
-		PageResponse<ResponseAdminSettingsNonMembersDTO> result = adminSettingsService.getAdminSettingsNonMembers(
-			pageable);
-
-		// Then
-		Assertions.assertThat(result).isEqualTo(pageResponse);
-
-	}
-
-	@Test
-	@DisplayName("비회원 목록 조회 메서드 AdminSettingsNonMembersFailedException 테스트")
-	void getAdminSettingsNonMembersMethodAdminSettingsNonMembersFailedExceptionTest() {
-
-		// Given
-
-		// when
-		Pageable pageable = PageRequest.of(0, 10);
-
-		when(adminSettingsAdaptor.getAdminSettingsNonMembers(pageable))
-			.thenReturn(ResponseEntity.status(500).build());
-
-		// Then
-		Assertions.assertThatThrownBy(() -> adminSettingsService.getAdminSettingsNonMembers(pageable))
-			.isInstanceOf(AdminSettingsNonMembersFailedException.class);
 	}
 
 	@Test

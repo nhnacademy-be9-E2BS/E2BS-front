@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -53,11 +54,13 @@ class MemberLoginControllerTest {
 	void getLoginTest() throws Exception {
 
 		// Given
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("dormantCnt", 0);
 
 		// When
 
 		// Then
-		mockMvc.perform(get("/members/login"))
+		mockMvc.perform(get("/members/login").session(session))
 			.andExpect(status().isOk())
 			.andExpect(view().name("member/login/login"));
 

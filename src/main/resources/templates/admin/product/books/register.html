@@ -559,9 +559,16 @@
             initialValue: getProductDescription
         });
 
-        document.getElementById("submitBtn").addEventListener('click', function () {
+        document.getElementById("submitBtn").addEventListener('click', function (e) {
             document.querySelector('#productContent').value = editorContent.getHTML();
             document.querySelector('#productDescription').value = editorDescription.getHTML();
+            const regularPrice = Number(document.querySelector('input[name="productRegularPrice"]').value);
+            const salePrice = Number(document.querySelector('input[name="productSalePrice"]').value);
+
+            if (regularPrice < salePrice) {
+                alert('정가는 판매가보다 비싸야합니다');
+                e.preventDefault(); // 폼 제출 막기
+            }
         });
 
 

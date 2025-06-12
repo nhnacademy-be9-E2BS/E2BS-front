@@ -2,8 +2,6 @@ package com.nhnacademy.front.cart.model.dto.response;
 
 import java.math.BigDecimal;
 
-import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
