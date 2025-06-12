@@ -3,10 +3,10 @@ package com.nhnacademy.front.common.error.controller;
 import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 
@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "ERROR", description = "에러 메세지 변환 및 에러 페이지 화면 제공")
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class ErrorController {
 
