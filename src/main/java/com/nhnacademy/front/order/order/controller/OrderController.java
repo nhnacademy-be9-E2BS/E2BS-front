@@ -457,11 +457,15 @@ public class OrderController {
 			isChangeOfMindReturnAvailable = daysBetween <= 10;
 		}
 
+		Boolean isReviewed = reviewService.isReviewedByOrder(orderCode);
+
+		model.addAttribute("customerId", customerId);
 		model.addAttribute("isReturnAvailable", isReturnAvailable);
 		model.addAttribute("isChangeOfMindReturnAvailable", isChangeOfMindReturnAvailable);
 		model.addAttribute("order", order);
 		model.addAttribute("orderDetails", orderDetails);
 		model.addAttribute("productAmount", productAmount);
+		model.addAttribute("isReviewed", isReviewed);
 
 		return "customer/order-details";
 	}
