@@ -57,6 +57,7 @@ class MemberEmailDormantControllerTest {
 
 		// Given
 		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("remainingCnt", 0);
 
 		// When
 
@@ -155,8 +156,9 @@ class MemberEmailDormantControllerTest {
 
 		// Then
 		mockMvc.perform(post("/member/dormant/email").session(session)
-				.with(csrf()))
-			.andExpect(status().is4xxClientError());
+				.with(csrf())
+				.param("dormantEmailNumber", requestDormantEmailNumberDTO.getDormantEmailNumber()))
+			.andExpect(status().is3xxRedirection());
 
 	}
 

@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -46,7 +47,9 @@ import com.nhnacademy.front.account.socialauth.model.domain.SocialAuth;
 import com.nhnacademy.front.account.socialauth.model.domain.SocialAuthName;
 import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.jwt.rule.JwtRule;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -76,6 +79,12 @@ class MemberMypageServiceTest {
 
 	@Mock
 	private PasswordEncoder passwordEncoder;
+
+	@Mock
+	private HttpServletRequest request;
+
+	@Mock
+	private HttpServletResponse response;
 
 	@Test
 	@DisplayName("마이페이지 총 주문 건수 조회 메서드 테스트")
@@ -372,6 +381,28 @@ class MemberMypageServiceTest {
 	}
 
 	@Test
+	@DisplayName("회원 정보를 수정하는 메서드 PasswordNotEqualsException2 테스트")
+	void updateMemberInfoMethodPasswordNotEqualsException2Test() throws Exception {
+
+		// Given
+		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
+			jwtStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any())).thenReturn("user");
+
+			RequestMemberInfoDTO requestMemberInfoDTO = new RequestMemberInfoDTO(
+				"user", "user", "user@naver.com", LocalDate.now(), "010-1234-1234",
+				"1234", null
+			);
+
+			// When
+
+			// Then
+			org.junit.jupiter.api.Assertions.assertThrows(PasswordNotEqualsException.class, () -> {
+				memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO);
+			});
+		}
+	}
+
+	@Test
 	@DisplayName("회원 정보를 수정하는 메서드 NotFoundMemberInfoException 테스트")
 	void updateMemberInfoMethodNotFoundMemberInfoExceptionTest() throws Exception {
 
@@ -441,6 +472,41 @@ class MemberMypageServiceTest {
 			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> {
 				memberMypageService.withdrawMember(request, responseMock);
 			});
+
+		}
+	}
+
+	@Test
+	@DisplayName("withdraw 메서드 테스트")
+	void withdrawMethodTest() throws Exception {
+		// Given
+		String memberId = "user";
+		String refreshKey = JwtRule.REFRESH_PREFIX.getValue() + ":" + memberId;
+
+		Cookie jwtCookie = new Cookie(JwtRule.JWT_ISSUE_HEADER.getValue(), "header.payload.signature");
+		Cookie[] cookies = new Cookie[] {
+			jwtCookie
+		};
+
+		// When
+		when(request.getCookies()).thenReturn(cookies);
+		when(memberInfoAdaptor.withdrawMember(memberId)).thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+
+		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
+			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(request)).thenReturn(memberId);
+
+			// Then
+			Assertions.assertThatCode(() -> memberMypageService.withdrawMember(request, response))
+				.doesNotThrowAnyException();
+
+			ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
+
+			verify(response).addCookie(cookieCaptor.capture());
+
+			Cookie removedCookie = cookieCaptor.getValue();
+			Assertions.assertThat(removedCookie.getName()).isEqualTo(JwtRule.JWT_ISSUE_HEADER.getValue());
+			Assertions.assertThat(removedCookie.getMaxAge()).isZero();
+			Assertions.assertThat(removedCookie.getValue()).isNull();
 
 		}
 	}
