@@ -197,7 +197,7 @@
                 <div style="display: flex; align-items: center; gap: 20px;">
                     <span class="address-note">* 배송지는 최대 10개까지 등록 가능합니다.</span>
                     <button class="btn-add-address" th:disabled="${#lists.size(addresses) >= 10}"
-                            th:onclick="|location.href='@{/mypage/addresses/save}'|">+ 새 배송지 등록
+                            th:onclick="|location.href='@{/mypage/addresses/form}'|">+ 새 배송지 등록
                     </button>
                 </div>
             </div>
