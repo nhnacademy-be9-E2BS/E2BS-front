@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.service.MemberCartService;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
@@ -94,7 +95,7 @@ class MemberCartControllerTest {
 	@DisplayName("POST /members/carts/items - 회원 장바구니 항목 추가 테스트 실패(유효성 검사 실패)")
 	void memberAddToCart_Fail_ValidationException() throws Exception {
 		// given
-		RequestAddCartItemsDTO requestDto = new RequestAddCartItemsDTO(); // 필드 누락
+		RequestAddCartItemsDTO requestDto = new RequestAddCartItemsDTO();
 		String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
 		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
@@ -138,40 +139,71 @@ class MemberCartControllerTest {
 		verify(memberCartService).getCartItemsByMember(MEMBER_ID);
 	}
 
-	// @Test
-	// @DisplayName("PUT /members/carts/items/{cartItemsId} - 회원 장바구니 항목 수량 변경 테스트")
-	// void updateCartItemForMember() throws Exception {
-	// 	// given
-	// 	RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO(MEMBER_ID, null, 1L, 5);
-	// 	String jsonRequest = objectMapper.writeValueAsString(requestDto);
-	//
-	// 	when(memberCartService.updateCartItemForMember(anyInt(), any(RequestUpdateCartItemsDTO.class))).thenReturn(1);
-	//
-	// 	try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
-	// 		mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
-	//
-	// 		// when & then
-	// 		mockMvc.perform(put("/members/carts/items/{cartItemsId}", 1L)
-	// 				.contentType(MediaType.APPLICATION_JSON)
-	// 				.content(jsonRequest)
-	// 				.with(csrf()))
-	// 			.andExpect(status().isNoContent());
-	// 	}
-	//
-	// 	verify(memberCartService).updateCartItemForMember(1L, requestDto);
-	// }
-	//
-	// @Test
-	// @DisplayName("DELETE /members/carts/items/{cartItemsId} - 회원 장바구니 항목 삭제 테스트")
-	// void deleteCartItemForMember() throws Exception {
-	// 	// when & then
-	// 	mockMvc.perform(delete("/members/carts/items/{cartItemsId}", 1L)
-	// 			.sessionAttr("cartItemsCounts", 5)
-	// 			.with(csrf()))
-	// 		.andExpect(status().isNoContent());
-	//
-	// 	verify(memberCartService).deleteCartItemForMember(1L);
-	// }
+	@Test
+	@DisplayName("PUT /members/carts/items/{cartItemsId} - 회원 장바구니 항목 수량 변경 테스트")
+	void updateCartItemForMember() throws Exception {
+		// given
+		long cartItemId = 10L;
+		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO(MEMBER_ID, "", 1L, 5);
+		String jsonRequest = objectMapper.writeValueAsString(requestDto);
+
+		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
+			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
+
+			// when & then
+			when(memberCartService.updateCartItemForMember(eq(cartItemId), any(RequestUpdateCartItemsDTO.class)))
+				.thenReturn(5);
+
+			mockMvc.perform(put("/members/carts/items/{cartItemsId}", cartItemId)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(jsonRequest)
+					.with(csrf()))
+				.andExpect(status().isOk())
+				.andExpect(content().string("5"));
+		}
+
+		verify(memberCartService).updateCartItemForMember(eq(cartItemId), any(RequestUpdateCartItemsDTO.class));
+	}
+
+	@Test
+	@DisplayName("PUT /members/carts/items/{cartItemsId} - 회원 장바구니 항목 수량 변경 테스트 실패(유효성 검사)")
+	void updateCartItemForMember_ValidationFail() throws Exception {
+		// given
+		long cartItemId = 10L;
+		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO();
+		String jsonRequest = objectMapper.writeValueAsString(requestDto);
+
+		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
+			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
+
+			// when & then
+			mockMvc.perform(put("/members/carts/items/{cartItemsId}", cartItemId)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(jsonRequest)
+					.with(csrf()))
+				.andExpect(status().isBadRequest());
+		}
+	}
+
+	@Test
+	@DisplayName("DELETE /members/carts/items/{cartItemsId} - 회원 장바구니 항목 삭제 테스트")
+	void deleteCartItemForMember() throws Exception {
+		// given
+		long cartItemId = 11L;
+
+		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
+			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
+
+			// when & then
+			mockMvc.perform(delete("/members/carts/items/{cartItemsId}", cartItemId)
+					.sessionAttr("cartItemsCounts", 3)
+					.with(csrf()))
+				.andExpect(status().isOk())
+				.andExpect(content().string("2"));
+		}
+
+		verify(memberCartService).deleteCartItemForMember(cartItemId);
+	}
 
 	@Test
 	@DisplayName("DELETE /members/carts - 회원 장바구니 전체 삭제 테스트")

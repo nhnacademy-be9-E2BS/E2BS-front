@@ -90,6 +90,22 @@ class ReviewControllerTest {
 	}
 
 	@Test
+	@DisplayName("POST /reviews - 리뷰 작성 테스트 실패(유효성 검사)")
+	void createReview_Fail_Validation() throws Exception {
+		// given
+		MockMultipartFile mockFile = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg", "dummy".getBytes());
+
+		// when & then
+		mockMvc.perform(MockMvcRequestBuilders.multipart("/reviews")
+				.file(mockFile)
+				.param("reviewContent", "좋네요")
+				.param("reviewGrade", "") // 유효성 실패 조건
+				.param("productId", "1")
+				.with(csrf()))
+			.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	@DisplayName("PUT /reviews/{reviewId} - 리뷰 수정 테스트")
 	void updateReview() throws Exception {
 		// given
@@ -151,10 +167,12 @@ class ReviewControllerTest {
 	@Test
 	@DisplayName("GET /reviews/{orderDetailId} - 주문 상세 Id로 리뷰 단건 조회 테스트")
 	void getReviewByOrderDetailId() throws Exception {
+		// given
 		ResponseReviewDTO responseDto = new ResponseReviewDTO(1L, 1L, 1L, "리뷰 내용", 4, "http://img.url");
 
 		when(reviewService.findReviewByOrderDetailId(1L)).thenReturn(responseDto);
 
+		// when & then
 		mockMvc.perform(get("/reviews/{orderDetailId}", 1L))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.reviewId").value(1))
