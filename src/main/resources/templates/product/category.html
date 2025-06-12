@@ -225,6 +225,10 @@
                             <span th:text="'('+${discountRates[iterStat.index]}+'%↓)'"></span>
                         </span>
                     </div>
+                    <div th:if="${product.productRegularPrice == product.productSalePrice}">
+                        <span class="col-10" style="font-weight: bold; font-size: large; color: #000000;"
+                              th:text="${#numbers.formatInteger(product.productRegularPrice, 0, 'COMMA')} + '원'"></span>
+                    </div>
 
                     <!-- 별점 및 리뷰-->
                     <div class="form-group">
