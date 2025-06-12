@@ -15,14 +15,8 @@ import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 
-@FeignClient(name = "customer-cart-adaptor", url = "${auth.member.url}")
+@FeignClient(name = "member-cart-adaptor", url = "${auth.member.url}")
 public interface MemberCartAdaptor {
-
-	/**
-	 * 회원 - 장바구니 생성
-	 */
-	@PostMapping("/{memberId}/carts")
-	ResponseEntity<Void> createCartByMember(@PathVariable String memberId);
 
 	/**
 	 * 회원 - 장바구니 목록 조회
