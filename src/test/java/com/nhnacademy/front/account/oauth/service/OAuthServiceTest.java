@@ -190,10 +190,12 @@ class OAuthServiceTest {
 		ResponseCheckOAuthIdDTO responseCheckOAuthIdDTO = new ResponseCheckOAuthIdDTO(true);
 		ResponseEntity<ResponseCheckOAuthIdDTO> responseCheck = new ResponseEntity<>(responseCheckOAuthIdDTO,
 			HttpStatus.CREATED);
+		ResponseEntity<Void> lastLoginResponse = new ResponseEntity<>(HttpStatus.CREATED);
 
 		// When
 		when(oAuthLoginAdaptor.checkOAuthLoginId("idNo")).thenReturn(responseCheck);
 		doNothing().when(authService).postAuthCreateJwtToken(any(RequestJwtTokenDTO.class), eq(response), eq(request));
+		when(oAuthLoginAdaptor.loginOAuthLastLogin("idNo")).thenReturn(lastLoginResponse);
 
 		// Then
 		Assertions.assertThatCode(() -> {
@@ -261,6 +263,7 @@ class OAuthServiceTest {
 		when(oAuthLoginAdaptor.checkOAuthLoginId("idNo")).thenReturn(responseCheck);
 		doNothing().when(authService).postAuthCreateJwtToken(any(RequestJwtTokenDTO.class), eq(response), eq(request));
 		when(oAuthRegisterAdaptor.registerOAuth(any(RequestOAuthRegisterDTO.class))).thenReturn(registerResponse);
+		when(oAuthLoginAdaptor.loginOAuthLastLogin("idNo")).thenReturn(registerResponse);
 
 		// Then
 		Assertions.assertThatCode(() -> {
