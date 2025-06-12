@@ -129,7 +129,7 @@
                         <!-- 장바구니 -->
                         <li class="nav-item">
                             <form style="margin: 0; padding: 0; display: inline-block;">
-                                <button th:if="${session.isMember}" th:formaction="@{/members/carts}" type="submit">
+                                <button th:if="${session.isMember != null and session.isMember and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}" th:formaction="@{/members/carts}" type="submit">
                                     <i class="ti-shopping-cart"></i>
                                     <span class="nav-shop__circle"
                                           th:style="${session.cartItemsCounts == null || session.cartItemsCounts == 0} ? 'display:none;' : ''"

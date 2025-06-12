@@ -42,7 +42,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
-			cartService
+			cartService, memberService
 		);
 		CustomLogoutHandler customLogoutHandler = new CustomLogoutHandler(
 			redisTemplate
