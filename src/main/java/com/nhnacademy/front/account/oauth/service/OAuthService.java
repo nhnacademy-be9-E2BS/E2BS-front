@@ -17,11 +17,16 @@ import com.nhnacademy.front.account.oauth.model.dto.request.RequestOAuthRegister
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponseCheckOAuthIdDTO;
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponsePaycoMemberInfoDTO;
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponseProviderPaycoAccessTokenDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestMergeCartItemDTO;
+import com.nhnacademy.front.cart.service.CartService;
+import com.nhnacademy.front.cart.service.MemberCartService;
 import com.nhnacademy.front.common.error.exception.ServerErrorException;
+import com.nhnacademy.front.common.util.CookieUtil;
 
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,8 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class OAuthService {
-	private final String PAYCO_PROCESSING_MESSAGE = "Payco 응답을 받지 못했습니다.";
-	private final String SYSTEM_ERROR_MESSAGE = "시스템에서 에러가 발생했습니다.";
 
 	private final OAuthProviderPaycoAccessTokenAdaptor oAuthProviderPaycoAccessTokenAdaptor;
 	private final OAuthPaycoMemberInfoAdaptor oAuthPaycoMemberInfoAdaptor;
@@ -38,6 +41,8 @@ public class OAuthService {
 	private final OAuthRegisterAdaptor oAuthRegisterAdaptor;
 
 	private final AuthService authService;
+	private final MemberCartService memberCartService;
+	private final CartService cartService;
 
 	@Value("${spring.security.oauth2.client.provider.payco.authorization-uri}")
 	private String authorizationUri;
@@ -118,6 +123,7 @@ public class OAuthService {
 				if (!registerResponse.getStatusCode().is2xxSuccessful()) {
 					throw new ServerErrorException();
 				}
+				memberCartService.createCartByMember(responsePaycoMemberInfoDTO.getData().getMember().getIdNo());
 			}
 
 			RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(
@@ -131,6 +137,28 @@ public class OAuthService {
 
 			authService.postAuthCreateJwtToken(requestJwtTokenDTO, response, request);
 
+			HttpSession session = request.getSession();
+
+			// 게스트 키가 있으면 장바구니를 꺼내서 병합 후 항목 개수 적용
+			String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
+			if (Objects.nonNull(guestCookieValue)) {
+				Integer mergedCount = cartService.mergeCartItemsToMemberFromGuest(new RequestMergeCartItemDTO(responsePaycoMemberInfoDTO.getData().getMember().getIdNo(), guestCookieValue));
+
+				session.setAttribute("cartItemsCounts", mergedCount);
+				CookieUtil.clearCookie(guestCookieValue, response); // 쿠키 삭제
+			} else {
+				// 없으면 기존 회원 장바구니 항목 개수 적용
+				session.setAttribute("cartItemsCounts", cartService.getCartItemsCountsForMember(responsePaycoMemberInfoDTO.getData().getMember().getIdNo()));
+			}
+
+			// Cookie[] cookies = request.getCookies();
+			// if (Objects.nonNull(cookies)) {
+			// 	for (Cookie cookie : cookies) {
+			// 		if ("orderCart".equals(cookie.getName())) {
+			// 			리다이렉트("/members/order");
+			// 		}
+			// 	}
+			// }
 		} catch (FeignException ex) {
 			throw new ServerErrorException();
 		}

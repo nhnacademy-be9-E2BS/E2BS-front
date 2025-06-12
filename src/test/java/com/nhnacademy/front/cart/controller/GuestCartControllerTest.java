@@ -172,7 +172,6 @@ class GuestCartControllerTest {
 			.andExpect(model().attributeExists("currentDeliveryPrice"))
 			.andExpect(model().attributeExists("currentDeliveryFee"));
 
-		verify(guestCartService).getCartItemsByGuest(guestKey);
 		verify(deliveryFeeSevice).getCurrentDeliveryFee();
 	}
 

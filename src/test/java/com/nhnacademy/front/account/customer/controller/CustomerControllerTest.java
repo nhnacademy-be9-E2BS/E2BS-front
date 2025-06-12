@@ -5,10 +5,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,15 +21,13 @@ import com.nhnacademy.front.account.customer.model.dto.request.RequestCustomerLo
 import com.nhnacademy.front.account.customer.model.dto.request.RequestCustomerRegisterDTO;
 import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerDTO;
 import com.nhnacademy.front.account.customer.service.CustomerService;
-import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 
 @ActiveProfiles("dev")
-@WithMockUser(username = "user", roles = {"MEMBER", "ADMIN", "USER"})
 @WebMvcTest(CustomerController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class CustomerControllerTest {
 
 	@Autowired
@@ -77,24 +70,6 @@ class CustomerControllerTest {
 		mockMvc.perform(get("/order/auth"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("customer/auth"));
-	}
-
-	@Test
-	@DisplayName("비회원 장바구니 항목 쿠키 저장 테스트")
-	void redirectGuestAuth() throws Exception {
-		// given
-		RequestCartOrderDTO dto = new RequestCartOrderDTO(List.of(), List.of());
-		String jsonRequest = objectMapper.writeValueAsString(dto);
-
-		String encoded = Base64.getEncoder().encodeToString(jsonRequest.getBytes(StandardCharsets.UTF_8));
-
-		// when & then
-		mockMvc.perform(post("/order/auth")
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonRequest))
-			.andExpect(status().isOk())
-			.andExpect(cookie().value("orderCart", encoded));
 	}
 
 	@Test

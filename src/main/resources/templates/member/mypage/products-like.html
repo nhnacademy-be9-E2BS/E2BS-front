@@ -56,10 +56,10 @@
                                     <button><i class="ti-search"></i></button>
                                 </a></li>
 
-                                <li th:if="${session.isMember}">
+                                <li th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}">
                                     <button class="member-add-cart-btn"><i class="ti-shopping-cart"></i></button>
                                 </li>
-                                <li th:if="${session.isMember == null}">
+                                <li th:if="${memberRole == null and memberName == null}">
                                     <button class="guest-add-cart-btn"><i class="ti-shopping-cart"></i></button>
                                 </li>
 

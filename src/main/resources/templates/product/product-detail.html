@@ -252,15 +252,17 @@
 								<button type="button" class="reduced" onclick="adjustQuantity(-1)"><i class="lnr lnr-chevron-down"></i></button>
 							</div>
 							<div class="button-container">
-								<button  th:class="${session.isMember} ? 'member-add-cart-btn' : 'guest-add-cart-btn'"
+								<button  th:class="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'} ? 'member-add-cart-btn' : 'guest-add-cart-btn'"
 										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 									쇼핑카트 담기</button>
 
-								<button class="buy-now-btn custom-btn" th:if="${session.isMember}"
+								<button class="buy-now-btn custom-btn"
+										th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}"
 										onclick="return submitOrderMember()"
 										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #163B63FF;color: white;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 									바로구매</button>
-								<button class="buy-now-btn custom-btn" th:if="${session.isMember == null}"
+								<button class="buy-now-btn custom-btn"
+										th:if="${memberRole == null and memberName == null}"
 										onclick="return submitOrderGuest()"
 										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 									바로구매</button>
@@ -474,6 +476,8 @@
 		});
 
 		function submitOrderMember() {
+			console.log('submitOrderMember')
+
 			let productIdList = [];
 			productIdList.push([[${product.productId}]]);
 			let quantityList = [];
@@ -495,6 +499,8 @@
 		}
 
 		function submitOrderGuest() {
+			console.log('submitOrderGuest')
+
 			let productIdList = [];
 			productIdList.push([[${product.productId}]]);
 			let quantityList = [];

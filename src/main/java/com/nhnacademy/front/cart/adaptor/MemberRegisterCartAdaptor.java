@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@FeignClient(name = "member-cart-adaptor", url = "/api/members/")
+@FeignClient(name = "member-register-cart-adaptor", url = "${member.state.url}")
 public interface MemberRegisterCartAdaptor {
 	/**
 	 * 회원 - 장바구니 생성

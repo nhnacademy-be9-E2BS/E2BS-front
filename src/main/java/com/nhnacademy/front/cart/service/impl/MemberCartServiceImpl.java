@@ -25,10 +25,14 @@ public class MemberCartServiceImpl implements MemberCartService {
 
 	@Override
 	public void createCartByMember(String memberId) {
-		ResponseEntity<Void> result = memberRegisterCartAdaptor.createCartByMember(memberId);
+		try {
+			ResponseEntity<Void> result = memberRegisterCartAdaptor.createCartByMember(memberId);
 
-		if (!result.getStatusCode().is2xxSuccessful()) {
-			throw new CartProcessException("회원 장바구니 생성 실패: " + result.getStatusCode());
+			if (!result.getStatusCode().is2xxSuccessful()) {
+				throw new CartProcessException("회원 장바구니 생성 실패: " + result.getStatusCode());
+			}
+		} catch (FeignException e) {
+			throw new CartProcessException("회원 장바구니 생성 실패: " + e.getMessage());
 		}
 	}
 

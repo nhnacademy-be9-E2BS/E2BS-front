@@ -61,8 +61,6 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 				session.setAttribute("cartItemsCounts", cartService.getCartItemsCountsForMember(memberId));
 			}
 
-			session.setAttribute("isMember", true);
-
 			Cookie[] cookies = request.getCookies();
 			if (Objects.nonNull(cookies)) {
 				for (Cookie cookie : cookies) {
