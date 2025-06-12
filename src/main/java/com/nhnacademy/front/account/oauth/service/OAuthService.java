@@ -122,6 +122,13 @@ public class OAuthService {
 
 			RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(
 				responsePaycoMemberInfoDTO.getData().getMember().getIdNo());
+
+			ResponseEntity<Void> latestLoginResponse = oAuthLoginAdaptor.loginOAuthLastLogin(
+				requestJwtTokenDTO.getMemberId());
+			if (!latestLoginResponse.getStatusCode().is2xxSuccessful()) {
+				throw new ServerErrorException();
+			}
+
 			authService.postAuthCreateJwtToken(requestJwtTokenDTO, response, request);
 
 		} catch (FeignException ex) {

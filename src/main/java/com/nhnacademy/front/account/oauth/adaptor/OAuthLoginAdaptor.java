@@ -19,4 +19,7 @@ public interface OAuthLoginAdaptor {
 	@PostMapping
 	ResponseEntity<Void> loginOAuth(@RequestBody RequestOAuthLoginDTO requestOAuthLoginDTO);
 
+	@GetMapping("/members/{member-id}")
+	ResponseEntity<Void> loginOAuthLastLogin(@PathVariable("member-id") String memberId);
+
 }
