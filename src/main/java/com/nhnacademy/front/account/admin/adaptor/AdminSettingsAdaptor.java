@@ -16,7 +16,6 @@ import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettin
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMonthlySummaryDTO;
-import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.common.page.PageResponse;
 
 @FeignClient(name = "admin-settings-adaptor", url = "${auth.admin.settings.url}")
@@ -38,10 +37,6 @@ public interface AdminSettingsAdaptor {
 
 	@DeleteMapping("/members/{member-id}")
 	ResponseEntity<Void> deleteAdminSettingsMember(@PathVariable("member-id") String memberId);
-
-	@GetMapping("/customers")
-	ResponseEntity<PageResponse<ResponseAdminSettingsNonMembersDTO>> getAdminSettingsNonMembers(
-		@SpringQueryMap Pageable pageable);
 
 	@GetMapping("/daily")
 	ResponseEntity<ResponseAdminSettingsDailySummaryDTO> getAdminSettingsDailySummaries();

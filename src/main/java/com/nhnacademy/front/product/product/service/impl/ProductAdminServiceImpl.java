@@ -49,7 +49,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 			request.getProductImages());
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductCreateProcessException("도서 등록 실패");
+			throw new ProductCreateProcessException();
 		}
 	}
 
@@ -61,7 +61,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productAdminAdaptor.getProducts(pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("전체 도서 조회 실패");
+			throw new ProductGetProcessException();
 		}
 		return response.getBody();
 	}
@@ -74,7 +74,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 		ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsBySearch(pageable, keyword, null, "");
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("전체 도서 조회 실패");
+			throw new ProductGetProcessException();
 		}
 		return response.getBody();
 	}
@@ -93,7 +93,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 			request.getProductImages());
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductUpdateProcessException("도서 정보 수정 실패");
+			throw new ProductUpdateProcessException();
 		}
 	}
 
@@ -105,7 +105,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 		ResponseEntity<Void> response = productAdminAdaptor.putUpdateProductSalePrice(productId, request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductUpdateProcessException("도서 판매가 수정 실패");
+			throw new ProductUpdateProcessException();
 		}
 	}
 
@@ -119,7 +119,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 			request, pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("도서 조회 실패");
+			throw new ProductGetProcessException();
 		}
 		return response.getBody();
 	}
@@ -134,7 +134,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 			request, pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("도서 조회 실패");
+			throw new ProductGetProcessException();
 		}
 		return response.getBody();
 	}
@@ -150,7 +150,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 		ResponseEntity<Void> response = productAdminAdaptor.postCreateProductByApi(request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductCreateProcessException("도서 등록 실패");
+			throw new ProductCreateProcessException();
 		}
 	}
 
@@ -162,7 +162,7 @@ public class ProductAdminServiceImpl implements ProductAdminService {
 		ResponseEntity<Void> response = productAdminAdaptor.postCreateProductQueryByApi(request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductCreateProcessException("도서 등록 실패");
+			throw new ProductCreateProcessException();
 		}
 	}
 
