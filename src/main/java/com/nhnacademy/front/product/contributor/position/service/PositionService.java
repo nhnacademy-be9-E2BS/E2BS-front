@@ -96,6 +96,7 @@ public class PositionService {
 		try {
 			ResponseEntity<PageResponse<ResponsePositionDTO>> response = positionAdaptor.getPositions(
 				PageRequest.of(0, 100));
+			assert response.getBody() != null;
 			return response.getBody().getContent();
 		} catch (FeignException e) {
 			throw new PositionGetProcessException("Feign 오류로 포지션 목록 가져오기 실패");
