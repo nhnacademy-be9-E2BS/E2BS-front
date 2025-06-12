@@ -64,7 +64,7 @@ public class DeliveryFeeServiceTest {
 		when(deliveryFeeAdminAdaptor.postDeliveryFee(any())).thenReturn(ResponseEntity.ok().build());
 
 		// when
-		ResponseEntity<Void> result = deliveryFeeSevice.CreateDeliveryFee(request);
+		ResponseEntity<Void> result = deliveryFeeSevice.createDeliveryFee(request);
 
 		// then
 		assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();

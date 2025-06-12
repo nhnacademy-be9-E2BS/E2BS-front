@@ -76,23 +76,23 @@ class PointHistoryControllerTest {
 	@Test
 	@DisplayName("마이페이지 포인트 내역 조회 - 성공")
 	void testGetPointHistorySuccess() throws Exception {
-		String MemberId = "member123";
+		String memberId = "member123";
 
 		PageResponse<ResponsePointHistoryDTO> response = new PageResponse<>();
 		response.setContent(List.of(new ResponsePointHistoryDTO()));
 		response.setSize(10);
 
 		when(homeService.getMemberNameFromHome(any(HttpServletRequest.class)))
-			.thenReturn(new ResponseHomeMemberNameDTO(MemberId, "USER", new MemberRole(1L, MemberRoleName.MEMBER)));
+			.thenReturn(new ResponseHomeMemberNameDTO(memberId, "USER", new MemberRole(1L, MemberRoleName.MEMBER)));
 
-		when(pointHistoryService.getPointHistoryByMemberId(eq(MemberId), any()))
+		when(pointHistoryService.getPointHistoryByMemberId(eq(memberId), any()))
 			.thenReturn(response);
 
-		when(memberMypageService.getMemberPoint(eq(new RequestMemberIdDTO(MemberId))))
+		when(memberMypageService.getMemberPoint(new RequestMemberIdDTO(memberId)))
 			.thenReturn(1000L);
 
 		try (MockedStatic<JwtGetMemberId> jwtMock = mockStatic(JwtGetMemberId.class)) {
-			jwtMock.when(() -> JwtGetMemberId.jwtGetMemberId(any())).thenReturn(MemberId);
+			jwtMock.when(() -> JwtGetMemberId.jwtGetMemberId(any())).thenReturn(memberId);
 
 			mockMvc.perform(get("/mypage/pointHistory"))
 				.andExpect(status().isOk())

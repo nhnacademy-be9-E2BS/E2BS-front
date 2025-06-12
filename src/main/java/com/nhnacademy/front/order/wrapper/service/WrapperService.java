@@ -33,7 +33,7 @@ public class WrapperService {
 		ResponseEntity<Void> response = adminWrapperAdaptor.postCreateWrapper(requestMeta, registerRequest.getWrapperImage());
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new WrapperCreateProcessException("포장지 등록 실패");
+			throw new WrapperCreateProcessException();
 		}
 	}
 
@@ -44,7 +44,7 @@ public class WrapperService {
 		ResponseEntity<PageResponse<ResponseWrapperDTO>> response = userWrapperAdaptor.getWrappersBySaleable(pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new WrapperGetProcessException("판매 중인 포장지 리스트 조회 실패");
+			throw new WrapperGetProcessException();
 		}
 		return response.getBody();
 	}
@@ -56,7 +56,7 @@ public class WrapperService {
 		ResponseEntity<PageResponse<ResponseWrapperDTO>> response = adminWrapperAdaptor.getWrappers(pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new WrapperGetProcessException("모든 포장지 리스트 조회 실패");
+			throw new WrapperGetProcessException();
 		}
 		return response.getBody();
 	}
@@ -68,7 +68,7 @@ public class WrapperService {
 		ResponseEntity<Void> response = adminWrapperAdaptor.putUpdateWrapper(wrapperId, modifyRequest);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new WrapperUpdateProcessException("포장지 정보 수정 실패");
+			throw new WrapperUpdateProcessException();
 		}
 	}
 }

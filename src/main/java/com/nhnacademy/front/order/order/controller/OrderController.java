@@ -67,6 +67,7 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductRe
 import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.review.service.ReviewService;
 
+import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -254,30 +255,33 @@ public class OrderController {
 	@Operation(summary = "주문 완료 페이지", description = "주문 완료 페이지 제공")
 	@GetMapping("/order/confirm")
 	public String getConfirmOrder(@Parameter(description = "주문 상품 정보")
-		                          @CookieValue(name = "orderCart") String encodedCart,
+		                          @CookieValue(name = "orderCart", required = false) String encodedCart,
 								  @Parameter(hidden = true) HttpServletRequest request,
 		                          @Parameter(hidden = true) HttpServletResponse response) throws JsonProcessingException {
-		// 완료된 선택된 장바구니 데이터 지운 후
-		String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
-		RequestCartOrderDTO orderRequest = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
+		// 장바구니로 담은 상품 결제인 경우
+		if (!StringUtils.isEmpty(encodedCart)) {
+			String orderCartJson = new String(Base64.getDecoder().decode(encodedCart), StandardCharsets.UTF_8);
+			RequestCartOrderDTO orderRequest = objectMapper.readValue(orderCartJson, RequestCartOrderDTO.class);
 
-		String memberId = "";
-		String guestKey = "";
-		if (JwtHasToken.hasToken(request)) {
-			memberId = JwtGetMemberId.jwtGetMemberId(request);
-		} else {
-			guestKey = CookieUtil.getCookieValue("guestKey", request);
-			if (Objects.isNull(guestKey)) {
-				guestKey = UUID.randomUUID().toString();
-				CookieUtil.setCookie("guestKey", response, guestKey);
+			String memberId = "";
+			String guestKey = "";
+			if (JwtHasToken.hasToken(request)) {
+				memberId = JwtGetMemberId.jwtGetMemberId(request);
+			} else {
+				guestKey = CookieUtil.getCookieValue("guestKey", request);
+				if (Objects.isNull(guestKey)) {
+					guestKey = UUID.randomUUID().toString();
+					CookieUtil.setCookie("guestKey", response, guestKey);
+				}
 			}
+
+			// 완료된 선택된 장바구니 데이터 지운 후
+			Integer cartItemsCounts = cartService.deleteOrderCompleteCartItems(new RequestDeleteCartOrderDTO(memberId, guestKey, orderRequest.getProductIds(), orderRequest.getCartQuantities()));
+			request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
+
+			// 쿠키 삭제
+			CookieUtil.clearCookie("orderCart", response);
 		}
-
-		Integer cartItemsCounts = cartService.deleteOrderCompleteCartItems(new RequestDeleteCartOrderDTO(memberId, guestKey, orderRequest.getProductIds(), orderRequest.getCartQuantities()));
-		request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
-
-		// 쿠키 삭제
-		CookieUtil.clearCookie("orderCart", response);
 
 		return "payment/confirmation";
 	}

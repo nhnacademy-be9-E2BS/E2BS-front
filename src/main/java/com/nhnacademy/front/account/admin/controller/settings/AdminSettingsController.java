@@ -26,7 +26,6 @@ import com.nhnacademy.front.account.admin.model.dto.request.RequestAdminSettings
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
-import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.account.admin.service.AdminSettingsService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
@@ -134,21 +133,6 @@ public class AdminSettingsController {
 		adminSettingsService.deleteAdminSettingsMember(memberId);
 
 		return REDIRECT_ADMIN_SETTINGS_MEMBERS_PATH;
-	}
-
-	/**
-	 * 관리자 페이지 비회원 관리 뷰
-	 */
-	@JwtTokenCheck
-	@GetMapping("/customers")
-	public String getAdminSettingsNonMembers(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
-		PageResponse<ResponseAdminSettingsNonMembersDTO> response = adminSettingsService.getAdminSettingsNonMembers(
-			pageable);
-		Page<ResponseAdminSettingsNonMembersDTO> nonMembers = PageResponseConverter.toPage(response);
-
-		model.addAttribute("nonMembers", nonMembers);
-
-		return "admin/settings/members/admin-settings-non-members";
 	}
 
 }

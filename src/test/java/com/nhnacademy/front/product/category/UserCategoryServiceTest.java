@@ -208,11 +208,12 @@ class UserCategoryServiceTest {
 	@DisplayName("get categories by product ids - fail1")
 	void get_category_by_product_ids_fail1_test() {
 		// given
+		List<Long> productIds = List.of(1L);
 		ResponseEntity<List<ResponseCategoryIdsDTO>> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		when(userCategoryAdaptor.getCategoriesByProductIds(anyList())).thenReturn(response);
 
 		// when & then
-		assertThatThrownBy(() -> userCategoryService.getCategoriesByProductIds(List.of(1L)))
+		assertThatThrownBy(() -> userCategoryService.getCategoriesByProductIds(productIds))
 			.isInstanceOf(CategoryGetProcessException.class);
 	}
 
@@ -220,10 +221,11 @@ class UserCategoryServiceTest {
 	@DisplayName("get categories by product ids - fail2")
 	void get_category_by_product_ids_fail2_test() {
 		// given
+		List<Long> productIds = List.of(1L);
 		when(userCategoryAdaptor.getCategoriesByProductIds(anyList())).thenThrow(FeignException.class);
 
 		// when & then
-		assertThatThrownBy(() -> userCategoryService.getCategoriesByProductIds(List.of(1L)))
+		assertThatThrownBy(() -> userCategoryService.getCategoriesByProductIds(productIds))
 			.isInstanceOf(CategoryGetProcessException.class);
 	}
 }

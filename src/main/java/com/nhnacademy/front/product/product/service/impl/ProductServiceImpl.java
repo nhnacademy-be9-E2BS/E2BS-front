@@ -28,11 +28,11 @@ public class ProductServiceImpl implements ProductService {
 			ResponseEntity<ResponseProductReadDTO> response = productAdaptor.getProductById(productId, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("도서 단일 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("도서 단일 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 
@@ -45,11 +45,11 @@ public class ProductServiceImpl implements ProductService {
 			ResponseEntity<List<ResponseProductReadDTO>> response = productAdaptor.getProducts(productIds);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("order 전용 리스트 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("order 전용 리스트 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 }
