@@ -838,7 +838,7 @@
                             <span th:text="${ItemNewAllList[0].publisherName}">출판사</span>
                         </p>
                         <p class="today-main-desc"
-                           th:text="${ItemNewAllList[0].productDescription}">
+                           th:utext="${ItemNewAllList[0].productDescription}">
                             도서 설명이 이곳에 노출됩니다.
                         </p>
                         <p class="today-main-price"
@@ -854,7 +854,6 @@
                          th:each="book, stat : ${ItemNewAllList}"
                          th:if="${stat.index >= 1 and stat.index <= 4}">
                         <a th:href="@{/books/{productId}(productId=${book.productId})}">
-
                             <img th:src="@{${book.productImage}}"
                                  alt="서브 도서 이미지">
                         </a>
