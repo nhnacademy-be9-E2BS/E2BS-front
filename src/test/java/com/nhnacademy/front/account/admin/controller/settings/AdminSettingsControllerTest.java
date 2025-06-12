@@ -29,9 +29,7 @@ import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettin
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMonthlySummaryDTO;
-import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.account.admin.service.AdminSettingsService;
-import com.nhnacademy.front.account.customer.model.domain.Customer;
 import com.nhnacademy.front.account.memberstate.model.domain.MemberState;
 import com.nhnacademy.front.account.memberstate.model.domain.MemberStateName;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
@@ -180,37 +178,6 @@ class AdminSettingsControllerTest {
 			.andExpect(status().is3xxRedirection())
 			.andExpect(redirectedUrl("/admin/settings/members"));
 
-	}
-
-	@Test
-	@DisplayName("관리자 비회원 목록 페이지 테스트")
-	void getAdminSettingsNonMembersTest() throws Exception {
-
-		// Given
-		List<ResponseAdminSettingsNonMembersDTO> content = List.of(
-			new ResponseAdminSettingsNonMembersDTO(new Customer())
-		);
-		PageResponse<ResponseAdminSettingsNonMembersDTO> mockResponse = new PageResponse<>();
-		mockResponse.setContent(content);
-		mockResponse.setNumber(0);
-		mockResponse.setSize(10);
-		mockResponse.setTotalElements(1L);
-
-		Page<ResponseAdminSettingsNonMembersDTO> mockPage = new PageImpl<>(content);
-
-		// When
-		when(adminSettingsService.getAdminSettingsNonMembers(any(Pageable.class))).thenReturn(mockResponse);
-
-		try (MockedStatic<PageResponseConverter> mockStatic = mockStatic(PageResponseConverter.class)) {
-			mockStatic.when(() -> PageResponseConverter.toPage(mockResponse)).thenReturn(mockPage);
-
-			// Then
-			mockMvc.perform(get("/admin/settings/customers"))
-				.andExpect(status().isOk())
-				.andExpect(view().name("admin/settings/members/admin-settings-non-members"))
-				.andExpect(model().attributeExists("nonMembers"));
-		}
-		
 	}
 
 }

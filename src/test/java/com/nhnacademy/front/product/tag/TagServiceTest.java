@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.tag.adaptor.TagAdaptor;
 import com.nhnacademy.front.product.tag.execption.TagCreateProcessException;
+import com.nhnacademy.front.product.tag.execption.TagDeleteProcessException;
 import com.nhnacademy.front.product.tag.execption.TagGetProcessException;
 import com.nhnacademy.front.product.tag.execption.TagUpdateProcessException;
 import com.nhnacademy.front.product.tag.model.dto.request.RequestTagDTO;
@@ -128,7 +129,6 @@ class TagServiceTest {
 			.isInstanceOf(TagGetProcessException.class);
 	}
 
-
 	@Test
 	@DisplayName("update tag - success")
 	void updateTag_successTest() {
@@ -181,6 +181,49 @@ class TagServiceTest {
 		// when & then
 		assertThatThrownBy(() -> tagService.updateTag(1L, request))
 			.isInstanceOf(TagUpdateProcessException.class);
+	}
+
+	@Test
+	@DisplayName("delete tag - success")
+	void deleteTagSuccessTest() {
+		// given
+		Long tagId = 1L;
+		RequestTagDTO request = new RequestTagDTO("Tag A");
+		when(tagAdaptor.deleteTag(tagId, request)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+
+		// when
+		tagService.deleteTag(tagId, request);
+
+		// then
+		verify(tagAdaptor, times(1)).deleteTag(tagId, request);
+	}
+
+	@Test
+	@DisplayName("delete tag - fail1")
+	void deleteTagFail1Test() {
+		// given
+		Long tagId = 1L;
+		RequestTagDTO request = new RequestTagDTO("Tag A");
+		when(tagAdaptor.deleteTag(tagId, request)).thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+
+		// when & then
+		assertThatThrownBy(() -> tagService.deleteTag(tagId, request))
+			.isInstanceOf(TagDeleteProcessException.class)
+			.hasMessageContaining("태그 삭제 실패");
+	}
+
+	@Test
+	@DisplayName("delete tag - fail2")
+	void deleteTagFail2Test() {
+		// given
+		Long tagId = 1L;
+		RequestTagDTO request = new RequestTagDTO("Tag A");
+		when(tagAdaptor.deleteTag(tagId, request)).thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+
+		// when & then
+		assertThatThrownBy(() -> tagService.deleteTag(tagId, request))
+			.isInstanceOf(TagDeleteProcessException.class)
+			.hasMessageContaining("태그 삭제 실패");
 	}
 
 }

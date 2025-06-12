@@ -14,14 +14,12 @@ import com.nhnacademy.front.account.admin.exception.AdminSettingsFailedException
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberDeleteFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
-import com.nhnacademy.front.account.admin.exception.AdminSettingsNonMembersFailedException;
 import com.nhnacademy.front.account.auth.exception.SaveJwtTokenProcessException;
 import com.nhnacademy.front.account.customer.exception.CustomerLoginCheckException;
 import com.nhnacademy.front.account.customer.exception.CustomerLoginProcessingException;
 import com.nhnacademy.front.account.customer.exception.CustomerPasswordCheckException;
 import com.nhnacademy.front.account.customer.exception.CustomerRegisterProcessingException;
 import com.nhnacademy.front.account.member.exception.DormantDoorayNotMatchedNumberException;
-import com.nhnacademy.front.account.member.exception.DormantEmailNotMatchedNumberException;
 import com.nhnacademy.front.account.member.exception.DormantProcessingException;
 import com.nhnacademy.front.account.member.exception.GetMemberStateFailedException;
 import com.nhnacademy.front.account.member.exception.LoginProcessException;
@@ -31,7 +29,6 @@ import com.nhnacademy.front.account.member.exception.NotFoundMemberRankNameExcep
 import com.nhnacademy.front.account.member.exception.PasswordNotEqualsException;
 import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordException;
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
-import com.nhnacademy.front.account.memberrank.exception.NotFoundMemberRankException;
 import com.nhnacademy.front.account.oauth.exception.PaycoProcessingException;
 import com.nhnacademy.front.account.pointhistory.exception.PointHistoryGetException;
 import com.nhnacademy.front.cart.exception.CartProcessException;
@@ -65,27 +62,18 @@ import lombok.RequiredArgsConstructor;
 public class WebAdviceController {
 	private final ErrorMessageLoader errorMessageLoader;
 
-	// @ExceptionHandler(LoginRedirectException.class)
-	// public ModelAndView handleLoginRedirect(LoginRedirectException ex) {
-	// 	ModelAndView modelAndView = new ModelAndView("redirect:/login");
-	// 	modelAndView.addObject("error", ex.getMessage());
-	// 	return modelAndView;
-	// }
-
 	// 잘못된 요청 에러
 	@ExceptionHandler({
 		ValidationFailedException.class,
 		CustomerRegisterProcessingException.class,
 		CartProcessException.class, ReviewProcessException.class, LikeProcessException.class,
-		DormantDoorayNotMatchedNumberException.class,
-		DormantEmailNotMatchedNumberException.class})
+		DormantDoorayNotMatchedNumberException.class})
 	public ResponseEntity<String> badRequestException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 
 	// 찾지 못한 에러
-	@ExceptionHandler({NotFoundMemberIdException.class,
-		NotFoundMemberRankException.class})
+	@ExceptionHandler({NotFoundMemberIdException.class})
 	public ResponseEntity<String> notFoundMemberIdException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}
@@ -107,7 +95,7 @@ public class WebAdviceController {
 		SaveAddressFailedException.class, UpdateAddressFailedException.class, DeleteAddressFailedException.class,
 		AdminSettingsFailedException.class, AdminSettingsMembersFailedException.class,
 		AdminSettingsMemberUpdateFailedException.class,
-		AdminSettingsMemberDeleteFailedException.class, AdminSettingsNonMembersFailedException.class,
+		AdminSettingsMemberDeleteFailedException.class,
 		SaveJwtTokenProcessException.class,
 		DormantProcessingException.class, NotFoundMemberRankNameException.class, NotFoundMemberInfoException.class,
 		RegisterProcessException.class, GetMemberStateFailedException.class, PaycoProcessingException.class,

@@ -29,7 +29,7 @@ public class DeliveryFeeSevice {
 	/**
 	 * 관리자 배송비 정책 추가
 	 */
-	public ResponseEntity<Void> CreateDeliveryFee(RequestDeliveryFeeDTO request) {
+	public ResponseEntity<Void> createDeliveryFee(RequestDeliveryFeeDTO request) {
 		return deliveryFeeAdminAdaptor.postDeliveryFee(request);
 	}
 
