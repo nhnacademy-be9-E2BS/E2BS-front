@@ -285,12 +285,19 @@
                         바로구매
                     </button>
 
-                    <button th:class="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'} ? 'member-add-cart-btn' : 'guest-add-cart-btn'"
+                    <button th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}"
+                            class="member-add-cart-btn"
+                            style="background-color: #007BFF; color: white; border: none;">
+                        쇼핑카트 담기
+                    </button>
+                    <button th:if="${memberRole == null and memberName == null}"
+                            class="guest-add-cart-btn"
                             style="background-color: #007BFF; color: white; border: none;">
                         쇼핑카트 담기
                     </button>
 
                     <button class="like-button"
+                            th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}"
                             th:data-liked="${product.liked}"
                             style="background-color: #e1e1e1; color: black; font-size: 12px; border: none;"
                             th:text="${product.liked} ? '위시리스트 취소' : '위시리스트 담기'">
