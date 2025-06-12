@@ -16,6 +16,8 @@ import com.nhnacademy.front.account.member.model.dto.request.RequestLoginMemberD
 import com.nhnacademy.front.account.member.model.dto.response.ResponseLoginMemberDTO;
 import com.nhnacademy.front.account.memberrole.model.domain.MemberRoleName;
 
+import feign.FeignException;
+
 @ExtendWith(MockitoExtension.class)
 class MemberLoginUserDetailsServiceTest {
 
@@ -35,12 +37,12 @@ class MemberLoginUserDetailsServiceTest {
 		);
 
 		// When
-		when(memberLoginAdaptor.postLoginMember(new RequestLoginMemberDTO("user"))).thenReturn(responseLoginMemberDTO);
+		when(memberLoginAdaptor.postLoginMember(any(RequestLoginMemberDTO.class))).thenReturn(responseLoginMemberDTO);
 
 		// Then
 		Assertions.assertThatCode(() -> {
 			memberLoginUserDetailsService.loadUserByUsername("user");
-		});
+		}).doesNotThrowAnyException();
 
 	}
 
@@ -56,6 +58,26 @@ class MemberLoginUserDetailsServiceTest {
 		// When
 		when(memberLoginAdaptor.postLoginMember(any(RequestLoginMemberDTO.class)))
 			.thenReturn(responseLoginMemberDTO);
+
+		// Then
+		org.junit.jupiter.api.Assertions.assertThrows(LoginProcessException.class, () -> {
+			memberLoginUserDetailsService.loadUserByUsername("user");
+		});
+
+	}
+
+	@Test
+	@DisplayName("Security 로그인을 위한 UserDetailService FeignException 테스트")
+	void memberLoginUserDetailsServiceFeignExceptionTest() throws Exception {
+
+		// Given
+		ResponseLoginMemberDTO responseLoginMemberDTO = new ResponseLoginMemberDTO(
+			"user", "1234", MemberRoleName.MEMBER
+		);
+
+		// When
+		when(memberLoginAdaptor.postLoginMember(any(RequestLoginMemberDTO.class))).thenThrow(
+			mock(FeignException.class));
 
 		// Then
 		org.junit.jupiter.api.Assertions.assertThrows(LoginProcessException.class, () -> {
