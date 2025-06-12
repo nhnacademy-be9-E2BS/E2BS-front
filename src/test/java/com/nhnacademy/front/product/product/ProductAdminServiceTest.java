@@ -26,10 +26,16 @@ import com.nhnacademy.front.product.product.adaptor.ProductAdminAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
 import com.nhnacademy.front.product.product.exception.ProductUpdateProcessException;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateByQueryDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiCreateDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchByQueryTypeDTO;
+import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductMetaDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
+import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 import com.nhnacademy.front.product.product.service.impl.ProductAdminServiceImpl;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 import com.nhnacademy.front.product.state.model.dto.domain.ProductStateName;
@@ -56,10 +62,6 @@ class ProductAdminServiceTest {
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 100, productImage,
 			List.of(1L), List.of(1L), List.of(1L));
-		RequestProductMetaDTO requestMeta = new RequestProductMetaDTO(
-			1L, 1L, "title", "content", "description", LocalDate.now(),
-			"978-89-12345-01-1", 10000L, 8000L, true, 100,
-			List.of(1L), List.of(1L), List.of(1L));
 
 		when(productAdminAdaptor.postCreateProduct(any(RequestProductMetaDTO.class), anyList()))
 			.thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
@@ -84,10 +86,6 @@ class ProductAdminServiceTest {
 		RequestProductDTO request = new RequestProductDTO(
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 100, productImage,
-			List.of(1L), List.of(1L), List.of(1L));
-		RequestProductMetaDTO requestMeta = new RequestProductMetaDTO(
-			1L, 1L, "title", "content", "description", LocalDate.now(),
-			"978-89-12345-01-1", 10000L, 8000L, true, 100,
 			List.of(1L), List.of(1L), List.of(1L));
 
 		when(productAdminAdaptor.postCreateProduct(any(RequestProductMetaDTO.class), anyList()))
@@ -176,10 +174,6 @@ class ProductAdminServiceTest {
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 100, productImage,
 			List.of(1L), List.of(1L), List.of(1L));
-		RequestProductMetaDTO requestMeta = new RequestProductMetaDTO(
-			1L, 1L, "title", "content", "description", LocalDate.now(),
-			"978-89-12345-01-1", 10000L, 8000L, true, 100,
-			List.of(1L), List.of(1L), List.of(1L));
 
 		when(productAdminAdaptor.putUpdateProduct(anyLong(), any(RequestProductMetaDTO.class), anyList()))
 			.thenReturn(new ResponseEntity<>(HttpStatus.OK));
@@ -241,6 +235,155 @@ class ProductAdminServiceTest {
 		assertThatThrownBy(() -> productAdminService.updateProductSalePrice(1L, request))
 			.isInstanceOf(ProductUpdateProcessException.class);
 	}
+
+	@Test
+	@DisplayName("get products API by query - success")
+	void get_products_api_success_test() {
+		// given
+		RequestProductApiSearchDTO request = mock(RequestProductApiSearchDTO.class);
+		Pageable pageable = PageRequest.of(0, 5);
+
+		List<ResponseProductsApiSearchDTO> content = new ArrayList<>();
+		PageResponse<ResponseProductsApiSearchDTO> body = new PageResponse<>();
+		body.setContent(content);
+
+		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> responseEntity =
+			new ResponseEntity<>(body, HttpStatus.OK);
+
+		when(productAdminAdaptor.searchBooksByQuery(request, pageable)).thenReturn(responseEntity);
+
+		// when
+		PageResponse<ResponseProductsApiSearchDTO> result = productAdminService.getProductsApi(request, pageable);
+
+		// then
+		assertThat(result).isEqualTo(body);
+		verify(productAdminAdaptor).searchBooksByQuery(request, pageable);
+	}
+
+	@Test
+	@DisplayName("get products API by query - fail")
+	void get_products_api_fail_test() {
+		// given
+		RequestProductApiSearchDTO request = mock(RequestProductApiSearchDTO.class);
+		Pageable pageable = PageRequest.of(0, 5);
+
+		ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> responseEntity =
+			new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+		when(productAdminAdaptor.searchBooksByQuery(request, pageable)).thenReturn(responseEntity);
+
+		// when & then
+		assertThatThrownBy(() -> productAdminService.getProductsApi(request, pageable))
+			.isInstanceOf(ProductGetProcessException.class);
+	}
+
+	@Test
+	@DisplayName("create product by API - success")
+	void create_product_api_success_test() {
+		// given
+		RequestProductApiCreateDTO request = new RequestProductApiCreateDTO();
+		request.setTagIds(new ArrayList<>());  // 명시적으로 null 아님을 확인
+
+		ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.CREATED);
+		when(productAdminAdaptor.postCreateProductByApi(request)).thenReturn(responseEntity);
+
+		// when
+		productAdminService.createProductApi(request);
+
+		// then
+		verify(productAdminAdaptor).postCreateProductByApi(request);
+	}
+
+	@Test
+	@DisplayName("create product by API - fail")
+	void create_product_api_fail_test() {
+		// given
+		RequestProductApiCreateDTO request = new RequestProductApiCreateDTO();
+		request.setTagIds(new ArrayList<>());
+
+		ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		when(productAdminAdaptor.postCreateProductByApi(request)).thenReturn(responseEntity);
+
+		// when & then
+		assertThatThrownBy(() -> productAdminService.createProductApi(request))
+			.isInstanceOf(ProductCreateProcessException.class);
+	}
+
+	@Test
+	@DisplayName("get products API by category - success")
+	void get_products_api_by_category_success_test() {
+		// given
+		RequestProductApiSearchByQueryTypeDTO request = mock(RequestProductApiSearchByQueryTypeDTO.class);
+		Pageable pageable = PageRequest.of(0, 5);
+
+		List<ResponseProductsApiSearchByQueryTypeDTO> content = new ArrayList<>();
+		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> body = new PageResponse<>();
+		body.setContent(content);
+
+		ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> responseEntity =
+			new ResponseEntity<>(body, HttpStatus.OK);
+
+		when(productAdminAdaptor.listBooksByCategory(request, pageable)).thenReturn(responseEntity);
+
+		// when
+		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> result =
+			productAdminService.getProductsApi(request, pageable);
+
+		// then
+		assertThat(result).isEqualTo(body);
+		verify(productAdminAdaptor).listBooksByCategory(request, pageable);
+	}
+
+	@Test
+	@DisplayName("get products API by category - fail")
+	void get_products_api_by_category_fail_test() {
+		// given
+		RequestProductApiSearchByQueryTypeDTO request = mock(RequestProductApiSearchByQueryTypeDTO.class);
+		Pageable pageable = PageRequest.of(0, 5);
+
+		ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> responseEntity =
+			new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+		when(productAdminAdaptor.listBooksByCategory(request, pageable)).thenReturn(responseEntity);
+
+		// when & then
+		assertThatThrownBy(() -> productAdminService.getProductsApi(request, pageable))
+			.isInstanceOf(ProductGetProcessException.class);
+	}
+
+	@Test
+	@DisplayName("create product by category API - success")
+	void create_product_query_api_success_test() {
+		// given
+		RequestProductApiCreateByQueryDTO request = new RequestProductApiCreateByQueryDTO();
+
+		ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.CREATED);
+		when(productAdminAdaptor.postCreateProductQueryByApi(request)).thenReturn(responseEntity);
+
+		// when
+		productAdminService.createProductQueryApi(request);
+
+		// then
+		verify(productAdminAdaptor).postCreateProductQueryByApi(request);
+	}
+
+	@Test
+	@DisplayName("create product by category API - fail")
+	void create_product_query_api_fail_test() {
+		// given
+		RequestProductApiCreateByQueryDTO request = new RequestProductApiCreateByQueryDTO();
+
+		ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		when(productAdminAdaptor.postCreateProductQueryByApi(request)).thenReturn(responseEntity);
+
+		// when & then
+		assertThatThrownBy(() -> productAdminService.createProductQueryApi(request))
+			.isInstanceOf(ProductCreateProcessException.class);
+	}
+
+
+
+
 
 
 }

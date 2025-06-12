@@ -44,7 +44,8 @@ public class ProductSearchController {
 	private final ProductSearchService productSearchService;
 	private final UserCategoryService userCategoryService;
 
-	private static final String productString = "products";
+	private static final String PRODUCT_STRING = "products";
+	private static final String DISCOUNT_RATES_STRING = "discountRates";
 
 	/**
 	 * 사용자 - 검색창에 검색어를 입력하여 도서 리스트 조회 (페이징)
@@ -78,9 +79,9 @@ public class ProductSearchController {
 			discountRates.add(discountRate);
 		}
 
-		model.addAttribute(productString, products);
+		model.addAttribute(PRODUCT_STRING, products);
 		model.addAttribute("keyword", keyword);
-		model.addAttribute("discountRates", discountRates);
+		model.addAttribute(DISCOUNT_RATES_STRING, discountRates);
 		if (Objects.isNull(sort)) {
 			model.addAttribute("sort", ProductSortType.NO_SORT.toString());
 		} else {
@@ -122,9 +123,9 @@ public class ProductSearchController {
 				/ dto.getProductRegularPrice()) * 100);
 			discountRates.add(discountRate);
 		}
-		model.addAttribute(productString, products);
+		model.addAttribute(PRODUCT_STRING, products);
 		model.addAttribute("rootCategory", category);
-		model.addAttribute("discountRates", discountRates);
+		model.addAttribute(DISCOUNT_RATES_STRING, discountRates);
 		if (Objects.isNull(sort)) {
 			model.addAttribute("sort", ProductSortType.NO_SORT.toString());
 		} else {
@@ -162,8 +163,8 @@ public class ProductSearchController {
 			discountRates.add(discountRate);
 		}
 
-		model.addAttribute(productString, products);
-		model.addAttribute("discountRates", discountRates);
+		model.addAttribute(PRODUCT_STRING, products);
+		model.addAttribute(DISCOUNT_RATES_STRING, discountRates);
 
 		return "product/best-product";
 	}
@@ -196,9 +197,9 @@ public class ProductSearchController {
 			discountRates.add(discountRate);
 		}
 
-		model.addAttribute(productString, products);
+		model.addAttribute(PRODUCT_STRING, products);
 		model.addAttribute("todayDate", LocalDate.now());
-		model.addAttribute("discountRates", discountRates);
+		model.addAttribute(DISCOUNT_RATES_STRING, discountRates);
 
 		return "product/newest-product";
 	}

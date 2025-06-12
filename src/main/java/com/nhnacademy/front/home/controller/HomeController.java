@@ -16,7 +16,6 @@ import com.nhnacademy.front.index.service.IndexService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "메인 페이지", description = "메인 페이지 화면 제공 및 기능 구현")
@@ -33,7 +32,7 @@ public class HomeController {
 		})
 	@JwtTokenCheck
 	@GetMapping("/")
-	public String index(HttpServletRequest request, Model model) {
+	public String index(Model model) {
 		List<ResponseMainPageProductDTO> bestSellerList = indexService.getBestSellerProducts();
 		List<List<ResponseMainPageProductDTO>> chunkedList = new ArrayList<>();
 
