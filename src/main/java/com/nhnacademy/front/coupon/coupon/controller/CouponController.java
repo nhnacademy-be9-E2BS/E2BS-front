@@ -68,8 +68,8 @@ public class CouponController {
 		@RequestParam(value = "couponType", required = false) String couponType,
 		@RequestParam(value = "keyword", required = false) String keyword, Model model) {
 		log.info("keyword : {}", keyword);
-		Pageable pageable_fix = PageRequest.of(0, Integer.MAX_VALUE);
-		PageResponse<ResponseCouponPolicyDTO> couponPolicyDTO = couponPolicyServiceImpl.getCouponPolicies(pageable_fix);
+		Pageable pageableFix = PageRequest.of(0, Integer.MAX_VALUE);
+		PageResponse<ResponseCouponPolicyDTO> couponPolicyDTO = couponPolicyServiceImpl.getCouponPolicies(pageableFix);
 		Page<ResponseCouponPolicyDTO> couponPolicies = PageResponseConverter.toPage(couponPolicyDTO);
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();

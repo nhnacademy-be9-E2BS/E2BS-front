@@ -23,7 +23,7 @@ import com.nhnacademy.front.account.pointhistory.service.impl.PointHistoryServic
 import com.nhnacademy.front.common.page.PageResponse;
 
 @ExtendWith(MockitoExtension.class)
-class PointHistoryServiceImplTest {
+class PointHistoryServiceTest {
 
 	@Mock
 	private PointHistoryAdaptor pointHistoryAdaptor;
@@ -42,7 +42,7 @@ class PointHistoryServiceImplTest {
 		mockPage.setContent(List.of(new ResponsePointHistoryDTO()));
 		mockPage.setSize(10);
 
-		when(pointHistoryAdaptor.getPointHistoryByMemberId(eq(memberId), eq(pageable)))
+		when(pointHistoryAdaptor.getPointHistoryByMemberId(memberId, pageable))
 			.thenReturn(ResponseEntity.ok(mockPage));
 
 		// when
@@ -61,7 +61,7 @@ class PointHistoryServiceImplTest {
 		String memberId = "test-member";
 		Pageable pageable = PageRequest.of(0, 10);
 
-		when(pointHistoryAdaptor.getPointHistoryByMemberId(eq(memberId), eq(pageable)))
+		when(pointHistoryAdaptor.getPointHistoryByMemberId(memberId, pageable))
 			.thenReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
 
 		// when & then
