@@ -20,6 +20,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
@@ -148,6 +149,38 @@ class TagControllerTest {
 			.andExpect(status().isBadRequest())
 			.andExpect(result -> assertThat(result.getResolvedException())
 				.isInstanceOf(ValidationFailedException.class));
+	}
+
+	@Test
+	@DisplayName("태그 삭제 - success")
+	void deleteTagSuccessTest() throws Exception {
+		// given
+		RequestTagDTO requestTagDTO = new RequestTagDTO();
+		requestTagDTO.setTagName("Tag A");
+
+		// when & then
+		mockMvc.perform(delete("/admin/settings/tags/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(requestTagDTO))
+				.with(csrf()))
+			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("태그 삭제 - fail")
+	void deleteTagFailTest() throws Exception {
+		// given
+		RequestTagDTO requestTagDTO = new RequestTagDTO();
+		requestTagDTO.setTagName(null); // 유효성 검사 실패를 유도
+
+		// when & then
+		mockMvc.perform(delete("/admin/settings/tags/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(requestTagDTO))
+				.with(csrf()))
+			.andExpect(status().isBadRequest())
+			.andExpect(result -> assertThat(result.getResolvedException())
+				.isInstanceOf(MethodArgumentNotValidException.class));
 	}
 
 }
