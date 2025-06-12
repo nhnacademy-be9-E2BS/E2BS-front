@@ -68,6 +68,10 @@ public class ProductAdminController {
 	private final ContributorService contributorService;
 	private final ProductStateService productStateService;
 
+	private static final String PRODUCT_STRING = "products";
+	private static final String CATEGORIES_STRING = "categories";
+	private static final String REDIRECT_PRODUCT_LIST = "redirect:/admin/settings/books";
+
 	/**
 	 * 관리자 페이지 -> 전체 도서 리스트 조회
 	 */
@@ -89,7 +93,7 @@ public class ProductAdminController {
 		}
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
-		model.addAttribute("products", products);
+		model.addAttribute(PRODUCT_STRING, products);
 		return "admin/product/books/view";
 	}
 
@@ -118,7 +122,7 @@ public class ProductAdminController {
 		model.addAttribute("publishers", publishers.getContent());
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
+		model.addAttribute(CATEGORIES_STRING, categories);
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
@@ -151,7 +155,7 @@ public class ProductAdminController {
 		model.addAttribute("publishers", publishers.getContent());
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
+		model.addAttribute(CATEGORIES_STRING, categories);
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
@@ -181,7 +185,7 @@ public class ProductAdminController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		productAdminService.createProduct(request);
-		return "redirect:/admin/settings/books";
+		return REDIRECT_PRODUCT_LIST;
 	}
 
 	/**
@@ -204,7 +208,7 @@ public class ProductAdminController {
 		}
 
 		productAdminService.updateProduct(bookId, request);
-		return "redirect:/admin/settings/books";
+		return REDIRECT_PRODUCT_LIST;
 	}
 
 	/**
@@ -226,7 +230,7 @@ public class ProductAdminController {
 			throw new ValidationFailedException(bindingResult);
 		}
 		productAdminService.updateProductSalePrice(bookId, request);
-		return "redirect:/admin/settings/books";
+		return REDIRECT_PRODUCT_LIST;
 	}
 
 	/**
@@ -238,7 +242,7 @@ public class ProductAdminController {
 		@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
 		PageResponse<ResponseProductsApiSearchDTO> response = productAdminService.getProductsApi(request, pageable);
 		Page<ResponseProductsApiSearchDTO> products = PageResponseConverter.toPage(response);
-		model.addAttribute("products", products);
+		model.addAttribute(PRODUCT_STRING, products);
 		return "admin/product/books/books-api-search";
 	}
 
@@ -250,7 +254,7 @@ public class ProductAdminController {
 		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> response = productAdminService.getProductsApi(request,
 			pageable);
 		Page<ResponseProductsApiSearchByQueryTypeDTO> products = PageResponseConverter.toPage(response);
-		model.addAttribute("products", products);
+		model.addAttribute(PRODUCT_STRING, products);
 		model.addAttribute("queryType", request.getQueryType());
 		return "admin/product/books/books-api-search-query";
 	}
@@ -268,7 +272,7 @@ public class ProductAdminController {
 		model.addAttribute("book", dto);
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
+		model.addAttribute(CATEGORIES_STRING, categories);
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
@@ -281,7 +285,7 @@ public class ProductAdminController {
 
 		model.addAttribute("book", dto);
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
+		model.addAttribute(CATEGORIES_STRING, categories);
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);

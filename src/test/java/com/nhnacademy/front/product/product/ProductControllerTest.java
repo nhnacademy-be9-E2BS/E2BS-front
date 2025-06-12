@@ -79,7 +79,6 @@ class ProductControllerTest {
 	@DisplayName("도서 상세 페이지 조회")
 	void get_product_test() throws Exception {
 		// given
-		String memberId = "member";
 		ResponseProductStateDTO productStateDTO = new ResponseProductStateDTO(1L, ProductStateName.SALE.name());
 		ResponsePublisherDTO publisherDTO = new ResponsePublisherDTO(1L, "publisher");
 		ResponseCategoryDTO categoryADTO = new ResponseCategoryDTO(1L, "category A", null);
