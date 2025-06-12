@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 
 import com.nhnacademy.front.account.member.adaptor.DoorayAdaptor;
 import com.nhnacademy.front.account.member.adaptor.MemberDormantAdaptor;
@@ -52,13 +54,16 @@ class MemberDormantServiceTest {
 	void createDoorayAuthenticationNumberMethodTest() throws Exception {
 
 		// Given
+		ValueOperations<String, Object> valueOperations = mock(ValueOperations.class);
+
+		when(redisTemplate.opsForValue()).thenReturn(valueOperations);
 
 		// When
 
 		// Then
 		Assertions.assertThatCode(() -> {
 			memberDormantService.createDoorayAuthenticationNumber("user");
-		});
+		}).doesNotThrowAnyException();
 
 	}
 
@@ -67,13 +72,16 @@ class MemberDormantServiceTest {
 	void createEmailAuthenticationNumberMethodTest() throws Exception {
 
 		// Given
+		ValueOperations<String, Object> valueOperations = mock(ValueOperations.class);
+
+		when(redisTemplate.opsForValue()).thenReturn(valueOperations);
 
 		// When
 
 		// Then
 		Assertions.assertThatCode(() -> {
 			memberDormantService.createEmailAuthenticationNumber("user");
-		});
+		}).doesNotThrowAnyException();
 
 	}
 
@@ -84,17 +92,19 @@ class MemberDormantServiceTest {
 		// Given
 		String doorayDormantKey = "doorayDormantNumber:user";
 		RequestDormantDoorayNumberDTO requestDormantDoorayNumberDTO = new RequestDormantDoorayNumberDTO(
-			"000000"
+			"123456"
 		);
 
 		// When
 		when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-		when(valueOperations.get(doorayDormantKey)).thenReturn("000000");
+		when(valueOperations.get(doorayDormantKey)).thenReturn(
+			123456
+		);
 
 		// Then
 		Assertions.assertThatCode(() -> {
 			memberDormantService.checkDoorayAuthenticationNumber(requestDormantDoorayNumberDTO, "user");
-		});
+		}).doesNotThrowAnyException();
 	}
 
 	@Test
@@ -130,12 +140,12 @@ class MemberDormantServiceTest {
 
 		// When
 		when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-		when(valueOperations.get(emailDormantKey)).thenReturn("000000");
+		when(valueOperations.get(emailDormantKey)).thenReturn(123456);
 
 		// Then
 		Assertions.assertThatCode(() -> {
 			memberDormantService.checkEmailAuthenticationNumber(requestDormantEmailNumberDTO, "user");
-		});
+		}).doesNotThrowAnyException();
 	}
 
 	@Test
@@ -182,6 +192,13 @@ class MemberDormantServiceTest {
 	void changeMemberStateActiveMethodTest() throws Exception {
 
 		// Given
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("dormantMemberId", "user");
+		session.setAttribute("memberState", "ACTIVE");
+
+		request.setSession(session);
+
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.CREATED);
 
 		// When
@@ -189,8 +206,8 @@ class MemberDormantServiceTest {
 
 		// Then
 		Assertions.assertThatCode(() -> {
-			memberDormantService.changeMemberStateActive("user", any(HttpServletRequest.class));
-		});
+			memberDormantService.changeMemberStateActive("user", request);
+		}).doesNotThrowAnyException();
 
 	}
 
@@ -259,12 +276,12 @@ class MemberDormantServiceTest {
 		// Given
 
 		// When
-		doNothing().when(javaMailSender).send(new SimpleMailMessage());
+		doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
 
 		// Then
 		Assertions.assertThatCode(() -> {
 			memberDormantService.sendEmailAuthenticationNumber("user@naver.com", "000000");
-		});
+		}).doesNotThrowAnyException();
 
 	}
 

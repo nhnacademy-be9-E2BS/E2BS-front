@@ -210,7 +210,24 @@ class AdminSettingsControllerTest {
 				.andExpect(view().name("admin/settings/members/admin-settings-non-members"))
 				.andExpect(model().attributeExists("nonMembers"));
 		}
-		
+
+	}
+
+	@Test
+	@DisplayName("관리자 회원 탈퇴 메서드 테스트")
+	void deleteAdminSettingsMemberMethodTest() throws Exception {
+
+		// Given
+
+		// When
+		doNothing().when(adminSettingsService).deleteAdminSettingsMember("user");
+
+		// Then
+		mockMvc.perform(delete("/admin/settings/members/user")
+				.with(csrf()))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(redirectedUrl("/admin/settings/members"));
+
 	}
 
 }
