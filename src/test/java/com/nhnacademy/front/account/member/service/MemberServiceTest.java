@@ -37,6 +37,7 @@ import com.nhnacademy.front.account.socialauth.model.domain.SocialAuth;
 import com.nhnacademy.front.account.socialauth.model.domain.SocialAuthName;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
 
+import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @ExtendWith(MockitoExtension.class)
@@ -128,6 +129,31 @@ class MemberServiceTest {
 
 		// When
 		when(memberRegisterAdaptor.postRegisterMember(requestRegisterMemberDTO)).thenReturn(null);
+
+		// Then
+		org.junit.jupiter.api.Assertions.assertThrows(RegisterProcessException.class, () -> {
+			memberService.createMember(requestRegisterMemberDTO);
+		});
+
+	}
+
+	@Test
+	@DisplayName("회원가입 수행하는 메서드 FeignException 테스트")
+	void createMemberMethodFeignExceptionTest() throws Exception {
+
+		// Given
+		RequestRegisterMemberDTO requestRegisterMemberDTO = new RequestRegisterMemberDTO(
+			"user",
+			"user",
+			"1234",
+			"1234",
+			"user@naver.com",
+			LocalDate.now(),
+			"010-1234-5678"
+		);
+
+		// When
+		when(memberRegisterAdaptor.postRegisterMember(requestRegisterMemberDTO)).thenThrow(FeignException.class);
 
 		// Then
 		org.junit.jupiter.api.Assertions.assertThrows(RegisterProcessException.class, () -> {

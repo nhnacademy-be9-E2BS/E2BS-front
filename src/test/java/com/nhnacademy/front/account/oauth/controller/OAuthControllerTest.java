@@ -65,6 +65,7 @@ class OAuthControllerTest {
 		// Given
 
 		// When
+		when(oAuthService.getPaycoLogin()).thenReturn("/members/login");
 
 		// Then
 		mockMvc.perform(get("/oauth2/authorization/payco"))
