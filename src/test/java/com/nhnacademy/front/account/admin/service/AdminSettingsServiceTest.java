@@ -23,7 +23,6 @@ import com.nhnacademy.front.account.admin.exception.AdminSettingsFailedException
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberDeleteFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
-import com.nhnacademy.front.account.admin.exception.AdminSettingsNonMembersFailedException;
 import com.nhnacademy.front.account.admin.model.domain.DailySummary;
 import com.nhnacademy.front.account.admin.model.domain.MonthlySummary;
 import com.nhnacademy.front.account.admin.model.domain.WeeklySummary;
@@ -32,7 +31,6 @@ import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettin
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMonthlySummaryDTO;
-import com.nhnacademy.front.account.customer.model.domain.Customer;
 import com.nhnacademy.front.account.memberstate.model.domain.MemberState;
 import com.nhnacademy.front.common.page.PageResponse;
 

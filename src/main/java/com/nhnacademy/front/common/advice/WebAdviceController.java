@@ -14,7 +14,6 @@ import com.nhnacademy.front.account.admin.exception.AdminSettingsFailedException
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberDeleteFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
-import com.nhnacademy.front.account.admin.exception.AdminSettingsNonMembersFailedException;
 import com.nhnacademy.front.account.auth.exception.SaveJwtTokenProcessException;
 import com.nhnacademy.front.account.customer.exception.CustomerLoginCheckException;
 import com.nhnacademy.front.account.customer.exception.CustomerLoginProcessingException;
@@ -93,7 +92,7 @@ public class WebAdviceController {
 		SaveAddressFailedException.class, UpdateAddressFailedException.class, DeleteAddressFailedException.class,
 		AdminSettingsFailedException.class, AdminSettingsMembersFailedException.class,
 		AdminSettingsMemberUpdateFailedException.class,
-		AdminSettingsMemberDeleteFailedException.class, AdminSettingsNonMembersFailedException.class,
+		AdminSettingsMemberDeleteFailedException.class,
 		SaveJwtTokenProcessException.class,
 		DormantProcessingException.class, NotFoundMemberRankNameException.class, NotFoundMemberInfoException.class,
 		RegisterProcessException.class, GetMemberStateFailedException.class, PaycoProcessingException.class,

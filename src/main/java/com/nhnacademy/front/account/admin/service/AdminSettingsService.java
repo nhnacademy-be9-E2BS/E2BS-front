@@ -12,7 +12,6 @@ import com.nhnacademy.front.account.admin.exception.AdminSettingsFailedException
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberDeleteFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
-import com.nhnacademy.front.account.admin.exception.AdminSettingsNonMembersFailedException;
 import com.nhnacademy.front.account.admin.model.domain.DailySummary;
 import com.nhnacademy.front.account.admin.model.domain.WeeklySummary;
 import com.nhnacademy.front.account.admin.model.dto.request.RequestAdminSettingsMemberStateDTO;
