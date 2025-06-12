@@ -21,20 +21,46 @@ $(document).ready(function () {
             contentType: false, // 중요 multipart 사용 시 false: query string으로 변환되지 않도록 false 설정
             success: function () {
                 alert("리뷰가 등록되었습니다.");
-                location.reload();
+                window.location.reload();
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
                 console.error('status:', status);
                 console.error('xhr:', xhr);
 
-                let message = '리뷰 등록에 실패했습니다.';
+                let message = '리뷰 등록에 실패했습니다. ' +  `(${xhr.responseJSON.status})`
                 if (xhr.responseJSON) {
-                    message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
-                               `상태 코드: ${xhr.responseJSON.status}\n` +
-                               `발생 시간: ${xhr.responseJSON.timeStamp}`;
-                }
+                    const rawTimestamp = xhr.responseJSON.timestamp;
+                    let formattedTime = rawTimestamp;
 
+                    try {
+                        const date = new Date(rawTimestamp);
+                        formattedTime = date.toLocaleString('ko-KR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false,
+                            timeZone: 'Asia/Seoul'
+                        });
+                    } catch (e) {
+                        console.warn("시간 포맷 변환 실패:", e);
+                    }
+
+                    // 전체 message 또는 trace에서 Exception 이후 메시지 한 줄 추출
+                    const fullText = xhr.responseJSON.message || xhr.responseJSON.trace || '';
+                    let extractedMessage = fullText;
+
+                    const match = fullText.match(/Exception:\s*(.+?)\\r?\\n/);
+                    if (match && match[1]) {
+                        extractedMessage = match[1];
+                    }
+
+                    message += `\n\n발생 시간: ${formattedTime}` +
+                        `\n에러 메시지: ${extractedMessage}`;
+                }
                 alert(message);
             }
         });
