@@ -6,6 +6,7 @@ import java.util.Objects;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
+import com.nhnacademy.front.account.member.service.MemberService;
 import com.nhnacademy.front.cart.model.dto.request.RequestMergeCartItemDTO;
 import com.nhnacademy.front.cart.service.CartService;
 import com.nhnacademy.front.common.util.CookieUtil;
@@ -26,6 +27,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 	private static final String CART_ORDER_URL = "/members/order";
 
 	private final CartService cartService;
+	private final MemberService memberService;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -44,27 +46,31 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 		 */
 		HttpSession session = request.getSession();
 
-		// 게스트 키가 있으면 장바구니를 꺼내서 병합 후 항목 개수 적용
-		String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
-		if (Objects.nonNull(guestCookieValue)) {
-			Integer mergedCount = cartService.mergeCartItemsToMemberFromGuest(new RequestMergeCartItemDTO(memberId, guestCookieValue));
+		// 회원인 경우
+		String memberState = memberService.getMemberState(memberId);
+		if (memberState.equals("MEMBER")) {
+			// 게스트 키가 있으면 장바구니를 꺼내서 병합 후 항목 개수 적용
+			String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
+			if (Objects.nonNull(guestCookieValue)) {
+				Integer mergedCount = cartService.mergeCartItemsToMemberFromGuest(new RequestMergeCartItemDTO(memberId, guestCookieValue));
 
-			session.setAttribute("cartItemsCounts", mergedCount);
-			CookieUtil.clearCookie(guestCookieValue, response); // 쿠키 삭제
-		} else {
-			// 없으면 기존 회원 장바구니 항목 개수 적용
-			session.setAttribute("cartItemsCounts", cartService.getCartItemsCountsForMember(memberId));
-		}
+				session.setAttribute("cartItemsCounts", mergedCount);
+				CookieUtil.clearCookie(guestCookieValue, response); // 쿠키 삭제
+			} else {
+				// 없으면 기존 회원 장바구니 항목 개수 적용
+				session.setAttribute("cartItemsCounts", cartService.getCartItemsCountsForMember(memberId));
+			}
 
-		session.setAttribute("isMember", true);
+			session.setAttribute("isMember", true);
 
-		Cookie[] cookies = request.getCookies();
-		if (Objects.nonNull(cookies)) {
-			for (Cookie cookie : cookies) {
-				if ("orderCart".equals(cookie.getName())) {
-					setDefaultTargetUrl(CART_ORDER_URL);
-					super.onAuthenticationSuccess(request, response, authentication);
-					return;
+			Cookie[] cookies = request.getCookies();
+			if (Objects.nonNull(cookies)) {
+				for (Cookie cookie : cookies) {
+					if ("orderCart".equals(cookie.getName())) {
+						setDefaultTargetUrl(CART_ORDER_URL);
+						super.onAuthenticationSuccess(request, response, authentication);
+						return;
+					}
 				}
 			}
 		}

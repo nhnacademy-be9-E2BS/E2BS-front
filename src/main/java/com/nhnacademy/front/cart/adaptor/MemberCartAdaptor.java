@@ -19,6 +19,12 @@ import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDT
 public interface MemberCartAdaptor {
 
 	/**
+	 * 회원 - 장바구니 생성
+	 */
+	@PostMapping("/{memberId}/carts")
+	ResponseEntity<Void> createCartByMember(@PathVariable String memberId);
+
+	/**
 	 * 회원 - 장바구니 목록 조회
 	 */
 	@GetMapping("/{memberId}/carts")

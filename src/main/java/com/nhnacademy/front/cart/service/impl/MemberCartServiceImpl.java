@@ -22,6 +22,15 @@ public class MemberCartServiceImpl implements MemberCartService {
 	private final MemberCartAdaptor memberCartAdaptor;
 
 	@Override
+	public void createCartByMember(String memberId) {
+		ResponseEntity<Void> result = memberCartAdaptor.createCartByMember(memberId);
+
+		if (!result.getStatusCode().is2xxSuccessful()) {
+			throw new CartProcessException("회원 장바구니 생성 실패: " + result.getStatusCode());
+		}
+	}
+
+	@Override
 	public List<ResponseCartItemsForMemberDTO> getCartItemsByMember(String memberId) throws FeignException {
 		ResponseEntity<List<ResponseCartItemsForMemberDTO>> result = memberCartAdaptor.getCartItemsByMember(memberId);
 
