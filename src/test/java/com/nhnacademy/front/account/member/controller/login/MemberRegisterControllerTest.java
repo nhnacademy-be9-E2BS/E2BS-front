@@ -94,7 +94,7 @@ class MemberRegisterControllerTest {
 				.param("memberBirth", String.valueOf(requestRegisterMemberDTO.getMemberBirth()))
 				.param("memberPhone", requestRegisterMemberDTO.getMemberPhone()))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/login"));
+			.andExpect(redirectedUrl("/members/login"));
 
 	}
 
