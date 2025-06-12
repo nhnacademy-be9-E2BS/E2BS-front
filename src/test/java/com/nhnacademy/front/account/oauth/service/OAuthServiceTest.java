@@ -25,10 +25,15 @@ import com.nhnacademy.front.account.oauth.model.dto.request.RequestOAuthRegister
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponseCheckOAuthIdDTO;
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponsePaycoMemberInfoDTO;
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponseProviderPaycoAccessTokenDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestMergeCartItemDTO;
+import com.nhnacademy.front.cart.service.CartService;
+import com.nhnacademy.front.cart.service.MemberCartService;
 import com.nhnacademy.front.common.error.exception.ServerErrorException;
+import com.nhnacademy.front.common.util.CookieUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @ExtendWith({MockitoExtension.class})
 class OAuthServiceTest {
@@ -50,6 +55,12 @@ class OAuthServiceTest {
 
 	@Mock
 	private AuthService authService;
+
+	@Mock
+	private MemberCartService memberCartService;
+
+	@Mock
+	private CartService cartService;
 
 	@Mock
 	private HttpServletRequest request;
@@ -192,6 +203,9 @@ class OAuthServiceTest {
 			HttpStatus.CREATED);
 		ResponseEntity<Void> lastLoginResponse = new ResponseEntity<>(HttpStatus.CREATED);
 
+		HttpSession session = mock(HttpSession.class);
+		when(request.getSession()).thenReturn(session);
+
 		// When
 		when(oAuthLoginAdaptor.checkOAuthLoginId("idNo")).thenReturn(responseCheck);
 		doNothing().when(authService).postAuthCreateJwtToken(any(RequestJwtTokenDTO.class), eq(response), eq(request));
@@ -259,11 +273,20 @@ class OAuthServiceTest {
 
 		ResponseEntity<Void> registerResponse = new ResponseEntity<>(HttpStatus.CREATED);
 
+		HttpSession session = mock(HttpSession.class);
+		when(request.getSession()).thenReturn(session);
+
+		String guestKey = "GUEST12345";
+		mockStatic(CookieUtil.class); // static 메서드 mocking
+		when(CookieUtil.getCookieValue("guestKey", request)).thenReturn(guestKey);
+
 		// When
 		when(oAuthLoginAdaptor.checkOAuthLoginId("idNo")).thenReturn(responseCheck);
 		doNothing().when(authService).postAuthCreateJwtToken(any(RequestJwtTokenDTO.class), eq(response), eq(request));
 		when(oAuthRegisterAdaptor.registerOAuth(any(RequestOAuthRegisterDTO.class))).thenReturn(registerResponse);
 		when(oAuthLoginAdaptor.loginOAuthLastLogin("idNo")).thenReturn(registerResponse);
+		doNothing().when(memberCartService).createCartByMember("idNo");
+		when(cartService.mergeCartItemsToMemberFromGuest(any(RequestMergeCartItemDTO.class))).thenReturn(5);
 
 		// Then
 		Assertions.assertThatCode(() -> {
