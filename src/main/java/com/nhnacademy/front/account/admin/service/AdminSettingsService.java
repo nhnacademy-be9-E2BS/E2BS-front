@@ -12,7 +12,6 @@ import com.nhnacademy.front.account.admin.exception.AdminSettingsFailedException
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberDeleteFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMemberUpdateFailedException;
 import com.nhnacademy.front.account.admin.exception.AdminSettingsMembersFailedException;
-import com.nhnacademy.front.account.admin.exception.AdminSettingsNonMembersFailedException;
 import com.nhnacademy.front.account.admin.model.domain.DailySummary;
 import com.nhnacademy.front.account.admin.model.domain.WeeklySummary;
 import com.nhnacademy.front.account.admin.model.dto.request.RequestAdminSettingsMemberStateDTO;
@@ -20,7 +19,6 @@ import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettin
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMonthlySummaryDTO;
-import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.common.page.PageResponse;
 
 import feign.FeignException;
@@ -91,17 +89,6 @@ public class AdminSettingsService {
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new AdminSettingsMemberDeleteFailedException();
 		}
-	}
-
-	public PageResponse<ResponseAdminSettingsNonMembersDTO> getAdminSettingsNonMembers(Pageable pageable) throws
-		FeignException {
-		ResponseEntity<PageResponse<ResponseAdminSettingsNonMembersDTO>> response = adminSettingsAdaptor.getAdminSettingsNonMembers(
-			pageable);
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new AdminSettingsNonMembersFailedException();
-		}
-
-		return response.getBody();
 	}
 
 	public WeeklySummary getWeeklySummary(ResponseAdminSettingsDailySummaryDTO responseAdminSettingsDailySummaryDTO) {

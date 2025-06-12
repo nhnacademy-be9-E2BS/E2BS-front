@@ -83,7 +83,7 @@ public class DeliveryFeeControllerTest {
 	@DisplayName("POST /admin/settings/deliveryFee - 정상 생성 후 리다이렉트")
 	void testCreateDeliveryFees_success() throws Exception {
 		// given
-		when(deliveryFeeSevice.CreateDeliveryFee(any(RequestDeliveryFeeDTO.class))).thenReturn(
+		when(deliveryFeeSevice.createDeliveryFee(any(RequestDeliveryFeeDTO.class))).thenReturn(
 			ResponseEntity.ok().build());
 
 		// when

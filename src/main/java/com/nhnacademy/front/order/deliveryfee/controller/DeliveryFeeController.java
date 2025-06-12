@@ -56,7 +56,7 @@ public class DeliveryFeeController {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
-		deliveryFeeSevice.CreateDeliveryFee(deliveryFeeDTO);
+		deliveryFeeSevice.createDeliveryFee(deliveryFeeDTO);
 		return "redirect:/admin/settings/deliveryFee";
 	}
 
