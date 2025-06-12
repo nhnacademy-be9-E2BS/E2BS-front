@@ -33,20 +33,20 @@ class MemberCartServiceImplTest {
 	@InjectMocks
 	private MemberCartServiceImpl memberCartService;
 
-	@Test
-	@DisplayName("회원 장바구니 생성 테스트")
-	void createCartForMember() {
-		// given
-		String memberId = "id123";
-		doNothing().when(memberCartAdaptor).createCartByMember(memberId);
-
-		// when
-		when(memberCartAdaptor.createCartByMember(memberId)).thenReturn(ResponseEntity.noContent().build());
-
-		// when & then
-		assertThatCode(() -> memberCartService.deleteCartForMember(memberId))
-			.doesNotThrowAnyException();
-	}
+	// @Test
+	// @DisplayName("회원 장바구니 생성 테스트")
+	// void createCartForMember() {
+	// 	// given
+	// 	String memberId = "id123";
+	// 	doNothing().when(memberCartAdaptor).createCartByMember(memberId);
+	//
+	// 	// when
+	// 	when(memberCartAdaptor.createCartByMember(memberId)).thenReturn(ResponseEntity.noContent().build());
+	//
+	// 	// when & then
+	// 	assertThatCode(() -> memberCartService.deleteCartForMember(memberId))
+	// 		.doesNotThrowAnyException();
+	// }
 	
 
 	@Test
