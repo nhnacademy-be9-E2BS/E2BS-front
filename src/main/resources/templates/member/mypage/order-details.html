@@ -280,11 +280,14 @@
 
                         <td>
                             <!--th:if="${order.state.equals('COMPLETE')} and ${orderDetail.reviewId == null}"-->
-                            <button class="btn-primary" th:if="${orderDetail.reviewId == null}"
+                            <button class="btn-primary"
+                                    th:if="${orderDetail.reviewId == null and order.state != 'RETURN' and order.state != 'CANCEL'}"
                                     th:attr="data-product-id=${orderDetail.productId}"
                                     onclick="openReviewCreateModal(this)">리뷰 작성
                             </button>
-                            <button class="btn-primary" th:if="${orderDetail.reviewId != null}"
+
+                            <button class="btn-primary"
+                                    th:if="${orderDetail.reviewId != null and order.state != 'RETURN' and order.state != 'CANCEL'}"
                                     th:data-orderdetail-id="${orderDetail.orderDetailId}"
                                     onclick="openReviewUpdateModal(this)">리뷰 수정
                             </button>

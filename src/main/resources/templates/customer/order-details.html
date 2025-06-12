@@ -2,8 +2,131 @@
 <html
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layouts/customer-layout}">
+<head>
+    <style>
+        .fa-star {
+            color: #ccc;
+            transition: color 0.2s ease;
+        }
+        .fa-star.fa-2x.filled {
+            color: gold;
+            transition: color 0.2s ease;
+        }
+    </style>
+</head>
+
 <body>
 <div layout:fragment="content">
+    <!-- 리뷰 작성 모달 -->
+    <div class="modal" id="reviewCreateModal" tabindex="-1" aria-labelledby="reviewCreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- 넓은 모달 -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewCreateModalLabel">리뷰 작성</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-contact form-review mt-3">
+                        <input type="hidden" name="productId" id="createReviewModalProductId" />
+                        <input type="hidden" name="customerId" id="customerId" th:value="${customerId}" />
+
+                        <!-- 평점 -->
+                        <div class="form-group mb-3">
+                            <label class="fw-bold mb-1">평점 선택</label>
+                            <ul class="list d-flex gap-2 px-0 mb-2" style="list-style: none;">
+                                <li><a href="#" class="star" data-star-value="1"><i class="fa fa-star fa-2x"></i></a></li>
+                                <li><a href="#" class="star" data-star-value="2"><i class="fa fa-star fa-2x"></i></a></li>
+                                <li><a href="#" class="star" data-star-value="3"><i class="fa fa-star fa-2x"></i></a></li>
+                                <li><a href="#" class="star" data-star-value="4"><i class="fa fa-star fa-2x"></i></a></li>
+                                <li><a href="#" class="star" data-star-value="5"><i class="fa fa-star fa-2x"></i></a></li>
+                            </ul>
+                            <p class="text-muted" id="selectedRating">0점</p>
+                            <input type="hidden" name="reviewGrade" id="ratingInput" value="0" />
+                        </div>
+
+                        <!-- 이미지 업로드 -->
+                        <div class="form-group mb-3">
+                            <label for="createImage" class="form-label fw-bold">이미지 업로드</label>
+                            <input type="file" class="form-control" id="createImage" name="reviewImage">
+                            <div class="preview-container mt-2 text-center">
+                                <img id="create-imagePreview" src="#" alt="이미지 미리보기"
+                                     style="display:none; max-width:100%; height:auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+                                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'" />
+                            </div>
+                        </div>
+
+                        <!-- 리뷰 내용 -->
+                        <div class="form-group mb-3">
+                            <label for="textarea" class="form-label fw-bold">리뷰 내용</label>
+                            <textarea class="form-control" name="reviewContent" id="textarea" rows="12"
+                                      style="min-height: 300px;" placeholder="상품에 대한 솔직한 리뷰를 작성해주세요 :)"></textarea>
+                        </div>
+
+                        <!-- 제출 버튼 -->
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold fs-5 rounded-pill">작성완료</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 리뷰 수정 모달 -->
+    <div class="modal fade" id="reviewUpdateModal" tabindex="-1" aria-labelledby="reviewUpdateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- 넓은 모달 -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewUpdateModalLabel">리뷰 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" name="reviewId" id="updateReviewId" />
+
+                        <!-- 평점 -->
+                        <div class="form-group mb-3">
+                            <ul class="list d-flex gap-2 px-0 mb-2" style="list-style: none;">
+                                <li><i class="fa fa-star fa-2x"></i></li>
+                                <li><i class="fa fa-star fa-2x"></i></li>
+                                <li><i class="fa fa-star fa-2x"></i></li>
+                                <li><i class="fa fa-star fa-2x"></i></li>
+                                <li><i class="fa fa-star fa-2x"></i></li>
+                            </ul>
+                        </div>
+
+                        <!-- 이미지 업로드 -->
+                        <div class="form-group mb-3">
+                            <label for="updateImage" class="form-label fw-bold">이미지 업로드</label>
+                            <input type="file" class="form-control" id="updateImage" name="reviewImage">
+                            <div class="preview-container mt-2 text-center">
+                                <img id="update-imagePreview" src="#" alt="리뷰 이미지 미리보기"
+                                     style="display:none; max-width:100%; height:auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+                                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'" />
+                            </div>
+                        </div>
+
+                        <!-- 리뷰 내용 -->
+                        <div class="form-group mb-3">
+                            <label for="updateTextarea" class="form-label fw-bold">리뷰 내용</label>
+                            <textarea class="form-control" name="reviewContent" id="updateTextarea" rows="12"
+                                      style="min-height: 300px;" placeholder="상품에 대한 솔직한 리뷰를 작성해주세요 :)"></textarea>
+                        </div>
+
+                        <!-- 제출 버튼 -->
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-warning px-5 py-2 fw-bold fs-5 rounded-pill"
+                                    onclick="submitOrderDetailReviewUpdate()">
+                                수정완료
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <section>
         <div class="container">
             <h2>주문 조회</h2>
@@ -88,6 +211,7 @@
                         <th>단일 가격</th>
                         <th>수량</th>
                         <th>포장지</th>
+                        <th>리뷰</th>
                     </tr>
                     <tr th:each="orderDetail:${orderDetails}">
                         <td class="text-truncate" style="max-width: 1px;">
@@ -102,6 +226,19 @@
                         <td th:if="${orderDetail.wrapperId} == null">포장 없음</td>
                         <td th:if="${orderDetail.wrapperId} != null">
                             <span th:text="${orderDetail.wrapperName}+'(개당 '+${T(java.lang.String).format('%,d',orderDetail.wrapperPrice)}+')'"></span>
+                        </td>
+                        <td>
+                            <button class="btn-primary"
+                                    th:if="${orderDetail.reviewId == null and order.state != 'RETURN' and order.state != 'CANCEL'}"
+                                    th:attr="data-product-id=${orderDetail.productId}"
+                                    onclick="openReviewCreateModal(this)">리뷰 작성
+                            </button>
+
+                            <button class="btn-primary"
+                                    th:if="${orderDetail.reviewId != null and order.state != 'RETURN' and order.state != 'CANCEL'}"
+                                    th:data-orderdetail-id="${orderDetail.orderDetailId}"
+                                    onclick="openReviewUpdateModal(this)">리뷰 수정
+                            </button>
                         </td>
                     </tr>
                 </table>
@@ -147,6 +284,12 @@
             </div>
 
         </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script th:src="@{/js/review/review-create.js}"></script>
+        <script th:src="@{/js/review/review-update.js}"></script>
+        <script th:src="@{/js/review/star-count.js}"></script>
+        <script th:src="@{/js/review/review-modal.js}"></script>
     </section>
 </div>
 </body>

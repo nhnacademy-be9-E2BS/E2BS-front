@@ -46,16 +46,19 @@ public class PointPolicyController {
 	@JwtTokenCheck
 	@GetMapping("/admin/settings/pointPolicies")
 	public String getPointPolicies(Model model) {
+		final String TITLE = "title";
+		final String POLICIES = "policies";
+
 		List<ResponsePointPolicyDTO> responseRegister = pointPolicyService.getRegisterPointPolicy();
 		List<ResponsePointPolicyDTO> responseReviewImg = pointPolicyService.getReviewImgPointPolicy();
 		List<ResponsePointPolicyDTO> responseReview = pointPolicyService.getReviewPointPolicy();
 		List<ResponsePointPolicyDTO> responseBook = pointPolicyService.getBookPointPolicy();
 
 		List<Map<String, Object>> sections = new ArrayList<>();
-		sections.add(Map.of("title", "회원가입 정책", "policies", responseRegister));
-		sections.add(Map.of("title", "이미지 리뷰 정책", "policies", responseReviewImg));
-		sections.add(Map.of("title", "일반 리뷰 정책", "policies", responseReview));
-		sections.add(Map.of("title", "기본 적립률(%) 정책", "policies", responseBook));
+		sections.add(Map.of(TITLE, "회원가입 정책", POLICIES, responseRegister));
+		sections.add(Map.of(TITLE, "이미지 리뷰 정책", POLICIES, responseReviewImg));
+		sections.add(Map.of(TITLE, "일반 리뷰 정책", POLICIES, responseReview));
+		sections.add(Map.of(TITLE, "기본 적립률(%) 정책", POLICIES, responseBook));
 
 		model.addAttribute("policySections", sections);
 		return "admin/pointpolicy/point-policy";
