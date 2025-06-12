@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.nhnacademy.front.order.order.model.dto.request.RequestPaymentApproveDTO;
@@ -35,6 +36,7 @@ class PaymentQueryParamResolverFactoryTest {
 	}
 
 	@Test
+	@DisplayName("지원하는 형식의 resolver 작동 확인")
 	void testResolve_withSupportedResolver_returnsDto() {
 		// given
 		RequestPaymentApproveDTO expectedDto = new RequestPaymentApproveDTO();
@@ -52,6 +54,7 @@ class PaymentQueryParamResolverFactoryTest {
 	}
 
 	@Test
+	@DisplayName("지원하는 형식의 resolver가 없는 경우 확인")
 	void testResolve_withoutSupportedResolver_throwsException() {
 		// given
 		when(unsupportedResolver.supports(mockRequest)).thenReturn(false);
