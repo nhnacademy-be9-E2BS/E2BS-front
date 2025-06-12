@@ -79,13 +79,14 @@
 
                               <td>
                                   <div class="price-info" style="margin-top: 5px;">
-                                      <!-- 정가 + 할인률 -->
-                                      <p style="margin: 0; font-size: 0.85em; color: #888;">
+                                      <!-- 정가와 판매가가 다를 때만 정가 + 할인률 출력 -->
+                                      <p th:if="${cartItem.productRegularPrice != cartItem.productSalePrice}"
+                                         style="margin: 0; font-size: 0.85em; color: #888;">
                                           <del th:text="${#numbers.formatInteger(cartItem.productRegularPrice, 3, 'COMMA')} + '원'">정가</del>
                                           <span th:text="'↓ ' + ${cartItem.discountRate} + '%'" style="margin-left: 5px; color: #dc3545;">22%</span>
                                       </p>
 
-                                      <!-- 판매가 강조 -->
+                                      <!-- 항상 표시되는 판매가 -->
                                       <h5 class="unit-price"
                                           th:text="${#numbers.formatInteger(cartItem.productSalePrice, 3, 'COMMA')} + '원'"
                                           style="margin: 2px 0 0 0; color: #000; font-weight: bold;">판매가</h5>
