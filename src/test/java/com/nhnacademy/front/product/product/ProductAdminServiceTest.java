@@ -56,10 +56,6 @@ class ProductAdminServiceTest {
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 100, productImage,
 			List.of(1L), List.of(1L), List.of(1L));
-		RequestProductMetaDTO requestMeta = new RequestProductMetaDTO(
-			1L, 1L, "title", "content", "description", LocalDate.now(),
-			"978-89-12345-01-1", 10000L, 8000L, true, 100,
-			List.of(1L), List.of(1L), List.of(1L));
 
 		when(productAdminAdaptor.postCreateProduct(any(RequestProductMetaDTO.class), anyList()))
 			.thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
@@ -84,10 +80,6 @@ class ProductAdminServiceTest {
 		RequestProductDTO request = new RequestProductDTO(
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 100, productImage,
-			List.of(1L), List.of(1L), List.of(1L));
-		RequestProductMetaDTO requestMeta = new RequestProductMetaDTO(
-			1L, 1L, "title", "content", "description", LocalDate.now(),
-			"978-89-12345-01-1", 10000L, 8000L, true, 100,
 			List.of(1L), List.of(1L), List.of(1L));
 
 		when(productAdminAdaptor.postCreateProduct(any(RequestProductMetaDTO.class), anyList()))
@@ -175,10 +167,6 @@ class ProductAdminServiceTest {
 		RequestProductDTO request = new RequestProductDTO(
 			1L, 1L, "title", "content", "description", LocalDate.now(),
 			"978-89-12345-01-1", 10000L, 8000L, true, 100, productImage,
-			List.of(1L), List.of(1L), List.of(1L));
-		RequestProductMetaDTO requestMeta = new RequestProductMetaDTO(
-			1L, 1L, "title", "content", "description", LocalDate.now(),
-			"978-89-12345-01-1", 10000L, 8000L, true, 100,
 			List.of(1L), List.of(1L), List.of(1L));
 
 		when(productAdminAdaptor.putUpdateProduct(anyLong(), any(RequestProductMetaDTO.class), anyList()))
