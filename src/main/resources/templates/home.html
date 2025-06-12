@@ -903,8 +903,8 @@
                     <a th:href="@{/books/{productId}(productId=${product.productId})}">
 
 
-                    <img th:src="${product.productImage}"
-                         alt="도서 이미지"/>
+                        <img th:src="${product.productImage}"
+                             alt="도서 이미지"/>
                     </a>
 
 
@@ -994,14 +994,21 @@
                 const item = document.createElement('div');
                 item.className = 'sub-book-item';
 
+                // <a> 태그 생성
+                const link = document.createElement('a');
+                link.href = `/books/${book.productId}`; // Thymeleaf URL 패턴과 동일
+
                 const img = document.createElement('img');
                 img.src = book.productImage;
+                img.alt = '서브 도서 이미지';
+
+                link.appendChild(img);
 
                 const title = document.createElement('p');
                 title.className = 'sub-book-title';
                 title.innerText = book.productTitle;
 
-                item.appendChild(img);
+                item.appendChild(link);
                 item.appendChild(title);
                 subContainer.appendChild(item);
             });
@@ -1042,25 +1049,26 @@
                 itemDiv.classList.add('book-item');
 
                 // 2) rank-badge
-// 2) rank-badge
                 const badge = document.createElement('div');
                 badge.classList.add('rank-badge');
                 const rankNum = (i + 1).toString();
                 badge.innerText = rankNum;
 
                 if (rankNum === '1') badge.classList.add('rank-1');
-                else if (rankNum === '2' || rankNum === '4') badge.classList.add('rank-2'); // rank-2 == gray
+                else if (rankNum === '2' || rankNum === '4') badge.classList.add('rank-2');
                 else if (rankNum === '3') badge.classList.add('rank-3');
-                else badge.style.backgroundColor = '#999'; // 기타 순위: 중립 회색 (옵션)
+                else badge.style.backgroundColor = '#999';
 
                 itemDiv.appendChild(badge);
 
-
-                // 3) 책 이미지
+                // 3) <a> 태그와 책 이미지
+                const link = document.createElement('a');
+                link.href = `/books/${product.productId}`; // Thymeleaf URL 패턴과 동일
                 const img = document.createElement('img');
                 img.src = product.productImage;
                 img.alt = '도서 이미지';
-                itemDiv.appendChild(img);
+                link.appendChild(img);
+                itemDiv.appendChild(link);
 
                 // 4) 책 제목
                 const titleP = document.createElement('p');
