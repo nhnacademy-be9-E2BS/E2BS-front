@@ -33,11 +33,11 @@ public class UserCategoryService {
 			ResponseEntity<List<ResponseCategoryDTO>> response = userCategoryAdaptor.getCategoriesToDepth3();
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new CategoryGetProcessException("카테고리 헤더 조회 실패");
+				throw new CategoryGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new CategoryGetProcessException("카테고리 헤더 조회 실패");
+			throw new CategoryGetProcessException();
 		}
 	}
 
@@ -48,11 +48,11 @@ public class UserCategoryService {
 		try {
 			List<ResponseCategoryDTO> allCategories = getCachedCategories();
 
-			if (allCategories == null) {
+			if (allCategories.isEmpty()) {
 				ResponseEntity<List<ResponseCategoryDTO>> response = userCategoryAdaptor.getAllCategories();
 
 				if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
-					throw new CategoryGetProcessException("카테고리 사이드 바 조회 실패");
+					throw new CategoryGetProcessException();
 				}
 				allCategories = response.getBody();
 			}
@@ -64,7 +64,7 @@ public class UserCategoryService {
 			return result;
 			
 		} catch (FeignException e) {
-			throw new CategoryGetProcessException("카테고리 사이드 바 조회 실패");
+			throw new CategoryGetProcessException();
 		}
 	}
 
@@ -76,11 +76,11 @@ public class UserCategoryService {
 			ResponseEntity<List<ResponseCategoryIdsDTO>> response = userCategoryAdaptor.getCategoriesByProductIds(productIds);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new CategoryGetProcessException("상품 카테고리 조회 실패");
+				throw new CategoryGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new CategoryGetProcessException("상품 카테고리 조회 실패");
+			throw new CategoryGetProcessException();
 		}
 	}
 
@@ -89,7 +89,7 @@ public class UserCategoryService {
 	 */
 	private List<ResponseCategoryDTO> getCachedCategories() {
 		if (!Boolean.TRUE.equals(redisTemplate.hasKey("Categories::all"))) {
-			return null;
+			return List.of();
 		}
 
 		Object cached = redisTemplate.opsForValue().get("Categories::all");

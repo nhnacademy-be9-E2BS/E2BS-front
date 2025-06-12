@@ -30,7 +30,7 @@ public class PublisherService {
 		ResponseEntity<Void> response = publisherAdaptor.postCreatePublisher(request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new PublisherCreateProcessException("출판사 등록 실패");
+			throw new PublisherCreateProcessException();
 		}
 	}
 
@@ -41,7 +41,7 @@ public class PublisherService {
 		ResponseEntity<PageResponse<ResponsePublisherDTO>> response = publisherAdaptor.getPublishers(pageable);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new PublisherGetProcessException("출판사 리스트 조회 실패");
+			throw new PublisherGetProcessException();
 		}
 		return response.getBody();
 	}
@@ -53,7 +53,7 @@ public class PublisherService {
 		ResponseEntity<Void> response = publisherAdaptor.putUpdatePublisher(publisherId, request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new PublisherUpdateProcessException("출판사 정보 수정 실패");
+			throw new PublisherUpdateProcessException();
 		}
 	}
 }

@@ -44,6 +44,8 @@ public class ProductSearchController {
 	private final ProductSearchService productSearchService;
 	private final UserCategoryService userCategoryService;
 
+	private static final String productString = "products";
+
 	/**
 	 * 사용자 - 검색창에 검색어를 입력하여 도서 리스트 조회 (페이징)
 	 * 정렬 기준 선택 가능 (default = 정확도순)
@@ -69,8 +71,16 @@ public class ProductSearchController {
 			sort, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
-		model.addAttribute("products", products);
+		List<Long> discountRates = new ArrayList<>();
+		for (ResponseProductReadDTO dto : products) {
+			long discountRate = (long)(((double)(dto.getProductRegularPrice() - dto.getProductSalePrice())
+				/ dto.getProductRegularPrice()) * 100);
+			discountRates.add(discountRate);
+		}
+
+		model.addAttribute(productString, products);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("discountRates", discountRates);
 		if (Objects.isNull(sort)) {
 			model.addAttribute("sort", ProductSortType.NO_SORT.toString());
 		} else {
@@ -112,7 +122,7 @@ public class ProductSearchController {
 				/ dto.getProductRegularPrice()) * 100);
 			discountRates.add(discountRate);
 		}
-		model.addAttribute("products", products);
+		model.addAttribute(productString, products);
 		model.addAttribute("rootCategory", category);
 		model.addAttribute("discountRates", discountRates);
 		if (Objects.isNull(sort)) {
@@ -145,7 +155,15 @@ public class ProductSearchController {
 		PageResponse<ResponseProductReadDTO> response = productSearchService.getBestProducts(pageable, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
-		model.addAttribute("products", products);
+		List<Long> discountRates = new ArrayList<>();
+		for (ResponseProductReadDTO dto : products) {
+			long discountRate = (long)(((double)(dto.getProductRegularPrice() - dto.getProductSalePrice())
+				/ dto.getProductRegularPrice()) * 100);
+			discountRates.add(discountRate);
+		}
+
+		model.addAttribute(productString, products);
+		model.addAttribute("discountRates", discountRates);
 
 		return "product/best-product";
 	}
@@ -171,8 +189,16 @@ public class ProductSearchController {
 		PageResponse<ResponseProductReadDTO> response = productSearchService.getNewestProducts(pageable, memberId);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
-		model.addAttribute("products", products);
+		List<Long> discountRates = new ArrayList<>();
+		for (ResponseProductReadDTO dto : products) {
+			long discountRate = (long)(((double)(dto.getProductRegularPrice() - dto.getProductSalePrice())
+				/ dto.getProductRegularPrice()) * 100);
+			discountRates.add(discountRate);
+		}
+
+		model.addAttribute(productString, products);
 		model.addAttribute("todayDate", LocalDate.now());
+		model.addAttribute("discountRates", discountRates);
 
 		return "product/newest-product";
 	}

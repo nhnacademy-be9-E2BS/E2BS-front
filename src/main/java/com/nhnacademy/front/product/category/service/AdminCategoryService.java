@@ -31,7 +31,7 @@ public class AdminCategoryService {
 		ResponseEntity<List<ResponseCategoryDTO>> response = userCategoryAdaptor.getAllCategories();
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new CategoryGetProcessException("전체 카테고리 리스트 조회 실패");
+			throw new CategoryGetProcessException();
 		}
 		return response.getBody();
 	}
@@ -44,7 +44,7 @@ public class AdminCategoryService {
 		ResponseEntity<Void> response = adminCategoryAdaptor.postCreateCategoryTree(request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new CategoryCreateProcessException("카테고리 등록 실패");
+			throw new CategoryCreateProcessException();
 		}
 	}
 
@@ -56,7 +56,7 @@ public class AdminCategoryService {
 		ResponseEntity<Void> response = adminCategoryAdaptor.postCreateChildCategory(categoryId, request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new CategoryCreateProcessException("카테고리 등록 실패");
+			throw new CategoryCreateProcessException();
 		}
 	}
 
@@ -67,7 +67,7 @@ public class AdminCategoryService {
 		ResponseEntity<Void> response = adminCategoryAdaptor.putUpdateCategory(categoryId, request);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new CategoryUpdateProcessException("카테고리 명 수정 실패");
+			throw new CategoryUpdateProcessException();
 		}
 	}
 
@@ -78,7 +78,7 @@ public class AdminCategoryService {
 		ResponseEntity<Void> response = adminCategoryAdaptor.deleteCategory(categoryId);
 
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new CategoryDeleteProcessException("카테고리 삭제 실패");
+			throw new CategoryDeleteProcessException();
 		}
 	}
 
