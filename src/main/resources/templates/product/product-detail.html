@@ -151,7 +151,7 @@
 				</div>
 				<!-- 상품 정보 -->
 				<div class="col" style="overflow-x: auto; margin-left: 20px;">
-					<div class=" card-product" th:data-product-id = "${product.productId}">
+					<div class="card-product" th:data-product-id = "${product.productId}">
 						<!--상품 제목-->
 						<h3 th:text="${product.productTitle}"></h3>
 
@@ -252,24 +252,24 @@
 								<button type="button" class="reduced" onclick="adjustQuantity(-1)"><i class="lnr lnr-chevron-down"></i></button>
 							</div>
 							<div class="button-container">
-								<!-- 장바구니 추가 -->
-								<button th:if="${session.isMember}"
-										class="member-add-cart-btn"
-											style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
-										장바구니에 추가</button>
-								<button th:if="${session.isMember == null}"
-										class="guest-add-cart-btn"
+								<button  th:class="${session.isMember} ? 'member-add-cart-btn' : 'guest-add-cart-btn'"
 										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
-									장바구니에 추가</button>
+									쇼핑카트 담기</button>
 
 								<button class="buy-now-btn custom-btn" th:if="${session.isMember}"
 										onclick="return submitOrderMember()"
-										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
+										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #163B63FF;color: white;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 									바로구매</button>
 								<button class="buy-now-btn custom-btn" th:if="${session.isMember == null}"
 										onclick="return submitOrderGuest()"
 										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #2d4fff;color: #fff;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;">
 									바로구매</button>
+
+								<button class="like-button"
+										th:data-liked="${product.liked}"
+										style="display: inline-block;min-width: 180px;padding: 12px 32px;font-size: 18px;font-weight: 600;border: 2px solid transparent;border-radius: 999px;background: #e1e1e1;color: black;cursor: pointer;transition: background 0.2s, color 0.2s, border 0.2s;"
+										th:text="${product.liked} ? '위시리스트 취소' : '위시리스트 담기'">
+								</button>
 							</div>
 						</div>
 					</div>

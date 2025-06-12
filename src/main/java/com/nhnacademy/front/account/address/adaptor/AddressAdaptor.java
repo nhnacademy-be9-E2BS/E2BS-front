@@ -17,28 +17,28 @@ import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAdd
 @FeignClient(name = "member-address-adaptor", url = "${auth.member.mypage.url}")
 public interface AddressAdaptor {
 
-	@GetMapping("/{memberId}/addresses")
-	ResponseEntity<List<ResponseMemberAddressDTO>> getMemberAddresses(@PathVariable("memberId") String memberId);
+	@GetMapping("/{member-id}/addresses")
+	ResponseEntity<List<ResponseMemberAddressDTO>> getMemberAddresses(@PathVariable("member-id") String memberId);
 
-	@PostMapping("/{memberId}/addresses/save")
-	ResponseEntity<Void> saveMemberAddress(@PathVariable("memberId") String memberId,
+	@PostMapping("/{member-id}/addresses/form")
+	ResponseEntity<Void> saveMemberAddress(@PathVariable("member-id") String memberId,
 		@RequestBody RequestMemberAddressSaveDTO requestMemberAddressSaveDTO);
 
-	@GetMapping("/{memberId}/addresses/{addressId}")
-	ResponseEntity<ResponseMemberAddressDTO> getAddress(@PathVariable("memberId") String memberId,
-		@PathVariable("addressId") long addressId);
+	@GetMapping("/{member-id}/addresses/{address-id}")
+	ResponseEntity<ResponseMemberAddressDTO> getAddress(@PathVariable("member-id") String memberId,
+		@PathVariable("address-id") long addressId);
 
-	@PutMapping("/{memberId}/addresses/{addressId}")
-	ResponseEntity<Void> updateMemberAddress(@PathVariable("memberId") String memberId,
-		@PathVariable("addressId") long addressId,
+	@PutMapping("/{member-id}/addresses/{address-id}")
+	ResponseEntity<Void> updateMemberAddress(@PathVariable("member-id") String memberId,
+		@PathVariable("address-id") long addressId,
 		@RequestBody RequestMemberAddressSaveDTO requestMemberAddressSaveDTO);
 
-	@DeleteMapping("/{memberId}/addresses/{addressId}")
-	ResponseEntity<Void> deleteAddress(@PathVariable("memberId") String memberId,
-		@PathVariable("addressId") long addressId);
+	@DeleteMapping("/{member-id}/addresses/{address-id}")
+	ResponseEntity<Void> deleteAddress(@PathVariable("member-id") String memberId,
+		@PathVariable("address-id") long addressId);
 
-	@PostMapping("/{memberId}/addresses/{addressId}/default")
-	ResponseEntity<Void> setDefaultAddress(@PathVariable("memberId") String memberId,
-		@PathVariable("addressId") long addressId);
+	@PostMapping("/{member-id}/addresses/{address-id}/default")
+	ResponseEntity<Void> setDefaultAddress(@PathVariable("member-id") String memberId,
+		@PathVariable("address-id") long addressId);
 
 }

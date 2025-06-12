@@ -71,7 +71,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		if (!isMember) {
 			SecurityContextHolder.clearContext();
 			String errorMessage = URLEncoder.encode("회원 아이디로 로그인 해주세요.", StandardCharsets.UTF_8);
-			response.sendRedirect("/login?error=" + errorMessage);
+			response.sendRedirect("/members/login?error=" + errorMessage);
 			return;
 		}
 
@@ -82,7 +82,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			request.getSession().setAttribute("dormantMemberId", memberId);
 			request.getSession().setAttribute("dormantCnt", 0);
 			request.getSession().setAttribute("memberState", memberState);
-			response.sendRedirect("/login");
+			response.sendRedirect("/members/login");
 			return;
 		}
 
@@ -96,7 +96,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		AuthenticationException failed) throws IOException, ServletException {
 
 		String errorMessage = URLEncoder.encode("아이디 또는 비밀번호가 일치하지 않습니다.", StandardCharsets.UTF_8);
-		response.sendRedirect("/login?error=" + errorMessage);
+		response.sendRedirect("/members/login?error=" + errorMessage);
 
 	}
 }

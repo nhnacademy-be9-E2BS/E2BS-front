@@ -9,7 +9,7 @@ import com.nhnacademy.front.account.member.model.dto.response.ResponseMypageMemb
 @FeignClient(name = "member-coupon-adaptor", url = "${auth.member.mypage.url}")
 public interface MemberCouponAdaptor {
 
-	@GetMapping("/{memberId}/coupons/counts")
-	ResponseMypageMemberCouponDTO getMemberCouponAmount(@PathVariable("memberId") String memberId);
+	@GetMapping("/{member-id}/coupons/counts")
+	ResponseMypageMemberCouponDTO getMemberCouponAmount(@PathVariable("member-id") String memberId);
 
 }

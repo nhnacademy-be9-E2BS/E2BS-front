@@ -1,7 +1,5 @@
 package com.nhnacademy.front.order.order.service;
 
-import java.time.LocalDate;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,6 +11,7 @@ import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
 import com.nhnacademy.front.order.order.adaptor.OrderMemberAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.request.RequestPaymentApproveDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
@@ -46,9 +45,8 @@ public class OrderService {
 	/**
 	 * 결제 완료 후 결제 승인 요청을 back에 요청하는 서비스
 	 */
-	public ResponseEntity<Void> confirmOrder(@RequestParam String orderId, @RequestParam String paymentKey,
-		@RequestParam long amount) throws FeignException {
-		return orderAdaptor.confirmOrder(orderId, paymentKey, amount);
+	public ResponseEntity<Void> confirmOrder(RequestPaymentApproveDTO approveRequest) throws FeignException {
+		return orderAdaptor.confirmOrder(approveRequest);
 	}
 
 	/**
