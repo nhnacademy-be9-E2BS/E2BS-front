@@ -103,7 +103,7 @@ class LikeControllerTest {
 	@DisplayName("DELETE /products/{productId}/likes - 좋아요 삭제")
 	void deleteLike() throws Exception {
 		// given
-		doNothing().when(likeService).deleteLike(eq(productId), eq(memberId));
+		doNothing().when(likeService).deleteLike(productId, memberId);
 
 		// when & then
 		mockMvc.perform(delete("/products/{productId}/likes", productId)

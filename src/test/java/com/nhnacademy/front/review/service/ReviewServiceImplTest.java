@@ -184,11 +184,14 @@ class ReviewServiceImplTest {
 		long productId = 1L;
 		Pageable pageable = PageRequest.of(0, 5);
 
-		when(productReviewAdaptor.getReviewsByProduct(eq(productId), eq(pageable)))
+		when(productReviewAdaptor.getReviewsByProduct(productId, pageable))
 			.thenThrow(mock(FeignException.class));
 
 		// when & then
-		assertThrows(ReviewProcessException.class, () -> reviewService.getReviewsByProduct(productId, pageable));
+		assertThrows(ReviewProcessException.class, () -> {
+			// 예외를 던질 수 있는 하나의 호출만 람다 내에 작성
+			reviewService.getReviewsByProduct(productId, pageable);
+		});
 	}
 
 	@Test
@@ -256,7 +259,9 @@ class ReviewServiceImplTest {
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
-		assertThrows(ReviewProcessException.class, () -> reviewService.getReviewsByMember(any(), any()));
+		assertThrows(ReviewProcessException.class, () -> {
+			reviewService.getReviewsByMember(any(), any());
+		});
 	}
 
 	@Test
@@ -280,7 +285,9 @@ class ReviewServiceImplTest {
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
-		assertThrows(ReviewProcessException.class, () -> reviewService.isReviewedByOrder(any()));
+		assertThrows(ReviewProcessException.class, () -> {
+			reviewService.isReviewedByOrder(any());
+		});
 	}
 
 	@Test
@@ -316,7 +323,9 @@ class ReviewServiceImplTest {
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
-		assertThrows(ReviewProcessException.class, () -> reviewService.findReviewByOrderDetailId(anyLong()));
+		assertThrows(ReviewProcessException.class, () ->  {
+			reviewService.findReviewByOrderDetailId(anyLong());
+		});
 	}
 
 	@Test
