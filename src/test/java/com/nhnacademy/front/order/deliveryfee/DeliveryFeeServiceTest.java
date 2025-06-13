@@ -23,7 +23,7 @@ import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliver
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 
 @ExtendWith(MockitoExtension.class)
-public class DeliveryFeeServiceTest {
+class DeliveryFeeServiceTest {
 	@Mock
 	private DeliveryFeeAdaptor deliveryFeeAdaptor;
 
