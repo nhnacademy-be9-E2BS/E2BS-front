@@ -89,7 +89,9 @@
                     </div>
 
                     <!-- 판매 가격 -->
-                    <span class="card-product__price">판매가: <span th:text="${likeProduct.productSalePrice}">0</span>원</span>
+                    <span class="card-product__price">
+                        판매가: <span th:text="${#numbers.formatInteger(likeProduct.productSalePrice, 1, 'COMMA')}"></span>원
+                    </span>
                 </div>
             </div>
         </div>
