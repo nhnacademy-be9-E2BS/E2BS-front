@@ -9,9 +9,9 @@ import com.nhnacademy.front.common.config.FeignFormDataSupportConfig;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 
-@FeignClient(name = "user-wrapper-service", url = "${order.wrapper.url}", configuration = FeignFormDataSupportConfig.class)
+@FeignClient(name = "gateway-service", contextId = "user-wrapper-service", configuration = FeignFormDataSupportConfig.class)
 public interface UserWrapperAdaptor {
 
-	@GetMapping
+	@GetMapping("/api/wrappers")
 	ResponseEntity<PageResponse<ResponseWrapperDTO>> getWrappersBySaleable(Pageable pageable);
 }

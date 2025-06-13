@@ -14,30 +14,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.address.model.dto.request.RequestMemberAddressSaveDTO;
 import com.nhnacademy.front.account.address.model.dto.response.ResponseMemberAddressDTO;
 
-@FeignClient(name = "member-address-adaptor", url = "${auth.member.mypage.url}")
+@FeignClient(name = "gateway-service", contextId = "member-address-adaptor")
 public interface AddressAdaptor {
 
-	@GetMapping("/{member-id}/addresses")
+	@GetMapping("/api/auth/mypage/{member-id}/addresses")
 	ResponseEntity<List<ResponseMemberAddressDTO>> getMemberAddresses(@PathVariable("member-id") String memberId);
 
-	@PostMapping("/{member-id}/addresses/form")
+	@PostMapping("/api/auth/mypage/{member-id}/addresses/form")
 	ResponseEntity<Void> saveMemberAddress(@PathVariable("member-id") String memberId,
 		@RequestBody RequestMemberAddressSaveDTO requestMemberAddressSaveDTO);
 
-	@GetMapping("/{member-id}/addresses/{address-id}")
+	@GetMapping("/api/auth/mypage/{member-id}/addresses/{address-id}")
 	ResponseEntity<ResponseMemberAddressDTO> getAddress(@PathVariable("member-id") String memberId,
 		@PathVariable("address-id") long addressId);
 
-	@PutMapping("/{member-id}/addresses/{address-id}")
+	@PutMapping("/api/auth/mypage/{member-id}/addresses/{address-id}")
 	ResponseEntity<Void> updateMemberAddress(@PathVariable("member-id") String memberId,
 		@PathVariable("address-id") long addressId,
 		@RequestBody RequestMemberAddressSaveDTO requestMemberAddressSaveDTO);
 
-	@DeleteMapping("/{member-id}/addresses/{address-id}")
+	@DeleteMapping("/api/auth/mypage/{member-id}/addresses/{address-id}")
 	ResponseEntity<Void> deleteAddress(@PathVariable("member-id") String memberId,
 		@PathVariable("address-id") long addressId);
 
-	@PostMapping("/{member-id}/addresses/{address-id}/default")
+	@PostMapping("/api/auth/mypage/{member-id}/addresses/{address-id}/default")
 	ResponseEntity<Void> setDefaultAddress(@PathVariable("member-id") String memberId,
 		@PathVariable("address-id") long addressId);
 

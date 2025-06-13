@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.product.category.model.dto.request.RequestCategoryDTO;
 
-@FeignClient(name = "admin-category-service", url = "${auth.product.category.url}")
+@FeignClient(name = "gateway-service", contextId = "admin-category-service")
 public interface AdminCategoryAdaptor {
 
-	@PostMapping
+	@PostMapping("/api/auth/admin/categories")
 	ResponseEntity<Void> postCreateCategoryTree(@RequestBody List<RequestCategoryDTO> request);
 
-	@PostMapping("/{categoryId}")
+	@PostMapping("/api/auth/admin/categories/{categoryId}")
 	ResponseEntity<Void> postCreateChildCategory(@PathVariable("categoryId") Long categoryId,
 		@RequestBody RequestCategoryDTO request);
 
-	@PutMapping("/{categoryId}")
+	@PutMapping("/api/auth/admin/categories/{categoryId}")
 	ResponseEntity<Void> putUpdateCategory(@PathVariable("categoryId") Long categoryId,
 		@RequestBody RequestCategoryDTO request);
 
-	@DeleteMapping("/{categoryId}")
+	@DeleteMapping("/api/auth/admin/categories/{categoryId}")
 	ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") Long categoryId);
 }

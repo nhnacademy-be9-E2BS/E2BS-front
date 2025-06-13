@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberEmailDTO;
 
-@FeignClient(name = "member-dormant-adaptor", url = "${member.dormant.url}")
+@FeignClient(name = "gateway-service", contextId = "member-dormant-adaptor")
 public interface MemberDormantAdaptor {
 
-	@PostMapping("/members/{member-id}/dooray")
+	@PostMapping("/api/dormant/members/{member-id}/dooray")
 	ResponseEntity<Void> changeDormantMemberStateActive(@PathVariable("member-id") String memberId);
 
-	@GetMapping("/members/{member-id}")
+	@GetMapping("/api/dormant/members/{member-id}")
 	ResponseEntity<ResponseMemberEmailDTO> getMemberEmail(@PathVariable("member-id") String memberId);
 
 }

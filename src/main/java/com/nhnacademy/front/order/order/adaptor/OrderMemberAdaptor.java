@@ -17,30 +17,30 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 
-@FeignClient(name = "order-member-service", url = "${order.order.auth}")
+@FeignClient(name = "gateway-service", contextId = "order-member-service")
 public interface OrderMemberAdaptor {
 
-	@PostMapping("/create/point")
+	@PostMapping("/api/auth/orders/create/point")
 	ResponseEntity<ResponseOrderResultDTO> postPointCreateOrder(
 		@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO);
 
-	@GetMapping
+	@GetMapping("/api/auth/orders")
 	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByMemberId(Pageable pageable, @RequestParam String memberId,
 		@RequestParam(required = false) String stateName,
 		@RequestParam(required = false) String startDate,
 		@RequestParam(required = false) String endDate,
 		@RequestParam(required = false) String orderCode);
 
-	@DeleteMapping("/{orderCode}")
+	@DeleteMapping("/api/auth/orders/{orderCode}")
 	ResponseEntity<Void> cancelOrder(@PathVariable String orderCode);
 
-	@PostMapping("/return")
+	@PostMapping("/api/auth/orders/return")
 	ResponseEntity<Void> returnOrder(@RequestBody RequestOrderReturnDTO returnDTO);
 
-	@GetMapping("/return")
+	@GetMapping("/api/auth/orders/return")
 	ResponseEntity<PageResponse<ResponseOrderReturnDTO>> getReturnOrdersByMemberId(Pageable pageable, @RequestParam String memberId);
 
-	@GetMapping("/return/{orderCode}")
+	@GetMapping("/api/auth/orders/return/{orderCode}")
 	ResponseEntity<ResponseOrderReturnDTO> getReturnOrder(@PathVariable String orderCode);
 
 }
