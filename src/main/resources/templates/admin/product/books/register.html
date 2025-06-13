@@ -570,33 +570,6 @@
                 e.preventDefault(); // 폼 제출 막기
             }
         });
-
-
-        // // 사진 미리보기 기능
-        // document.getElementById('imagePaths').addEventListener('DOMContentLoaded', function (event) {
-        //     const previewContainer = document.getElementById('previewContainer');
-        //     previewContainer.innerHTML = ''; // 기존 미리보기 초기화
-        //
-        //     const files = event.target.files;
-        //     for (let i = 0; i < files.length; i++) {
-        //         const file = files[i];
-        //         const reader = new FileReader();
-        //
-        //         reader.onload = function (e) {
-        //             const imgDiv = document.createElement('div');
-        //             imgDiv.className = 'col-md-4 mb-3'; // 한 줄에 3개씩 (col-md-4는 12/4 = 3개)
-        //             const img = document.createElement('img');
-        //             img.src = e.target.result;
-        //             img.alt = 'Preview';
-        //             img.className = 'img-fluid';
-        //             img.style.maxHeight = '150px'; // 이미지 크기 조정
-        //             imgDiv.appendChild(img);
-        //             previewContainer.appendChild(imgDiv);
-        //         };
-        //
-        //         reader.readAsDataURL(file);
-        //     }
-        // });
     </script>
 
 
