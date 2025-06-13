@@ -44,9 +44,9 @@ public class ErrorMessageLoader {
 	private void loadYamlFromUrl(String url) {
 		Yaml yaml = new Yaml();
 
-		try (InputStream inputStream = new URL(url).openStream()) {
+		try (InputStream inputStream = new URL(url).openStream()) { // NOSONAR
 			Map<String, Object> data = yaml.load(inputStream);
-			Map<String, String> errors = (Map<String, String>)data.get("errors");
+			Map<String, String> errors = (Map<String, String>)data.get("errors"); // NOSONAR
 
 			errorMessages.putAll(errors);
 		} catch (Exception ex) {

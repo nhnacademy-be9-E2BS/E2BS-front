@@ -164,7 +164,7 @@ public class WebAdviceController {
 	}
 
 	@ExceptionHandler({Throwable.class})
-	public ModelAndView throwable500Exception() {
+	public ModelAndView throwableException() {
 		String code = "F500";
 
 		String errorMessage = errorMessageLoader.getMessage(code);

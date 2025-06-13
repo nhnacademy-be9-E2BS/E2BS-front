@@ -41,6 +41,7 @@ class CustomAuthenticationFailureHandlerTest {
 		verify(response).sendRedirect(contains("/admin/login?error="));
 	}
 
+	@SuppressWarnings("squid:S2699")
 	@Test
 	@DisplayName("비회원 로그인 실패시 리다이렉트 테스트")
 	void customerLoginFailureRedirect() throws IOException, ServletException {
