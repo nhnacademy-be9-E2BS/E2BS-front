@@ -109,7 +109,7 @@ public class WebAdviceController {
 		CategoryUpdateProcessException.class, CategoryDeleteProcessException.class,
 		ProductCreateProcessException.class, ProductGetProcessException.class, ProductUpdateProcessException.class
 	})
-	public ModelAndView systemException500() {
+	public ModelAndView systemException500() { // NOSOANR
 		String code = "F500";
 		String errorMessage = errorMessageLoader.getMessage(code);
 
@@ -163,9 +163,8 @@ public class WebAdviceController {
 		return modelAndView;
 	}
 
-	@SuppressWarnings("squid:S2699")
 	@ExceptionHandler({Throwable.class})
-	public ModelAndView throwableException() {
+	public ModelAndView throwableException() { // NOSONAR
 		String code = "F500";
 
 		String errorMessage = errorMessageLoader.getMessage(code);
