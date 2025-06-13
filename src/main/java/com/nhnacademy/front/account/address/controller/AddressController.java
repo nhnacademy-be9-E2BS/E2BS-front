@@ -39,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/mypage/addresses")
 public class AddressController {
+	private final static String ADDRESS_REDIRECT_PATH = "redirect:/mypage/addresses";
 
 	private final AddressService addressService;
 
@@ -89,7 +90,7 @@ public class AddressController {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		addressService.updateAddress(requestMemberAddressSaveDTO, memberId, addressId);
 
-		return "redirect:/mypage/addresses";
+		return ADDRESS_REDIRECT_PATH;
 	}
 
 	@Operation(summary = "회원 배송지 정보 삭제 기능", description = "회원 배송지 정보 삭제 기능 제공",
@@ -103,7 +104,7 @@ public class AddressController {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		addressService.deleteAddress(memberId, addressId);
 
-		return "redirect:/mypage/addresses";
+		return ADDRESS_REDIRECT_PATH;
 	}
 
 	@Operation(summary = "회원 기본 배송지 설정 기능", description = "회원 기본 배송지 설정 기능 제공",
@@ -118,7 +119,7 @@ public class AddressController {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		addressService.setDefaultAddress(memberId, addressId);
 
-		return "redirect:/mypage/addresses";
+		return ADDRESS_REDIRECT_PATH;
 	}
 
 }
