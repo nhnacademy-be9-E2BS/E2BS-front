@@ -34,7 +34,7 @@ import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 @WithMockUser(username = "admin", roles = {"ADMIN", "MEMBER", "USER"})
 @WebMvcTest(controllers = DeliveryFeeController.class)
 @ActiveProfiles("dev")
-public class DeliveryFeeControllerTest {
+class DeliveryFeeControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
