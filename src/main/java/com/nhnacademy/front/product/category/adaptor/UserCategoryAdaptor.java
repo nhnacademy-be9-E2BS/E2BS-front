@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
 import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryIdsDTO;
 
-@FeignClient(name = "user-category-service", url = "${product.category.url}")
+@FeignClient(name = "gateway-service", contextId = "user-category-service")
 public interface UserCategoryAdaptor {
 
-	@GetMapping
+	@GetMapping("/api/categories")
 	ResponseEntity<List<ResponseCategoryDTO>> getCategoriesToDepth3();
 
-	@GetMapping("/all")
+	@GetMapping("/api/categories/all")
 	ResponseEntity<List<ResponseCategoryDTO>> getAllCategories();
 
-	@GetMapping("/productIds")
+	@GetMapping("/api/categories/productIds")
 	ResponseEntity<List<ResponseCategoryIdsDTO>> getCategoriesByProductIds(@RequestParam List<Long> productIds);
 }

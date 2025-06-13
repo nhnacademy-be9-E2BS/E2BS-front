@@ -14,17 +14,17 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.contributor.position.dto.request.RequestPositionDTO;
 import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePositionDTO;
 
-@FeignClient(name = "position-service", url = "${product.contributor.position.url}")
+@FeignClient(name = "gateway-service", contextId = "position-service")
 public interface PositionAdaptor {
-	@GetMapping
+	@GetMapping("/api/admin/positions")
 	ResponseEntity<PageResponse<ResponsePositionDTO>> getPositions(Pageable pageable);
 
-	@GetMapping
+	@GetMapping("/api/admin/positions")
 	ResponsePositionDTO getPosition(@RequestParam("positionId") long positionId);
 
-	@PostMapping
+	@PostMapping("/api/admin/positions")
 	ResponsePositionDTO postCreatePosition( @RequestBody RequestPositionDTO requestPositionDTO);
 
-	@PutMapping("/{positionId}")
+	@PutMapping("/api/admin/positions/{positionId}")
 	ResponsePositionDTO putUpdatePosition(@PathVariable Long positionId, @RequestBody RequestPositionDTO requestPositionDTO);
 }

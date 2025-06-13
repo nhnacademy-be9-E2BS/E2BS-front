@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.coupon.membercoupon.model.dto.request.RequestAllMemberCouponDTO;
 
-@FeignClient(name = "member-coupon-service", url = "${coupon.member.url}")
+@FeignClient(name = "gateway-service", contextId = "member-coupon-service")
 public interface MemberCouponAdaptor {
 
-	@PostMapping("/issue")
+	@PostMapping("/api/admin/memberCoupons/issue")
 	ResponseEntity<Void> postMemberCoupons(@RequestBody RequestAllMemberCouponDTO request);
 
 }
