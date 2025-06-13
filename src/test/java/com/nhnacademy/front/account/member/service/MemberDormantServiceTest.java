@@ -1,5 +1,6 @@
 package com.nhnacademy.front.account.member.service;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.assertj.core.api.Assertions;
@@ -54,9 +55,9 @@ class MemberDormantServiceTest {
 	void createDoorayAuthenticationNumberMethodTest()  {
 
 		// Given
-		ValueOperations<String, Object> valueOperations = mock(ValueOperations.class);
+		ValueOperations<String, Object> valueOperationsGiven = mock(ValueOperations.class);
 
-		when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+		when(redisTemplate.opsForValue()).thenReturn(valueOperationsGiven);
 
 		// When
 
@@ -72,9 +73,9 @@ class MemberDormantServiceTest {
 	void createEmailAuthenticationNumberMethodTest() {
 
 		// Given
-		ValueOperations<String, Object> valueOperations = mock(ValueOperations.class);
+		ValueOperations<String, Object> valueOperationsGiven = mock(ValueOperations.class);
 
-		when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+		when(redisTemplate.opsForValue()).thenReturn(valueOperationsGiven);
 
 		// When
 
@@ -122,7 +123,7 @@ class MemberDormantServiceTest {
 		when(valueOperations.get(doorayDormantKey)).thenReturn(null);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(DormantProcessingException.class, () -> {
+		assertThrows(DormantProcessingException.class, () -> {
 			memberDormantService.checkDoorayAuthenticationNumber(requestDormantDoorayNumberDTO, "user");
 		});
 
@@ -163,7 +164,7 @@ class MemberDormantServiceTest {
 		when(valueOperations.get(emailDormantKey)).thenReturn(null);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(DormantProcessingException.class, () -> {
+		assertThrows(DormantProcessingException.class, () -> {
 			memberDormantService.checkEmailAuthenticationNumber(requestDormantEmailNumberDTO, "user");
 		});
 
@@ -185,10 +186,10 @@ class MemberDormantServiceTest {
 		// Then
 		memberDormantService.sendDoorayMessageAuthenticationNumber(requestDoorayAuthenticationDTO);
 		verify(doorayAdaptor).sendDoorayAuthenticationNumber(
-			eq(requestDoorayAuthenticationDTO),
-			eq("3204376758577275363"),
-			eq("4081630330794795988"),
-			eq("b42JstgjQf-uqLBb3dj_yg")
+			requestDoorayAuthenticationDTO,
+			"3204376758577275363",
+			"4081630330794795988",
+			"b42JstgjQf-uqLBb3dj_yg"
 		);
 	}
 
@@ -222,12 +223,16 @@ class MemberDormantServiceTest {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		HttpServletRequest request = mock(HttpServletRequest.class);
 
 		// When
 		when(memberDormantAdaptor.changeDormantMemberStateActive("user")).thenReturn(response);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(DormantProcessingException.class, () -> memberDormantService.changeMemberStateActive("user", any(HttpServletRequest.class)));
+		assertThrows(DormantProcessingException.class, () ->
+			memberDormantService.changeMemberStateActive("user", request)
+		);
+
 	}
 
 	@Test
@@ -266,7 +271,7 @@ class MemberDormantServiceTest {
 		when(memberDormantAdaptor.getMemberEmail("user")).thenReturn(response);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(DormantProcessingException.class, () -> {
+		assertThrows(DormantProcessingException.class, () -> {
 			memberDormantService.getMemberEmail("user");
 		});
 

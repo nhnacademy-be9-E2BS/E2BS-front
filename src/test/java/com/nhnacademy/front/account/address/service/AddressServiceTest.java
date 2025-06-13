@@ -53,7 +53,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 배송지 조회 메서드 is2xx 에러 테스트")
-	void getMemberAddressesIs2xxMethodTest() throws Exception {
+	void getMemberAddressesIs2xxMethodTest() {
 
 		// Given
 		ResponseEntity<List<ResponseMemberAddressDTO>> response = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -70,7 +70,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 배송지 조회 메서드 EmptyResponseException 에러 테스트")
-	void getMemberAddressesMethodEmptyResponseExceptionTest() throws Exception {
+	void getMemberAddressesMethodEmptyResponseExceptionTest() {
 
 		// Given
 		ResponseEntity<List<ResponseMemberAddressDTO>> response = new ResponseEntity<>(null, HttpStatus.CREATED);
@@ -172,7 +172,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원의 특정 배송지 조회 메서드 EmptyResponseException 테스트")
-	void getAddressByAddressIdMethodEmptyResponseExceptionTest() throws Exception {
+	void getAddressByAddressIdMethodEmptyResponseExceptionTest() {
 
 		// Given
 		ResponseEntity<ResponseMemberAddressDTO> response = new ResponseEntity<>(null,
