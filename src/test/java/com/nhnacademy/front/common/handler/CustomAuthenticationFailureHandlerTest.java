@@ -28,6 +28,7 @@ class CustomAuthenticationFailureHandlerTest {
 		when(exception.getMessage()).thenReturn("Invalid credentials");
 	}
 
+	@SuppressWarnings("squid:S2699")
 	@Test
 	@DisplayName("관리자 로그인 실패시 리다이렉트 테스트")
 	void adminLoginFailureRedirect() throws IOException, ServletException {
@@ -55,6 +56,7 @@ class CustomAuthenticationFailureHandlerTest {
 		verify(response).sendRedirect(contains("/customer/login?error="));
 	}
 
+	@SuppressWarnings("squid:S2699")
 	@Test
 	@DisplayName("회원 로그인 실패시 리다이렉트 테스트")
 	void defaultLoginFailureRedirect() throws IOException, ServletException {

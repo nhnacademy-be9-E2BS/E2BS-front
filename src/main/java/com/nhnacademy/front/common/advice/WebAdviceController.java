@@ -163,6 +163,7 @@ public class WebAdviceController {
 		return modelAndView;
 	}
 
+	@SuppressWarnings("squid:S2699")
 	@ExceptionHandler({Throwable.class})
 	public ModelAndView throwableException() {
 		String code = "F500";
