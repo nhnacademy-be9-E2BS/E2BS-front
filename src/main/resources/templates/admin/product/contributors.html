@@ -14,7 +14,6 @@
                     font-size: 14px;
                     background-color: #fff;
                     border-radius: 10px;
-                    overflow: hidden;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
                 }
 
@@ -173,7 +172,7 @@
                                                name="contributorName"
                                                class="form-control"
                                                readonly
-                                               style="width: 100%; overflow: hidden; text-overflow: ellipsis;" />
+                                               style="width: 100%;" />
 
                                         <select name="positionId" class="form-select">
                                             <option th:each="position : ${positions}"
