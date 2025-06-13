@@ -88,38 +88,38 @@ class MemberMypageServiceTest {
 
 	@Test
 	@DisplayName("마이페이지 총 주문 건수 조회 메서드 테스트")
-	void getMemberOrderMethodTest() throws Exception {
+	void getMemberOrderMethodTest() {
 
 		// Given
 		ResponseMemberOrderDTO responseMemberOrderDTO = new ResponseMemberOrderDTO(
 			"user", 1
 		);
-		ResponseEntity<ResponseMemberOrderDTO> response = new ResponseEntity<>(responseMemberOrderDTO,
+		ResponseEntity<ResponseMemberOrderDTO> responseResult = new ResponseEntity<>(responseMemberOrderDTO,
 			HttpStatus.CREATED);
 
 		// When
-		when(memberOrderAdaptor.getMemberOrdersCnt("user")).thenReturn(response);
+		when(memberOrderAdaptor.getMemberOrdersCnt("user")).thenReturn(responseResult);
 
 		int orderCnt = memberMypageService.getMemberOrder("user");
 
 		// Then
-		Assertions.assertThat(orderCnt).isEqualTo(response.getBody().getOrderCnt());
+		Assertions.assertThat(orderCnt).isEqualTo(responseResult.getBody().getOrderCnt());
 
 	}
 
 	@Test
 	@DisplayName("마이페이지 총 주문 건수 조회 메서드 EmptyResponseException 테스트")
-	void getMemberOrderMethodEmptyResponseExceptionTest() throws Exception {
+	void getMemberOrderMethodEmptyResponseExceptionTest() {
 
 		// Given
 		ResponseMemberOrderDTO responseMemberOrderDTO = new ResponseMemberOrderDTO(
 			"user", 1
 		);
-		ResponseEntity<ResponseMemberOrderDTO> response = new ResponseEntity<>(responseMemberOrderDTO,
+		ResponseEntity<ResponseMemberOrderDTO> responseResult = new ResponseEntity<>(responseMemberOrderDTO,
 			HttpStatus.BAD_REQUEST);
 
 		// When
-		when(memberOrderAdaptor.getMemberOrdersCnt("user")).thenReturn(response);
+		when(memberOrderAdaptor.getMemberOrdersCnt("user")).thenReturn(responseResult);
 
 		// Then
 		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> {
@@ -130,7 +130,7 @@ class MemberMypageServiceTest {
 
 	@Test
 	@DisplayName("회원 보유 쿠폰 개수 조회 메서드 테스트")
-	void getMemberCouponMethodTest() throws Exception {
+	void getMemberCouponMethodTest() {
 
 		// Given
 		ResponseMypageMemberCouponDTO responseMypageMemberCouponDTO = new ResponseMypageMemberCouponDTO(
@@ -149,7 +149,7 @@ class MemberMypageServiceTest {
 
 	@Test
 	@DisplayName("회원 보유 쿠폰 개수 조회 메서드 EmptyResponseException 테스트")
-	void getMemberCouponMethodEmptyResponseExceptionTest() throws Exception {
+	void getMemberCouponMethodEmptyResponseExceptionTest() {
 
 		// Given
 
@@ -157,14 +157,12 @@ class MemberMypageServiceTest {
 		when(memberCouponAdaptor.getMemberCouponAmount("user")).thenReturn(null);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> {
-			memberMypageService.getMemberCoupon(new RequestMemberIdDTO("user"));
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberCoupon(new RequestMemberIdDTO("user")));
 	}
 
 	@Test
 	@DisplayName("회원 보유 포인트 조회 메서드 테스트")
-	void getMemberPointTest() throws Exception {
+	void getMemberPointTest() {
 
 		// Given
 		ResponseMemberPointDTO responseMemberPointDTO = new ResponseMemberPointDTO(
@@ -183,7 +181,7 @@ class MemberMypageServiceTest {
 
 	@Test
 	@DisplayName("회원 보유 포인트 조회 메서드 EmptyResponseException 테스트")
-	void getMemberPointEmptyResponseExceptionTest() throws Exception {
+	void getMemberPointEmptyResponseExceptionTest() {
 
 		// Given
 
@@ -191,15 +189,13 @@ class MemberMypageServiceTest {
 		when(memberPointHistoryAdaptor.getMemberPointAmount("user")).thenReturn(null);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> {
-			memberMypageService.getMemberPoint(new RequestMemberIdDTO("user"));
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberPoint(new RequestMemberIdDTO("user")));
 
 	}
 
 	@Test
 	@DisplayName("회원 등급 조회 메서드 테스트")
-	void getMemberRankNameMethodTest() throws Exception {
+	void getMemberRankNameMethodTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -217,23 +213,21 @@ class MemberMypageServiceTest {
 				new MemberRole(1, MemberRoleName.MEMBER),
 				new SocialAuth(1, SocialAuthName.WEB)
 			);
-			ResponseEntity<ResponseMemberInfoDTO> response = new ResponseEntity<>(responseMemberInfoDTO,
+			ResponseEntity<ResponseMemberInfoDTO> responseResult = new ResponseEntity<>(responseMemberInfoDTO,
 				HttpStatus.CREATED);
 
 			// When
-			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(response);
+			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(responseResult);
 
 			// Then
-			Assertions.assertThatCode(() -> {
-				memberMypageService.getMemberRankName(any(HttpServletRequest.class));
-			});
+			Assertions.assertThatNoException().isThrownBy(() -> memberMypageService.getMemberRankName(mock(HttpServletRequest.class)));
 
 		}
 	}
 
 	@Test
 	@DisplayName("회원 등급 조회 메서드 NotFoundMemberRankNameException 테스트")
-	void getMemberRankNameMethodNotFoundMemberRankNameExceptionTest() throws Exception {
+	void getMemberRankNameMethodNotFoundMemberRankNameExceptionTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -251,23 +245,21 @@ class MemberMypageServiceTest {
 				new MemberRole(1, MemberRoleName.MEMBER),
 				new SocialAuth(1, SocialAuthName.WEB)
 			);
-			ResponseEntity<ResponseMemberInfoDTO> response = new ResponseEntity<>(responseMemberInfoDTO,
+			ResponseEntity<ResponseMemberInfoDTO> responseResult = new ResponseEntity<>(responseMemberInfoDTO,
 				HttpStatus.BAD_REQUEST);
 
 			// When
-			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(response);
+			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(responseResult);
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberRankNameException.class, () -> {
-				memberMypageService.getMemberRankName(any(HttpServletRequest.class));
-			});
+			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberRankNameException.class, () -> memberMypageService.getMemberRankName(any(HttpServletRequest.class)));
 
 		}
 	}
 
 	@Test
 	@DisplayName("회원 정보를 조회하는 메서드 테스트")
-	void getMemberInfoMethodTest() throws Exception {
+	void getMemberInfoMethodTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -285,22 +277,20 @@ class MemberMypageServiceTest {
 				new MemberRole(1, MemberRoleName.MEMBER),
 				new SocialAuth(1, SocialAuthName.WEB)
 			);
-			ResponseEntity<ResponseMemberInfoDTO> response = new ResponseEntity<>(responseMemberInfoDTO,
+			ResponseEntity<ResponseMemberInfoDTO> responseResult = new ResponseEntity<>(responseMemberInfoDTO,
 				HttpStatus.CREATED);
 
 			// When
-			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(response);
+			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(responseResult);
 
 			// Then
-			Assertions.assertThatCode(() -> {
-				memberMypageService.getMemberInfo(any(HttpServletRequest.class));
-			}).doesNotThrowAnyException();
+			Assertions.assertThatCode(() -> memberMypageService.getMemberInfo(any(HttpServletRequest.class))).doesNotThrowAnyException();
 		}
 	}
 
 	@Test
 	@DisplayName("회원 정보를 조회하는 메서드 NotFoundMemberInfoException 테스트")
-	void getMemberInfoMethodNotFoundMemberInfoExceptionTest() throws Exception {
+	void getMemberInfoMethodNotFoundMemberInfoExceptionTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -318,23 +308,21 @@ class MemberMypageServiceTest {
 				new MemberRole(1, MemberRoleName.MEMBER),
 				new SocialAuth(1, SocialAuthName.WEB)
 			);
-			ResponseEntity<ResponseMemberInfoDTO> response = new ResponseEntity<>(responseMemberInfoDTO,
+			ResponseEntity<ResponseMemberInfoDTO> responseResult = new ResponseEntity<>(responseMemberInfoDTO,
 				HttpStatus.BAD_REQUEST);
 
 			// When
-			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(response);
+			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(responseResult);
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> {
-				memberMypageService.getMemberInfo(any(HttpServletRequest.class));
-			});
+			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.getMemberInfo(any(HttpServletRequest.class)));
 
 		}
 	}
 
 	@Test
 	@DisplayName("회원 정보를 수정하는 메서드 테스트")
-	void updateMemberInfoMethodTest() throws Exception {
+	void updateMemberInfoMethodTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -345,11 +333,11 @@ class MemberMypageServiceTest {
 				"1234", "1234"
 			);
 
-			ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.CREATED);
+			ResponseEntity<Void> responseResult = new ResponseEntity<>(HttpStatus.CREATED);
 
 			// When
-			when(memberInfoAdaptor.updateMemberInfo(eq("user"), eq(requestMemberInfoDTO)))
-				.thenReturn(response);
+			when(memberInfoAdaptor.updateMemberInfo("user", requestMemberInfoDTO))
+				.thenReturn(responseResult);
 
 			// Then
 			Assertions.assertThatCode(() ->
@@ -360,7 +348,7 @@ class MemberMypageServiceTest {
 
 	@Test
 	@DisplayName("회원 정보를 수정하는 메서드 PasswordNotEqualsException 테스트")
-	void updateMemberInfoMethodPasswordNotEqualsExceptionTest() throws Exception {
+	void updateMemberInfoMethodPasswordNotEqualsExceptionTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -374,15 +362,13 @@ class MemberMypageServiceTest {
 			// When
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(PasswordNotEqualsException.class, () -> {
-				memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO);
-			});
+			org.junit.jupiter.api.Assertions.assertThrows(PasswordNotEqualsException.class, () -> memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO));
 		}
 	}
 
 	@Test
 	@DisplayName("회원 정보를 수정하는 메서드 PasswordNotEqualsException2 테스트")
-	void updateMemberInfoMethodPasswordNotEqualsException2Test() throws Exception {
+	void updateMemberInfoMethodPasswordNotEqualsException2Test() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -396,15 +382,13 @@ class MemberMypageServiceTest {
 			// When
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(PasswordNotEqualsException.class, () -> {
-				memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO);
-			});
+			org.junit.jupiter.api.Assertions.assertThrows(PasswordNotEqualsException.class, () -> memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO));
 		}
 	}
 
 	@Test
 	@DisplayName("회원 정보를 수정하는 메서드 NotFoundMemberInfoException 테스트")
-	void updateMemberInfoMethodNotFoundMemberInfoExceptionTest() throws Exception {
+	void updateMemberInfoMethodNotFoundMemberInfoExceptionTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -415,34 +399,32 @@ class MemberMypageServiceTest {
 				"1234", "1234"
 			);
 
-			ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			ResponseEntity<Void> responseResult = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 			// When
-			when(memberInfoAdaptor.updateMemberInfo(eq("user"), eq(requestMemberInfoDTO)))
-				.thenReturn(response);
+			when(memberInfoAdaptor.updateMemberInfo("user", requestMemberInfoDTO))
+				.thenReturn(responseResult);
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> {
-				memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO);
-			});
+			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO));
 		}
 	}
 
 	@Test
 	@DisplayName("회원 탈퇴하는 메서드 테스트")
-	void withdrawMemberMethodTest() throws Exception {
+	void withdrawMemberMethodTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
 			jwtStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any())).thenReturn("user");
 
-			ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.CREATED);
+			ResponseEntity<Void> responseResult = new ResponseEntity<>(HttpStatus.CREATED);
 
 			HttpServletRequest request = mock(HttpServletRequest.class);
 			HttpServletResponse responseMock = mock(HttpServletResponse.class);
 
 			// When
-			when(memberInfoAdaptor.withdrawMember("user")).thenReturn(response);
+			when(memberInfoAdaptor.withdrawMember("user")).thenReturn(responseResult);
 
 			// Then
 			Assertions.assertThatCode(() ->
@@ -454,34 +436,31 @@ class MemberMypageServiceTest {
 
 	@Test
 	@DisplayName("회원 탈퇴하는 메서드 NotFoundMemberInfoException 테스트")
-	void withdrawMemberMethodNotFoundMemberInfoExceptionTest() throws Exception {
+	void withdrawMemberMethodNotFoundMemberInfoExceptionTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
 			jwtStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any())).thenReturn("user");
 
-			ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			ResponseEntity<Void> responseResult = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 			HttpServletRequest request = mock(HttpServletRequest.class);
 			HttpServletResponse responseMock = mock(HttpServletResponse.class);
 
 			// When
-			when(memberInfoAdaptor.withdrawMember("user")).thenReturn(response);
+			when(memberInfoAdaptor.withdrawMember("user")).thenReturn(responseResult);
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> {
-				memberMypageService.withdrawMember(request, responseMock);
-			});
+			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.withdrawMember(request, responseMock));
 
 		}
 	}
 
 	@Test
 	@DisplayName("withdraw 메서드 테스트")
-	void withdrawMethodTest() throws Exception {
+	void withdrawMethodTest() {
 		// Given
 		String memberId = "user";
-		String refreshKey = JwtRule.REFRESH_PREFIX.getValue() + ":" + memberId;
 
 		Cookie jwtCookie = new Cookie(JwtRule.JWT_ISSUE_HEADER.getValue(), "header.payload.signature");
 		Cookie[] cookies = new Cookie[] {
@@ -513,7 +492,7 @@ class MemberMypageServiceTest {
 
 	@Test
 	@DisplayName("회원 최근 주문 목록 조회 메서드 테스트")
-	void getMemberRecentOrdersMethodTest() throws Exception {
+	void getMemberRecentOrdersMethodTest() {
 
 		// Given
 		List<ResponseMemberRecentOrderDTO> responseMemberRecentOrderDTOS = List.of(
@@ -521,23 +500,21 @@ class MemberMypageServiceTest {
 				LocalDateTime.now(), "1", new ArrayList<>(), "ACTIVE"
 			)
 		);
-		ResponseEntity<List<ResponseMemberRecentOrderDTO>> response = new ResponseEntity<>(
+		ResponseEntity<List<ResponseMemberRecentOrderDTO>> responseResult = new ResponseEntity<>(
 			responseMemberRecentOrderDTOS, HttpStatus.CREATED
 		);
 
 		// When
-		when(memberOrderAdaptor.getMemberRecentOrders("user")).thenReturn(response);
+		when(memberOrderAdaptor.getMemberRecentOrders("user")).thenReturn(responseResult);
 
 		// Then
-		Assertions.assertThatCode(() -> {
-			memberMypageService.getMemberRecentOrders("user");
-		}).doesNotThrowAnyException();
+		Assertions.assertThatCode(() -> memberMypageService.getMemberRecentOrders("user")).doesNotThrowAnyException();
 
 	}
 
 	@Test
 	@DisplayName("회원 최근 주문 목록 조회 메서드 EmptyResponseException 테스트")
-	void getMemberRecentOrdersMethodEmptyResponseExceptionTest() throws Exception {
+	void getMemberRecentOrdersMethodEmptyResponseExceptionTest() {
 
 		// Given
 		List<ResponseMemberRecentOrderDTO> responseMemberRecentOrderDTOS = List.of(
@@ -545,17 +522,15 @@ class MemberMypageServiceTest {
 				LocalDateTime.now(), "1", new ArrayList<>(), "ACTIVE"
 			)
 		);
-		ResponseEntity<List<ResponseMemberRecentOrderDTO>> response = new ResponseEntity<>(
+		ResponseEntity<List<ResponseMemberRecentOrderDTO>> responseResult = new ResponseEntity<>(
 			responseMemberRecentOrderDTOS, HttpStatus.BAD_REQUEST
 		);
 
 		// When
-		when(memberOrderAdaptor.getMemberRecentOrders("user")).thenReturn(response);
+		when(memberOrderAdaptor.getMemberRecentOrders("user")).thenReturn(responseResult);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> {
-			memberMypageService.getMemberRecentOrders("user");
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberRecentOrders("user"));
 
 	}
 

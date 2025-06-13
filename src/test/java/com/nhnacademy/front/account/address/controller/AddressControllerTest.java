@@ -48,8 +48,6 @@ class AddressControllerTest {
 	@MockitoBean
 	private ErrorMessageLoader errorMessageLoader;
 
-	MockedStatic<JwtGetMemberId> jwtStatic;
-
 	@BeforeEach
 	void setUp() throws Exception {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
