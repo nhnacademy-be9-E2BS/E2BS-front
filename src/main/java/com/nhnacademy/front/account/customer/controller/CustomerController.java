@@ -104,7 +104,7 @@ public class CustomerController {
 	@ApiResponse(responseCode = "200", description = "로그인 성공 및 고객 ID 반환", content = @Content(schema = @Schema(implementation = Long.class)))
 	@PostMapping("/customers/order/login")
 	public ResponseEntity<Long> login(@Parameter(description = "비회원 로그인 요청 DTO", required = true) @Validated @RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO,
-		                              @Parameter(hidden = true) BindingResult bindingResult) throws JsonProcessingException {
+		                              @Parameter(hidden = true) BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
