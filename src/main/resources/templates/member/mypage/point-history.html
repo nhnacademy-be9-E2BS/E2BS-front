@@ -12,7 +12,7 @@
                     포인트 내역 <span style="font-size: 14px; color: #888; font-weight: normal;">| 상품 구매 및 각종 활동 참여 시 적립금이 지급됩니다.</span>
                 </h3>
                 <div style="font-size: 18px; margin-bottom: 20px;">
-                    <span>사용 가능한 적립금 : <span style="font-weight: bold;" th:text="${usablePoint} + '원'">1,000원</span></span>
+                    <span>사용 가능한 적립금 : <span style="font-weight: bold;" th:text="${T(java.lang.String).format('%,d',usablePoint)} + '원'">1,000원</span></span>
                 </div>
 
             </div>
