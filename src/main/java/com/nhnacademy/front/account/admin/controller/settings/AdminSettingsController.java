@@ -46,7 +46,9 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/admin/settings")
 public class AdminSettingsController {
 	private static final String REDIRECT = "redirect:";
-	private static final String ADMIN_SETTINGS_MEMBERS_PATH = "/admin/settings/members";
+	private static final String ADMIN_PATH = "/admin";
+	private static final String SETTINGS_PATH = "/settings";
+	private static final String MEMBERS_PATH = "/members";
 
 	private final AdminSettingsService adminSettingsService;
 
@@ -107,7 +109,7 @@ public class AdminSettingsController {
 		}
 		adminSettingsService.updateAdminSettingsMemberState(memberId, requestAdminSettingsMemberStateDTO);
 
-		return REDIRECT + ADMIN_SETTINGS_MEMBERS_PATH;
+		return REDIRECT + ADMIN_PATH + SETTINGS_PATH + MEMBERS_PATH;
 	}
 
 	@Operation(summary = "관리자 회원 역할 수정", description = "관리자 회원 역할 수정 기능 제공",
@@ -120,7 +122,7 @@ public class AdminSettingsController {
 	public String updateAdminSettingsMemberRole(@PathVariable("member-id") String memberId) {
 		adminSettingsService.updateAdminSettingsMemberRole(memberId);
 
-		return REDIRECT + ADMIN_SETTINGS_MEMBERS_PATH;
+		return REDIRECT + ADMIN_PATH + SETTINGS_PATH + MEMBERS_PATH;
 	}
 
 	@Operation(summary = "관리자 회원 탈퇴", description = "관리자 회원 탈퇴 기능 제공",
@@ -133,7 +135,7 @@ public class AdminSettingsController {
 	public String deleteAdminSettingsMember(@PathVariable("member-id") String memberId) {
 		adminSettingsService.deleteAdminSettingsMember(memberId);
 
-		return REDIRECT + ADMIN_SETTINGS_MEMBERS_PATH;
+		return REDIRECT + ADMIN_PATH + SETTINGS_PATH + MEMBERS_PATH;
 	}
 
 }
