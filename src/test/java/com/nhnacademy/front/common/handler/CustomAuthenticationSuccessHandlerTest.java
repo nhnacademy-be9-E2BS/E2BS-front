@@ -60,7 +60,7 @@ class CustomAuthenticationSuccessHandlerTest {
 		when(memberService.getMemberState(memberId)).thenReturn("MEMBER");
 		when(request.getSession()).thenReturn(session);
 		when(cartService.mergeCartItemsToMemberFromGuest(any())).thenReturn(5);
-		when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("orderCart", "Y")});
+		when(request.getCookies()).thenReturn(new Cookie[] {new Cookie("orderCart", "Y")});
 
 		try (MockedStatic<CookieUtil> mocked = Mockito.mockStatic(CookieUtil.class)) {
 			mocked.when(() -> CookieUtil.getCookieValue("guestKey", request)).thenReturn("guest123");
@@ -74,7 +74,6 @@ class CustomAuthenticationSuccessHandlerTest {
 			// then
 			verify(session).setAttribute("cartItemsCounts", 5);
 			verify(spyHandler).setDefaultTargetUrl("/members/order");
-			verify(spyHandler).onAuthenticationSuccess(request, response, authentication);
 		}
 	}
 
@@ -100,7 +99,6 @@ class CustomAuthenticationSuccessHandlerTest {
 			// then
 			verify(session).setAttribute("cartItemsCounts", 3);
 			verify(spyHandler).setDefaultTargetUrl("/");
-			verify(spyHandler).onAuthenticationSuccess(request, response, authentication);
 		}
 	}
 
