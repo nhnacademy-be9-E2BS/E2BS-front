@@ -16,9 +16,9 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ErrorController {
-	private final static String ERROR_404 = "error/error-404";
-	private final static String ERROR_500 = "error/error-500";
-	private final static String ERROR_MESSAGE = "errorMessage";
+	private static final String ERROR_404 = "error/error-404";
+	private static final String ERROR_500 = "error/error-500";
+	private static final String ERROR_MESSAGE = "errorMessage";
 
 	private final ErrorMessageLoader errorMessageLoader;
 

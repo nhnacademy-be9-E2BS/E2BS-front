@@ -60,7 +60,7 @@ import lombok.RequiredArgsConstructor;
 @ControllerAdvice
 @RequiredArgsConstructor
 public class WebAdviceController {
-	private final static String ERROR_MESSAGE = "errorMessage";
+	private static final String ERROR_MESSAGE = "errorMessage";
 
 	private final ErrorMessageLoader errorMessageLoader;
 

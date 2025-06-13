@@ -45,7 +45,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/admin/settings")
 public class AdminSettingsController {
-	private final static String REDIRECT_ADMIN_SETTINGS_MEMBERS_PATH = "redirect:/admin/settings/members";
+	private static final String REDIRECT_ADMIN_SETTINGS_MEMBERS_PATH = "redirect:/admin/settings/members";
 
 	private final AdminSettingsService adminSettingsService;
 
