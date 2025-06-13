@@ -161,4 +161,16 @@ public class WebAdviceController {
 		return modelAndView;
 	}
 
+	@ExceptionHandler({Throwable.class})
+	public ModelAndView throwable500Exception() {
+		String code = "F500";
+
+		String errorMessage = errorMessageLoader.getMessage(code);
+
+		ModelAndView modelAndView = new ModelAndView("redirect:/error/500");
+		modelAndView.addObject("errorMessage", errorMessage);
+
+		return modelAndView;
+	}
+
 }
