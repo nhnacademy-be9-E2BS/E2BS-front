@@ -50,7 +50,7 @@ public class SecurityConfig {
 		CustomAuthenticationFailureHandler customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
 
 		http.csrf(AbstractHttpConfigurer::disable);
-		http.securityMatcher("/members/login", "/member/login", "/members/register", "/logout");
+		http.securityMatcher(LOGIN_URL, PROCESS_LOGIN_URL, REGISTER_URL, LOGOUT_URL);
 		/**
 		 *  권한있는 회원만 접근 가능한 URL 설정
 		 */

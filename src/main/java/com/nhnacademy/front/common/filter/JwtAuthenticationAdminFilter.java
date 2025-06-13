@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 public class JwtAuthenticationAdminFilter extends UsernamePasswordAuthenticationFilter {
+	private final static String MEMBER_STATE = "memberState";
 
 	private final AuthenticationManager authenticationManager;
 	private final AuthService authService;
@@ -45,8 +46,8 @@ public class JwtAuthenticationAdminFilter extends UsernamePasswordAuthentication
 	public Authentication attemptAuthentication(HttpServletRequest request,
 		HttpServletResponse response) throws AuthenticationException {
 		HttpSession session = request.getSession();
-		if (Objects.nonNull(session) && Objects.isNull(session.getAttribute("memberState"))) {
-			session.removeAttribute("memberState");
+		if (Objects.nonNull(session) && Objects.isNull(session.getAttribute(MEMBER_STATE))) {
+			session.removeAttribute(MEMBER_STATE);
 		}
 
 		String memberId = request.getParameter("memberId");
@@ -82,7 +83,7 @@ public class JwtAuthenticationAdminFilter extends UsernamePasswordAuthentication
 			SecurityContextHolder.clearContext();
 			request.getSession().setAttribute("dormantMemberId", memberId);
 			request.getSession().setAttribute("dormantCnt", 0);
-			request.getSession().setAttribute("memberState", memberState);
+			request.getSession().setAttribute(MEMBER_STATE, memberState);
 			response.sendRedirect("/admin/login");
 			return;
 		}
