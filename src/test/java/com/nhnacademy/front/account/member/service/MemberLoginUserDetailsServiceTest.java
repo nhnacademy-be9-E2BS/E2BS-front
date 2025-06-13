@@ -29,7 +29,7 @@ class MemberLoginUserDetailsServiceTest {
 
 	@Test
 	@DisplayName("Security 로그인을 위한 UserDetailService 테스트")
-	void memberLoginUserDetailsServiceTest() throws Exception {
+	void memberLoginUserDetailsServiceTest() {
 
 		// Given
 		ResponseLoginMemberDTO responseLoginMemberDTO = new ResponseLoginMemberDTO(
@@ -48,7 +48,7 @@ class MemberLoginUserDetailsServiceTest {
 
 	@Test
 	@DisplayName("Security 로그인을 위한 UserDetailService LoginProcessException 테스트")
-	void memberLoginUserDetailsServiceLoginProcessExceptionTest() throws Exception {
+	void memberLoginUserDetailsServiceLoginProcessExceptionTest() {
 
 		// Given
 		ResponseLoginMemberDTO responseLoginMemberDTO = new ResponseLoginMemberDTO(
@@ -68,12 +68,9 @@ class MemberLoginUserDetailsServiceTest {
 
 	@Test
 	@DisplayName("Security 로그인을 위한 UserDetailService FeignException 테스트")
-	void memberLoginUserDetailsServiceFeignExceptionTest() throws Exception {
+	void memberLoginUserDetailsServiceFeignExceptionTest() {
 
 		// Given
-		ResponseLoginMemberDTO responseLoginMemberDTO = new ResponseLoginMemberDTO(
-			"user", "1234", MemberRoleName.MEMBER
-		);
 
 		// When
 		when(memberLoginAdaptor.postLoginMember(any(RequestLoginMemberDTO.class))).thenThrow(

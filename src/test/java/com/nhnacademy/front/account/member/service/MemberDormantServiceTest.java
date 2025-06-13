@@ -51,7 +51,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("Dooray 인증 번호 전송 메서드 테스트")
-	void createDoorayAuthenticationNumberMethodTest() throws Exception {
+	void createDoorayAuthenticationNumberMethodTest()  {
 
 		// Given
 		ValueOperations<String, Object> valueOperations = mock(ValueOperations.class);
@@ -69,7 +69,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("Email 인증 번호 전송 메서드 테스트")
-	void createEmailAuthenticationNumberMethodTest() throws Exception {
+	void createEmailAuthenticationNumberMethodTest() {
 
 		// Given
 		ValueOperations<String, Object> valueOperations = mock(ValueOperations.class);
@@ -87,7 +87,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("Dooray 인증번호 확인 메서드 테스트")
-	void checkDoorayAuthenticationNumberMethodTest() throws Exception {
+	void checkDoorayAuthenticationNumberMethodTest() {
 
 		// Given
 		String doorayDormantKey = "doorayDormantNumber:user";
@@ -109,7 +109,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("Dooray 인증번호 확인 메서드 DormantProcessingException 테스트")
-	void checkDoorayAuthenticationNumberMethodDormantProcessingExceptionTest() throws Exception {
+	void checkDoorayAuthenticationNumberMethodDormantProcessingExceptionTest() {
 
 		// Given
 		String doorayDormantKey = "doorayDormantNumber:user";
@@ -130,7 +130,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("Email 인증번호 확인 메서드 테스트")
-	void checkEmailAuthenticationNumberMethodTest() throws Exception {
+	void checkEmailAuthenticationNumberMethodTest() {
 
 		// Given
 		String emailDormantKey = "emailDormantNumber:user";
@@ -150,7 +150,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("Email 인증번호 확인 메서드 DormantProcessingException 테스트")
-	void checkEmailAuthenticationNumberMethodDormantProcessingExceptionTest() throws Exception {
+	void checkEmailAuthenticationNumberMethodDormantProcessingExceptionTest() {
 
 		// Given
 		String emailDormantKey = "emailDormantNumber:user";
@@ -171,7 +171,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("Dooray 인증 번호 메세지 전송 메서드 테스트")
-	void sendDoorayMessageAuthenticationNumberMethodTest() throws Exception {
+	void sendDoorayMessageAuthenticationNumberMethodTest() {
 
 		// Given
 		RequestDoorayAuthenticationDTO requestDoorayAuthenticationDTO = new RequestDoorayAuthenticationDTO(
@@ -184,12 +184,17 @@ class MemberDormantServiceTest {
 
 		// Then
 		memberDormantService.sendDoorayMessageAuthenticationNumber(requestDoorayAuthenticationDTO);
-
+		verify(doorayAdaptor).sendDoorayAuthenticationNumber(
+			eq(requestDoorayAuthenticationDTO),
+			eq("3204376758577275363"),
+			eq("4081630330794795988"),
+			eq("b42JstgjQf-uqLBb3dj_yg")
+		);
 	}
 
 	@Test
 	@DisplayName("회원 상태 Active 변경하는 메서드 테스트")
-	void changeMemberStateActiveMethodTest() throws Exception {
+	void changeMemberStateActiveMethodTest() {
 
 		// Given
 		MockHttpServletRequest request = new MockHttpServletRequest();
@@ -213,7 +218,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("회원 상태 Active 변경하는 메서드 DormantProcessingException 테스트")
-	void changeMemberStateActiveMethodDormantProcessingExceptionTest() throws Exception {
+	void changeMemberStateActiveMethodDormantProcessingExceptionTest() {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -222,14 +227,12 @@ class MemberDormantServiceTest {
 		when(memberDormantAdaptor.changeDormantMemberStateActive("user")).thenReturn(response);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(DormantProcessingException.class, () -> {
-			memberDormantService.changeMemberStateActive("user", any(HttpServletRequest.class));
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(DormantProcessingException.class, () -> memberDormantService.changeMemberStateActive("user", any(HttpServletRequest.class)));
 	}
 
 	@Test
 	@DisplayName("회원의 이메일을 가져오는 메서드 테스트")
-	void getMemberEmailMethodTest() throws Exception {
+	void getMemberEmailMethodTest() {
 
 		// Given
 		ResponseMemberEmailDTO responseMemberEmailDTO = new ResponseMemberEmailDTO(
@@ -250,7 +253,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("회원의 이메일을 가져오는 메서드 DormantProcessingException 테스트")
-	void getMemberEmailMethodDormantProcessingExceptionTest() throws Exception {
+	void getMemberEmailMethodDormantProcessingExceptionTest() {
 
 		// Given
 		ResponseMemberEmailDTO responseMemberEmailDTO = new ResponseMemberEmailDTO(
@@ -271,7 +274,7 @@ class MemberDormantServiceTest {
 
 	@Test
 	@DisplayName("해당 회원에게 이메일 전송하는 메서드 테스트")
-	void sendEmailAuthenticationNumberMethodTest() throws Exception {
+	void sendEmailAuthenticationNumberMethodTest() {
 
 		// Given
 

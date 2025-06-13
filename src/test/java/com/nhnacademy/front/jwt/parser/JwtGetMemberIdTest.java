@@ -18,7 +18,7 @@ class JwtGetMemberIdTest {
 
 	@Test
 	@DisplayName("jwtGetMemberId 쿠키가 null 인 경우 테스트")
-	void jwtGetMemberIdCookieNullTest() throws Exception {
+	void jwtGetMemberIdCookieNullTest() {
 
 		// Given
 		HttpServletRequest request = mock(HttpServletRequest.class);
@@ -34,7 +34,7 @@ class JwtGetMemberIdTest {
 
 	@Test
 	@DisplayName("jwtGetMemberId 쿠키가 없는 경우 테스트")
-	void jwtGetMemberIdCookieEmptyTest() throws Exception {
+	void jwtGetMemberIdCookieEmptyTest() {
 
 		// Given
 		HttpServletRequest request = mock(HttpServletRequest.class);
@@ -51,7 +51,7 @@ class JwtGetMemberIdTest {
 
 	@Test
 	@DisplayName("jwtGetMemberId memberId 파싱 실패 NotFoundMemberIdException 테스트")
-	void jwtGetMemberIdNotFoundMemberIdExceptionTest() throws Exception {
+	void jwtGetMemberIdNotFoundMemberIdExceptionTest() {
 
 		// Given
 		HttpServletRequest request = mock(HttpServletRequest.class);
@@ -64,16 +64,14 @@ class JwtGetMemberIdTest {
 			mockedStatic.when(() -> JwtMemberIdParser.getMemberId("header.payload.signature"))
 				.thenReturn(null);
 
-			Assertions.assertThrows(NotFoundMemberIdException.class, () -> {
-				JwtGetMemberId.jwtGetMemberId(request);
-			});
+			Assertions.assertThrows(NotFoundMemberIdException.class, () -> JwtGetMemberId.jwtGetMemberId(request));
 		}
 
 	}
 
 	@Test
 	@DisplayName("jwtGetMemberId 메서드 테스트")
-	void jwtGetMemberIdMethodTest() throws Exception {
+	void jwtGetMemberIdMethodTest() {
 
 		// Given
 		HttpServletRequest request = mock(HttpServletRequest.class);
