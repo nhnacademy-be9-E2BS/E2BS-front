@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-	private final static String MEMBER_STATE = "memberState";
+	private static final String MEMBER_STATE = "memberState";
 
 	private final AuthenticationManager authenticationManager;
 	private final AuthService authService;

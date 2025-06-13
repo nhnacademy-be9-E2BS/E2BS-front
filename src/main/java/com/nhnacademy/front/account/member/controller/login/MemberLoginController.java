@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/members/login")
 public class MemberLoginController {
-	private final static String DORMANT_CNT = "dormantCnt";
+	private static final String DORMANT_CNT = "dormantCnt";
 
 	/**
 	 * 로그인 뷰

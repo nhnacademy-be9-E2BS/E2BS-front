@@ -21,6 +21,7 @@ public class CookieUtil {
 		Cookie cookie = new Cookie(cookieName, value);
 		cookie.setPath("/");
 		cookie.setHttpOnly(true);
+		cookie.setSecure(true);
 		cookie.setMaxAge(EXPIRY);
 		response.addCookie(cookie);
 	}
@@ -39,6 +40,8 @@ public class CookieUtil {
 	public static void clearCookie(String cookieName, HttpServletResponse response) {
 		Cookie cookie = new Cookie(cookieName, null);
 		cookie.setPath("/");
+		cookie.setSecure(true);
+		cookie.setHttpOnly(true);
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
 	}

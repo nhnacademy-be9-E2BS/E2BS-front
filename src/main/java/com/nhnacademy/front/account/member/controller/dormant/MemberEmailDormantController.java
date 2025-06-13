@@ -31,9 +31,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberEmailDormantController {
-	private final static String DORMANT_MEMBER_ID = "dormantMemberId";
-	private final static String REMAINING_SECONDS = "remainingSeconds";
-	private final static String REMAINING_CNT = "remainingCnt";
+	private static final String DORMANT_MEMBER_ID = "dormantMemberId";
+	private static final String REMAINING_SECONDS = "remainingSeconds";
+	private static final String REMAINING_CNT = "remainingCnt";
 
 	private final MemberDormantService memberDormantService;
 
