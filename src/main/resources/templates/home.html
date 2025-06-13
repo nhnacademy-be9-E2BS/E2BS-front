@@ -936,7 +936,7 @@
     <section class="free-shipping-banner">
         <div class="free-shipping-wrapper">
             <div class="free-shipping-text">
-                착한배송, 3만원 이상 무료배송
+                착한배송&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(DeliveryFee, 3, 'COMMA')} + '원 이상 무료배송'"></span>
             </div>
             <img src="/images/free-shipping-banner.png" alt="무료배송 배너 이미지">
         </div>
