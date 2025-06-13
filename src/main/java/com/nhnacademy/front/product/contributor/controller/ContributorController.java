@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -42,14 +41,12 @@ public class ContributorController {
 	 */
 	@PostMapping
 	public String createContributor(@Validated @ModelAttribute RequestContributorDTO requestContributorDTO,
-		BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
-		List<ResponsePositionDTO> positions = positionService.getPositionList();
 		contributorService.createContributor(requestContributorDTO);
 
-		redirectAttributes.addFlashAttribute("positions", positions);
 		return "redirect:/admin/settings/contributors";
 	}
 
@@ -58,8 +55,7 @@ public class ContributorController {
 	 */
 	@PutMapping("/{contributorId}")
 	public String updateContributor(@Validated @ModelAttribute RequestContributorDTO request,
-		@PathVariable Long contributorId,
-		BindingResult bindingResult) {
+		@PathVariable Long contributorId, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -79,7 +75,7 @@ public class ContributorController {
 
 	/**기여자 전체 조회
 	 */
-	@GetMapping()
+	@GetMapping
 	public String getAllContributors(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
 		List<ResponsePositionDTO> positions = positionService.getPositionList();
 		model.addAttribute("positions", positions);
