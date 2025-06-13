@@ -154,8 +154,8 @@
                             <span th:case="true">결제 완료</span>
                             <span th:case="false">결제 대기</span>
                         </td>
-                        <th>주문 금액</th>
-                        <td th:text="${T(java.lang.String).format('%,d',order.paymentAmount + order.pointAmount)}">
+                        <th>결제 금액</th>
+                        <td th:text="${T(java.lang.String).format('%,d',order.paymentAmount)}">
                             35000
                         </td>
                     </tr>

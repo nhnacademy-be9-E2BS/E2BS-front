@@ -1,10 +1,14 @@
 package com.nhnacademy.front.common.error.loader;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
@@ -14,6 +18,7 @@ import lombok.Getter;
 @Getter
 @Component
 public class ErrorMessageLoader {
+	private static final Logger logger = LoggerFactory.getLogger(ErrorMessageLoader.class);
 
 	private Map<String, String> errorMessages = Collections.emptyMap();
 
@@ -30,13 +35,13 @@ public class ErrorMessageLoader {
 			String targetUrl = locale.equals("eng") ? engUrl : krUrl;
 			loadYamlFromUrl(targetUrl);
 		} catch (Exception e) {
-			System.err.println("에러 메시지 파일 로드 실패: " + e.getMessage());
+			logger.error("에러 메시지 파일 로드 실패", e);
 			errorMessages = Collections.emptyMap();
 		}
 
 	}
 
-	private void loadYamlFromUrl(String url) throws Exception {
+	private void loadYamlFromUrl(String url) {
 		Yaml yaml = new Yaml();
 
 		try (InputStream inputStream = new URL(url).openStream()) {
@@ -44,6 +49,10 @@ public class ErrorMessageLoader {
 			Map<String, String> errors = (Map<String, String>)data.get("errors");
 
 			errorMessages.putAll(errors);
+		} catch (MalformedURLException ex) {
+			throw new RuntimeException(ex);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
 		}
 
 	}

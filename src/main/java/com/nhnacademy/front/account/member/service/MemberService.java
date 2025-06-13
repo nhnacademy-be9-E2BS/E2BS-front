@@ -72,8 +72,9 @@ public class MemberService {
 		if (!memberInfoDTO.getStatusCode().is2xxSuccessful() || Objects.isNull(memberInfoDTO.getBody())) {
 			return null;
 		}
+		ResponseMemberInfoDTO responseMemberInfoDTO = memberInfoDTO.getBody();
 
-		return memberInfoDTO.getBody().getCustomer().getCustomerName();
+		return responseMemberInfoDTO.getCustomer().getCustomerName();
 	}
 
 	public String getMemberState(String memberId) {
@@ -83,7 +84,7 @@ public class MemberService {
 				throw new GetMemberStateFailedException();
 			}
 
-			return response.getBody().getMemberstate();
+			return Objects.requireNonNull(response.getBody()).getMemberstate();
 		} catch (FeignException ex) {
 			throw new GetMemberStateFailedException();
 		}

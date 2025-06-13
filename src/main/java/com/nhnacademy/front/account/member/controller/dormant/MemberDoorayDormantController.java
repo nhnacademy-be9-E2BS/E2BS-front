@@ -32,6 +32,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberDoorayDormantController {
+	private static final String DORMANT_MEMBER_ID = "dormantMemberId";
+	private static final String REMAINING_SECONDS = "remainingSeconds";
+	private static final String REMAINING_CNT = "remainingCnt";
 
 	private final MemberDormantService memberDormantService;
 
@@ -46,13 +49,13 @@ public class MemberDoorayDormantController {
 		})
 	@GetMapping("/login/dormant")
 	public String getMemberDormant(HttpServletRequest request, Model model) {
-		if (request.getSession().getAttribute("dormantMemberId") == null) {
+		if (request.getSession().getAttribute(DORMANT_MEMBER_ID) == null) {
 			throw new DormantProcessingException();
 		}
-		String memberId = request.getSession().getAttribute("dormantMemberId").toString();
+		String memberId = request.getSession().getAttribute(DORMANT_MEMBER_ID).toString();
 		model.addAttribute("memberId", memberId);
 
-		request.getSession().setAttribute("remainingSeconds", 0);
+		request.getSession().setAttribute(REMAINING_SECONDS, 0);
 
 		return "member/dormant/dormant-method";
 	}
@@ -67,18 +70,18 @@ public class MemberDoorayDormantController {
 		HttpSession session = request.getSession();
 		Integer remainingSeconds = 0;
 
-		if (request.getSession().getAttribute("remainingCnt") != null) {
-			Integer remainingCnt = (Integer)request.getSession().getAttribute("remainingCnt");
-			request.getSession().setAttribute("remainingCnt", ++remainingCnt);
+		if (request.getSession().getAttribute(REMAINING_CNT) != null) {
+			Integer remainingCnt = (Integer)request.getSession().getAttribute(REMAINING_CNT);
+			request.getSession().setAttribute(REMAINING_CNT, ++remainingCnt);
 
 			if (remainingCnt == 1) {
-				remainingSeconds = (Integer)session.getAttribute("remainingSeconds");
+				remainingSeconds = (Integer)session.getAttribute(REMAINING_SECONDS);
 			}
 
 		}
 
 		model.addAttribute("memberId", memberId);
-		model.addAttribute("remainingSeconds", remainingSeconds);
+		model.addAttribute(REMAINING_SECONDS, remainingSeconds);
 
 		return "member/dormant/dormant-dooray";
 	}
@@ -92,15 +95,15 @@ public class MemberDoorayDormantController {
 		HttpServletRequest request) {
 		// 6자리 무작위 값을 생성해서 redis 에 저장하는 메서드
 		String authenticationNumber = memberDormantService.createDoorayAuthenticationNumber(memberId);
-		String text = String.format("[E2BS] 인증번호 [%s] 타인에게 알려주지 마세요.\n3분 이내에 입력해주세요.", authenticationNumber);
+		String text = String.format("[E2BS] 인증번호 [%s] 타인에게 알려주지 마세요.%n3분 이내에 입력해주세요.", authenticationNumber);
 
 		memberDormantService.sendDoorayMessageAuthenticationNumber(
 			new RequestDoorayAuthenticationDTO("E2BS 관리자", text)
 		);
 
 		HttpSession session = request.getSession();
-		session.setAttribute("remainingSeconds", 180);
-		session.setAttribute("remainingCnt", 0);
+		session.setAttribute(REMAINING_SECONDS, 180);
+		session.setAttribute(REMAINING_CNT, 0);
 
 		return "redirect:/member/dormant/dooray/" + memberId;
 	}
@@ -129,10 +132,10 @@ public class MemberDoorayDormantController {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		if (request.getSession().getAttribute("dormantMemberId") == null) {
+		if (request.getSession().getAttribute(DORMANT_MEMBER_ID) == null) {
 			throw new DormantProcessingException();
 		}
-		String memberId = request.getSession().getAttribute("dormantMemberId").toString();
+		String memberId = request.getSession().getAttribute(DORMANT_MEMBER_ID).toString();
 
 		// 회원이 입력한 인증 번호가 일치하는 지 확인
 		if (!memberDormantService.checkDoorayAuthenticationNumber(requestDormantDoorayNumberDTO, memberId)) {
@@ -143,9 +146,9 @@ public class MemberDoorayDormantController {
 		memberDormantService.changeMemberStateActive(memberId, request);
 
 		HttpSession session = request.getSession();
-		session.removeAttribute("remainingSeconds");
-		session.removeAttribute("remainingCnt");
-		session.removeAttribute("dormantMemberId");
+		session.removeAttribute(REMAINING_SECONDS);
+		session.removeAttribute(REMAINING_CNT);
+		session.removeAttribute(DORMANT_MEMBER_ID);
 		session.removeAttribute("dormantCnt");
 		session.removeAttribute("memberState");
 

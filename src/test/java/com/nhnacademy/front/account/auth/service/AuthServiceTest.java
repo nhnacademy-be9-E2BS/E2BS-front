@@ -65,7 +65,7 @@ class AuthServiceTest {
 
 		// Then
 		verify(response, times(2)).addCookie(any(Cookie.class));
-		verify(request).setAttribute(eq("access-refresh"), eq("access.token.value"));
+		verify(request).setAttribute("access-refresh", "access.token.value");
 
 	}
 

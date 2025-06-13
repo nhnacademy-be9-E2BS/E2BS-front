@@ -30,7 +30,7 @@ class MemberRankServiceTest {
 
 	@Test
 	@DisplayName("회원 등급 조회 메서드 테스트")
-	void getMemberRankMethodTest() throws Exception {
+	void getMemberRankMethodTest() {
 
 		// Given
 		List<ResponseMemberRankDTO> responseMemberRankDTOS = List.of(
@@ -52,7 +52,7 @@ class MemberRankServiceTest {
 
 	@Test
 	@DisplayName("회원 등급 조회 메서드 NotFoundMemberRankNameException 테스트")
-	void getMemberRankMethodNotFoundMemberRankNameExceptionTest() throws Exception {
+	void getMemberRankMethodNotFoundMemberRankNameExceptionTest() {
 
 		// Given
 		List<ResponseMemberRankDTO> responseMemberRankDTOS = List.of(
@@ -66,9 +66,7 @@ class MemberRankServiceTest {
 		when(memberRankAdaptor.getMemberRank("user")).thenReturn(response);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberRankNameException.class, () -> {
-			memberRankService.getMemberRank("user");
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberRankNameException.class, () -> memberRankService.getMemberRank("user"));
 
 	}
 

@@ -1,5 +1,6 @@
 package com.nhnacademy.front.account.member.service;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Objects;
 
@@ -30,7 +31,8 @@ public class MemberDormantService {
 	private final JavaMailSender javaMailSender;
 
 	public String createDoorayAuthenticationNumber(String memberId) {
-		int authenticationNumber = (int)(Math.random() * 900000) + 100000;
+		SecureRandom secureRandom = new SecureRandom();
+		int authenticationNumber = secureRandom.nextInt(900000) + 100000;
 
 		String doorayDormantKey = "doorayDormantNumber:" + memberId;
 		redisTemplate.opsForValue().set(doorayDormantKey, authenticationNumber, Duration.ofSeconds(180));
@@ -39,7 +41,8 @@ public class MemberDormantService {
 	}
 
 	public String createEmailAuthenticationNumber(String memberId) {
-		int authenticationNumber = (int)(Math.random() * 900000) + 100000;
+		SecureRandom secureRandom = new SecureRandom();
+		int authenticationNumber = secureRandom.nextInt(900000) + 100000;
 
 		String emailDormantKey = "emailDormantNumber:" + memberId;
 		redisTemplate.opsForValue().set(emailDormantKey, authenticationNumber, Duration.ofSeconds(180));
@@ -102,8 +105,9 @@ public class MemberDormantService {
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
 			throw new DormantProcessingException();
 		}
+		ResponseMemberEmailDTO responseMemberEmailDTO = Objects.requireNonNull(response.getBody());
 
-		return response.getBody().getCustomerEmail();
+		return responseMemberEmailDTO.getCustomerEmail();
 	}
 
 	/**
@@ -113,7 +117,7 @@ public class MemberDormantService {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(customerEmail);
 		message.setSubject("[E2BS] 인증번호 안내");
-		message.setText(String.format("[E2BS] 인증번호 [%s] 타인에게 알려주지 마세요.\n3분 이내에 입력해주세요.", authenticationNumber));
+		message.setText(String.format("[E2BS] 인증번호 [%s] 타인에게 알려주지 마세요.%n3분 이내에 입력해주세요.", authenticationNumber));
 		javaMailSender.send(message);
 	}
 

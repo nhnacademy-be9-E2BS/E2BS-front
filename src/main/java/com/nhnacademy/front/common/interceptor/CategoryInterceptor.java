@@ -24,21 +24,21 @@ public class CategoryInterceptor implements HandlerInterceptor {
 	private final ObjectMapper objectMapper;
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
-		Exception {
-		if (Boolean.TRUE.equals(redisTemplate.hasKey("Categories::header"))) {
-			Object cached = redisTemplate.opsForValue().get("Categories::header");
-			if (cached instanceof List<?>) {
-				@SuppressWarnings("unchecked")
-				List<ResponseCategoryDTO> categoryDTOs = objectMapper.convertValue(cached,
-					new TypeReference<List<ResponseCategoryDTO>>() {
-					});
-				request.setAttribute("headerCategories", categoryDTOs);
-				return true;
-			}
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		Object cached = Boolean.TRUE.equals(redisTemplate.hasKey("Categories::header"))
+			? redisTemplate.opsForValue().get("Categories::header")
+			: null;
+
+		if (cached instanceof List<?>) {
+			@SuppressWarnings("unchecked")
+			List<ResponseCategoryDTO> categoryDTOs = objectMapper.convertValue(
+				cached, new TypeReference<List<ResponseCategoryDTO>>() {});
+			request.setAttribute("headerCategories", categoryDTOs);
+		} else {
+			request.setAttribute("headerCategories", userCategoryService.getCategoriesToDepth3());
 		}
 
-		request.setAttribute("headerCategories", userCategoryService.getCategoriesToDepth3());
 		return true;
 	}
+
 }

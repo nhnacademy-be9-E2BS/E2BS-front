@@ -15,23 +15,25 @@ import reactor.core.publisher.Flux;
 @Configuration
 public class LoadBalancerConfig {
 
+	private static final String LOCALHOST = "localhost";
+	private static final String SERVICE_ID = "gateway-service";
+
 	@Profile("prod")
 	@Bean
 	public ServiceInstanceListSupplier serviceInstanceListSupplierProd(ConfigurableApplicationContext context) {
 		return ServiceInstanceListSupplier.builder()
 			.withBase(new ServiceInstanceListSupplier() {
-				private final String serviceId = "gateway-service";
 
 				@Override
 				public String getServiceId() {
-					return serviceId;
+					return SERVICE_ID;
 				}
 
 				@Override
 				public Flux<List<ServiceInstance>> get() {
 					List<ServiceInstance> instances = List.of(
-						new DefaultServiceInstance(serviceId + "-1", serviceId, "localhost", 10232, false),
-						new DefaultServiceInstance(serviceId + "-2", serviceId, "localhost", 10233, false)
+						new DefaultServiceInstance(SERVICE_ID + "-1", SERVICE_ID, LOCALHOST, 10232, false),
+						new DefaultServiceInstance(SERVICE_ID + "-2", SERVICE_ID, LOCALHOST, 10233, false)
 					);
 					return Flux.just(instances);
 				}
@@ -45,17 +47,16 @@ public class LoadBalancerConfig {
 	public ServiceInstanceListSupplier serviceInstanceListSupplierDev(ConfigurableApplicationContext context) {
 		return ServiceInstanceListSupplier.builder()
 			.withBase(new ServiceInstanceListSupplier() {
-				private final String serviceId = "gateway-service";
 
 				@Override
 				public String getServiceId() {
-					return serviceId;
+					return SERVICE_ID;
 				}
 
 				@Override
 				public Flux<List<ServiceInstance>> get() {
 					List<ServiceInstance> instances = List.of(
-						new DefaultServiceInstance(serviceId + "-1", serviceId, "localhost", 10232, false)
+						new DefaultServiceInstance(SERVICE_ID + "-1", SERVICE_ID, LOCALHOST, 10232, false)
 					);
 					return Flux.just(instances);
 				}

@@ -4,6 +4,7 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,8 @@ import com.nhnacademy.front.home.controller.HomeController;
 import com.nhnacademy.front.home.service.HomeService;
 import com.nhnacademy.front.index.model.dto.response.ResponseMainPageProductDTO;
 import com.nhnacademy.front.index.service.IndexService;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 
 @WebMvcTest(HomeController.class)
 @ActiveProfiles("dev")
@@ -37,6 +40,9 @@ class HomeControllerTest {
 
 	@MockitoBean
 	private IndexService indexService;
+
+	@MockitoBean
+	private DeliveryFeeSevice deliveryFeeSevice;
 
 	@MockitoBean
 	private ErrorMessageLoader errorMessageLoader;
@@ -74,6 +80,9 @@ class HomeControllerTest {
 
 		given(indexService.getBestSellerProducts()).willReturn(bestSellers);
 		given(indexService.getNewItemsProducts()).willReturn(newItems);
+
+		ResponseDeliveryFeeDTO deliveryFeeDTO = new ResponseDeliveryFeeDTO(1L, 5000L, 30000L, LocalDateTime.now());
+		given(deliveryFeeSevice.getCurrentDeliveryFee()).willReturn(deliveryFeeDTO);
 
 		// when & then
 		mockMvc.perform(get("/").accept(MediaType.TEXT_HTML))

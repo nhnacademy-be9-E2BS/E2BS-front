@@ -31,6 +31,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberEmailDormantController {
+	private static final String DORMANT_MEMBER_ID = "dormantMemberId";
+	private static final String REMAINING_SECONDS = "remainingSeconds";
+	private static final String REMAINING_CNT = "remainingCnt";
 
 	private final MemberDormantService memberDormantService;
 
@@ -44,18 +47,18 @@ public class MemberEmailDormantController {
 		HttpSession session = request.getSession();
 		Integer remainingSeconds = 0;
 
-		if (request.getSession().getAttribute("remainingCnt") != null) {
-			Integer remainingCnt = (Integer)request.getSession().getAttribute("remainingCnt");
-			request.getSession().setAttribute("remainingCnt", ++remainingCnt);
+		if (request.getSession().getAttribute(REMAINING_CNT) != null) {
+			Integer remainingCnt = (Integer)request.getSession().getAttribute(REMAINING_CNT);
+			request.getSession().setAttribute(REMAINING_CNT, ++remainingCnt);
 
 			if (remainingCnt == 1) {
-				remainingSeconds = (Integer)session.getAttribute("remainingSeconds");
+				remainingSeconds = (Integer)session.getAttribute(REMAINING_SECONDS);
 			}
 
 		}
 
 		model.addAttribute("memberId", memberId);
-		model.addAttribute("remainingSeconds", remainingSeconds);
+		model.addAttribute(REMAINING_SECONDS, remainingSeconds);
 
 		return "member/dormant/dormant-email";
 	}
@@ -73,8 +76,8 @@ public class MemberEmailDormantController {
 		memberDormantService.sendEmailAuthenticationNumber(customerEmail, authenticationNumber);
 
 		HttpSession session = request.getSession();
-		session.setAttribute("remainingSeconds", 180);
-		session.setAttribute("remainingCnt", 0);
+		session.setAttribute(REMAINING_SECONDS, 180);
+		session.setAttribute(REMAINING_CNT, 0);
 
 		return "redirect:/member/dormant/email/" + memberId;
 	}
@@ -101,10 +104,10 @@ public class MemberEmailDormantController {
 			throw new ValidationFailedException(bindingResult);
 		}
 
-		if (request.getSession().getAttribute("dormantMemberId") == null) {
+		if (request.getSession().getAttribute(DORMANT_MEMBER_ID) == null) {
 			throw new DormantProcessingException();
 		}
-		String memberId = request.getSession().getAttribute("dormantMemberId").toString();
+		String memberId = request.getSession().getAttribute(DORMANT_MEMBER_ID).toString();
 
 		// 회원이 입력한 인증 번호가 일치하는 지 확인
 		if (!memberDormantService.checkEmailAuthenticationNumber(requestDormantEmailNumberDTO, memberId)) {
@@ -114,9 +117,9 @@ public class MemberEmailDormantController {
 		memberDormantService.changeMemberStateActive(memberId, request);
 
 		HttpSession session = request.getSession();
-		session.removeAttribute("remainingSeconds");
-		session.removeAttribute("remainingCnt");
-		session.removeAttribute("dormantMemberId");
+		session.removeAttribute(REMAINING_SECONDS);
+		session.removeAttribute(REMAINING_CNT);
+		session.removeAttribute(DORMANT_MEMBER_ID);
 		session.removeAttribute("dormantCnt");
 		session.removeAttribute("memberState");
 

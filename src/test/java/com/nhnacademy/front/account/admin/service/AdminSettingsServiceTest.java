@@ -45,7 +45,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 페이지 조회 메서드 테스트")
-	void getAdminSettingsMethodTest() throws Exception {
+	void getAdminSettingsMethodTest() {
 
 		// Given
 		ResponseAdminSettingsDTO responseAdminSettingsDTO = new ResponseAdminSettingsDTO(
@@ -67,7 +67,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 페이지 조회 메서드 AdminSettingsFailedException 테스트")
-	void getAdminSettingsAdminSettingsFailedExceptionTest() throws Exception {
+	void getAdminSettingsAdminSettingsFailedExceptionTest() {
 
 		// Given
 		ResponseAdminSettingsDTO responseAdminSettingsDTO = new ResponseAdminSettingsDTO(
@@ -89,7 +89,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 페이지 일일 요약 데이터 조회 메서드 테스트")
-	void getAdminSettingsDailySummariesMethodTest() throws Exception {
+	void getAdminSettingsDailySummariesMethodTest() {
 
 		// Given
 		ResponseAdminSettingsDailySummaryDTO responseAdminSettingsDailySummaryDTO = new ResponseAdminSettingsDailySummaryDTO(
@@ -110,7 +110,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 페이지 일일 요약 데이터 조회 AdminSettingsFailedException 테스트")
-	void getAdminSettingsDailySummariesMethodAdminSettingsFailedExceptionTest() throws Exception {
+	void getAdminSettingsDailySummariesMethodAdminSettingsFailedExceptionTest() {
 
 		// Given
 		ResponseAdminSettingsDailySummaryDTO responseAdminSettingsDailySummaryDTO = new ResponseAdminSettingsDailySummaryDTO(
@@ -131,7 +131,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 페이지 월 별 요약 데이터 조회 메서드 테스트")
-	void getAdminSettingsMonthlySummariesMethodTest() throws Exception {
+	void getAdminSettingsMonthlySummariesMethodTest() {
 
 		// Given
 		ResponseAdminSettingsMonthlySummaryDTO responseAdminSettingsMonthlySummaryDTO = new ResponseAdminSettingsMonthlySummaryDTO(
@@ -153,7 +153,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 페이지 월 별 요약 데이터 조회 AdminSettingsFailedException 메서드 테스트")
-	void getAdminSettingsMonthlySummariesMethodAdminSettingsFailedExceptionTest() throws Exception {
+	void getAdminSettingsMonthlySummariesMethodAdminSettingsFailedExceptionTest() {
 
 		// Given
 		ResponseAdminSettingsMonthlySummaryDTO responseAdminSettingsMonthlySummaryDTO = new ResponseAdminSettingsMonthlySummaryDTO(
@@ -175,7 +175,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 페이지 회원 목록 조회 메서드 테스트")
-	void getAdminSettingsMembersMethodTest() throws Exception {
+	void getAdminSettingsMembersMethodTest() {
 
 		// Given
 		List<ResponseAdminSettingsMembersDTO> content = List.of(
@@ -204,7 +204,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("회원 목록 조회 AdminSettingsMembersFailedException 메서드 테스트")
-	void getAdminSettingsMembersAdminSettingsMembersFailedExceptionException() throws Exception {
+	void getAdminSettingsMembersAdminSettingsMembersFailedExceptionException() {
 
 		// Given
 		ResponseEntity<PageResponse<ResponseAdminSettingsMembersDTO>> response =
@@ -223,7 +223,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 회원 상태 변경 메서드 테스트")
-	void updateAdminSettingsMemberStateMethodTest() throws Exception {
+	void updateAdminSettingsMemberStateMethodTest() {
 
 		// Given
 		RequestAdminSettingsMemberStateDTO requestAdminSettingsMemberStateDTO = new RequestAdminSettingsMemberStateDTO(
@@ -245,7 +245,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 회원 상태 변경 메서드 AdminSettingsMemberUpdateFailedException 테스트")
-	void updateAdminSettingsMemberStateMethodAdminSettingsMemberUpdateFailedExceptionTest() throws Exception {
+	void updateAdminSettingsMemberStateMethodAdminSettingsMemberUpdateFailedExceptionTest() {
 
 		// Given
 		RequestAdminSettingsMemberStateDTO requestAdminSettingsMemberStateDTO = new RequestAdminSettingsMemberStateDTO(
@@ -267,7 +267,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 회원 역할 변경 메서드 테스트")
-	void updateAdminSettingsMemberRoleMethodTest() throws Exception {
+	void updateAdminSettingsMemberRoleMethodTest() {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.CREATED);
@@ -284,7 +284,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 회원 역할 변경 메서드 AdminSettingsMemberUpdateFailedException 테스트")
-	void updateAdminSettingsMemberRoleAdminSettingsMemberUpdateFailedExceptionTest() throws Exception {
+	void updateAdminSettingsMemberRoleAdminSettingsMemberUpdateFailedExceptionTest() {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -292,16 +292,14 @@ class AdminSettingsServiceTest {
 		// When
 		when(adminSettingsAdaptor.updateAdminSettingsMemberRole("user")).thenReturn(response);
 
-		// Then{
-		org.junit.jupiter.api.Assertions.assertThrows(AdminSettingsMemberUpdateFailedException.class, () -> {
-			adminSettingsService.updateAdminSettingsMemberRole("user");
-		});
+		// Then
+		org.junit.jupiter.api.Assertions.assertThrows(AdminSettingsMemberUpdateFailedException.class, () -> adminSettingsService.updateAdminSettingsMemberRole("user"));
 
 	}
 
 	@Test
 	@DisplayName("관리자 회원 탈퇴 메서드 테스트")
-	void deleteAdminSettingsMemberMethodTest() throws Exception {
+	void deleteAdminSettingsMemberMethodTest() {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.CREATED);
@@ -318,7 +316,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 회원 탈퇴 메서드 AdminSettingsMemberDeleteFailedException 테스트")
-	void deleteAdminSettingsMemberMethodAdminSettingsMemberDeleteFailedExceptionTest() throws Exception {
+	void deleteAdminSettingsMemberMethodAdminSettingsMemberDeleteFailedExceptionTest() {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -335,7 +333,7 @@ class AdminSettingsServiceTest {
 
 	@Test
 	@DisplayName("관리자 페이지 주간 요약 데이터 조회 메서드 테스트")
-	void getWeeklySummaryMethodTest() throws Exception {
+	void getWeeklySummaryMethodTest() {
 
 		// Given
 		List<DailySummary> dailySummaries = new ArrayList<>();
