@@ -51,8 +51,8 @@ public class ErrorController {
 	}
 
 	private String renderErrorPage(String errorMessage, Model model) {
-		model.addAttribute("errorMessage", errorMessage);
-		return "error/404";
+		model.addAttribute(ERROR_MESSAGE, errorMessage);
+		return ERROR_404;
 	}
 
 }

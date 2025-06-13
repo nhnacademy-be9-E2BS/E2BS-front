@@ -154,13 +154,13 @@ class MemberMypageServiceTest {
 	void getMemberCouponMethodEmptyResponseExceptionTest() {
 
 		// Given
-		RequestMemberIdDTO request = new RequestMemberIdDTO("user");
+		RequestMemberIdDTO requestMemberIdDTO = new RequestMemberIdDTO("user");
 
 		// When
 		when(memberCouponAdaptor.getMemberCouponAmount("user")).thenReturn(null);
 
 		// Then
-		assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberCoupon(request));
+		assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberCoupon(requestMemberIdDTO));
 	}
 
 	@Test
@@ -187,13 +187,13 @@ class MemberMypageServiceTest {
 	void getMemberPointEmptyResponseExceptionTest() {
 
 		// Given
-		RequestMemberIdDTO request = new RequestMemberIdDTO("user");
+		RequestMemberIdDTO requestMemberIdDTO = new RequestMemberIdDTO("user");
 
 		// When
 		when(memberPointHistoryAdaptor.getMemberPointAmount("user")).thenReturn(null);
 
 		// Then
-		assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberPoint(request));
+		assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberPoint(requestMemberIdDTO));
 
 	}
 
@@ -224,7 +224,8 @@ class MemberMypageServiceTest {
 			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(responseResult);
 
 			// Then
-			Assertions.assertThatNoException().isThrownBy(() -> memberMypageService.getMemberRankName(mock(HttpServletRequest.class)));
+			Assertions.assertThatNoException()
+				.isThrownBy(() -> memberMypageService.getMemberRankName(mock(HttpServletRequest.class)));
 
 		}
 	}
@@ -291,7 +292,8 @@ class MemberMypageServiceTest {
 			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(responseResult);
 
 			// Then
-			Assertions.assertThatCode(() -> memberMypageService.getMemberInfo(any(HttpServletRequest.class))).doesNotThrowAnyException();
+			Assertions.assertThatCode(() -> memberMypageService.getMemberInfo(any(HttpServletRequest.class)))
+				.doesNotThrowAnyException();
 		}
 	}
 
@@ -358,20 +360,21 @@ class MemberMypageServiceTest {
 	@DisplayName("회원 정보를 수정하는 메서드 PasswordNotEqualsException 테스트")
 	void updateMemberInfoMethodPasswordNotEqualsExceptionTest() {
 
-			// Given
-			try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
-				jwtStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any())).thenReturn("user");
+		// Given
+		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
+			jwtStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any())).thenReturn("user");
 
-				RequestMemberInfoDTO requestMemberInfoDTO = new RequestMemberInfoDTO(
-					"user", "user", "user@naver.com", LocalDate.now(), "010-1234-1234",
-					"1234", "12345"
+			RequestMemberInfoDTO requestMemberInfoDTO = new RequestMemberInfoDTO(
+				"user", "user", "user@naver.com", LocalDate.now(), "010-1234-1234",
+				"1234", "12345"
 			);
 			HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
 
 			// When
 
 			// Then
-			assertThrows(PasswordNotEqualsException.class, () -> memberMypageService.updateMemberInfo(mockRequest, requestMemberInfoDTO));
+			assertThrows(PasswordNotEqualsException.class,
+				() -> memberMypageService.updateMemberInfo(mockRequest, requestMemberInfoDTO));
 		}
 	}
 
@@ -392,7 +395,8 @@ class MemberMypageServiceTest {
 			// When
 
 			// Then
-			assertThrows(PasswordNotEqualsException.class, () -> memberMypageService.updateMemberInfo(mockRequest, requestMemberInfoDTO));
+			assertThrows(PasswordNotEqualsException.class,
+				() -> memberMypageService.updateMemberInfo(mockRequest, requestMemberInfoDTO));
 		}
 	}
 
@@ -417,7 +421,8 @@ class MemberMypageServiceTest {
 				.thenReturn(responseResult);
 
 			// Then
-			assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.updateMemberInfo(mockRequest, requestMemberInfoDTO));
+			assertThrows(NotFoundMemberInfoException.class,
+				() -> memberMypageService.updateMemberInfo(mockRequest, requestMemberInfoDTO));
 		}
 	}
 
@@ -462,7 +467,8 @@ class MemberMypageServiceTest {
 			when(memberInfoAdaptor.withdrawMember("user")).thenReturn(responseResult);
 
 			// Then
-			assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.withdrawMember(requestResult, responseMock));
+			assertThrows(NotFoundMemberInfoException.class,
+				() -> memberMypageService.withdrawMember(requestResult, responseMock));
 
 		}
 	}
