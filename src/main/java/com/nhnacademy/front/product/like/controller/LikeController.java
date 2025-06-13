@@ -27,7 +27,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +40,13 @@ public class LikeController {
 
 
 	@JwtTokenCheck
-	@Operation(summary = "좋아요 등록", description = "회원이 상품에 대한 좋아요를 등록합니다.")
-	@ApiResponses({
-		@ApiResponse(responseCode = "201", description = "좋아요 등록 성공"),
-		@ApiResponse(responseCode = "400", description = "유효성 검사 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
-		@ApiResponse(responseCode = "401", description = "인증 실패")
-	})
+	@Operation(summary = "좋아요 등록",
+		description = "회원이 상품에 대한 좋아요를 등록합니다.",
+		responses = {
+			@ApiResponse(responseCode = "201", description = "좋아요 등록 성공"),
+			@ApiResponse(responseCode = "400", description = "유효성 검사 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@PostMapping("/products/{productId}/likes")
 	public ResponseEntity<Void> addLike(@Parameter(description = "좋아요를 등록할 상품 ID", example = "123", required = true) @PathVariable long productId,
 		                                @Parameter(hidden = true) HttpServletRequest request) {
@@ -60,12 +60,13 @@ public class LikeController {
 	}
 
 	@JwtTokenCheck
-	@Operation(summary = "좋아요 취소", description = "회원이 상품에 대한 좋아요를 취소합니다.")
-	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "좋아요 취소 성공"),
-		@ApiResponse(responseCode = "400", description = "유효성 검사 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
-		@ApiResponse(responseCode = "401", description = "인증 실패")
-	})
+	@Operation(summary = "좋아요 취소",
+		description = "회원이 상품에 대한 좋아요를 취소합니다.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "좋아요 취소 성공"),
+			@ApiResponse(responseCode = "400", description = "유효성 검사 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@DeleteMapping("/products/{productId}/likes")
 	public ResponseEntity<Void> deleteLike(@Parameter(description = "좋아요를 취소할 상품 ID", example = "123", required = true) @PathVariable long productId,
 		                                   @Parameter(hidden = true) HttpServletRequest request) {
@@ -76,11 +77,12 @@ public class LikeController {
 	}
 
 	@JwtTokenCheck
-	@Operation(summary = "좋아요 상품 목록 조회", description = "회원이 좋아요한 상품 목록을 조회합니다.")
-	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "조회 성공"),
-		@ApiResponse(responseCode = "401", description = "인증 실패")
-	})
+	@Operation(summary = "좋아요 상품 목록 조회",
+		description = "회원이 좋아요한 상품 목록을 조회합니다.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@GetMapping("/products/likes")
 	public String getLikedProductsByCustomer(@Parameter(hidden = true) @PageableDefault(size = 6, sort = "likeCreatedAt", direction = Sort.Direction.DESC) Pageable pageable,
 		                                     @Parameter(hidden = true) HttpServletRequest request,

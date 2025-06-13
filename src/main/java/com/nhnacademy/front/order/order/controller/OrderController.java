@@ -106,6 +106,7 @@ public class OrderController {
 	private final ObjectMapper objectMapper;
 
 	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
+	public static final String CUSTOMER_ID = "customerId";
 
 	private final PaymentQueryParamResolverFactory paymentResolverFactory;
 
@@ -186,7 +187,7 @@ public class OrderController {
 		model.addAttribute("products", products);
 		model.addAttribute("quantities", quantities);
 		model.addAttribute("wrappers", wrappers);
-		model.addAttribute("customerId", customerRequest.getCustomerId());
+		model.addAttribute(CUSTOMER_ID, customerRequest.getCustomerId());
 		model.addAttribute("customerName", customerRequest.getCustomerName());
 		model.addAttribute("productCategories", productCategoryMap);
 		model.addAttribute("deliveryFee", deliveryFeeSevice.getCurrentDeliveryFee());
@@ -423,7 +424,7 @@ public class OrderController {
 		PageResponse<ResponseOrderDTO> pageResponse = response.getBody();
 		Page<ResponseOrderDTO> orders = PageResponseConverter.toPage(pageResponse);
 		model.addAttribute("orders", orders);
-		model.addAttribute("customerId", customerId);
+		model.addAttribute(CUSTOMER_ID, customerId);
 		return "customer/orders";
 	}
 
@@ -459,7 +460,7 @@ public class OrderController {
 
 		Boolean isReviewed = reviewService.isReviewedByOrder(orderCode);
 
-		model.addAttribute("customerId", customerId);
+		model.addAttribute(CUSTOMER_ID, customerId);
 		model.addAttribute("isReturnAvailable", isReturnAvailable);
 		model.addAttribute("isChangeOfMindReturnAvailable", isChangeOfMindReturnAvailable);
 		model.addAttribute("order", order);
