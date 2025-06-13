@@ -1,8 +1,6 @@
 package com.nhnacademy.front.common.error.loader;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
@@ -12,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
+
+import com.nhnacademy.front.common.error.exception.ServerErrorException;
 
 import lombok.Getter;
 
@@ -49,10 +49,8 @@ public class ErrorMessageLoader {
 			Map<String, String> errors = (Map<String, String>)data.get("errors");
 
 			errorMessages.putAll(errors);
-		} catch (MalformedURLException ex) {
-			throw new RuntimeException(ex);
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
+		} catch (Exception ex) {
+			throw new ServerErrorException();
 		}
 
 	}
