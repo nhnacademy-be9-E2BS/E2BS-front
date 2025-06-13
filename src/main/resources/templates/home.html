@@ -156,7 +156,7 @@
         }
 
         .weekly-banner {
-            background-color: #fdeee0;  /* 바깥 wrapper에 칠함 */
+            background-color: #fdeee0; /* 바깥 wrapper에 칠함 */
             padding: 80px 0;
         }
 
@@ -220,7 +220,6 @@
             color: #444;
             text-align: center;
         }
-
 
 
         /* 책 아이템 사이 세로선 */
@@ -631,8 +630,9 @@
 
         .free-shipping-wrapper img {
             height: 80px;
-            object-fit:contain;
+            object-fit: contain;
         }
+
         .review-section {
             padding: 60px 5%;
             background-color: #fff;
@@ -695,7 +695,6 @@
         }
 
 
-
     </style>
 </head>
 
@@ -703,35 +702,53 @@
 <div layout:fragment="content">
 
     <div class="tab-content" id="tab-content-0" style="display: block;">
-    <section class="feature-banner">
-        <div class="banner-wrapper-outer">
-            <!-- 배너 내부 전체 래퍼 -->
-            <div class="banner-wrapper">
-                <!-- 1) 텍스트 영역 -->
-                <div class="banner-text">
-                    <h2>2026<br/>EBS 수능특강</h2>
-                    <p>수능연계대비 필수교재</p>
-                </div>
+        <section class="feature-banner">
+            <div class="banner-wrapper-outer">
+                <!-- 배너 내부 전체 래퍼 -->
+                <div class="banner-wrapper">
+                    <!-- 1) 텍스트 영역 -->
+                    <div class="banner-text">
+                        <h2>2026<br/>EBS 수능특강</h2>
+                        <p>수능연계대비 필수교재</p>
+                    </div>
 
-                <div class="banner-items">
-                    <div class="banner-item">
-                        <img src="https://image.aladin.co.kr/product/35532/55/cover500/8954789544_1.jpg" alt="수능특강 문학">
-                    </div>
-                    <div class="banner-item">
-                        <img src="https://image.aladin.co.kr/product/35532/62/cover500/8954789587_2.jpg" alt="수능특강 영어">
-                    </div>
-                    <div class="banner-item">
-                        <img src="https://image.aladin.co.kr/product/35532/55/cover500/s012036173_1.jpg" alt="수능특강 수학Ⅱ">
-                    </div>
-                    <div class="banner-item">
-                        <img src="https://image.aladin.co.kr/product/35532/58/cover500/8954789668_3.jpg" alt="수능특강 한국사">
+                    <div class="banner-items">
+                        <div class="banner-item">
+                            <a th:href="@{/books/1}">
+                                <img src="https://image.aladin.co.kr/product/35532/55/cover500/8954789544_1.jpg"
+                                     alt="수능특강 문학">
+                            </a>
+                        </div>
+                        <div class="banner-item">
+                            <a th:href="@{/books/2}">
+
+                                <img src="https://image.aladin.co.kr/product/35532/62/cover500/8954789587_2.jpg"
+                                     alt="수능특강 영어">
+                            </a>
+
+                        </div>
+                        <div class="banner-item">
+                            <a th:href="@{/books/3}">
+
+                                <img src="https://image.aladin.co.kr/product/35532/55/cover500/s012036173_1.jpg"
+                                     alt="수능특강 수학Ⅱ">
+                            </a>
+
+
+                        </div>
+                        <div class="banner-item">
+                            <a th:href="@{/books/4}">
+
+                                <img src="https://image.aladin.co.kr/product/35532/58/cover500/8954789668_3.jpg"
+                                     alt="수능특강 한국사">
+                            </a>
+
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
     </div>
-
 
 
     <div class="tab-content" id="tab-content-1" style="display: none;">
@@ -743,7 +760,9 @@
                 </div>
                 <div class="banner-items">
                     <div class="banner-item" th:each="book, stat : ${BestSellerList}" th:if="${stat.index < 4}">
-                        <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        <a th:href="@{/books/{productId}(productId=${book.productId})}">
+                            <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        </a>
                         <p class="book-title" th:text="${book.productTitle}">도서 제목</p>
                     </div>
                 </div>
@@ -760,7 +779,9 @@
                 </div>
                 <div class="banner-items">
                     <div class="banner-item" th:each="book, stat : ${BestSellerList}" th:if="${stat.index < 4}">
-                        <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        <a th:href="@{/books/{productId}(productId=${book.productId})}">
+                            <img th:src="@{${book.productImage}}" alt="도서 이미지">
+                        </a>
                         <p class="book-title" th:text="${book.productTitle}">도서 제목</p>
                     </div>
                 </div>
@@ -772,8 +793,8 @@
          배너 바로 아래 들어갈 탭 네비게이션
          ============================== -->
     <ul class="banner-tab-nav">
-        <li class="tab-item active">2025 수능특강</li>
-        <li class="tab-item">이주의_책</li>
+        <li class="tab-item active">2026 수능특강</li>
+        <li class="tab-item">이주의 책</li>
         <li class="tab-item">이슈도서</li>
     </ul>
 
@@ -800,21 +821,24 @@
 
             <div class="today-book-content" th:if="${ItemNewAllList.size() > 0}">
                 <div class="today-main-book">
-                    <img class="today-main-img"
-                         th:src="@{${ItemNewAllList[0].productImage}}"
-                         alt="대표 도서 이미지">
+                    <a th:href="@{/books/{productId}(productId=${ItemNewAllList[0].productId})}">
+                        <img class="today-main-img"
+                             th:src="@{${ItemNewAllList[0].productImage}}"
+                             alt="대표 도서 이미지">
+                    </a>
 
                     <div class="today-main-info">
                         <h3 class="today-main-title" th:text="${ItemNewAllList[0].productTitle}">
                             도서 제목
                         </h3>
+
                         <p class="today-main-meta">
                             <span th:text="${ItemNewAllList[0].contributorName}">저자</span>
                             <span class="dot">·</span>
                             <span th:text="${ItemNewAllList[0].publisherName}">출판사</span>
                         </p>
                         <p class="today-main-desc"
-                           th:text="${ItemNewAllList[0].productDescription}">
+                           th:utext="${ItemNewAllList[0].productDescription}">
                             도서 설명이 이곳에 노출됩니다.
                         </p>
                         <p class="today-main-price"
@@ -829,8 +853,10 @@
                     <div class="sub-book-item"
                          th:each="book, stat : ${ItemNewAllList}"
                          th:if="${stat.index >= 1 and stat.index <= 4}">
-                        <img th:src="@{${book.productImage}}"
-                             alt="서브 도서 이미지">
+                        <a th:href="@{/books/{productId}(productId=${book.productId})}">
+                            <img th:src="@{${book.productImage}}"
+                                 alt="서브 도서 이미지">
+                        </a>
                         <p class="sub-book-title" th:text="${book.productTitle}">
                             서브 도서 제목
                         </p>
@@ -847,21 +873,13 @@
     <section class="bestseller-section">
         <!-- 1) 섹션 제목 -->
         <div class="section-title">
-            <h2>베스트셀러</h2>
-            <span>이주의 가장 인기 있는 도서를 만나보세요.</span>
+            <h2>베스트</h2>
+            <span>E2BS에서 베스트 도서를 만나보세요.</span>
         </div>
 
         <!-- 3) 카테고리 네비게이션 -->
         <nav class="category-nav">
-            <a href="#" class="active">전체</a>
-            <a href="#">소설</a>
-            <a href="#">시/에세이/기행</a>
-            <a href="#">인문/교양/철학</a>
-            <a href="#">사회/정치/법률</a>
-            <a href="#">경제/경영</a>
-            <a href="#">자기계발</a>
-            <a href="#">유아</a>
-            <a href="#">여행/취미/레저</a>
+            <a href="https://e2bs.shop/books/search/best" class="active">전체</a>
         </nav>
 
         <!-- 4) 좌/우 화살표 + 책 목록 래퍼 -->
@@ -882,10 +900,13 @@
                          th:text="${stat.index + 1}">
                         1
                     </div>
+                    <a th:href="@{/books/{productId}(productId=${product.productId})}">
 
 
-                    <img th:src="${product.productImage}"
-                         alt="도서 이미지"/>
+                        <img th:src="${product.productImage}"
+                             alt="도서 이미지"/>
+                    </a>
+
 
                     <!-- 도서 제목 -->
                     <p class="book-title"
@@ -912,7 +933,6 @@
          =========================== -->
 
 
-
     <section class="free-shipping-banner">
         <div class="free-shipping-wrapper">
             <div class="free-shipping-text">
@@ -921,7 +941,6 @@
             <img src="/images/free-shipping-banner.png" alt="무료배송 배너 이미지">
         </div>
     </section>
-
 
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -975,14 +994,21 @@
                 const item = document.createElement('div');
                 item.className = 'sub-book-item';
 
+                // <a> 태그 생성
+                const link = document.createElement('a');
+                link.href = `/books/${book.productId}`; // Thymeleaf URL 패턴과 동일
+
                 const img = document.createElement('img');
                 img.src = book.productImage;
+                img.alt = '서브 도서 이미지';
+
+                link.appendChild(img);
 
                 const title = document.createElement('p');
                 title.className = 'sub-book-title';
                 title.innerText = book.productTitle;
 
-                item.appendChild(img);
+                item.appendChild(link);
                 item.appendChild(title);
                 subContainer.appendChild(item);
             });
@@ -1001,7 +1027,6 @@
         };
 
         document.addEventListener('DOMContentLoaded', renderTodayBook);
-
 
 
         const bestSellerList = /*[[${BestSellerList}]]*/ [];
@@ -1024,25 +1049,26 @@
                 itemDiv.classList.add('book-item');
 
                 // 2) rank-badge
-// 2) rank-badge
                 const badge = document.createElement('div');
                 badge.classList.add('rank-badge');
                 const rankNum = (i + 1).toString();
                 badge.innerText = rankNum;
 
                 if (rankNum === '1') badge.classList.add('rank-1');
-                else if (rankNum === '2' || rankNum === '4') badge.classList.add('rank-2'); // rank-2 == gray
+                else if (rankNum === '2' || rankNum === '4') badge.classList.add('rank-2');
                 else if (rankNum === '3') badge.classList.add('rank-3');
-                else badge.style.backgroundColor = '#999'; // 기타 순위: 중립 회색 (옵션)
+                else badge.style.backgroundColor = '#999';
 
                 itemDiv.appendChild(badge);
 
-
-                // 3) 책 이미지
+                // 3) <a> 태그와 책 이미지
+                const link = document.createElement('a');
+                link.href = `/books/${product.productId}`; // Thymeleaf URL 패턴과 동일
                 const img = document.createElement('img');
                 img.src = product.productImage;
                 img.alt = '도서 이미지';
-                itemDiv.appendChild(img);
+                link.appendChild(img);
+                itemDiv.appendChild(link);
 
                 // 4) 책 제목
                 const titleP = document.createElement('p');
@@ -1084,8 +1110,8 @@
             spaceBetween: 30,
             centeredSlides: true,
             loop: true,
-            pagination: { el: '.swiper-pagination', clickable: true },
-            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            pagination: {el: '.swiper-pagination', clickable: true},
+            navigation: {nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev'},
         });
 
     </script>

@@ -166,17 +166,17 @@
                 <div class="info-box">
                     <i class="fas fa-receipt"></i>
                     <div class="info-title">진행중 주문건</div>
-                    <div class="info-value" th:text="${orderCnt} + '건'">0건</div>
+                    <div class="info-value" th:text="${T(java.lang.String).format('%,d',orderCnt)} + '건'">0건</div>
                 </div>
                 <div class="info-box">
                     <i class="fas fa-ticket-alt"></i>
                     <div class="info-title">쿠폰</div>
-                    <div class="info-value" th:text="${couponCnt} + '장'">0장</div>
+                    <div class="info-value" th:text="${T(java.lang.String).format('%,d',couponCnt)} + '장'">0장</div>
                 </div>
                 <div class="info-box">
                     <i class="fas fa-coins"></i>
                     <div class="info-title">포인트</div>
-                    <div class="info-value" th:text="${pointAmount} + '원'">1,000원</div>
+                    <div class="info-value" th:text="${T(java.lang.String).format('%,d',pointAmount)} + '원'">1,000원</div>
                 </div>
                 <div class="info-box">
                     <i class="fas fa-user-circle"></i>
@@ -198,9 +198,6 @@
                 <tr>
                     <th style="white-space: nowrap;">주문일자</th>
                     <th style="white-space: nowrap;">주문번호</th>
-                    <th style="white-space: nowrap;">상품명</th>
-                    <th style="white-space: nowrap;">상품개수</th>
-                    <th style="white-space: nowrap;">상품금액</th>
                     <th style="white-space: nowrap;">상태</th>
                 </tr>
                 </thead>
@@ -212,15 +209,9 @@
                                 th:text="${#temporals.format(order.orderCreatedAt, 'yyyy-MM-dd')}">
                                 2025-06-06
                             </td>
-                            <td th:if="${iterStat.index == 0}" th:rowspan="${order.products.size()}"
-                                th:text="${order.orderCode}">
-                                주문번호
+                            <td th:if="${iterStat.index == 0}" th:rowspan="${order.products.size()}">
+                                <a th:text="${order.orderCode}" th:href="'/mypage/orders/' + ${order.orderCode}"></a>
                             </td>
-
-                            <!-- 상품 정보 -->
-                            <td th:text="${product.productName}">상품명</td>
-                            <td th:text="${product.quantity}">수량</td>
-                            <td th:text="${#numbers.formatInteger(product.price, 0)} + '원'">단가</td>
 
                             <!-- 상태도 첫 행에만 -->
                             <td th:if="${iterStat.index == 0}" th:rowspan="${order.products.size()}"

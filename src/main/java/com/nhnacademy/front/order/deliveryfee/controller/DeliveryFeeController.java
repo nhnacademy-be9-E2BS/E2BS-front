@@ -42,7 +42,7 @@ public class DeliveryFeeController {
 		PageResponse<ResponseDeliveryFeeDTO> pageResponse = response.getBody();
 		Page<ResponseDeliveryFeeDTO> deliveryFees = PageResponseConverter.toPage(pageResponse);
 		model.addAttribute("deliveryFees", deliveryFees);
-		return "admin/order/deliveryFeeManagement";
+		return "admin/order/delivery-fee-management";
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class DeliveryFeeController {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
-		deliveryFeeSevice.CreateDeliveryFee(deliveryFeeDTO);
+		deliveryFeeSevice.createDeliveryFee(deliveryFeeDTO);
 		return "redirect:/admin/settings/deliveryFee";
 	}
 

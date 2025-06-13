@@ -68,8 +68,8 @@ public class CouponController {
 		@RequestParam(value = "couponType", required = false) String couponType,
 		@RequestParam(value = "keyword", required = false) String keyword, Model model) {
 		log.info("keyword : {}", keyword);
-		Pageable pageable_fix = PageRequest.of(0, Integer.MAX_VALUE);
-		PageResponse<ResponseCouponPolicyDTO> couponPolicyDTO = couponPolicyServiceImpl.getCouponPolicies(pageable_fix);
+		Pageable pageableFix = PageRequest.of(0, Integer.MAX_VALUE);
+		PageResponse<ResponseCouponPolicyDTO> couponPolicyDTO = couponPolicyServiceImpl.getCouponPolicies(pageableFix);
 		Page<ResponseCouponPolicyDTO> couponPolicies = PageResponseConverter.toPage(couponPolicyDTO);
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
@@ -77,7 +77,7 @@ public class CouponController {
 		PageResponse<ResponseProductReadDTO> productDTO = productAdminService.getProducts(pageable);
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(productDTO);
 		if(keyword != null) {
-			PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword, null);
+			PageResponse<ResponseProductReadDTO> response = productSearchService.getProductsBySearch(pageable, keyword, null, "");
 			products = PageResponseConverter.toPage(response);
 			log.info(String.valueOf(products.getTotalElements()));
 		}
@@ -132,10 +132,10 @@ public class CouponController {
 	 */
 	@Operation(summary = "쿠폰 단건 조회", description = "연결된 쿠폰 정보를 ID로 조회")
 	@JwtTokenCheck
-	@GetMapping("/{couponId}")
+	@GetMapping("/{coupon-id}")
 	public String getCoupon(
 		@Parameter(description = "쿠폰 ID", example = "1")
-		@PathVariable Long couponId, Model model) {
+		@PathVariable("coupon-id") Long couponId, Model model) {
 		ResponseCouponDTO response = couponServiceImpl.getCoupon(couponId);
 
 		model.addAttribute("coupon", response);
@@ -152,10 +152,10 @@ public class CouponController {
 		@ApiResponse(responseCode = "400", description = "쿠폰 활성 상태 변경 실패")
 	})
 	@JwtTokenCheck
-	@PutMapping("/{couponId}")
+	@PutMapping("/{coupon-id}")
 	public ResponseEntity<Void> updateCoupon(
 		@Parameter(description = "쿠폰 ID", example = "1")
-		@PathVariable Long couponId) {
+		@PathVariable("coupon-id") Long couponId) {
 		couponServiceImpl.updateCoupon(couponId);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

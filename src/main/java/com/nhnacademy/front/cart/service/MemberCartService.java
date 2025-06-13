@@ -7,6 +7,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 
 public interface MemberCartService {
+	void createCartByMember(String memberId);
 	List<ResponseCartItemsForMemberDTO> getCartItemsByMember(String memberId);
 	Integer createCartItemForMember(RequestAddCartItemsDTO requestDto);
 	Integer updateCartItemForMember(long cartItemId, RequestUpdateCartItemsDTO requestDto);

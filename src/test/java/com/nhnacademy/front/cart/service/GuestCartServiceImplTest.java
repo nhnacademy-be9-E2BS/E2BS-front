@@ -52,6 +52,20 @@ class GuestCartServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("게스트 장바구니 목록 조회 테스트 - 실패(HTTP 응답 실패)")
+	void getCartItemsByGuest_Fail_StatusNot2xx() {
+		// given
+		ResponseEntity<List<ResponseCartItemsForGuestDTO>> response =
+			ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		when(guestCartAdaptor.getCartItemsByGuest(SESSION_ID)).thenReturn(response);
+
+		// when & then
+		assertThatThrownBy(() -> guestCartService.getCartItemsByGuest(SESSION_ID))
+			.isInstanceOf(CartProcessException.class)
+			.hasMessageContaining("게스트 장바구니 목록 조회 실패");
+	}
+
+	@Test
 	@DisplayName("게스트 장바구니 목록 조회 테스트 - 실패(FeignException 발생)")
 	void getCartItemsByGuest_Fail_FeignException() {
 		// given
@@ -75,12 +89,26 @@ class GuestCartServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("게스트 장바구니 항목 추가 테스트 - 실패(HTTP 응답 실패)")
+	void createCartItemForGuest_Fail_StatusNot2xx() {
+		// given
+		RequestAddCartItemsDTO dto = new RequestAddCartItemsDTO();
+		ResponseEntity<Integer> response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		when(guestCartAdaptor.createCartItemForGuest(dto)).thenReturn(response);
+
+		// when & then
+		assertThatThrownBy(() -> guestCartService.createCartItemForGuest(dto))
+			.isInstanceOf(CartProcessException.class)
+			.hasMessageContaining("게스트 장바구니 항목 추가 실패");
+	}
+
+	@Test
 	@DisplayName("게스트 장바구니 항목 추가 테스트 - 실패(FeignException 발생)")
 	void createCartItemForGuest_Fail_FeignException() {
 		// given
 		RequestAddCartItemsDTO dto = new RequestAddCartItemsDTO();
 		when(guestCartAdaptor.createCartItemForGuest(dto))
-			.thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+			.thenThrow(FeignException.class);
 
 		// when & then
 		assertThatThrownBy(() -> guestCartService.createCartItemForGuest(dto))
@@ -98,6 +126,20 @@ class GuestCartServiceImplTest {
 		// when & then
 		assertThatCode(() -> guestCartService.updateCartItemForGuest(dto))
 			.doesNotThrowAnyException();
+	}
+
+	@Test
+	@DisplayName("게스트 장바구니 수량 변경 테스트 - 실패(HTTP 응답 실패)")
+	void updateCartItemForGuest_Fail_StatusNot2xx() {
+		// given
+		RequestUpdateCartItemsDTO dto = new RequestUpdateCartItemsDTO();
+		ResponseEntity<Integer> response = ResponseEntity.status(HttpStatus.CONFLICT).build();
+		when(guestCartAdaptor.updateCartItemForGuest(dto)).thenReturn(response);
+
+		// when & then
+		assertThatThrownBy(() -> guestCartService.updateCartItemForGuest(dto))
+			.isInstanceOf(CartProcessException.class)
+			.hasMessageContaining("게스트 장바구니 항목 수량 변경 실패");
 	}
 
 	@Test
@@ -125,6 +167,20 @@ class GuestCartServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("게스트 장바구니 항목 삭제 테스트 - 실패(HTTP 응답 실패)")
+	void deleteCartItemForGuest_Fail_StatusNot2xx() {
+		// given
+		RequestDeleteCartItemsForGuestDTO dto = new RequestDeleteCartItemsForGuestDTO();
+		ResponseEntity<Void> response = ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		when(guestCartAdaptor.deleteCartItemForGuest(dto)).thenReturn(response);
+
+		// when & then
+		assertThatThrownBy(() -> guestCartService.deleteCartItemForGuest(dto))
+			.isInstanceOf(CartProcessException.class)
+			.hasMessageContaining("게스트 장바구니 항목 삭제 실패");
+	}
+
+	@Test
 	@DisplayName("게스트 장바구니 항목 삭제 테스트 - 실패(FeignException 발생)")
 	void deleteCartItemForGuest_Fail_FeignException() {
 		// given
@@ -146,7 +202,20 @@ class GuestCartServiceImplTest {
 		assertThatCode(() -> guestCartService.deleteCartForGuest(SESSION_ID))
 			.doesNotThrowAnyException();
 	}
-	
+
+	@Test
+	@DisplayName("게스트 장바구니 전체 삭제 테스트 - 실패(HTTP 응답 실패)")
+	void deleteCartForGuest_Fail_StatusNot2xx() {
+		// given
+		ResponseEntity<Void> response = ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
+		when(guestCartAdaptor.deleteCartForGuest(SESSION_ID)).thenReturn(response);
+
+		// when & then
+		assertThatThrownBy(() -> guestCartService.deleteCartForGuest(SESSION_ID))
+			.isInstanceOf(CartProcessException.class)
+			.hasMessageContaining("게스트 장바구니 전체 삭제 실패");
+	}
+
 	@Test
 	@DisplayName("게스트 장바구니 전체 삭제 테스트 - 실패(FeignException 발생)")
 	void deleteCartForGuest_Fail_FeignException() {

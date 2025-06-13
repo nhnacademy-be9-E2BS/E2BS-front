@@ -45,6 +45,7 @@
         .search-button:hover {
             color: #000;
         }
+
         .sticky-header {
             position: sticky;
             top: 0;
@@ -100,7 +101,7 @@
                     <!-- 로그인 / 장바구니 -->
                     <ul class="nav-shop d-flex align-items-center list-unstyled mb-0">
                         <li class="nav-item" th:if="${memberRole == null || memberName == null}">
-                            <a class="button button-header" th:href="@{/login}">Login</a>
+                            <a class="button button-header" th:href="@{/members/login}">Login</a>
                         </li>
                         <li class="nav-item" th:if="${memberName != null}">
                             <span class="nav-link" th:text="${memberName}">회원명</span>
@@ -128,13 +129,14 @@
                         <!-- 장바구니 -->
                         <li class="nav-item">
                             <form style="margin: 0; padding: 0; display: inline-block;">
-                                <button th:if="${session.isMember}" th:formaction="@{/members/carts}" type="submit">
+                                <button th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}" th:formaction="@{/members/carts}" type="submit">
                                     <i class="ti-shopping-cart"></i>
                                     <span class="nav-shop__circle"
                                           th:style="${session.cartItemsCounts == null || session.cartItemsCounts == 0} ? 'display:none;' : ''"
                                           th:text="${session.cartItemsCounts}">0</span>
                                 </button>
-                                <button th:if="${session.isMember == null}" th:formaction="@{/guests/carts}" type="submit">
+                                <button th:if="${memberName == null and memberRole == null}" th:formaction="@{/guests/carts}"
+                                        type="submit">
                                     <i class="ti-shopping-cart"></i>
                                     <span class="nav-shop__circle"
                                           th:style="${session.cartItemsCounts == null || session.cartItemsCounts == 0} ? 'display:none;' : ''"

@@ -14,14 +14,14 @@
                     <div class="login_box_img">
                         <div class="hover">
                             <h4>계정이 이미 있나요?</h4>
-                            <a class="button button-account" href="/login">로그인 돌아가기</a>
+                            <a class="button button-account" href="/members/login">로그인 돌아가기</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-sm-6">
                     <div class="login_form_inner register_form_inner">
                         <h3>E2BS</h3>
-                        <form class="row login_form" action="/register" method="post" id="register_form">
+                        <form class="row login_form" action="/members/register" method="post" id="register_form">
                             <!--아이디-->
                             <div class="col-md-12 form-group">
                                 <div class="d-flex gap-2">
@@ -126,7 +126,7 @@
 
             const apiBaseUrl = getApiBaseUrl();
 
-            fetch(`${apiBaseUrl}/api/register/members/${encodeURIComponent(memberId)}`)
+            fetch(`${apiBaseUrl}/api/members/${encodeURIComponent(memberId)}/register`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`서버 오류: ${response.status}`);

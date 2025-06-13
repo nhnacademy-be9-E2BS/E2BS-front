@@ -14,14 +14,14 @@ import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfo
 @FeignClient(name = "member-info-adaptor", url = "${auth.member.url}")
 public interface MemberInfoAdaptor {
 
-	@GetMapping("/{memberId}")
-	ResponseEntity<ResponseMemberInfoDTO> getMemberInfo(@PathVariable("memberId") String memberId);
+	@GetMapping("/{member-id}")
+	ResponseEntity<ResponseMemberInfoDTO> getMemberInfo(@PathVariable("member-id") String memberId);
 
-	@PutMapping("/{memberId}/info")
-	ResponseEntity<Void> updateMemberInfo(@PathVariable("memberId") String memberId,
+	@PutMapping("/{member-id}/info")
+	ResponseEntity<Void> updateMemberInfo(@PathVariable("member-id") String memberId,
 		@RequestBody RequestMemberInfoDTO requestMemberInfoDTO);
 
-	@PostMapping("/{memberId}/info")
-	ResponseEntity<Void> withdrawMember(@PathVariable("memberId") String memberId);
+	@PostMapping("/{member-id}/info")
+	ResponseEntity<Void> withdrawMember(@PathVariable("member-id") String memberId);
 
 }

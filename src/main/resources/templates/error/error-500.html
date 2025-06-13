@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/user-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <style>
+            .error-box {
+                text-align: center;
+            }
+
+            .error-code {
+                font-size: 96px;
+                font-weight: 700;
+                margin: 0;
+            }
+
+            .error-message {
+                font-size: 22px;
+                margin-top: 12px;
+                color: #515154;
+            }
+
+            .description {
+                font-size: 16px;
+                margin-top: 10px;
+                color: #6e6e73;
+            }
+        </style>
+
+        <div class="container">
+            <div class="error-box">
+                <h1 class="error-code">500</h1>
+                <p class="error-message"
+                   th:text="${errorMessage != null} ? ${errorMessage} : '서비스에 접속할 수 없습니다.'">
+                    서비스에 접속할 수 없습니다.
+                </p>
+                <p class="description">
+                    지금 이 서비스와 연결할 수 없습니다.<br>
+                    잠시 후에 다시 확인해주세요.
+                </p>
+                <button class="btn btn-secondary" onclick="location.href='/'">메인으로 돌아가기</button>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

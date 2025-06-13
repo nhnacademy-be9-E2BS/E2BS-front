@@ -25,32 +25,6 @@ $(document).ready(function () {
     updateTotalPayment();
 });
 
-function updateTotalPayment() {
-    let totalProduct = 0;
-    let totalDelivery = 0;
-
-    $('.cart-item-checkbox:checked').each(function () {
-        const productId = $(this).data('product-id');
-        const row = $(this).closest('tr');
-
-        const priceText = row.find('.unit-price').text().replace(/[^0-9]/g, '');
-        const unitPrice = parseInt(priceText, 10) || 0;
-
-        const quantity = parseInt($('#quantity-' + productId).val(), 10) || 1;
-        totalProduct += unitPrice * quantity;
-
-        // 배송비는 각 체크된 항목별로 추출
-        const deliveryText = row.find('.unit-delivery-price').text().replace(/[^0-9]/g, '');
-        const deliveryFee = parseInt(deliveryText, 10) || 0;
-        totalDelivery += deliveryFee;
-    });
-
-    // DOM 반영
-    $('#totalProductPrice').text(totalProduct.toLocaleString('ko-KR') + '원');
-    $('#totalDeliveryPrice').text(totalDelivery.toLocaleString('ko-KR') + '원');
-    $('#totalPaymentPrice').text((totalProduct + totalDelivery).toLocaleString('ko-KR') + '원');
-}
-
 // 체크된 상품 주문
 $(document).ready(function () {
     $('#order-btn').click(function (e) {
@@ -92,7 +66,42 @@ $(document).ready(function () {
                 window.location.href = '/order/auth';
             },
             error: function () {
-                alert("주문 요청 중 오류가 발생했습니다.");
+                let message = '주문 요청 중 오류가 발생했습니다. ' + `(${xhr.responseJSON.status})`;
+
+                if (xhr.responseJSON) {
+                    const rawTimestamp = xhr.responseJSON.timestamp;
+                    let formattedTime = rawTimestamp;
+
+                    try {
+                        const date = new Date(rawTimestamp);
+                        formattedTime = date.toLocaleString('ko-KR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false,
+                            timeZone: 'Asia/Seoul'
+                        });
+                    } catch (e) {
+                        console.warn("시간 포맷 변환 실패:", e);
+                    }
+
+                    // 전체 message 또는 trace에서 Exception 이후 메시지 한 줄 추출
+                    const fullText = xhr.responseJSON.message || xhr.responseJSON.trace || '';
+                    let extractedMessage = fullText;
+
+                    const match = fullText.match(/Exception:\s*(.+?)\\r?\\n/);
+                    if (match && match[1]) {
+                        extractedMessage = match[1];
+                    }
+
+                    message += `\n\n발생 시간: ${formattedTime}` +
+                        `\n에러 메시지: ${extractedMessage}`;
+                }
+
+                alert(message);
             }
         });
     });

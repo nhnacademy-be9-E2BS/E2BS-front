@@ -20,6 +20,7 @@ import com.nhnacademy.front.order.order.adaptor.OrderAdaptor;
 import com.nhnacademy.front.order.order.adaptor.OrderMemberAdaptor;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.request.RequestOrderWrapperDTO;
+import com.nhnacademy.front.order.order.model.dto.request.RequestPaymentApproveDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
@@ -81,16 +82,17 @@ class OrderServiceTest {
 		String orderId = "TEST-ORDER-CODE";
 		String paymentKey = "TEST-PAYMENT-KEY";
 		long amount = 9999L;
+		RequestPaymentApproveDTO approveRequest = new RequestPaymentApproveDTO(orderId, paymentKey, amount, "TOSS");
 		ResponseEntity<Void> expectedResponse = ResponseEntity.ok().build();
 
-		when(orderAdaptor.confirmOrder(orderId, paymentKey, amount)).thenReturn(expectedResponse);
+		when(orderAdaptor.confirmOrder(approveRequest)).thenReturn(expectedResponse);
 
 		// when
-		ResponseEntity<Void> actualResponse = orderService.confirmOrder(orderId, paymentKey, amount);
+		ResponseEntity<Void> actualResponse = orderService.confirmOrder(approveRequest);
 
 		// then
 		assertEquals(expectedResponse, actualResponse);
-		verify(orderAdaptor).confirmOrder(orderId, paymentKey, amount);
+		verify(orderAdaptor).confirmOrder(approveRequest);
 	}
 
 	@Test

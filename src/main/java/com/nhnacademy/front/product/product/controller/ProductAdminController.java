@@ -45,8 +45,16 @@ import com.nhnacademy.front.product.state.model.dto.service.ProductStateService;
 import com.nhnacademy.front.product.tag.model.dto.response.ResponseTagDTO;
 import com.nhnacademy.front.product.tag.service.TagService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "도서(관리자)", description = "관리자 도서 관련 API")
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/settings/books")
@@ -60,13 +68,23 @@ public class ProductAdminController {
 	private final ContributorService contributorService;
 	private final ProductStateService productStateService;
 
+	private static final String PRODUCT_STRING = "products";
+	private static final String CATEGORIES_STRING = "categories";
+	private static final String REDIRECT_PRODUCT_LIST = "redirect:/admin/settings/books";
+
 	/**
 	 * 관리자 페이지 -> 전체 도서 리스트 조회
 	 */
+	@Operation(summary = "모든 도서 리스트 조회",
+		description = "관리자 페이지에서 모든 도서 리스트를 조회합니다. (검색 가능)",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@JwtTokenCheck
 	@GetMapping
-	public String getProducts(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
-		@RequestParam(required = false) String keyword) {
+	public String getProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+		@Parameter(description = "검색 키워드", in = ParameterIn.QUERY) @RequestParam(required = false) String keyword) {
 		PageResponse<ResponseProductReadDTO> response;
 		if(Objects.isNull(keyword)) {
 			response = productAdminService.getProducts(pageable);
@@ -75,19 +93,26 @@ public class ProductAdminController {
 		}
 		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
 
-		model.addAttribute("products", products);
+		model.addAttribute(PRODUCT_STRING, products);
 		return "admin/product/books/view";
 	}
 
 	/**
 	 * 관리자 도서 정보 단일 조회
 	 */
+	@Operation(summary = "도서 단일 조회",
+		description = "관리자 페이지에서 도서 상세페이지를 조회합니다.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@JwtTokenCheck
-	@GetMapping("/register/{bookId}")
-	public String getProductsById(@PathVariable Long bookId, Model model, Pageable pageable) {
+	@GetMapping("/register/{book-id}")
+	public String getProductsById(@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId,
+		Model model, @Parameter(description = "페이징 정보") Pageable pageable) {
 		model.addAttribute("bookId", bookId);
 
-		ResponseProductReadDTO response = productService.getProduct(bookId);
+		ResponseProductReadDTO response = productService.getProduct(bookId, "");
 		model.addAttribute("product", response);
 
 		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(pageable);
@@ -97,7 +122,7 @@ public class ProductAdminController {
 		model.addAttribute("publishers", publishers.getContent());
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
+		model.addAttribute(CATEGORIES_STRING, categories);
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
@@ -105,16 +130,21 @@ public class ProductAdminController {
 		List<ResponseProductStateDTO> states = productStateService.getProductStates();
 		model.addAttribute("states", states);
 
-		model.addAttribute("product", response);
 		return "admin/product/books/register";
 	}
 
 	/**
 	 * 관리자 도서 등록 뷰로 이동
 	 */
+	@Operation(summary = "도서 등록 페이지 이동",
+		description = "관리자 페이지에서 도서 등록 페이지로 이동합니다.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@JwtTokenCheck
 	@GetMapping("/register")
-	public String getRegisterView(Model model, Pageable pageable) {
+	public String getRegisterView(Model model, @Parameter(description = "페이징 정보") Pageable pageable) {
 		ResponseProductReadDTO response = new ResponseProductReadDTO();
 		model.addAttribute("product", response);
 
@@ -125,13 +155,14 @@ public class ProductAdminController {
 		model.addAttribute("publishers", publishers.getContent());
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
+		model.addAttribute(CATEGORIES_STRING, categories);
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
 
 		List<ResponseProductStateDTO> states = productStateService.getProductStates();
 		model.addAttribute("states", states);
+
 		return "admin/product/books/register";
 	}
 
@@ -139,43 +170,67 @@ public class ProductAdminController {
 	 * 관리자가 admin settings 페이지에서 도서 등록
 	 * 관리자 -> 도서 등록
 	 */
+	@Operation(summary = "도서 등록",
+		description = "관리자 페이지에서 도서를 등록합니다.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "400", description = "유효성 검사 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@JwtTokenCheck
 	@PostMapping("/register")
-	public String createProduct(@Validated @ModelAttribute RequestProductDTO request, BindingResult bindingResult) {
+	public String createProduct(@Parameter(description = "도서 등록 및 수정 DTO", required = true, schema = @Schema(implementation = RequestProductDTO.class))
+		@Validated @ModelAttribute RequestProductDTO request, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		productAdminService.createProduct(request);
-		return "redirect:/admin/settings/books";
+		return REDIRECT_PRODUCT_LIST;
 	}
 
 	/**
 	 * 관리자가 도서를 수정
 	 */
+	@Operation(summary = "도서 수정",
+		description = "관리자 페이지에서 도서를 수정합니다.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "400", description = "유효성 검사 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@JwtTokenCheck
-	@PutMapping("/register/{bookId}")
-	public String updateProduct(@Validated @ModelAttribute RequestProductDTO request,
-		BindingResult bindingResult, @PathVariable Long bookId) {
+	@PutMapping("/register/{book-id}")
+	public String updateProduct(@Parameter(description = "도서 등록 및 수정 DTO", required = true, schema = @Schema(implementation = RequestProductDTO.class))
+		@Validated @ModelAttribute RequestProductDTO request, BindingResult bindingResult,
+		@Parameter(description = "수정할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 
 		productAdminService.updateProduct(bookId, request);
-		return "redirect:/admin/settings/books";
+		return REDIRECT_PRODUCT_LIST;
 	}
 
 	/**
 	 * 관리자가 도서 판매가를 수정
 	 */
+	@Operation(summary = "도서 판매가 수정",
+		description = "관리자 페이지에서 도서의 판매가를 수정합니다.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "400", description = "유효성 검사 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@JwtTokenCheck
-	@PutMapping("/{bookId}/salePrice")
-	public String updateProduct(@Validated @RequestBody RequestProductSalePriceUpdateDTO request,
-		BindingResult bindingResult, @PathVariable Long bookId) {
+	@PutMapping("/{book-id}/salePrice")
+	public String updateProduct(@Parameter(description = "도서 판매가 수정 DTO", required = true, schema = @Schema(implementation = RequestProductSalePriceUpdateDTO.class))
+		@Validated @RequestBody RequestProductSalePriceUpdateDTO request, BindingResult bindingResult,
+		@Parameter(description = "수정할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
 		productAdminService.updateProductSalePrice(bookId, request);
-		return "redirect:/admin/settings/books";
+		return REDIRECT_PRODUCT_LIST;
 	}
 
 	/**
@@ -187,7 +242,7 @@ public class ProductAdminController {
 		@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
 		PageResponse<ResponseProductsApiSearchDTO> response = productAdminService.getProductsApi(request, pageable);
 		Page<ResponseProductsApiSearchDTO> products = PageResponseConverter.toPage(response);
-		model.addAttribute("products", products);
+		model.addAttribute(PRODUCT_STRING, products);
 		return "admin/product/books/books-api-search";
 	}
 
@@ -199,7 +254,7 @@ public class ProductAdminController {
 		PageResponse<ResponseProductsApiSearchByQueryTypeDTO> response = productAdminService.getProductsApi(request,
 			pageable);
 		Page<ResponseProductsApiSearchByQueryTypeDTO> products = PageResponseConverter.toPage(response);
-		model.addAttribute("products", products);
+		model.addAttribute(PRODUCT_STRING, products);
 		model.addAttribute("queryType", request.getQueryType());
 		return "admin/product/books/books-api-search-query";
 	}
@@ -217,7 +272,7 @@ public class ProductAdminController {
 		model.addAttribute("book", dto);
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
+		model.addAttribute(CATEGORIES_STRING, categories);
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);
@@ -230,7 +285,7 @@ public class ProductAdminController {
 
 		model.addAttribute("book", dto);
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
-		model.addAttribute("categories", categories);
+		model.addAttribute(CATEGORIES_STRING, categories);
 
 		List<ResponseTagDTO> tags = tagService.getTags(Pageable.unpaged()).getContent();
 		model.addAttribute("tags", tags);

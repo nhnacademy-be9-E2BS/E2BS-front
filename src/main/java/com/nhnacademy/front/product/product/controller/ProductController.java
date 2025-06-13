@@ -12,36 +12,52 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
+import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
 import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
-import com.nhnacademy.front.product.category.model.dto.response.ResponseCategoryDTO;
-import com.nhnacademy.front.product.category.service.UserCategoryService;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.service.ProductService;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewInfoDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseReviewPageDTO;
 import com.nhnacademy.front.review.service.ReviewService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "도서(사용자)", description = "사용자 도서 관련 API")
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/books")
 public class ProductController {
 
 	private final ProductService productService;
-	private final UserCategoryService userCategoryService;
 	private final ReviewService reviewService;
 	private final DeliveryFeeSevice deliveryFeeSevice;
 
 	/**
 	 * 사용자 - 도서 상세 페이지 조회
 	 */
-	@GetMapping("/{bookId}")
-	public String getProduct(@PathVariable Long bookId, Model model,
-		                     @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+	@Operation(summary = "도서 단일 조회",
+		description = "도서 상세페이지를 조회합니다.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "조회 성공")
+		})
+	@GetMapping("/{book-id}")
+	public String getProduct(@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId, Model model,
+		@Parameter(description = "페이징 정보") @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable,
+		@Parameter(hidden = true) HttpServletRequest request) {
+		String memberId = "";
+		if (JwtHasToken.hasToken(request)) {
+			memberId = JwtGetMemberId.jwtGetMemberId(request);
+		}
+
 		// 상품 상세
-		ResponseProductReadDTO response = productService.getProduct(bookId);
+		ResponseProductReadDTO response = productService.getProduct(bookId, memberId);
 		model.addAttribute("product", response);
 
 		// 리뷰 상세
@@ -53,7 +69,8 @@ public class ProductController {
 		ResponseDeliveryFeeDTO deliveryFee = deliveryFeeSevice.getCurrentDeliveryFee();
 
 		// 적용 중인 할인률 계산
-		long discountRate = (long)(((double)(response.getProductRegularPrice() - response.getProductSalePrice()) / response.getProductRegularPrice()) * 100);
+		long discountRate = (long)(((double)(response.getProductRegularPrice() - response.getProductSalePrice())
+			/ response.getProductRegularPrice()) * 100);
 
 		model.addAttribute("reviewsByProduct", reviewsByProduct);
 		model.addAttribute("totalGradeAvg", reviewInfo.getTotalGradeAvg());
@@ -63,22 +80,5 @@ public class ProductController {
 		model.addAttribute("discountRate", discountRate);
 
 		return "product/product-detail";
-	}
-
-	/**
-	 * 사용자 - 카테고리를 눌러서 그 카테고리에 해당하는 도서 리스트 조회 (페이징)
-	 */
-	@GetMapping("/category/{categoryId}")
-	public String getProduct(@PageableDefault(page = 0, size = 9) Pageable pageable,
-		@PathVariable Long categoryId, Model model) {
-		PageResponse<ResponseProductReadDTO> response = productService.getProductsByCategoryId(pageable, categoryId);
-		Page<ResponseProductReadDTO> products = PageResponseConverter.toPage(response);
-
-		ResponseCategoryDTO category = userCategoryService.getCategoriesById(categoryId);
-
-		model.addAttribute("products", products);
-		model.addAttribute("rootCategory", category);
-
-		return "product/category";
 	}
 }

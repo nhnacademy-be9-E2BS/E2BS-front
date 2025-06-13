@@ -15,7 +15,7 @@ import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 
-@FeignClient(name = "customer-cart-adaptor", url = "${auth.member.url}")
+@FeignClient(name = "member-cart-adaptor", url = "${auth.member.url}")
 public interface MemberCartAdaptor {
 
 	/**

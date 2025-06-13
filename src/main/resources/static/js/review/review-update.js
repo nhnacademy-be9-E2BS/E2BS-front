@@ -67,19 +67,21 @@ function submitReviewUpdate(reviewId, index) {
             }
 
             // 이미지 업데이트
-            const imageContainer = $(`#image-${index}`);
-            if (imageContainer.length) {
-                imageContainer.find('img')
-                    .attr('src', response.reviewImageUrl)
-                    .show();
-            } else {
-                // div가 없을 경우 직접 추가할 수도 있음
-                const newImageHtml = `<div class="preview-container mt-2 text-center" id="image-${index}">
+            if (response.reviewImageUrl && response.reviewImageUrl.trim() !== '') {
+                const imageContainer = $(`#image-${index}`);
+                if (imageContainer.length) {
+                    imageContainer.find('img')
+                        .attr('src', response.reviewImageUrl)
+                        .show();
+                } else {
+                    // div가 없을 경우 직접 추가할 수도 있음
+                    const newImageHtml = `<div class="preview-container mt-2 text-center" id="image-${index}">
                                                 <img src="${response.reviewImageUrl}" alt="리뷰 이미지"
                                                      style="max-width:100%; height:auto; border-radius:10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
                                                      onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'">
                                             </div>`;
-                $(`#text-div-${index}`).before(newImageHtml);
+                    $(`#text-div-${index}`).before(newImageHtml);
+                }
             }
 
             // 폼 닫기
@@ -90,11 +92,38 @@ function submitReviewUpdate(reviewId, index) {
             console.error('status:', status);
             console.error('xhr:', xhr);
 
-            let message = '리뷰 수정 중 오류가 발생했습니다.';
+            let message = '리뷰 수정 중 오류가 발생했습니다. ' +  `(${xhr.responseJSON.status})`
             if (xhr.responseJSON) {
-                message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
-                           `상태 코드: ${xhr.responseJSON.status}\n` +
-                           `발생 시간: ${xhr.responseJSON.timeStamp}`;
+                const rawTimestamp = xhr.responseJSON.timestamp;
+                let formattedTime = rawTimestamp;
+
+                try {
+                    const date = new Date(rawTimestamp);
+                    formattedTime = date.toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false,
+                        timeZone: 'Asia/Seoul'
+                    });
+                } catch (e) {
+                    console.warn("시간 포맷 변환 실패:", e);
+                }
+
+                // 전체 message 또는 trace에서 Exception 이후 메시지 한 줄 추출
+                const fullText = xhr.responseJSON.message || xhr.responseJSON.trace || '';
+                let extractedMessage = fullText;
+
+                const match = fullText.match(/Exception:\s*(.+?)\\r?\\n/);
+                if (match && match[1]) {
+                    extractedMessage = match[1];
+                }
+
+                message += `\n\n발생 시간: ${formattedTime}` +
+                    `\n에러 메시지: ${extractedMessage}`;
             }
 
             alert(message);

@@ -26,7 +26,6 @@ import com.nhnacademy.front.account.admin.model.dto.request.RequestAdminSettings
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
-import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.account.admin.service.AdminSettingsService;
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
@@ -97,8 +96,8 @@ public class AdminSettingsController {
 			@ApiResponse(responseCode = "500", description = "관리자 회원 상태 수정 실패 응답", content = @Content(schema = @Schema(implementation = AdminSettingsMemberUpdateFailedException.class)))
 		})
 	@JwtTokenCheck
-	@PostMapping("/members/{memberId}")
-	public String updateAdminSettingsMemberState(@PathVariable("memberId") String memberId,
+	@PostMapping("/members/{member-id}")
+	public String updateAdminSettingsMemberState(@PathVariable("member-id") String memberId,
 		@Validated @Parameter(description = "회원 상태 수정 요청 DTO", required = true, schema = @Schema(implementation = RequestAdminSettingsMemberStateDTO.class))
 		@ModelAttribute RequestAdminSettingsMemberStateDTO requestAdminSettingsMemberStateDTO,
 		BindingResult bindingResult) {
@@ -116,8 +115,8 @@ public class AdminSettingsController {
 			@ApiResponse(responseCode = "500", description = "관리자 회원 역할 수정 실패 응답", content = @Content(schema = @Schema(implementation = AdminSettingsMemberUpdateFailedException.class)))
 		})
 	@JwtTokenCheck
-	@PutMapping("/members/{memberId}")
-	public String updateAdminSettingsMemberRole(@PathVariable("memberId") String memberId) {
+	@PutMapping("/members/{member-id}")
+	public String updateAdminSettingsMemberRole(@PathVariable("member-id") String memberId) {
 		adminSettingsService.updateAdminSettingsMemberRole(memberId);
 
 		return REDIRECT_ADMIN_SETTINGS_MEMBERS_PATH;
@@ -129,26 +128,11 @@ public class AdminSettingsController {
 			@ApiResponse(responseCode = "500", description = "관리자 회원 탈퇴 실패 응답", content = @Content(schema = @Schema(implementation = AdminSettingsMemberUpdateFailedException.class)))
 		})
 	@JwtTokenCheck
-	@DeleteMapping("/members/{memberId}")
-	public String deleteAdminSettingsMember(@PathVariable("memberId") String memberId) {
+	@DeleteMapping("/members/{member-id}")
+	public String deleteAdminSettingsMember(@PathVariable("member-id") String memberId) {
 		adminSettingsService.deleteAdminSettingsMember(memberId);
 
 		return REDIRECT_ADMIN_SETTINGS_MEMBERS_PATH;
-	}
-
-	/**
-	 * 관리자 페이지 비회원 관리 뷰
-	 */
-	@JwtTokenCheck
-	@GetMapping("/customers")
-	public String getAdminSettingsNonMembers(@PageableDefault(page = 0, size = 10) Pageable pageable, Model model) {
-		PageResponse<ResponseAdminSettingsNonMembersDTO> response = adminSettingsService.getAdminSettingsNonMembers(
-			pageable);
-		Page<ResponseAdminSettingsNonMembersDTO> nonMembers = PageResponseConverter.toPage(response);
-
-		model.addAttribute("nonMembers", nonMembers);
-
-		return "admin/settings/members/admin-settings-non-members";
 	}
 
 }

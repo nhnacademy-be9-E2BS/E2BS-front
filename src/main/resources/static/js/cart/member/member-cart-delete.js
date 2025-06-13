@@ -32,7 +32,7 @@ $(document).ready(function () {
                 alert('장바구니에 삭제 되었습니다!');
 
                 row.remove();
-                recalculateTotalPrice();
+                updateTotalPayment();
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
@@ -51,38 +51,6 @@ $(document).ready(function () {
         });
     });
 });
-
-// 총 결제 금액 재계산 함수
-function recalculateTotalPrice() {
-    let totalProduct = 0;
-    let totalDelivery = 0;
-
-    $('.cart-item-checkbox:checked').each(function () {
-        const productId = $(this).data('product-id');
-        const row = $(this).closest('tr');
-
-        const priceText = row.find('.unit-price').text().replace(/[^0-9]/g, '');
-        const unitPrice = parseInt(priceText, 10) || 0;
-
-        const quantity = parseInt($('#quantity-' + productId).val(), 10) || 1;
-        totalProduct += unitPrice * quantity;
-
-        const deliveryText = row.find('.unit-delivery-price').text().replace(/[^0-9]/g, '');
-        const deliveryFee = parseInt(deliveryText, 10) || 0;
-        totalDelivery += deliveryFee;
-    });
-
-    $('#totalProductPrice').text(totalProduct.toLocaleString('ko-KR') + '원');
-    $('#totalDeliveryPrice').text(totalDelivery.toLocaleString('ko-KR') + '원');
-    $('#totalPaymentPrice').text((totalProduct + totalDelivery).toLocaleString('ko-KR') + '원');
-
-    if ($('tbody .delete-item-btn').length === 0) {
-        $('.total-product-price').closest('tr').hide();
-        $('.out_button_area').hide();
-        $('tbody').append('<tr><td colspan="6" style="text-align:center;">장바구니가 비어 있습니다.</td></tr>');
-    }
-}
-
 
 // 회원 장바구니 전체 삭제
 $(document).ready(function () {
@@ -114,11 +82,39 @@ $(document).ready(function () {
                 console.error('status:', status);
                 console.error('xhr:', xhr);
 
-                let message = '장바구니 비우기를 실패했습니다.';
+                let message = '장바구니 비우기를 실패했습니다. ' + `(${xhr.responseJSON.status})`;
+
                 if (xhr.responseJSON) {
-                    message += `\n에러 메시지: ${xhr.responseJSON.title}\n` +
-                               `상태 코드: ${xhr.responseJSON.status}\n` +
-                               `발생 시간: ${xhr.responseJSON.timeStamp}`;
+                    const rawTimestamp = xhr.responseJSON.timestamp;
+                    let formattedTime = rawTimestamp;
+
+                    try {
+                        const date = new Date(rawTimestamp);
+                        formattedTime = date.toLocaleString('ko-KR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false,
+                            timeZone: 'Asia/Seoul'
+                        });
+                    } catch (e) {
+                        console.warn("시간 포맷 변환 실패:", e);
+                    }
+
+                    // 전체 message 또는 trace에서 Exception 이후 메시지 한 줄 추출
+                    const fullText = xhr.responseJSON.message || xhr.responseJSON.trace || '';
+                    let extractedMessage = fullText;
+
+                    const match = fullText.match(/Exception:\s*(.+?)\\r?\\n/);
+                    if (match && match[1]) {
+                        extractedMessage = match[1];
+                    }
+
+                    message += `\n\n발생 시간: ${formattedTime}` +
+                        `\n에러 메시지: ${extractedMessage}`;
                 }
 
                 alert(message);

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/user-layout}">
+<body>
+<div layout:fragment="content">
+    <section class="login_box_area section-margin">
+        <style>
+            .error-box {
+                text-align: center;
+            }
+
+            .error-code {
+                font-size: 96px;
+                font-weight: 700;
+                margin: 0;
+            }
+
+            .error-message {
+                font-size: 22px;
+                margin-top: 12px;
+                color: #515154;
+            }
+
+            .description {
+                font-size: 16px;
+                margin-top: 10px;
+                color: #6e6e73;
+            }
+        </style>
+
+        <div class="container">
+            <div class="error-box">
+                <h1 class="error-code">404</h1>
+                <p class="error-message"
+                   th:text="${errorMessage != null} ? ${errorMessage} : '서비스에 접속할 수 없습니다.'">
+                    페이지를 찾을 수 없습니다.
+                </p>
+                <p class="description">
+                    지금 입력하신 주소의 페이지는 사라졌거나, 다른 페이지로 변경되었을 수 있습니다.<br>
+                    다시 한 번 주소를 확인해 주세요.
+                </p>
+                <button class="btn btn-secondary" onclick="location.href='/'">메인으로 돌아가기</button>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

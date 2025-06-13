@@ -10,7 +10,7 @@ import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
 @FeignClient(name = "home-adaptor", url = "${auth.home.member.name.url}")
 public interface HomeAdaptor {
 
-	@GetMapping("/{memberId}")
-	ResponseEntity<ResponseHomeMemberNameDTO> getHomeMemberName(@PathVariable("memberId") String memberId);
+	@GetMapping("/{member-id}")
+	ResponseEntity<ResponseHomeMemberNameDTO> getHomeMemberName(@PathVariable("member-id") String memberId);
 
 }

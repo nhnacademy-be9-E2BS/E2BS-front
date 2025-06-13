@@ -186,6 +186,10 @@
                             <label for="imagePaths">사진 업로드 (첫 번째 사진이 썸네일입니다)</label>
                             <input type="file" class="form-control-file" name="productImages" id="imagePaths" multiple
                                    accept="image/*">
+                            <th:block th:each="image : ${product.productImagePaths}">
+                                <input type="hidden" th:name="existingImagePaths" th:value="${image.productImagePath}"/>
+                                <input type="hidden" th:name="existingImageIds" th:value="${image.productImageId}"/>
+                            </th:block>
                         </div>
 
                         <!-- 사진 미리보기 (한 줄에 3개씩) -->
@@ -555,9 +559,16 @@
             initialValue: getProductDescription
         });
 
-        document.getElementById("submitBtn").addEventListener('click', function () {
+        document.getElementById("submitBtn").addEventListener('click', function (e) {
             document.querySelector('#productContent').value = editorContent.getHTML();
             document.querySelector('#productDescription').value = editorDescription.getHTML();
+            const regularPrice = Number(document.querySelector('input[name="productRegularPrice"]').value);
+            const salePrice = Number(document.querySelector('input[name="productSalePrice"]').value);
+
+            if (regularPrice < salePrice) {
+                alert('정가는 판매가보다 비싸야합니다');
+                e.preventDefault(); // 폼 제출 막기
+            }
         });
 
 

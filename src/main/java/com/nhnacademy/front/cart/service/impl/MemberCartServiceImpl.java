@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.cart.adaptor.MemberCartAdaptor;
+import com.nhnacademy.front.cart.adaptor.MemberRegisterCartAdaptor;
 import com.nhnacademy.front.cart.exception.CartProcessException;
 import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
@@ -19,7 +20,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberCartServiceImpl implements MemberCartService {
 
+	private final MemberRegisterCartAdaptor memberRegisterCartAdaptor;
 	private final MemberCartAdaptor memberCartAdaptor;
+
+	@Override
+	public void createCartByMember(String memberId) {
+		try {
+			ResponseEntity<Void> result = memberRegisterCartAdaptor.createCartByMember(memberId);
+
+			if (!result.getStatusCode().is2xxSuccessful()) {
+				throw new CartProcessException("회원 장바구니 생성 실패: " + result.getStatusCode());
+			}
+		} catch (FeignException e) {
+			throw new CartProcessException("회원 장바구니 생성 실패: " + e.getMessage());
+		}
+	}
 
 	@Override
 	public List<ResponseCartItemsForMemberDTO> getCartItemsByMember(String memberId) throws FeignException {

@@ -38,8 +38,8 @@ public class MemberEmailDormantController {
 	 * 인증번호 화면 Controller
 	 */
 	@Operation(summary = "회원 휴면 Email 방식 페이지", description = "회원 휴면 Email 방식 화면 제공")
-	@GetMapping("/dormant/email/{memberId}")
-	public String getMemberDormantEmail(@PathVariable("memberId") String memberId, Model model,
+	@GetMapping("/{member-id}/dormant/email")
+	public String getMemberDormantEmail(@PathVariable("member-id") String memberId, Model model,
 		HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		Integer remainingSeconds = 0;
@@ -64,8 +64,9 @@ public class MemberEmailDormantController {
 	 * Email 인증 번호 전송 Controller
 	 */
 	@Operation(summary = "회원 휴면 Email 인증 번호 전송", description = "회원 휴면 Email 인증 번호 전송 기능 제공")
-	@PostMapping("/dormant/email/{memberId}")
-	public String postEmailAuthenticationNumber(@PathVariable("memberId") String memberId, HttpServletRequest request) {
+	@PostMapping("/{member-id}/dormant/email")
+	public String postEmailAuthenticationNumber(@PathVariable("member-id") String memberId,
+		HttpServletRequest request) {
 		String authenticationNumber = memberDormantService.createEmailAuthenticationNumber(memberId);
 		String customerEmail = memberDormantService.getMemberEmail(memberId);
 
@@ -119,7 +120,7 @@ public class MemberEmailDormantController {
 		session.removeAttribute("dormantCnt");
 		session.removeAttribute("memberState");
 
-		return "redirect:/login";
+		return "redirect:/members/login";
 	}
 
 }

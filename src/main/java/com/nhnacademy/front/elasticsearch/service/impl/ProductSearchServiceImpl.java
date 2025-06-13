@@ -26,16 +26,16 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 	 */
 	@Override
 	public PageResponse<ResponseProductReadDTO> getProductsBySearch(Pageable pageable, String keyword,
-		ProductSortType sort) {
+		ProductSortType sort, String memberId) {
 		try {
-			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsBySearch(pageable, keyword, sort);
+			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsBySearch(pageable, keyword, sort, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("검색어로 도서 리스트 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("검색어로 도서 리스트 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 
@@ -45,16 +45,16 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 	 */
 	@Override
 	public PageResponse<ResponseProductReadDTO> getProductsByCategory(Pageable pageable, Long categoryId,
-		ProductSortType sort) {
+		ProductSortType sort, String memberId) {
 		try {
-			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsByCategory(pageable, categoryId, sort);
+			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getProductsByCategory(pageable, categoryId, sort, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 
@@ -62,16 +62,16 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 	 * 헤더 클릭 시 베스트 도서 조회 (top 30)
 	 */
 	@Override
-	public PageResponse<ResponseProductReadDTO> getBestProducts(Pageable pageable) {
+	public PageResponse<ResponseProductReadDTO> getBestProducts(Pageable pageable, String memberId) {
 		try {
-			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getBestProducts(pageable);
+			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getBestProducts(pageable, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 
@@ -79,16 +79,16 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 	 * 헤더 클릭 시 신상 도서 조회 (출판일자 3개월 이내)
 	 */
 	@Override
-	public PageResponse<ResponseProductReadDTO> getNewestProducts(Pageable pageable) {
+	public PageResponse<ResponseProductReadDTO> getNewestProducts(Pageable pageable, String memberId) {
 		try {
-			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getNewestProducts(pageable);
+			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productSearchAdaptor.getNewestProducts(pageable, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
 }

@@ -57,8 +57,12 @@
                               </th>
                           </tr>
                       </thead>
+
                       <tbody id="cart-container">
-                          <tr th:each="cartItem : ${cartItemsByMember}">
+                      <span style="display: none" class="delivery-price" th:text="${currentDeliveryFee.deliveryFeeAmount}"></span>
+                      <span style="display: none" class="current-delivery-free-amount" th:text="${currentDeliveryFee.deliveryFeeFreeAmount}"></span>
+
+                      <tr th:each="cartItem : ${cartItemsByMember}">
                               <td>
                                   <div class="media">
                                       <div class="d-flex">
@@ -75,18 +79,17 @@
 
                               <td>
                                   <div class="price-info" style="margin-top: 5px;">
-                                      <!-- 정가 + 할인률 -->
-                                      <p style="margin: 0; font-size: 0.85em; color: #888;">
+                                      <!-- 정가와 판매가가 다를 때만 정가 + 할인률 출력 -->
+                                      <p th:if="${cartItem.productRegularPrice != cartItem.productSalePrice}"
+                                         style="margin: 0; font-size: 0.85em; color: #888;">
                                           <del th:text="${#numbers.formatInteger(cartItem.productRegularPrice, 3, 'COMMA')} + '원'">정가</del>
                                           <span th:text="'↓ ' + ${cartItem.discountRate} + '%'" style="margin-left: 5px; color: #dc3545;">22%</span>
                                       </p>
 
-                                      <!-- 판매가 강조 -->
+                                      <!-- 항상 표시되는 판매가 -->
                                       <h5 class="unit-price"
                                           th:text="${#numbers.formatInteger(cartItem.productSalePrice, 3, 'COMMA')} + '원'"
                                           style="margin: 2px 0 0 0; color: #000; font-weight: bold;">판매가</h5>
-
-                                      <span style="display: none" class="unit-delivery-price" th:text="${cartItem.deliveryFee.deliveryFeeAmount}"></span>
                                   </div>
                               </td>
 
@@ -148,7 +151,7 @@
                                       <!-- 배송비 정보 -->
                                       <div style="text-align: center;">
                                           <p style="margin: 0;">배송비</p>
-                                          <span  id="totalDeliveryPrice" style="font-size: 1.3rem;" th:text="${#numbers.formatInteger(totalDeliveryPrice, 3, 'COMMA')} + '원'">5,000원</span>
+                                          <span  id="totalDeliveryPrice" style="font-size: 1.3rem;" th:text="${#numbers.formatInteger(currentDeliveryPrice, 3, 'COMMA')} + '원'">5,000원</span>
                                       </div>
 
                                       <div style="font-size: 1.3rem;">=</div>
@@ -158,7 +161,7 @@
                                           <p style="margin: 0; font-weight: bold;">결제 예정 금액</p>
                                           <span id="totalPaymentPrice"
                                                 style="margin: 0; color: #dc3545; font-size: 1.3rem;"
-                                                th:text="${#numbers.formatInteger(totalProductPrice + totalDeliveryPrice, 3, 'COMMA')} + '원'">
+                                                th:text="${#numbers.formatInteger(totalProductPrice + currentDeliveryPrice, 3, 'COMMA')} + '원'">
                                             35,000원
                                         </span>
                                       </div>
@@ -172,12 +175,6 @@
                                   <div class="checkout_btn_inner">
                                       <button id="order-btn" type="button" class="primary-btn">주문하기</button>
                                   </div>
-                              </td>
-                          </tr>
-
-                          <tr th:if="${#lists.isEmpty(cartItemsByMember)}">
-                              <td colspan="6" style="text-align:center;">
-                                  장바구니가 비어 있습니다.
                               </td>
                           </tr>
                       </tbody>

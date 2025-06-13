@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.account.member.model.dto.request.RequestRegisterMemberDTO;
 import com.nhnacademy.front.account.member.service.MemberService;
+import com.nhnacademy.front.cart.service.MemberCartService;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,10 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/register")
+@RequestMapping("/members/register")
 public class MemberRegisterController {
 
 	private final MemberService memberService;
+	private final MemberCartService cartService;
 
 	/**
 	 *  회원가입 뷰
@@ -58,8 +60,9 @@ public class MemberRegisterController {
 		}
 
 		memberService.createMember(requestRegisterMemberDTO);
+		cartService.createCartByMember(requestRegisterMemberDTO.getMemberId());
 
-		return "redirect:/login";
+		return "redirect:/members/login";
 	}
 
 }

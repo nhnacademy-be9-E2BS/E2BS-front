@@ -34,6 +34,7 @@ import com.nhnacademy.front.account.customer.model.domain.Customer;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
+import com.nhnacademy.front.cart.service.CartService;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
@@ -53,6 +54,7 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDetailDT
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderReturnDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
+import com.nhnacademy.front.order.order.resolver.PaymentQueryParamResolverFactory;
 import com.nhnacademy.front.order.order.service.OrderService;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 import com.nhnacademy.front.order.wrapper.service.WrapperService;
@@ -93,10 +95,16 @@ class OrderControllerTest {
 	private MemberCouponService memberCouponService;
 
 	@MockitoBean
+	private CartService cartService;
+
+	@MockitoBean
 	private UserCategoryService userCategoryService;
 
 	@MockitoBean
 	private ReviewService reviewService;
+
+	@MockitoBean
+	private PaymentQueryParamResolverFactory paramResolverFactory;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -177,10 +185,14 @@ class OrderControllerTest {
 		when(wrapperService.getWrappersBySaleable(Pageable.unpaged())).thenReturn(wrappers);
 		when(wrappers.getContent()).thenReturn(new ArrayList<>());
 
+		String orderCart = "{\"productIds\":[1,2],\"cartQuantities\":[1,2]}";
+		String encodedCart = Base64.getEncoder().encodeToString(orderCart.getBytes(StandardCharsets.UTF_8));
+
 
 		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(mock(ResponseDeliveryFeeDTO.class));
 		mockMvc.perform(post("/customers/order")
 				.with(csrf())
+				.cookie(new Cookie("orderCart", encodedCart)) // 쿠키 추가
 				.param("customerId", "1")
 				.param("customerName", "customer")
 				.param("requestCartOrder.productIds[0]", "1")
@@ -202,7 +214,7 @@ class OrderControllerTest {
 		when(orderService.createOrder(any(RequestOrderWrapperDTO.class)))
 			.thenReturn(ResponseEntity.ok(responseDTO));
 
-		mockMvc.perform(post("/order/tossPay")
+		mockMvc.perform(post("/order/payment")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))
 				.with(csrf()))
@@ -214,7 +226,7 @@ class OrderControllerTest {
 	void testPostCheckOutFail() throws Exception {
 		RequestOrderWrapperDTO request = new RequestOrderWrapperDTO();
 
-		mockMvc.perform(post("/order/tossPay")
+		mockMvc.perform(post("/order/payment")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))
 				.with(csrf()))
@@ -258,7 +270,7 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("결제 완료 후 결제 승인 요청 - 성공 응답 시 리다이렉트")
 	void testGetSuccessOrder_success() throws Exception {
-		when(orderService.confirmOrder(anyString(), anyString(), anyLong()))
+		when(orderService.confirmOrder(any()))
 			.thenReturn(ResponseEntity.ok().build());
 
 		mockMvc.perform(get("/order/success")
@@ -272,7 +284,7 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("결제 완료 후 결제 승인 요청 - 실패 응답 시 리다이렉트")
 	void testGetSuccessOrder_fail() throws Exception {
-		when(orderService.confirmOrder(anyString(), anyString(), anyLong()))
+		when(orderService.confirmOrder(any()))
 			.thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
 
 		mockMvc.perform(get("/order/success")
@@ -286,7 +298,12 @@ class OrderControllerTest {
 	@Test
 	@DisplayName("결제 완료 페이지 접근")
 	void testGetConfirmOrder() throws Exception {
-		mockMvc.perform(get("/order/confirm"))
+		String orderCart = "{\"productIds\":[1,2],\"cartQuantities\":[1,2]}";
+		String encodedCart = Base64.getEncoder().encodeToString(orderCart.getBytes(StandardCharsets.UTF_8));
+
+
+		mockMvc.perform(get("/order/confirm")
+				.cookie(new Cookie("orderCart", encodedCart)))
 			.andExpect(status().isOk())
 			.andExpect(view().name("payment/confirmation"));
 	}
@@ -386,7 +403,7 @@ class OrderControllerTest {
 		// when & then
 		mockMvc.perform(get("/mypage/orders/" + orderCode))
 			.andExpect(status().isOk())
-			.andExpect(view().name("member/mypage/orderDetails"))
+			.andExpect(view().name("member/mypage/order-details"))
 			.andExpect(model().attributeExists("order"))
 			.andExpect(model().attributeExists("orderDetails"))
 			.andExpect(model().attributeExists("productAmount"));
@@ -420,7 +437,7 @@ class OrderControllerTest {
 		// when & then
 		mockMvc.perform(get("/customers/1/orders/" + orderCode))
 			.andExpect(status().isOk())
-			.andExpect(view().name("customer/orderDetails"))
+			.andExpect(view().name("customer/order-details"))
 			.andExpect(model().attributeExists("order"))
 			.andExpect(model().attributeExists("orderDetails"))
 			.andExpect(model().attributeExists("productAmount"));

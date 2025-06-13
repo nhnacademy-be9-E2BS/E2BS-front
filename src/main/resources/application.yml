@@ -60,10 +60,10 @@ management:
 
 member:
   login:
-    url: http://localhost:10232/api/login
+    url: http://localhost:10232/api/members/login
 
   register:
-    url: http://localhost:10232/api/register
+    url: http://localhost:10232/api/members/register
 
   state:
     url: http://localhost:10232/api/members
@@ -110,31 +110,19 @@ point:
 product:
   url: http://localhost:10232/api/products
 
-  publisher:
-    url: http://localhost:10232/api/admin/publishers
-
   contributor:
     position:
       url: http://localhost:10232/api/admin/positions
 
     url: http://localhost:10232/api/admin/contributors
 
-  tag:
-    url: http://localhost:10232/api/admin/tags
+
 
   category:
-    user:
-      url: http://localhost:10232/api/categories
-
-    admin:
-      url: http://localhost:10232/api/admin/categories
+    url: http://localhost:10232/api/categories
 
   book:
-    member:
-      url: http://localhost:10232/api/books
-
-    admin:
-      url: http://localhost:10232/api/admin/books
+    url: http://localhost:10232/api/books
 
   productState:
     url: http://localhost:10232/api/productState
@@ -145,7 +133,7 @@ search:
 
 order:
   wrapper:
-    url: http://localhost:10232/api # wrapper adaptor는 사용자 / 관리자 url이 같이 있어서 코드 내부에 있는 Mapping 어노테이션에서 나머지 url을 작성해주었음
+    url: http://localhost:10232/api/wrappers
 
   order:
     auth: http://localhost:10232/api/auth/orders
@@ -155,7 +143,7 @@ order:
 
   delivery:
     admin:
-      url: http://localhost:10232/api/admin/deliveryFee
+      url: http://localhost:10232/api/auth/admin/deliveryFee
 
     user:
       url: http://localhost:10232/api/deliveryFee
@@ -189,7 +177,24 @@ auth:
     settings:
       url: http://localhost:10232/api/auth/admin/settings
 
+  order:
+    wrapper:
+      url: http://localhost:10232/api/auth/admin/wrappers
+
+  product:
+    category:
+      url: http://localhost:10232/api/auth/admin/categories
+
+    publisher:
+      url: http://localhost:10232/api/auth/admin/publishers
+
+    book:
+      url: http://localhost:10232/api/auth/admin/books
+
+    tag:
+      url: http://localhost:10232/api/auth/admin/tags
 
 dooray:
   authentication:
     url: https://nhnacademy.dooray.com/services
+

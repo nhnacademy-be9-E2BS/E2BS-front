@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,13 +22,11 @@ import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiS
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductApiSearchDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductMetaDTO;
 import com.nhnacademy.front.product.product.model.dto.request.RequestProductSalePriceUpdateDTO;
-import com.nhnacademy.front.product.product.model.dto.request.RequestProductStockUpdateDTO;
-import com.nhnacademy.front.product.product.model.dto.response.ResponseProductCouponDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 
-@FeignClient(name = "product-admin-service", url = "${product.book.admin.url}")
+@FeignClient(name = "product-admin-service", url = "${auth.product.book.url}")
 public interface ProductAdminAdaptor {
 
 	@GetMapping
@@ -47,16 +44,9 @@ public interface ProductAdminAdaptor {
 		@RequestPart("product") RequestProductMetaDTO requestMeta,
 		@RequestPart("productImage") List<MultipartFile> productImage);
 
-	@PutMapping("/{bookId}/stock")
-	ResponseEntity<Void> putUpdateProductStock(@PathVariable Long bookId,
-		@RequestBody RequestProductStockUpdateDTO request);
-
 	@PutMapping("/{bookId}/salePrice")
 	ResponseEntity<Void> putUpdateProductSalePrice(@PathVariable Long bookId,
 		@RequestBody RequestProductSalePriceUpdateDTO request);
-
-	@GetMapping("/states/sale")
-	ResponseEntity<PageResponse<ResponseProductCouponDTO>> getProductsToCoupon(Pageable pageable);
 
 	// 일반 검색 (query + queryType)
 	@GetMapping("/aladdin/search")

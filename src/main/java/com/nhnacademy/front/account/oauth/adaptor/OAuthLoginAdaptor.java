@@ -13,10 +13,13 @@ import com.nhnacademy.front.account.oauth.model.dto.response.ResponseCheckOAuthI
 @FeignClient(name = "oauth-adaptor", url = "${oauth.login.url}")
 public interface OAuthLoginAdaptor {
 
-	@GetMapping("/{memberId}")
-	ResponseEntity<ResponseCheckOAuthIdDTO> checkOAuthLoginId(@PathVariable("memberId") String memberId);
+	@GetMapping("/{member-id}")
+	ResponseEntity<ResponseCheckOAuthIdDTO> checkOAuthLoginId(@PathVariable("member-id") String memberId);
 
 	@PostMapping
 	ResponseEntity<Void> loginOAuth(@RequestBody RequestOAuthLoginDTO requestOAuthLoginDTO);
+
+	@GetMapping("/members/{member-id}")
+	ResponseEntity<Void> loginOAuthLastLogin(@PathVariable("member-id") String memberId);
 
 }

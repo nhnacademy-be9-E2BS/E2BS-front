@@ -2,11 +2,9 @@ package com.nhnacademy.front.product.product.service.impl;
 
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.product.adaptor.ProductAdaptor;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
@@ -25,48 +23,33 @@ public class ProductServiceImpl implements ProductService {
 	 * product 단일 조회 (상세 조회)
 	 */
 	@Override
-	public ResponseProductReadDTO getProduct(long productId) {
+	public ResponseProductReadDTO getProduct(long productId, String memberId) {
 		try {
-			ResponseEntity<ResponseProductReadDTO> response = productAdaptor.getProductById(productId);
+			ResponseEntity<ResponseProductReadDTO> response = productAdaptor.getProductById(productId, memberId);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("도서 단일 조회 실패");
+				throw new ProductGetProcessException();
 			}
 			return response.getBody();
 		} catch (FeignException e) {
-			throw new ProductGetProcessException("도서 단일 조회 실패");
+			throw new ProductGetProcessException();
 		}
 	}
-
-	/**
-	 * 하나의 카테고리에 대한 product 리스트 페이징 조회
-	 */
-	@Override
-	public PageResponse<ResponseProductReadDTO> getProductsByCategoryId(Pageable pageable, long categoryId) {
-		try {
-			ResponseEntity<PageResponse<ResponseProductReadDTO>> response = productAdaptor.getProductsByCategory(
-				pageable, categoryId);
-
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
-			}
-			return response.getBody();
-		} catch (FeignException e) {
-			throw new ProductGetProcessException("카테고리 도서 리스트 조회 실패");
-		}
-	}
-
 
 	/**
 	 * order 전용 - 도서 여러권 리스트 조회
 	 */
 	@Override
-	public List<ResponseProductReadDTO> getProducts(List<Long> productIds) throws FeignException {
-		ResponseEntity<List<ResponseProductReadDTO>> response = productAdaptor.getProducts(productIds);
+	public List<ResponseProductReadDTO> getProducts(List<Long> productIds) {
+		try {
+			ResponseEntity<List<ResponseProductReadDTO>> response = productAdaptor.getProducts(productIds);
 
-		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw new ProductGetProcessException("order 전용 리스트 조회 실패");
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new ProductGetProcessException();
+			}
+			return response.getBody();
+		} catch (FeignException e) {
+			throw new ProductGetProcessException();
 		}
-		return response.getBody();
 	}
 }

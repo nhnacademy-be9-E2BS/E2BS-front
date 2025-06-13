@@ -16,7 +16,6 @@ import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettin
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsDailySummaryDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMembersDTO;
 import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsMonthlySummaryDTO;
-import com.nhnacademy.front.account.admin.model.dto.response.ResponseAdminSettingsNonMembersDTO;
 import com.nhnacademy.front.common.page.PageResponse;
 
 @FeignClient(name = "admin-settings-adaptor", url = "${auth.admin.settings.url}")
@@ -29,19 +28,15 @@ public interface AdminSettingsAdaptor {
 	ResponseEntity<PageResponse<ResponseAdminSettingsMembersDTO>> getAdminSettingsMembers(
 		@SpringQueryMap Pageable pageable);
 
-	@PostMapping("/members/{memberId}")
-	ResponseEntity<Void> updateAdminSettingsMemberState(@PathVariable("memberId") String memberId,
+	@PostMapping("/members/{member-id}")
+	ResponseEntity<Void> updateAdminSettingsMemberState(@PathVariable("member-id") String memberId,
 		@RequestBody RequestAdminSettingsMemberStateDTO requestAdminSettingsMemberStateDTO);
 
-	@PutMapping("/members/{memberId}")
-	ResponseEntity<Void> updateAdminSettingsMemberRole(@PathVariable("memberId") String memberId);
+	@PutMapping("/members/{member-id}")
+	ResponseEntity<Void> updateAdminSettingsMemberRole(@PathVariable("member-id") String memberId);
 
-	@DeleteMapping("/members/{memberId}")
-	ResponseEntity<Void> deleteAdminSettingsMember(@PathVariable("memberId") String memberId);
-
-	@GetMapping("/customers")
-	ResponseEntity<PageResponse<ResponseAdminSettingsNonMembersDTO>> getAdminSettingsNonMembers(
-		@SpringQueryMap Pageable pageable);
+	@DeleteMapping("/members/{member-id}")
+	ResponseEntity<Void> deleteAdminSettingsMember(@PathVariable("member-id") String memberId);
 
 	@GetMapping("/daily")
 	ResponseEntity<ResponseAdminSettingsDailySummaryDTO> getAdminSettingsDailySummaries();
