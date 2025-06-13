@@ -10,7 +10,7 @@ class LoginProcessMemberTest {
 
 	@Test
 	@DisplayName("LoginProcessMember 메서드 테스트")
-	void getAuthoritiesMethodTest() throws Exception {
+	void getAuthoritiesMethodTest() {
 
 		// Given
 		LoginProcessMember loginProcessMember = new LoginProcessMember(
@@ -26,7 +26,7 @@ class LoginProcessMemberTest {
 
 	@Test
 	@DisplayName("LoginProcessMember getPassword 메서드 테스트")
-	void getPasswordMethodTest() throws Exception {
+	void getPasswordMethodTest() {
 
 		// Given
 		LoginProcessMember loginProcessMember = new LoginProcessMember(
@@ -42,7 +42,7 @@ class LoginProcessMemberTest {
 
 	@Test
 	@DisplayName("LoginProcessMember getUsername 메서드 테스트")
-	void getUsernameMethodTest() throws Exception {
+	void getUsernameMethodTest() {
 
 		// Given
 		LoginProcessMember loginProcessMember = new LoginProcessMember(

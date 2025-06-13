@@ -58,11 +58,9 @@ class MemberServiceTest {
 	@Mock
 	private MemberStateAdaptor memberStateAdaptor;
 
-	MockedStatic<JwtGetMemberId> jwtStatic;
-
 	@Test
 	@DisplayName("회원가입 수행하는 메서드 테스트")
-	void createMemberMethodTest() throws Exception {
+	void createMemberMethodTest() {
 
 		// Given
 		RequestRegisterMemberDTO requestRegisterMemberDTO = new RequestRegisterMemberDTO(
@@ -82,15 +80,13 @@ class MemberServiceTest {
 		when(memberRegisterAdaptor.postRegisterMember(requestRegisterMemberDTO)).thenReturn(responseRegisterMemberDTO);
 
 		// Then
-		Assertions.assertThatCode(() -> {
-			memberService.createMember(requestRegisterMemberDTO);
-		});
+		Assertions.assertThatNoException().isThrownBy(() -> memberService.createMember(requestRegisterMemberDTO));
 
 	}
 
 	@Test
 	@DisplayName("회원가입 수행하는 메서드 RegisterNotEqualsPasswordException 테스트")
-	void createMemberMethodRegisterNotEqualsPasswordExceptionTest() throws Exception {
+	void createMemberMethodRegisterNotEqualsPasswordExceptionTest() {
 
 		// Given
 		RequestRegisterMemberDTO requestRegisterMemberDTO = new RequestRegisterMemberDTO(
@@ -106,15 +102,13 @@ class MemberServiceTest {
 		// When
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(RegisterNotEqualsPasswordException.class, () -> {
-			memberService.createMember(requestRegisterMemberDTO);
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(RegisterNotEqualsPasswordException.class, () -> memberService.createMember(requestRegisterMemberDTO));
 
 	}
 
 	@Test
 	@DisplayName("회원가입 수행하는 메서드 RegisterProcessException 테스트")
-	void createMemberMethodRegisterProcessExceptionTest() throws Exception {
+	void createMemberMethodRegisterProcessExceptionTest() {
 
 		// Given
 		RequestRegisterMemberDTO requestRegisterMemberDTO = new RequestRegisterMemberDTO(
@@ -131,15 +125,13 @@ class MemberServiceTest {
 		when(memberRegisterAdaptor.postRegisterMember(requestRegisterMemberDTO)).thenReturn(null);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(RegisterProcessException.class, () -> {
-			memberService.createMember(requestRegisterMemberDTO);
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(RegisterProcessException.class, () -> memberService.createMember(requestRegisterMemberDTO));
 
 	}
 
 	@Test
 	@DisplayName("회원가입 수행하는 메서드 FeignException 테스트")
-	void createMemberMethodFeignExceptionTest() throws Exception {
+	void createMemberMethodFeignExceptionTest() {
 
 		// Given
 		RequestRegisterMemberDTO requestRegisterMemberDTO = new RequestRegisterMemberDTO(
@@ -156,15 +148,13 @@ class MemberServiceTest {
 		when(memberRegisterAdaptor.postRegisterMember(requestRegisterMemberDTO)).thenThrow(FeignException.class);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(RegisterProcessException.class, () -> {
-			memberService.createMember(requestRegisterMemberDTO);
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(RegisterProcessException.class, () -> memberService.createMember(requestRegisterMemberDTO));
 
 	}
 
 	@Test
 	@DisplayName("회원 이름 조회하는 메서드 테스트")
-	void getMemberNameMethodTest() throws Exception {
+	void getMemberNameMethodTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -198,7 +188,7 @@ class MemberServiceTest {
 
 	@Test
 	@DisplayName("회원 이름 null 인 경우 조회하는 메서드 테스트")
-	void getMemberNameNullMethodTest() throws Exception {
+	void getMemberNameNullMethodTest() {
 
 		// Given
 		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
@@ -231,7 +221,7 @@ class MemberServiceTest {
 
 	@Test
 	@DisplayName("회원 상태 조회 메서드 테스트")
-	void getMemberStateMethodTest() throws Exception {
+	void getMemberStateMethodTest() {
 
 		// Given
 		ResponseMemberStateDTO responseMemberStateDTO = new ResponseMemberStateDTO(
@@ -252,7 +242,7 @@ class MemberServiceTest {
 
 	@Test
 	@DisplayName("회원 상태 조회 메서드 GetMemberStateFailedException 테스트")
-	void getMemberStateMethodGetMemberStateFailedExceptionTest() throws Exception {
+	void getMemberStateMethodGetMemberStateFailedExceptionTest() {
 
 		// Given
 		ResponseMemberStateDTO responseMemberStateDTO = new ResponseMemberStateDTO(
@@ -265,9 +255,7 @@ class MemberServiceTest {
 		when(memberStateAdaptor.getMemberState("user")).thenReturn(response);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(GetMemberStateFailedException.class, () -> {
-			memberService.getMemberState("user");
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(GetMemberStateFailedException.class, () -> memberService.getMemberState("user"));
 
 	}
 

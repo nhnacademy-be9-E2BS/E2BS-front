@@ -35,7 +35,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 배송지 조회 메서드 테스트")
-	void getMemberAddressesMethodTest() throws Exception {
+	void getMemberAddressesMethodTest() {
 
 		// Given
 		List<ResponseMemberAddressDTO> memberAddresses = List.of(new ResponseMemberAddressDTO());
@@ -87,7 +87,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 배송지 저장 메서드 테스트")
-	void saveMemberAddressMethodTest() throws Exception {
+	void saveMemberAddressMethodTest() {
 
 		// Given
 		RequestMemberAddressSaveDTO requestMemberAddressSaveDTO = new RequestMemberAddressSaveDTO(
@@ -115,7 +115,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 배송지 저장 메서드 SaveAddressFailedException 에러 테스트")
-	void saveMemberAddressMethodSaveAddressFailedException() throws Exception {
+	void saveMemberAddressMethodSaveAddressFailedException() {
 
 		// Given
 		RequestMemberAddressSaveDTO requestMemberAddressSaveDTO = new RequestMemberAddressSaveDTO(
@@ -142,7 +142,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원의 특정 배송지 조회 메서드 테스트")
-	void getAddressByAddressIdMethodTest() throws Exception {
+	void getAddressByAddressIdMethodTest() {
 
 		// Given
 		ResponseMemberAddressDTO responseMemberAddressDTO = new ResponseMemberAddressDTO(
@@ -182,15 +182,13 @@ class AddressServiceTest {
 		when(addressAdaptor.getAddress("user", 1)).thenReturn(response);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> {
-			ResponseMemberAddressDTO result = addressService.getAddressByAddressId("user", 1);
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> addressService.getAddressByAddressId("user", 1));
 
 	}
 
 	@Test
 	@DisplayName("회원의 특정 배송지 조회 메서드 EmptyResponseException2 테스트")
-	void getAddressByAddressIdMethodEmptyResponseException2Test() throws Exception {
+	void getAddressByAddressIdMethodEmptyResponseException2Test() {
 
 		// Given
 		ResponseMemberAddressDTO responseMemberAddressDTO = new ResponseMemberAddressDTO(
@@ -212,15 +210,13 @@ class AddressServiceTest {
 		when(addressAdaptor.getAddress("user", 1)).thenReturn(response);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> {
-			ResponseMemberAddressDTO result = addressService.getAddressByAddressId("user", 1);
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> addressService.getAddressByAddressId("user", 1));
 
 	}
 
 	@Test
 	@DisplayName("회원 배송지 수정 메서드 테스트")
-	void updateAddressMethodTest() throws Exception {
+	void updateAddressMethodTest() {
 
 		// Given
 		RequestMemberAddressSaveDTO requestMemberAddressSaveDTO = new RequestMemberAddressSaveDTO();
@@ -237,7 +233,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 배송지 수정 메서드 UpdateAddressFailedException 테스트")
-	void updateAddressMethodUpdateAddressFailedExceptionTest() throws Exception {
+	void updateAddressMethodUpdateAddressFailedExceptionTest() {
 
 		// Given
 		RequestMemberAddressSaveDTO requestMemberAddressSaveDTO = new RequestMemberAddressSaveDTO();
@@ -255,7 +251,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 배송지 삭제 메서드 테스트")
-	void deleteAddressMethodTest() throws Exception {
+	void deleteAddressMethodTest() {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.CREATED);
@@ -271,7 +267,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 배송지 삭제 메서드 DeleteAddressFailedException 테스트")
-	void deleteAddressMethodDeleteAddressFailedExceptionTest() throws Exception {
+	void deleteAddressMethodDeleteAddressFailedExceptionTest() {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -288,7 +284,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 기본 배송지 설정 메서드 테스트")
-	void setDefaultAddressMethodTest() throws Exception {
+	void setDefaultAddressMethodTest() {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.CREATED);
@@ -304,7 +300,7 @@ class AddressServiceTest {
 
 	@Test
 	@DisplayName("회원 기본 배송지 설정 메서드 EmptyResponseException 테스트")
-	void setDefaultAddressMethodEmptyResponseExceptionTest() throws Exception {
+	void setDefaultAddressMethodEmptyResponseExceptionTest() {
 
 		// Given
 		ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);

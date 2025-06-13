@@ -67,7 +67,7 @@ class OAuthServiceTest {
 
 	@Test
 	@DisplayName("Payco AccessToken 정상 응답 테스트")
-	void getPaycoAccessTokenMethodTest() throws Exception {
+	void getPaycoAccessTokenMethodTest() {
 
 		// Given
 		String dummyCode = "dummy-code";
@@ -92,7 +92,7 @@ class OAuthServiceTest {
 
 	@Test
 	@DisplayName("Payco AccessToken PaycoProcessingException 응답 테스트")
-	void getPaycoAccessTokenMethodPaycoProcessingExceptionTest() throws Exception {
+	void getPaycoAccessTokenMethodPaycoProcessingExceptionTest() {
 
 		// Given
 		String dummyCode = "dummy-code";
@@ -110,14 +110,12 @@ class OAuthServiceTest {
 		ReflectionTestUtils.setField(oAuthService, "clientSecret", "test-secret");
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(PaycoProcessingException.class, () -> {
-			oAuthService.getPaycoAccessToken(dummyCode);
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(PaycoProcessingException.class, () -> oAuthService.getPaycoAccessToken(dummyCode));
 	}
 
 	@Test
 	@DisplayName("Payco 회원 정보 메서드 테스트")
-	void getPaycoMemberInfoMethodTest() throws Exception {
+	void getPaycoMemberInfoMethodTest() {
 
 		// Given
 		ResponsePaycoMemberInfoDTO responsePaycoMemberInfoDTO = new ResponsePaycoMemberInfoDTO();
@@ -132,23 +130,23 @@ class OAuthServiceTest {
 		data.setMember(member);
 		responsePaycoMemberInfoDTO.setData(data);
 
-		ResponseEntity<ResponsePaycoMemberInfoDTO> response = new ResponseEntity<>(responsePaycoMemberInfoDTO,
+		ResponseEntity<ResponsePaycoMemberInfoDTO> responseResult = new ResponseEntity<>(responsePaycoMemberInfoDTO,
 			HttpStatus.CREATED);
 
 		// When
-		when(oAuthPaycoMemberInfoAdaptor.getPaycoMemberInfo("user", "access")).thenReturn(response);
+		when(oAuthPaycoMemberInfoAdaptor.getPaycoMemberInfo("user", "access")).thenReturn(responseResult);
 
 		ReflectionTestUtils.setField(oAuthService, "clientId", "user");
 		ResponsePaycoMemberInfoDTO result = oAuthService.getPaycoMemberInfo("access");
 
 		// Then
-		Assertions.assertThat(result).isEqualTo(response.getBody());
+		Assertions.assertThat(result).isEqualTo(responseResult.getBody());
 
 	}
 
 	@Test
 	@DisplayName("Payco 회원 정보 메서드 PaycoProcessException 테스트")
-	void getPaycoMemberInfoPaycoProcessExceptionTest() throws Exception {
+	void getPaycoMemberInfoPaycoProcessExceptionTest() {
 
 		// Given
 		ResponsePaycoMemberInfoDTO responsePaycoMemberInfoDTO = new ResponsePaycoMemberInfoDTO();
@@ -162,24 +160,22 @@ class OAuthServiceTest {
 		ResponsePaycoMemberInfoDTO.PaycoData data = new ResponsePaycoMemberInfoDTO.PaycoData();
 		data.setMember(member);
 
-		ResponseEntity<ResponsePaycoMemberInfoDTO> response = new ResponseEntity<>(responsePaycoMemberInfoDTO,
+		ResponseEntity<ResponsePaycoMemberInfoDTO> responseResult = new ResponseEntity<>(responsePaycoMemberInfoDTO,
 			HttpStatus.CREATED);
 
 		// When
-		when(oAuthPaycoMemberInfoAdaptor.getPaycoMemberInfo("user", "access")).thenReturn(response);
+		when(oAuthPaycoMemberInfoAdaptor.getPaycoMemberInfo("user", "access")).thenReturn(responseResult);
 
 		ReflectionTestUtils.setField(oAuthService, "clientId", "user");
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(PaycoProcessingException.class, () -> {
-			oAuthService.getPaycoMemberInfo("access");
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(PaycoProcessingException.class, () -> oAuthService.getPaycoMemberInfo("access"));
 
 	}
 
 	@Test
 	@DisplayName("Payco 로그인 메서드 테스트")
-	void paycoLoginMethodTest() throws Exception {
+	void paycoLoginMethodTest() {
 
 		// Given
 		ResponsePaycoMemberInfoDTO.PaycoMember member = new ResponsePaycoMemberInfoDTO.PaycoMember();
@@ -200,24 +196,19 @@ class OAuthServiceTest {
 			HttpStatus.CREATED);
 		ResponseEntity<Void> lastLoginResponse = new ResponseEntity<>(HttpStatus.CREATED);
 
-		// HttpSession session = mock(HttpSession.class);
-		// when(request.getSession()).thenReturn(session);
-
 		// When
 		when(oAuthLoginAdaptor.checkOAuthLoginId("idNo")).thenReturn(responseCheck);
 		doNothing().when(authService).postAuthCreateJwtToken(any(RequestJwtTokenDTO.class), eq(response), eq(request));
 		when(oAuthLoginAdaptor.loginOAuthLastLogin("idNo")).thenReturn(lastLoginResponse);
 
 		// Then
-		Assertions.assertThatCode(() -> {
-			oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response);
-		}).doesNotThrowAnyException();
+		Assertions.assertThatCode(() -> oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response)).doesNotThrowAnyException();
 
 	}
 
 	@Test
 	@DisplayName("Payco 로그인 메서드 PaycoProcessingException 테스트")
-	void paycoLoginMethodPaycoProcessingExceptionTest() throws Exception {
+	void paycoLoginMethodPaycoProcessingExceptionTest() {
 
 		// Given
 		ResponsePaycoMemberInfoDTO responsePaycoMemberInfoDTO = new ResponsePaycoMemberInfoDTO();
@@ -240,15 +231,13 @@ class OAuthServiceTest {
 		when(oAuthLoginAdaptor.checkOAuthLoginId("idNo")).thenReturn(responseCheck);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(PaycoProcessingException.class, () -> {
-			oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response);
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(PaycoProcessingException.class, () -> oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response));
 
 	}
 
 	@Test
 	@DisplayName("Payco 회원가입 메서드 테스트")
-	void paycoRegisterMethodTest() throws Exception {
+	void paycoRegisterMethodTest() {
 
 		// Given
 		ResponsePaycoMemberInfoDTO.PaycoMember member = new ResponsePaycoMemberInfoDTO.PaycoMember();
@@ -270,31 +259,20 @@ class OAuthServiceTest {
 
 		ResponseEntity<Void> registerResponse = new ResponseEntity<>(HttpStatus.CREATED);
 
-		// HttpSession session = mock(HttpSession.class);
-		// when(request.getSession()).thenReturn(session);
-
-		// String guestKey = "GUEST12345";
-		// mockStatic(CookieUtil.class); // static 메서드 mocking
-		// when(CookieUtil.getCookieValue("guestKey", request)).thenReturn(guestKey);
-
 		// When
 		when(oAuthLoginAdaptor.checkOAuthLoginId("idNo")).thenReturn(responseCheck);
 		doNothing().when(authService).postAuthCreateJwtToken(any(RequestJwtTokenDTO.class), eq(response), eq(request));
 		when(oAuthRegisterAdaptor.registerOAuth(any(RequestOAuthRegisterDTO.class))).thenReturn(registerResponse);
 		when(oAuthLoginAdaptor.loginOAuthLastLogin("idNo")).thenReturn(registerResponse);
-		// doNothing().when(memberCartService).createCartByMember("idNo");
-		// when(cartService.mergeCartItemsToMemberFromGuest(any(RequestMergeCartItemDTO.class))).thenReturn(5);
 
 		// Then
-		Assertions.assertThatCode(() -> {
-			oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response);
-		}).doesNotThrowAnyException();
+		Assertions.assertThatCode(() -> oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response)).doesNotThrowAnyException();
 
 	}
 
 	@Test
 	@DisplayName("Payco 회원가입 메서드 ServerErrorException 테스트")
-	void paycoRegisterMethodServerErrorExceptionTest() throws Exception {
+	void paycoRegisterMethodServerErrorExceptionTest() {
 
 		// Given
 		ResponsePaycoMemberInfoDTO.PaycoMember member = new ResponsePaycoMemberInfoDTO.PaycoMember();
@@ -321,9 +299,7 @@ class OAuthServiceTest {
 		when(oAuthRegisterAdaptor.registerOAuth(any(RequestOAuthRegisterDTO.class))).thenReturn(registerResponse);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(ServerErrorException.class, () -> {
-			oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response);
-		});
+		org.junit.jupiter.api.Assertions.assertThrows(ServerErrorException.class, () -> oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response));
 
 	}
 

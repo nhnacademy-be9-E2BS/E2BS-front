@@ -99,8 +99,8 @@ class CustomerServiceTest {
 
 		// then
 		assertEquals(result, responseDto);
-		assertEquals(request.getCustomerPassword(), "encodedPwd");
-		assertEquals(request.getCustomerPasswordCheck(), "encodedPwd");
+		assertEquals("encodedPwd", request.getCustomerPassword());
+		assertEquals("encodedPwd", request.getCustomerPasswordCheck());
 	}
 
 	@Test
