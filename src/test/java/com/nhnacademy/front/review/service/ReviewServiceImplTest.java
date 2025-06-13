@@ -190,7 +190,7 @@ class ReviewServiceImplTest {
 		// when & then
 		assertThrows(ReviewProcessException.class, () -> {
 			// 예외를 던질 수 있는 하나의 호출만 람다 내에 작성
-			reviewService.getReviewsByMember(any(), any());
+			reviewService.getReviewsByProduct(productId, pageable);
 		});
 	}
 
