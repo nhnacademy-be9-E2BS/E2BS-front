@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.oauth.model.dto.request.RequestOAuthLoginDTO;
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponseCheckOAuthIdDTO;
 
-@FeignClient(name = "oauth-adaptor", url = "${oauth.login.url}")
+@FeignClient(name = "gateway-service", contextId = "oauth-adaptor")
 public interface OAuthLoginAdaptor {
 
-	@GetMapping("/{member-id}")
+	@GetMapping("/api/oauth/login/{member-id}")
 	ResponseEntity<ResponseCheckOAuthIdDTO> checkOAuthLoginId(@PathVariable("member-id") String memberId);
 
-	@PostMapping
+	@PostMapping("/api/oauth/login")
 	ResponseEntity<Void> loginOAuth(@RequestBody RequestOAuthLoginDTO requestOAuthLoginDTO);
+
+	@GetMapping("/api/oauth/login/members/{member-id}")
+	ResponseEntity<Void> loginOAuthLastLogin(@PathVariable("member-id") String memberId);
 
 }

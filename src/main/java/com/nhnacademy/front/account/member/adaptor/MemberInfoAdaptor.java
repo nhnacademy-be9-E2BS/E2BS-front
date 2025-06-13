@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.member.model.dto.request.RequestMemberInfoDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfoDTO;
 
-@FeignClient(name = "member-info-adaptor", url = "${auth.member.url}")
+@FeignClient(name = "gateway-service", contextId = "member-info-adaptor")
 public interface MemberInfoAdaptor {
 
-	@GetMapping("/{member-id}")
+	@GetMapping("/api/auth/members/{member-id}")
 	ResponseEntity<ResponseMemberInfoDTO> getMemberInfo(@PathVariable("member-id") String memberId);
 
-	@PutMapping("/{member-id}/info")
+	@PutMapping("/api/auth/members/{member-id}/info")
 	ResponseEntity<Void> updateMemberInfo(@PathVariable("member-id") String memberId,
 		@RequestBody RequestMemberInfoDTO requestMemberInfoDTO);
 
-	@PostMapping("/{member-id}/info")
+	@PostMapping("/api/auth/members/{member-id}/info")
 	ResponseEntity<Void> withdrawMember(@PathVariable("member-id") String memberId);
 
 }

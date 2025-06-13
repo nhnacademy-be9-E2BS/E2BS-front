@@ -33,7 +33,7 @@ public class SecurityAdminConfig {
 	@Bean
 	public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
 		CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
-			cartService
+			cartService, memberService
 		);
 		CustomAuthenticationFailureHandler customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
 

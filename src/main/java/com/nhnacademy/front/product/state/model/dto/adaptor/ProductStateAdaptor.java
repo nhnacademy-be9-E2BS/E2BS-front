@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.nhnacademy.front.product.state.model.dto.response.ResponseProductStateDTO;
 
-@FeignClient(name = "product-state-service", url = "${product.productState.url}")
+@FeignClient(name = "gateway-service", contextId = "product-state-service")
 public interface ProductStateAdaptor {
-	@GetMapping
+	@GetMapping("/api/productState")
 	ResponseEntity<List<ResponseProductStateDTO>> getProductStates();
 }

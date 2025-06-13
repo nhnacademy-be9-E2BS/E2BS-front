@@ -8,6 +8,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class CookieUtil {
 
+	/**
+	 * 	이 클래스는 static 으로 공통 사용하기 때문에
+	 * 	private 생성자를 선언하여 다른 곳에서 인스턴스 생성을 못하도록 막는다.
+	 */
+	private CookieUtil() {
+	}
+
 	private static final int EXPIRY = 60 * 60 * 24; // 1일
 
 	public static void setCookie(String cookieName, HttpServletResponse response, String value) {

@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
 
-@FeignClient(name = "deliveryFee-service", url = "${order.delivery.user.url}")
+@FeignClient(name = "gateway-service", contextId = "deliveryFee-service")
 public interface DeliveryFeeAdaptor {
-	@GetMapping
+	@GetMapping("/api/deliveryFee")
 	ResponseEntity<ResponseDeliveryFeeDTO> getCurrentDeliveryFee();
 }

@@ -84,7 +84,7 @@ public class WebAdviceController {
 		String code = "A403";
 		String errorMessage = errorMessageLoader.getMessage(code);
 
-		ModelAndView modelAndView = new ModelAndView("redirect:/login");
+		ModelAndView modelAndView = new ModelAndView("redirect:/members/login");
 		modelAndView.addObject("errorMessage", errorMessage);
 
 		return modelAndView;
@@ -101,7 +101,8 @@ public class WebAdviceController {
 		RegisterProcessException.class, GetMemberStateFailedException.class, PaycoProcessingException.class,
 		PointHistoryGetException.class,
 		WrapperCreateProcessException.class, WrapperGetProcessException.class, WrapperUpdateProcessException.class,
-		PublisherCreateProcessException.class, PublisherGetProcessException.class, PublisherUpdateProcessException.class,
+		PublisherCreateProcessException.class, PublisherGetProcessException.class,
+		PublisherUpdateProcessException.class,
 		CategoryCreateProcessException.class, CategoryGetProcessException.class, CategoryNotFoundException.class,
 		CategoryUpdateProcessException.class, CategoryDeleteProcessException.class,
 		ProductCreateProcessException.class, ProductGetProcessException.class, ProductUpdateProcessException.class
@@ -121,7 +122,7 @@ public class WebAdviceController {
 		String code = "M403";
 		String errorMessage = errorMessageLoader.getMessage(code);
 
-		ModelAndView modelAndView = new ModelAndView("redirect:/login");
+		ModelAndView modelAndView = new ModelAndView("redirect:/members/login");
 		modelAndView.addObject("errorMessage", errorMessage);
 
 		return modelAndView;
@@ -143,7 +144,7 @@ public class WebAdviceController {
 		String code = "R400";
 		String errorMessage = errorMessageLoader.getMessage(code);
 
-		ModelAndView modelAndView = new ModelAndView("redirect:/register");
+		ModelAndView modelAndView = new ModelAndView("redirect:/members/register");
 		modelAndView.addObject("errorMessage", errorMessage);
 
 		return modelAndView;
@@ -155,6 +156,18 @@ public class WebAdviceController {
 		String errorMessage = errorMessageLoader.getMessage(code);
 
 		ModelAndView modelAndView = new ModelAndView("redirect:/mypage/info");
+		modelAndView.addObject("errorMessage", errorMessage);
+
+		return modelAndView;
+	}
+
+	@ExceptionHandler({Throwable.class})
+	public ModelAndView throwable500Exception() {
+		String code = "F500";
+
+		String errorMessage = errorMessageLoader.getMessage(code);
+
+		ModelAndView modelAndView = new ModelAndView("redirect:/error/500");
 		modelAndView.addObject("errorMessage", errorMessage);
 
 		return modelAndView;

@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.nhnacademy.front.account.member.model.dto.request.RequestRegisterMemberDTO;
 import com.nhnacademy.front.account.member.service.MemberService;
+import com.nhnacademy.front.cart.service.MemberCartService;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
@@ -34,6 +35,9 @@ class MemberRegisterControllerTest {
 
 	@MockitoBean
 	private MemberService memberService;
+
+	@MockitoBean
+	private MemberCartService cartService;
 
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
@@ -82,6 +86,7 @@ class MemberRegisterControllerTest {
 
 		// When
 		doNothing().when(memberService).createMember(requestRegisterMemberDTO);
+		doNothing().when(cartService).createCartByMember("user");
 
 		// Then
 		mockMvc.perform(post("/members/register")
@@ -94,7 +99,7 @@ class MemberRegisterControllerTest {
 				.param("memberBirth", String.valueOf(requestRegisterMemberDTO.getMemberBirth()))
 				.param("memberPhone", requestRegisterMemberDTO.getMemberPhone()))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/login"));
+			.andExpect(redirectedUrl("/members/login"));
 
 	}
 

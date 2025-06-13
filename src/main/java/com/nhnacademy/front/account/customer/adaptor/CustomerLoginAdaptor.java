@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.customer.model.dto.request.RequestCustomerLoginDTO;
 import com.nhnacademy.front.account.customer.model.dto.response.ResponseCustomerDTO;
 
-@FeignClient(name = "customer-login-adaptor", url = "${customer.login.url}")
+@FeignClient(name = "gateway-service", contextId = "customer-login-adaptor")
 public interface CustomerLoginAdaptor {
 
-	@PostMapping
+	@PostMapping("/api/customers/login")
 	ResponseEntity<ResponseCustomerDTO> customerLogin(@RequestBody RequestCustomerLoginDTO requestCustomerLoginDTO);
 
 }

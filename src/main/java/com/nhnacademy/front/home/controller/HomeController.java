@@ -9,9 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.nhnacademy.front.common.annotation.JwtTokenCheck;
-import com.nhnacademy.front.home.service.HomeService;
 import com.nhnacademy.front.index.model.dto.response.ResponseMainPageProductDTO;
 import com.nhnacademy.front.index.service.IndexService;
+import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
+import com.nhnacademy.front.order.deliveryfee.service.DeliveryFeeSevice;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,8 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HomeController {
 
-	private final HomeService homeService;
 	private final IndexService indexService;
+	private final DeliveryFeeSevice deliveryFeeSevice;
 
 	@Operation(summary = "메인 페이지 화면", description = "메인 페이지 데이터 요청 및 화면 제공",
 		responses = {
@@ -39,9 +40,13 @@ public class HomeController {
 		for (int i = 0; i < bestSellerList.size(); i += 4) {
 			chunkedList.add(bestSellerList.subList(i, Math.min(i + 4, bestSellerList.size())));
 		}
+
+		ResponseDeliveryFeeDTO deliveryFeeDTO = deliveryFeeSevice.getCurrentDeliveryFee();
+
 		model.addAttribute("today", LocalDate.now());
 		model.addAttribute("BestSellerList", bestSellerList);
 		model.addAttribute("ItemNewAllList", indexService.getNewItemsProducts());
+		model.addAttribute("DeliveryFee",deliveryFeeDTO.getDeliveryFeeFreeAmount());
 
 		return "home";
 	}

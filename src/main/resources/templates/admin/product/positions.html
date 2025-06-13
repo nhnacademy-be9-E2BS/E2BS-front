@@ -137,11 +137,10 @@
                         <thead>
                         <tr>
                             <th style="width: 80%;">역할명</th>
-                            <th style="width: 20%;">관리</th>
                         </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="position : ${positions.content}">
+                            <tr th:each="position : ${positions}">
                                 <td>
                                     <form th:action="@{'/admin/settings/positions/' + ${position.positionId}}" method="post">
                                         <input type="hidden" name="_method" value="put"/>
@@ -154,18 +153,12 @@
                                                    class="form-control"
                                                    style="width: 100%; overflow: hidden; text-overflow: ellipsis;"
                                                    readonly />
+
+                                            <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
+                                            <button type="submit" class="btn btn-sm btn-success d-none save-btn">저장</button>
+                                            <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
                                         </div>
                                     </form>
-                                </td>
-                                <td>
-                                    <!-- 수정 버튼 -->
-                                    <button type="button" class="btn btn-sm btn-outline-primary edit-btn">수정</button>
-
-                                    <!-- 저장 버튼: 기본은 숨김 -->
-                                    <button type="submit" class="btn btn-sm btn-success d-none save-btn" th:onclick="'updatePosition('+${position.positionId}+')'">저장</button>
-
-                                    <!-- 취소 버튼 (초기에는 숨김) -->
-                                    <button type="button" class="btn btn-sm btn-secondary d-none cancel-btn">취소</button>
                                 </td>
                             </tr>
                         </tbody>

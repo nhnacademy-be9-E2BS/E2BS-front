@@ -14,28 +14,28 @@ import com.nhnacademy.front.pointpolicy.model.dto.request.RequestPointPolicyRegi
 import com.nhnacademy.front.pointpolicy.model.dto.request.RequestPointPolicyUpdateDTO;
 import com.nhnacademy.front.pointpolicy.model.dto.response.ResponsePointPolicyDTO;
 
-@FeignClient(name = "point-policy-service", url = "${point.admin.url}")
+@FeignClient(name = "gateway-service", contextId = "point-policy-service")
 public interface PointPolicyAdaptor {
 
-	@PostMapping("/register")
+	@PostMapping("/api/admin/pointPolicies/register")
 	ResponseEntity<Void> createPointPolicy(@RequestBody RequestPointPolicyRegisterDTO request);
 
-	@GetMapping("/registerPolicy")
+	@GetMapping("/api/admin/pointPolicies/registerPolicy")
 	ResponseEntity<List<ResponsePointPolicyDTO>> getRegisterPointPolicies();
 
-	@GetMapping("/reviewImgPolicy")
+	@GetMapping("/api/admin/pointPolicies/reviewImgPolicy")
 	ResponseEntity<List<ResponsePointPolicyDTO>> getReviewImgPointPolicies();
 
-	@GetMapping("/reviewPolicy")
+	@GetMapping("/api/admin/pointPolicies/reviewPolicy")
 	ResponseEntity<List<ResponsePointPolicyDTO>> getReviewPointPolicies();
 
-	@GetMapping("/bookPolicy")
+	@GetMapping("/api/admin/pointPolicies/bookPolicy")
 	ResponseEntity<List<ResponsePointPolicyDTO>> getBookPointPolicies();
 
-	@PutMapping("/{point-policy-id}/activate")
+	@PutMapping("/api/admin/pointPolicies/{point-policy-id}/activate")
 	ResponseEntity<Void> activatePointPolicy(@PathVariable("point-policy-id") Long pointPolicyId);
 
-	@PutMapping("/{point-policy-id}")
+	@PutMapping("/api/admin/pointPolicies/{point-policy-id}")
 	ResponseEntity<Void> updatePointPolicy(@PathVariable("point-policy-id") Long pointPolicyId, @RequestBody RequestPointPolicyUpdateDTO request);
 
 }

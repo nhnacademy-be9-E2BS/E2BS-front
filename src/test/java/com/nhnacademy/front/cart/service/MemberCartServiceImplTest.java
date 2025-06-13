@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.nhnacademy.front.cart.adaptor.MemberCartAdaptor;
+import com.nhnacademy.front.cart.adaptor.MemberRegisterCartAdaptor;
 import com.nhnacademy.front.cart.exception.CartProcessException;
 import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
@@ -28,11 +29,28 @@ import feign.FeignException;
 class MemberCartServiceImplTest {
 
 	@Mock
+	private MemberRegisterCartAdaptor memberRegisterCartAdaptor;
+
+	@Mock
 	private MemberCartAdaptor memberCartAdaptor;
 
 	@InjectMocks
 	private MemberCartServiceImpl memberCartService;
 
+	@Test
+	@DisplayName("회원 장바구니 생성 테스트")
+	void createCartForMember() {
+		// given
+		String memberId = "id123";
+
+		// when
+		when(memberRegisterCartAdaptor.createCartByMember(memberId)).thenReturn(ResponseEntity.noContent().build());
+
+		// when & then
+		assertThatCode(() -> memberCartService.createCartByMember(memberId))
+			.doesNotThrowAnyException();
+	}
+	
 
 	@Test
 	@DisplayName("회원 장바구니 조회 테스트")
@@ -129,7 +147,7 @@ class MemberCartServiceImplTest {
 		RequestUpdateCartItemsDTO dto = new RequestUpdateCartItemsDTO();
 		ResponseEntity<Integer> response = ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-		when(memberCartAdaptor.updateCartItemForMember(eq(cartItemId), eq(dto))).thenReturn(response);
+		when(memberCartAdaptor.updateCartItemForMember(cartItemId, dto)).thenReturn(response);
 
 		// when & then
 		assertThatThrownBy(() -> memberCartService.updateCartItemForMember(cartItemId, dto))
@@ -144,7 +162,7 @@ class MemberCartServiceImplTest {
 		long cartItemId = 1L;
 		RequestUpdateCartItemsDTO dto = new RequestUpdateCartItemsDTO();
 
-		when(memberCartAdaptor.updateCartItemForMember(eq(cartItemId), eq(dto)))
+		when(memberCartAdaptor.updateCartItemForMember(cartItemId, dto))
 			.thenThrow(FeignException.class);
 
 		// when & then

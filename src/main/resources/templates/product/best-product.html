@@ -252,23 +252,30 @@
                    min="1">
             <!-- 수정: 회색 칸 제거, 텍스트로 변경 -->
           </div>
-          <button th:if="${session.isMember}"
+          <button th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}"
                   th:onclick="'return submitOrderMember(' + ${product.productId} + ')'"
                   style="background-color: #163B63FF; color: white; border: none;">
             바로구매
           </button>
-          <button th:if="${session.isMember == null}"
+          <button th:if="${memberRole == null and memberName == null}"
                   th:onclick="'return submitOrderGuest(' + ${product.productId} + ')'"
                   style="background-color: #163B63FF; color: white; border: none;">
             바로구매
           </button>
 
-          <button th:class="${session.isMember} ? 'member-add-cart-btn' : 'guest-add-cart-btn'"
+          <button th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}"
+                  class="member-add-cart-btn"
+                  style="background-color: #007BFF; color: white; border: none;">
+            쇼핑카트 담기
+          </button>
+          <button th:if="${memberRole == null and memberName == null}"
+                  class="guest-add-cart-btn"
                   style="background-color: #007BFF; color: white; border: none;">
             쇼핑카트 담기
           </button>
 
           <button class="like-button"
+                  th:if="${memberName != null and memberRole != null and memberRole.memberRoleName.name() == 'MEMBER'}"
                   th:data-liked="${product.liked}"
                   style="background-color: #e1e1e1; color: black; font-size: 12px; border: none;"
                   th:text="${product.liked} ? '위시리스트 취소' : '위시리스트 담기'">

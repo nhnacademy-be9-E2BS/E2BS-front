@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.member.model.dto.request.RequestLoginMemberDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseLoginMemberDTO;
 
-@FeignClient(name = "member-login-adaptor", url = "${member.login.url}")
+@FeignClient(name = "gateway-service", contextId = "member-login-adaptor")
 public interface MemberLoginAdaptor {
 
-	@PostMapping
+	@PostMapping("/api/members/login")
 	ResponseLoginMemberDTO postLoginMember(@RequestBody RequestLoginMemberDTO requestLoginMemberDTO);
 
 }

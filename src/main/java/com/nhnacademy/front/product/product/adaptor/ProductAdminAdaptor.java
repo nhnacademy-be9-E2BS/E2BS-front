@@ -26,42 +26,42 @@ import com.nhnacademy.front.product.product.model.dto.response.ResponseProductRe
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchByQueryTypeDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductsApiSearchDTO;
 
-@FeignClient(name = "product-admin-service", url = "${auth.product.book.url}")
+@FeignClient(name = "gateway-service", contextId = "product-admin-service")
 public interface ProductAdminAdaptor {
 
-	@GetMapping
+	@GetMapping("/api/auth/admin/books")
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProducts(Pageable pageable);
 
-	@GetMapping("/register")
+	@GetMapping("/api/auth/admin/books/register")
 	ResponseEntity<Void> getRegisterView();
 
-	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = "/api/auth/admin/books")
 	ResponseEntity<Void> postCreateProduct(@RequestPart("requestMeta") RequestProductMetaDTO requestMeta,
 		@RequestPart("productImage") List<MultipartFile> productImage);
 
-	@PutMapping(value = "/{bookId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "/api/auth/admin/books/{bookId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	ResponseEntity<Void> putUpdateProduct(@PathVariable Long bookId,
 		@RequestPart("product") RequestProductMetaDTO requestMeta,
 		@RequestPart("productImage") List<MultipartFile> productImage);
 
-	@PutMapping("/{bookId}/salePrice")
+	@PutMapping("/api/auth/admin/books/{bookId}/salePrice")
 	ResponseEntity<Void> putUpdateProductSalePrice(@PathVariable Long bookId,
 		@RequestBody RequestProductSalePriceUpdateDTO request);
 
 	// 일반 검색 (query + queryType)
-	@GetMapping("/aladdin/search")
+	@GetMapping("/api/auth/admin/books/aladdin/search")
 	ResponseEntity<PageResponse<ResponseProductsApiSearchDTO>> searchBooksByQuery(
 		@SpringQueryMap RequestProductApiSearchDTO request, Pageable pageable);
 
 	// 리스트 검색 (query 없음, Bestseller, NewBook 등)
-	@GetMapping("/aladdin/search")
+	@GetMapping("/api/auth/admin/books/aladdin/search")
 	ResponseEntity<PageResponse<ResponseProductsApiSearchByQueryTypeDTO>> listBooksByCategory(
 		@SpringQueryMap RequestProductApiSearchByQueryTypeDTO request, Pageable pageable);
 
-	@PostMapping("/aladdin/register")
+	@PostMapping("/api/auth/admin/books/aladdin/register")
 	ResponseEntity<Void> postCreateProductByApi(@RequestBody RequestProductApiCreateDTO request);
 
-	@PostMapping("/aladdin/register/list")
+	@PostMapping("/api/auth/admin/books/aladdin/register/list")
 	ResponseEntity<Void> postCreateProductQueryByApi(@RequestBody RequestProductApiCreateByQueryDTO request);
 
 }
