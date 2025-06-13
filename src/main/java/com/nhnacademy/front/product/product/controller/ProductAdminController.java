@@ -53,7 +53,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Tag(name = "도서(관리자)", description = "관리자 도서 관련 API")
 @Controller
 @RequiredArgsConstructor
@@ -83,10 +85,11 @@ public class ProductAdminController {
 		})
 	@JwtTokenCheck
 	@GetMapping
-	public String getProducts(@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
+	public String getProducts(
+		@Parameter(description = "페이징 정보") @PageableDefault(page = 0, size = 10) Pageable pageable, Model model,
 		@Parameter(description = "검색 키워드", in = ParameterIn.QUERY) @RequestParam(required = false) String keyword) {
 		PageResponse<ResponseProductReadDTO> response;
-		if(Objects.isNull(keyword)) {
+		if (Objects.isNull(keyword)) {
 			response = productAdminService.getProducts(pageable);
 		} else {
 			response = productAdminService.getProductsBySearch(pageable, keyword);
@@ -108,17 +111,18 @@ public class ProductAdminController {
 		})
 	@JwtTokenCheck
 	@GetMapping("/register/{book-id}")
-	public String getProductsById(@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId,
-		Model model, @Parameter(description = "페이징 정보") Pageable pageable) {
+	public String getProductsById(
+		@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId,
+		Model model) {
 		model.addAttribute("bookId", bookId);
 
 		ResponseProductReadDTO response = productService.getProduct(bookId, "");
 		model.addAttribute("product", response);
 
-		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(pageable);
+		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(Pageable.unpaged());
 		model.addAttribute("contributors", contributors.getContent());
 
-		PageResponse<ResponsePublisherDTO> publishers = publisherService.getPublishers(pageable);
+		PageResponse<ResponsePublisherDTO> publishers = publisherService.getPublishers(Pageable.unpaged());
 		model.addAttribute("publishers", publishers.getContent());
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
@@ -144,14 +148,14 @@ public class ProductAdminController {
 		})
 	@JwtTokenCheck
 	@GetMapping("/register")
-	public String getRegisterView(Model model, @Parameter(description = "페이징 정보") Pageable pageable) {
+	public String getRegisterView(Model model) {
 		ResponseProductReadDTO response = new ResponseProductReadDTO();
 		model.addAttribute("product", response);
 
-		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(pageable);
+		PageResponse<ResponseContributorDTO> contributors = contributorService.getContributors(Pageable.unpaged());
 		model.addAttribute("contributors", contributors.getContent());
 
-		PageResponse<ResponsePublisherDTO> publishers = publisherService.getPublishers(pageable);
+		PageResponse<ResponsePublisherDTO> publishers = publisherService.getPublishers(Pageable.unpaged());
 		model.addAttribute("publishers", publishers.getContent());
 
 		List<ResponseCategoryDTO> categories = adminCategoryService.getCategories();
@@ -179,7 +183,8 @@ public class ProductAdminController {
 		})
 	@JwtTokenCheck
 	@PostMapping("/register")
-	public String createProduct(@Parameter(description = "도서 등록 및 수정 DTO", required = true, schema = @Schema(implementation = RequestProductDTO.class))
+	public String createProduct(
+		@Parameter(description = "도서 등록 및 수정 DTO", required = true, schema = @Schema(implementation = RequestProductDTO.class))
 		@Validated @ModelAttribute RequestProductDTO request, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
@@ -200,7 +205,8 @@ public class ProductAdminController {
 		})
 	@JwtTokenCheck
 	@PutMapping("/register/{book-id}")
-	public String updateProduct(@Parameter(description = "도서 등록 및 수정 DTO", required = true, schema = @Schema(implementation = RequestProductDTO.class))
+	public String updateProduct(
+		@Parameter(description = "도서 등록 및 수정 DTO", required = true, schema = @Schema(implementation = RequestProductDTO.class))
 		@Validated @ModelAttribute RequestProductDTO request, BindingResult bindingResult,
 		@Parameter(description = "수정할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId) {
 		if (bindingResult.hasErrors()) {
@@ -223,7 +229,8 @@ public class ProductAdminController {
 		})
 	@JwtTokenCheck
 	@PutMapping("/{book-id}/salePrice")
-	public String updateProduct(@Parameter(description = "도서 판매가 수정 DTO", required = true, schema = @Schema(implementation = RequestProductSalePriceUpdateDTO.class))
+	public String updateProduct(
+		@Parameter(description = "도서 판매가 수정 DTO", required = true, schema = @Schema(implementation = RequestProductSalePriceUpdateDTO.class))
 		@Validated @RequestBody RequestProductSalePriceUpdateDTO request, BindingResult bindingResult,
 		@Parameter(description = "수정할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId) {
 		if (bindingResult.hasErrors()) {
