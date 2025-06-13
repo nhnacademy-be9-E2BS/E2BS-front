@@ -89,7 +89,7 @@ class OAuthControllerTest {
 		// Then
 		mockMvc.perform(get("/login/oauth2/code/payco?code=user"))
 			.andExpect(status().is3xxRedirection())
-			.andExpect(redirectedUrl("/login?error"));
+			.andExpect(redirectedUrl("/"));
 
 	}
 

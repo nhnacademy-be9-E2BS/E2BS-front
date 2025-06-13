@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseMemberCouponDTO;
 
-@FeignClient(name = "member-coupon-box", url = "${auth.member.mypage.url}")
+@FeignClient(name = "gateway-service", contextId = "member-coupon-box")
 public interface MemberCouponBoxAdaptor {
 
-	@GetMapping("/{member-id}/coupons")
+	@GetMapping("/api/auth/mypage/{member-id}/coupons")
 	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getMemberCouponsByMemberId(@PathVariable("member-id") String memberId,
 		Pageable pageable);
 
-	@GetMapping("/{member-id}/couponsUsable")
+	@GetMapping("/api/auth/mypage/{member-id}/couponsUsable")
 	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getUsableMemberCouponsByMemberId(@PathVariable("member-id") String memberId,
 		Pageable pageable);
 
-	@GetMapping("/{member-id}/couponsUnusable")
+	@GetMapping("/api/auth/mypage/{member-id}/couponsUnusable")
 	ResponseEntity<PageResponse<ResponseMemberCouponDTO>> getUnusableMemberCouponsByMemberId(@PathVariable("member-id") String memberId,
 		Pageable pageable);
 }

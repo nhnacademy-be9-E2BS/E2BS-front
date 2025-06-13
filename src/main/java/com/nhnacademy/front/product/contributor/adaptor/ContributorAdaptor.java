@@ -14,19 +14,19 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.contributor.dto.request.RequestContributorDTO;
 import com.nhnacademy.front.product.contributor.dto.response.ResponseContributorDTO;
 
-@FeignClient(name = "contributor-service", url = "${product.contributor.url}")
+@FeignClient(name = "gateway-service", contextId = "contributor-service")
 public interface ContributorAdaptor {
-	@GetMapping
+	@GetMapping("/api/admin/contributors")
 	ResponseEntity<PageResponse<ResponseContributorDTO>> getContributors(Pageable pageable);
 
-	@GetMapping
+	@GetMapping("/api/admin/contributors")
 	ResponseContributorDTO getContributor(@RequestParam("contributorId") long contributorId);
 
-	@PostMapping
+	@PostMapping("/api/admin/contributors")
 	ResponseContributorDTO postCreateContributor(@RequestBody RequestContributorDTO contributorDTO);
 
 
-	@PutMapping("/{contributorId}")
+	@PutMapping("/api/admin/contributors/{contributorId}")
 	ResponseContributorDTO putUpdateContributor(@PathVariable long contributorId,
 		@RequestBody RequestContributorDTO requestContributorDTO);
 

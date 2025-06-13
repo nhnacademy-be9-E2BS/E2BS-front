@@ -11,12 +11,12 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.order.deliveryfee.model.dto.request.RequestDeliveryFeeDTO;
 import com.nhnacademy.front.order.deliveryfee.model.dto.response.ResponseDeliveryFeeDTO;
 
-@FeignClient(name = "deliveryFee-admin-service", url = "${order.delivery.admin.url}")
+@FeignClient(name = "gateway-service", contextId = "deliveryFee-admin-service")
 public interface DeliveryFeeAdminAdaptor {
 
-	@GetMapping
+	@GetMapping("/api/auth/admin/deliveryFee")
 	ResponseEntity<PageResponse<ResponseDeliveryFeeDTO>> getDeliveryFees(Pageable pageable);
 
-	@PostMapping
+	@PostMapping("/api/auth/admin/deliveryFee")
 	ResponseEntity<Void> postDeliveryFee(@RequestBody RequestDeliveryFeeDTO request);
 }

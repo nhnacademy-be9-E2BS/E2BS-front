@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.account.oauth.model.dto.request.RequestOAuthRegisterDTO;
 
-@FeignClient(name = "oauth-register-adaptor", url = "${oauth.register.url}")
+@FeignClient(name = "gateway-service", contextId = "oauth-register-adaptor")
 public interface OAuthRegisterAdaptor {
 
-	@PostMapping
+	@PostMapping("/api/oauth/register")
 	ResponseEntity<Void> registerOAuth(@RequestBody RequestOAuthRegisterDTO requestOAuthRegisterDTO);
 
 }

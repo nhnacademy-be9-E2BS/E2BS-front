@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.coupon.membercoupon.model.dto.response.ResponseOrderCouponDTO;
 
-@FeignClient(name = "member-coupon-order-service", url = "${coupon.order.url}")
+@FeignClient(name = "gateway-service", contextId = "member-coupon-order-service")
 public interface MemberCouponOrderAdaptor {
 
-	@GetMapping("/{member-id}/coupons")
+	@GetMapping("/api/order/{member-id}/coupons")
 	ResponseEntity<List<ResponseOrderCouponDTO>> getCouponsInOrder(@PathVariable("member-id") String memberId, @RequestParam List<Long> request);
 }

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.auth.model.dto.request.RequestJwtTokenDTO;
 import com.nhnacademy.front.account.auth.model.dto.response.ResponseJwtTokenDTO;
 
-@FeignClient(name = "auth-jwt-create-adaptor", url = "${token.create.url}")
+@FeignClient(name = "gateway-service", contextId = "auth-jwt-create-adaptor")
 public interface AuthAdaptor {
 
-	@PostMapping
+	@PostMapping("/api/token")
 	ResponseEntity<ResponseJwtTokenDTO> postAuth(@RequestBody RequestJwtTokenDTO requestJwtTokenDTO);
 
 }

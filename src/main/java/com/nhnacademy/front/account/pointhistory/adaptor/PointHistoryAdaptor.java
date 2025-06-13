@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.nhnacademy.front.account.pointhistory.model.dto.response.ResponsePointHistoryDTO;
 import com.nhnacademy.front.common.page.PageResponse;
 
-@FeignClient(name = "point-history-service", url = "${auth.member.mypage.url}")
+@FeignClient(name = "gateway-service", contextId = "point-history-service")
 public interface PointHistoryAdaptor {
 
-	@GetMapping("/{member-id}/pointHistory")
+	@GetMapping("/api/auth/mypage/{member-id}/pointHistory")
 	ResponseEntity<PageResponse<ResponsePointHistoryDTO>> getPointHistoryByMemberId(@PathVariable("member-id") String memberId, Pageable pageable);
 }

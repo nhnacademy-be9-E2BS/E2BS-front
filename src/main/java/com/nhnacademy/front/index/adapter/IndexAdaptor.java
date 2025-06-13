@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.nhnacademy.front.index.model.dto.response.ResponseMainPageProductDTO;
 
-@FeignClient(name = "index-service", url = "${index.url}/category")
+@FeignClient(name = "gateway-service", contextId = "index-service")
 public interface IndexAdaptor {
-	@GetMapping("/bestseller")
+	@GetMapping("/api/category/bestseller")
 	ResponseEntity<List<ResponseMainPageProductDTO>> getBestSellerProducts();
 
-	@GetMapping("/blogbest")
+	@GetMapping("/api/category/blogbest")
 	ResponseEntity<List<ResponseMainPageProductDTO>> getBlogBestProducts();
 
-	@GetMapping("/newitems")
+	@GetMapping("/api/category/newitems")
 	ResponseEntity<List<ResponseMainPageProductDTO>> getNewItemsProducts();
 
 
-	@GetMapping("/newspecialitems")
+	@GetMapping("/api/category/newspecialitems")
 	ResponseEntity<List<ResponseMainPageProductDTO>> getNewSpecialItemsProducts();
 }

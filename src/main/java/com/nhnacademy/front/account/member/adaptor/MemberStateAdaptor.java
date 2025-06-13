@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberStateDTO;
 
-@FeignClient(name = "member-state-adaptor", url = "${member.state.url}")
+@FeignClient(name = "gateway-service", contextId = "member-state-adaptor")
 public interface MemberStateAdaptor {
 
-	@GetMapping("/{member-id}/memberstate")
+	@GetMapping("/api/members/{member-id}/memberstate")
 	ResponseEntity<ResponseMemberStateDTO> getMemberState(@PathVariable("member-id") String memberId);
 
 }

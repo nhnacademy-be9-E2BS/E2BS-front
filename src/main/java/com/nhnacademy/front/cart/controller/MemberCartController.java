@@ -47,12 +47,13 @@ public class MemberCartController {
 
 
 	@JwtTokenCheck
-	@Operation(summary = "회원 장바구니 항목 추가", description = "회원 장바구니에 상품을 추가합니다.")
-	@ApiResponses({
-		@ApiResponse(responseCode = "201", description = "장바구니에 항목 추가 성공", content = @Content(schema = @Schema(implementation = Integer.class))),
-		@ApiResponse(responseCode = "400", description = "유효성 검사 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
-		@ApiResponse(responseCode = "401", description = "인증 실패")
-	})
+	@Operation(summary = "회원 장바구니 항목 추가",
+		description = "회원 장바구니에 상품을 추가합니다.",
+		responses = {
+			@ApiResponse(responseCode = "201", description = "장바구니에 항목 추가 성공", content = @Content(schema = @Schema(implementation = Integer.class))),
+			@ApiResponse(responseCode = "400", description = "유효성 검사 실패", content = @Content(schema = @Schema(implementation = ValidationFailedException.class))),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
+		})
 	@PostMapping("/members/carts/items")
 	public ResponseEntity<Integer> memberAddToCart(@Parameter(description = "추가할 장바구니 항목 정보", required = true) @Valid @RequestBody RequestAddCartItemsDTO requestDto,
 		                                           @Parameter(hidden = true) BindingResult bindingResult,
