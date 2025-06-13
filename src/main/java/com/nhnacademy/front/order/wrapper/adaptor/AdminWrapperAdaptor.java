@@ -18,16 +18,16 @@ import com.nhnacademy.front.order.wrapper.model.dto.request.RequestModifyWrapper
 import com.nhnacademy.front.order.wrapper.model.dto.request.RequestRegisterWrapperMetaDTO;
 import com.nhnacademy.front.order.wrapper.model.dto.response.ResponseWrapperDTO;
 
-@FeignClient(name = "admin-wrapper-service", url = "${auth.order.wrapper.url}", configuration = FeignFormDataSupportConfig.class)
+@FeignClient(name = "gateway-service", contextId = "admin-wrapper-service", configuration = FeignFormDataSupportConfig.class)
 public interface AdminWrapperAdaptor {
 
-	@GetMapping
+	@GetMapping("/api/auth/admin/wrappers")
 	ResponseEntity<PageResponse<ResponseWrapperDTO>> getWrappers(Pageable pageable);
 
-	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = "/api/auth/admin/wrappers")
 	ResponseEntity<Void> postCreateWrapper(@RequestPart("requestMeta") RequestRegisterWrapperMetaDTO requestMeta,
 		@RequestPart("wrapperImage") MultipartFile wrapperImage);
 
-	@PutMapping("/{wrapperId}")
+	@PutMapping("/api/auth/admin/wrappers/{wrapperId}")
 	ResponseEntity<Void> putUpdateWrapper(@PathVariable("wrapperId") Long wrapperId, @RequestBody RequestModifyWrapperDTO modifyRequest);
 }

@@ -35,20 +35,20 @@ public class ErrorController {
 		return "error/error-404";
 	}
 
-	@Operation(summary = "404 에러 페이지", description = "404 에러 코드에 해당하는 메세지 및 화면 제공")
-	@GetMapping("/error")
-	public String get404(@RequestParam(value = "errorMessage") String errorMessage, Model model) {
-		model.addAttribute("errorMessage", errorMessage);
-
-		return "error/error-404";
-	}
-
 	@Operation(summary = "500 에러 페이지", description = "500 에러 코드에 해당하는 메세지 및 화면 제공")
 	@GetMapping("/error/500")
 	public String getError500(@RequestParam(value = "errorMessage") String errorMessage, Model model) {
 		model.addAttribute("errorMessage", errorMessage);
 
 		return "error/error-500";
+	}
+
+	@Operation(summary = "404 에러 페이지", description = "404 에러 코드에 해당하는 메세지 및 화면 제공")
+	@GetMapping("/error")
+	public String get404(@RequestParam(value = "errorMessage") String errorMessage, Model model) {
+		model.addAttribute("errorMessage", errorMessage);
+
+		return "error/error-404";
 	}
 
 }

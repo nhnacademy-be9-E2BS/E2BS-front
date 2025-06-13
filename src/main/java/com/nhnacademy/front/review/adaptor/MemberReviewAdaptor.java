@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.review.model.dto.response.ResponseMemberReviewDTO;
 
-@FeignClient(name = "member-review-adaptor", url = "${member.state.url}")
+@FeignClient(name = "gateway-service", contextId = "member-review-adaptor")
 public interface MemberReviewAdaptor {
 
 	/**
 	 * 회원 리뷰 페이징 목록 조회
 	 */
-	@GetMapping("/{memberId}/reviews")
+	@GetMapping("/api/members/{memberId}/reviews")
 	ResponseEntity<PageResponse<ResponseMemberReviewDTO>> getReviewsByMember(@PathVariable String memberId, Pageable pageable);
 
 }

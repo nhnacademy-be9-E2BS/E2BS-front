@@ -13,21 +13,21 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.coupon.coupon.model.dto.request.RequestCouponDTO;
 import com.nhnacademy.front.coupon.coupon.model.dto.response.ResponseCouponDTO;
 
-@FeignClient(name = "coupon-service", url = "${coupon.url}")
+@FeignClient(name = "gateway-service", contextId = "coupon-service")
 public interface CouponAdaptor {
 
-	@PostMapping
+	@PostMapping("/api/admin/coupons")
 	ResponseEntity<Void> createCoupon(@RequestBody RequestCouponDTO request);
 
-	@GetMapping
+	@GetMapping("/api/admin/coupons")
 	ResponseEntity<PageResponse<ResponseCouponDTO>> getCoupons(Pageable pageable);
 
-	@GetMapping("/{coupon-id}")
+	@GetMapping("/api/admin/coupons/{coupon-id}")
 	ResponseEntity<ResponseCouponDTO> getCoupon(@PathVariable("coupon-id") Long couponId);
 
-	@PutMapping("/{coupon-id}")
+	@PutMapping("/api/admin/coupons/{coupon-id}")
 	ResponseEntity<Void> updateCoupon(@PathVariable("coupon-id") Long couponId);
 
-	@GetMapping("/isActive")
+	@GetMapping("/api/admin/coupons/isActive")
 	ResponseEntity<PageResponse<ResponseCouponDTO>> getCouponsIsActive(Pageable pageable);
 }

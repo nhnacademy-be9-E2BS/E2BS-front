@@ -16,37 +16,37 @@ import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartItemsForGues
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForGuestDTO;
 
-@FeignClient(name = "guest-cart-adaptor", url = "${guest.url}")
+@FeignClient(name = "gateway-service", contextId = "guest-cart-adaptor")
 public interface GuestCartAdaptor {
 
 	/**
 	 * 게스트 - 장바구니 목록 조회
 	 */
-	@GetMapping("/{sessionId}/carts")
+	@GetMapping("/api/guests/{sessionId}/carts")
 	ResponseEntity<List<ResponseCartItemsForGuestDTO>> getCartItemsByGuest(@PathVariable String sessionId);
 
 	/**
 	 * 게스트 - 장바구니 항목 추가
 	 */
-	@PostMapping("/carts/items")
+	@PostMapping("/api/guests/carts/items")
 	ResponseEntity<Integer> createCartItemForGuest(@RequestBody RequestAddCartItemsDTO requestDto);
 
 	/**
 	 * 게스트 - 장바구니 항목 수량 변경
 	 */
-	@PutMapping("/carts/items")
+	@PutMapping("/api/guests/carts/items")
 	ResponseEntity<Integer> updateCartItemForGuest(@RequestBody RequestUpdateCartItemsDTO requestDto);
 
 	/**
 	 * 게스트 - 장바구니 항목 삭제
 	 */
-	@DeleteMapping("/carts/items")
+	@DeleteMapping("/api/guests/carts/items")
 	ResponseEntity<Void> deleteCartItemForGuest(@RequestBody RequestDeleteCartItemsForGuestDTO requestDto);
 
 	/**
 	 * 게스트 - 장바구니 전체 삭제
 	 */
-	@DeleteMapping("/{sessionId}/carts")
+	@DeleteMapping("/api/guests/{sessionId}/carts")
 	ResponseEntity<Void> deleteCartForGuest(@PathVariable String sessionId);
 
 }

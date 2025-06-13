@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.nhnacademy.front.account.member.model.dto.request.RequestRegisterMemberDTO;
 import com.nhnacademy.front.account.member.model.dto.response.ResponseRegisterMemberDTO;
 
-@FeignClient(name = "member-register-adaptor", url = "${member.register.url}")
+@FeignClient(name = "gateway-service", contextId = "member-register-adaptor")
 public interface MemberRegisterAdaptor {
 
-	@PostMapping
+	@PostMapping("/api/members/register")
 	ResponseRegisterMemberDTO postRegisterMember(@RequestBody RequestRegisterMemberDTO requestRegisterMemberDTO);
 
 }

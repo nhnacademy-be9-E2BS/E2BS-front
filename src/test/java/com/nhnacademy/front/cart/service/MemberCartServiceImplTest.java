@@ -147,7 +147,7 @@ class MemberCartServiceImplTest {
 		RequestUpdateCartItemsDTO dto = new RequestUpdateCartItemsDTO();
 		ResponseEntity<Integer> response = ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-		when(memberCartAdaptor.updateCartItemForMember(eq(cartItemId), eq(dto))).thenReturn(response);
+		when(memberCartAdaptor.updateCartItemForMember(cartItemId, dto)).thenReturn(response);
 
 		// when & then
 		assertThatThrownBy(() -> memberCartService.updateCartItemForMember(cartItemId, dto))
@@ -162,7 +162,7 @@ class MemberCartServiceImplTest {
 		long cartItemId = 1L;
 		RequestUpdateCartItemsDTO dto = new RequestUpdateCartItemsDTO();
 
-		when(memberCartAdaptor.updateCartItemForMember(eq(cartItemId), eq(dto)))
+		when(memberCartAdaptor.updateCartItemForMember(cartItemId, dto))
 			.thenThrow(FeignException.class);
 
 		// when & then

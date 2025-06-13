@@ -16,25 +16,25 @@ import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderResultDTO;
 import com.nhnacademy.front.order.order.model.dto.response.ResponseOrderWrapperDTO;
 
-@FeignClient(name = "order-service", url = "${order.order.url}")
+@FeignClient(name = "gateway-service", contextId = "order-service")
 public interface OrderAdaptor {
 
-	@PostMapping("/create/payment")
+	@PostMapping("/api/orders/create/payment")
 	ResponseEntity<ResponseOrderResultDTO> postCreateOrder(@RequestBody RequestOrderWrapperDTO requestOrderWrapperDTO);
 
-	@PostMapping("/cancel")
+	@PostMapping("/api/orders/cancel")
 	ResponseEntity<Void> deleteOrder(@RequestParam String orderId);
 
-	@PostMapping("/confirm")
+	@PostMapping("/api/orders/confirm")
 	ResponseEntity<Void> confirmOrder(@RequestBody RequestPaymentApproveDTO approveRequest);
 
-	@GetMapping("/{orderCode}")
+	@GetMapping("/api/orders/{orderCode}")
 	ResponseEntity<ResponseOrderWrapperDTO> getOrderByOrderCode(@PathVariable String orderCode);
 
-	@GetMapping("/customers/orders")
+	@GetMapping("/api/orders/customers/orders")
 	ResponseEntity<PageResponse<ResponseOrderDTO>> getOrdersByCustomerId(Pageable pageable, @RequestParam long customerId);
 
-	@GetMapping("/{orderCode}/reviewed")
+	@GetMapping("/api/orders/{orderCode}/reviewed")
 	ResponseEntity<Boolean> isReviewedByOrder(@PathVariable String orderCode);
 
 }
