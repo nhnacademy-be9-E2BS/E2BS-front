@@ -93,7 +93,7 @@ public class MemberMypageService {
 		if (!memberInfoDTO.getStatusCode().is2xxSuccessful() || Objects.isNull(memberInfoDTO.getBody())) {
 			throw new NotFoundMemberRankNameException();
 		}
-		ResponseMemberInfoDTO responseMemberInfoDTO = memberInfoDTO.getBody();
+		ResponseMemberInfoDTO responseMemberInfoDTO = Objects.requireNonNull(memberInfoDTO.getBody());
 
 		return responseMemberInfoDTO.getMemberRank().getMemberRankName();
 	}

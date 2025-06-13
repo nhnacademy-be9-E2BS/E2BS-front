@@ -1,6 +1,8 @@
 package com.nhnacademy.front.common.error.loader;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class ErrorMessageLoader {
 
 	}
 
-	private void loadYamlFromUrl(String url) throws Exception {
+	private void loadYamlFromUrl(String url) {
 		Yaml yaml = new Yaml();
 
 		try (InputStream inputStream = new URL(url).openStream()) {
@@ -47,6 +49,10 @@ public class ErrorMessageLoader {
 			Map<String, String> errors = (Map<String, String>)data.get("errors");
 
 			errorMessages.putAll(errors);
+		} catch (MalformedURLException ex) {
+			throw new RuntimeException(ex);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
 		}
 
 	}

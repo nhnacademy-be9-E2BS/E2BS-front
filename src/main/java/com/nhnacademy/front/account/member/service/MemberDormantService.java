@@ -105,7 +105,7 @@ public class MemberDormantService {
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
 			throw new DormantProcessingException();
 		}
-		ResponseMemberEmailDTO responseMemberEmailDTO = response.getBody();
+		ResponseMemberEmailDTO responseMemberEmailDTO = Objects.requireNonNull(response.getBody());
 
 		return responseMemberEmailDTO.getCustomerEmail();
 	}
