@@ -123,7 +123,6 @@ public class OAuthService {
 				if (!registerResponse.getStatusCode().is2xxSuccessful()) {
 					throw new ServerErrorException();
 				}
-				// memberCartService.createCartByMember(responsePaycoMemberInfoDTO.getData().getMember().getIdNo());
 			}
 
 			RequestJwtTokenDTO requestJwtTokenDTO = new RequestJwtTokenDTO(
@@ -142,13 +141,16 @@ public class OAuthService {
 			// 게스트 키가 있으면 장바구니를 꺼내서 병합 후 항목 개수 적용
 			String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
 			if (Objects.nonNull(guestCookieValue)) {
-				Integer mergedCount = cartService.mergeCartItemsToMemberFromGuest(new RequestMergeCartItemDTO(responsePaycoMemberInfoDTO.getData().getMember().getIdNo(), guestCookieValue));
+				Integer mergedCount = cartService.mergeCartItemsToMemberFromGuest(
+					new RequestMergeCartItemDTO(responsePaycoMemberInfoDTO.getData().getMember().getIdNo(),
+						guestCookieValue));
 
 				session.setAttribute("cartItemsCounts", mergedCount);
 				CookieUtil.clearCookie(guestCookieValue, response); // 쿠키 삭제
 			} else {
 				// 없으면 기존 회원 장바구니 항목 개수 적용
-				session.setAttribute("cartItemsCounts", cartService.getCartItemsCountsForMember(responsePaycoMemberInfoDTO.getData().getMember().getIdNo()));
+				session.setAttribute("cartItemsCounts", cartService.getCartItemsCountsForMember(
+					responsePaycoMemberInfoDTO.getData().getMember().getIdNo()));
 			}
 		} catch (FeignException ex) {
 			throw new ServerErrorException();

@@ -53,7 +53,6 @@ class ReviewServiceImplTest {
 	@InjectMocks
 	private ReviewServiceImpl reviewService;
 
-	
 	@Test
 	@DisplayName("리뷰 생성 테스트")
 	void createReview() {
@@ -259,8 +258,11 @@ class ReviewServiceImplTest {
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
+		Pageable pageable = Pageable.unpaged();
+
 		assertThrows(ReviewProcessException.class, () ->
-			reviewService.getReviewsByMember("wrongMemberId", Pageable.unpaged()));
+			reviewService.getReviewsByMember("wrongMemberId", pageable)
+		);
 	}
 
 	@Test
@@ -335,5 +337,5 @@ class ReviewServiceImplTest {
 		// when & then
 		assertThrows(ReviewProcessException.class, () -> reviewService.findReviewByOrderDetailId(1L));
 	}
-	
+
 }

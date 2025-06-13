@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import com.nhnacademy.front.common.error.exception.EmptyRequestException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.contributor.position.adaptor.PositionAdaptor;
-import com.nhnacademy.front.product.contributor.position.exception.PositionGetProcessException;
-import com.nhnacademy.front.product.contributor.position.exception.PositionProcessException;
 import com.nhnacademy.front.product.contributor.position.dto.request.RequestPositionDTO;
 import com.nhnacademy.front.product.contributor.position.dto.response.ResponsePositionDTO;
+import com.nhnacademy.front.product.contributor.position.exception.PositionGetProcessException;
+import com.nhnacademy.front.product.contributor.position.exception.PositionProcessException;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -97,7 +97,7 @@ public class PositionService {
 			ResponseEntity<PageResponse<ResponsePositionDTO>> response = positionAdaptor.getPositions(
 				PageRequest.of(0, 100));
 			assert response.getBody() != null;
-			return response.getBody().getContent();
+			return Objects.requireNonNull(response.getBody()).getContent();
 		} catch (FeignException e) {
 			throw new PositionGetProcessException("Feign 오류로 포지션 목록 가져오기 실패");
 		}

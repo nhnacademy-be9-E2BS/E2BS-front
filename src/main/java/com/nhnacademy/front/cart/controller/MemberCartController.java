@@ -29,7 +29,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -45,7 +44,6 @@ public class MemberCartController {
 	private final DeliveryFeeSevice deliveryFeeSevice;
 	private static final String CART_ITEMS_COUNTS = "cartItemsCounts";
 
-
 	@JwtTokenCheck
 	@Operation(summary = "회원 장바구니 항목 추가",
 		description = "회원 장바구니에 상품을 추가합니다.",
@@ -55,9 +53,10 @@ public class MemberCartController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@PostMapping("/members/carts/items")
-	public ResponseEntity<Integer> memberAddToCart(@Parameter(description = "추가할 장바구니 항목 정보", required = true) @Valid @RequestBody RequestAddCartItemsDTO requestDto,
-		                                           @Parameter(hidden = true) BindingResult bindingResult,
-		                                           @Parameter(hidden = true) HttpServletRequest request) {
+	public ResponseEntity<Integer> memberAddToCart(
+		@Parameter(description = "추가할 장바구니 항목 정보", required = true) @Valid @RequestBody RequestAddCartItemsDTO requestDto,
+		@Parameter(hidden = true) BindingResult bindingResult,
+		@Parameter(hidden = true) HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -79,7 +78,8 @@ public class MemberCartController {
 			@ApiResponse(responseCode = "401", description = "인증 실패")
 		})
 	@GetMapping("/members/carts")
-	public String getCartsByMember(@Parameter(hidden = true) HttpServletRequest request, @Parameter(hidden = true) Model model) {
+	public String getCartsByMember(@Parameter(hidden = true) HttpServletRequest request,
+		@Parameter(hidden = true) Model model) {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		List<ResponseCartItemsForMemberDTO> cartItemsByMember = memberCartService.getCartItemsByMember(memberId);
 
@@ -112,10 +112,11 @@ public class MemberCartController {
 			@ApiResponse(responseCode = "404", description = "해당 장바구니 항목 없음")
 		})
 	@PutMapping("/members/carts/items/{cartItemsId}")
-	public ResponseEntity<Integer> updateCartItemForMember(@Parameter(description = "장바구니 항목 ID", required = true) @PathVariable long cartItemsId,
-		                                                   @Parameter(description = "변경할 장바구니 항목 정보", required = true) @Valid @RequestBody RequestUpdateCartItemsDTO requestDto,
-		                                                   @Parameter(hidden = true) BindingResult bindingResult,
-		                                                   @Parameter(hidden = true) HttpServletRequest request) {
+	public ResponseEntity<Integer> updateCartItemForMember(
+		@Parameter(description = "장바구니 항목 ID", required = true) @PathVariable long cartItemsId,
+		@Parameter(description = "변경할 장바구니 항목 정보", required = true) @Valid @RequestBody RequestUpdateCartItemsDTO requestDto,
+		@Parameter(hidden = true) BindingResult bindingResult,
+		@Parameter(hidden = true) HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
@@ -138,12 +139,13 @@ public class MemberCartController {
 			@ApiResponse(responseCode = "404", description = "해당 항목 없음")
 		})
 	@DeleteMapping("/members/carts/items/{cartItemsId}")
-	public ResponseEntity<Integer> deleteCartItemForMember(@Parameter(description = "장바구니 항목 ID", required = true) @PathVariable long cartItemsId,
-		                                                   @Parameter(hidden = true) HttpServletRequest request) {
+	public ResponseEntity<Integer> deleteCartItemForMember(
+		@Parameter(description = "장바구니 항목 ID", required = true) @PathVariable long cartItemsId,
+		@Parameter(hidden = true) HttpServletRequest request) {
 		memberCartService.deleteCartItemForMember(cartItemsId);
 
 		HttpSession session = request.getSession();
-		Integer cartItemsCounts = (Integer) session.getAttribute(CART_ITEMS_COUNTS);
+		Integer cartItemsCounts = (Integer)session.getAttribute(CART_ITEMS_COUNTS);
 		int updatedCount = cartItemsCounts != null ? cartItemsCounts - 1 : 0;
 		session.setAttribute(CART_ITEMS_COUNTS, updatedCount);
 
