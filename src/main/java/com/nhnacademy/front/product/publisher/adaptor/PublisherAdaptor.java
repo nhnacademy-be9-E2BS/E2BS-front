@@ -13,16 +13,16 @@ import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.product.publisher.model.dto.request.RequestPublisherDTO;
 import com.nhnacademy.front.product.publisher.model.dto.response.ResponsePublisherDTO;
 
-@FeignClient(name = "publisher-service", url = "${auth.product.publisher.url}")
+@FeignClient(name = "gateway-service", contextId = "publisher-service")
 public interface PublisherAdaptor {
 
-	@GetMapping
+	@GetMapping("/api/auth/admin/publishers")
 	ResponseEntity<PageResponse<ResponsePublisherDTO>> getPublishers(Pageable pageable);
 
-	@PostMapping
+	@PostMapping("/api/auth/admin/publishers")
 	ResponseEntity<Void> postCreatePublisher(@RequestBody RequestPublisherDTO request);
 
-	@PutMapping("/{publisherId}")
+	@PutMapping("/api/auth/admin/publishers/{publisherId}")
 	ResponseEntity<Void> putUpdatePublisher(@PathVariable("publisherId") Long publisherId,
 		@RequestBody RequestPublisherDTO request);
 }

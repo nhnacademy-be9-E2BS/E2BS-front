@@ -42,6 +42,13 @@ spring:
           auth: true
           starttls:
             enable: true
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false # Ribbon 비활성화 (Spring Cloud LoadBalancer 사용)
+      configurations:
+        default:
+          type: RoundRobin
 
 server:
   servlet:
@@ -58,143 +65,6 @@ management:
       exposure:
         include: "*" # Actuator 의 모든 엔드포인트를 웹에서 노출 (운영환경에선 최소화 필요)
 
-member:
-  login:
-    url: http://localhost:10232/api/members/login
-
-  register:
-    url: http://localhost:10232/api/members/register
-
-  state:
-    url: http://localhost:10232/api/members
-
-  dormant:
-    url: http://localhost:10232/api/dormant
-
-customer:
-  login:
-    url: http://localhost:10232/api/customers/login
-
-  register:
-    url: http://localhost:10232/api/customers/register
-
-oauth:
-  login:
-    url: http://localhost:10232/api/oauth/login
-
-  register:
-    url: http://localhost:10232/api/oauth/register
-
-token:
-  create:
-    url: http://localhost:10232/api/token
-
-# 쿠폰
-coupon:
-  url: http://localhost:10232/api/admin/coupons
-
-  policy:
-    url: http://localhost:10232/api/admin/couponPolicies
-
-  member:
-    url: http://localhost:10232/api/admin/memberCoupons
-
-  order:
-    url: http://localhost:10232/api/order
-
-point:
-  admin:
-    url: http://localhost:10232/api/admin/pointPolicies
-
-# 상품 - 출판사, 기여자 역할
-product:
-  url: http://localhost:10232/api/products
-
-  contributor:
-    position:
-      url: http://localhost:10232/api/admin/positions
-
-    url: http://localhost:10232/api/admin/contributors
-
-
-
-  category:
-    url: http://localhost:10232/api/categories
-
-  book:
-    url: http://localhost:10232/api/books
-
-  productState:
-    url: http://localhost:10232/api/productState
-
-search:
-  product:
-    url: http://localhost:10232/api/books/elasticsearch
-
-order:
-  wrapper:
-    url: http://localhost:10232/api/wrappers
-
-  order:
-    auth: http://localhost:10232/api/auth/orders
-    url: http://localhost:10232/api/orders # 비인증 주문 관련 -> 비회원 용 요청
-
-  admin: http://localhost:10232/api/auth/admin/orders
-
-  delivery:
-    admin:
-      url: http://localhost:10232/api/auth/admin/deliveryFee
-
-    user:
-      url: http://localhost:10232/api/deliveryFee
-
-cart:
-  url: http://localhost:10232/api/carts
-
-guest:
-  url: http://localhost:10232/api/guests
-
-review:
-  url: http://localhost:10232/api/reviews
-
-index:
-  url: http://localhost:10232/api
-
-# 인증이 필요한 url
-auth:
-  member:
-    mypage:
-      url: http://localhost:10232/api/auth/mypage
-
-    url: http://localhost:10232/api/auth/members
-
-  home:
-    member:
-      name:
-        url: http://localhost:10232/api/auth/home
-
-  admin:
-    settings:
-      url: http://localhost:10232/api/auth/admin/settings
-
-  order:
-    wrapper:
-      url: http://localhost:10232/api/auth/admin/wrappers
-
-  product:
-    category:
-      url: http://localhost:10232/api/auth/admin/categories
-
-    publisher:
-      url: http://localhost:10232/api/auth/admin/publishers
-
-    book:
-      url: http://localhost:10232/api/auth/admin/books
-
-    tag:
-      url: http://localhost:10232/api/auth/admin/tags
-
 dooray:
   authentication:
     url: https://nhnacademy.dooray.com/services
-

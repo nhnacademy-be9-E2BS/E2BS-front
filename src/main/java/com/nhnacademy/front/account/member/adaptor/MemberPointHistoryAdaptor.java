@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberPointDTO;
 
-@FeignClient(name = "member-point-history-adaptor", url = "${auth.member.mypage.url}")
+@FeignClient(name = "gateway-service", contextId = "member-point-history-adaptor")
 public interface MemberPointHistoryAdaptor {
 
-	@GetMapping("/{memberId}/points")
+	@GetMapping("/api/auth/mypage/{memberId}/points")
 	ResponseMemberPointDTO getMemberPointAmount(@PathVariable("memberId") String memberId);
 
 }

@@ -15,27 +15,27 @@ import com.nhnacademy.front.review.model.dto.response.ResponseReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewMetaDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseUpdateReviewDTO;
 
-@FeignClient(name = "review-adaptor", url = "${review.url}", configuration = FeignFormDataSupportConfig.class)
+@FeignClient(name = "gateway-service", contextId = "review-adaptor", configuration = FeignFormDataSupportConfig.class)
 public interface ReviewAdaptor {
 
 	/**
 	 * 리뷰 생성
 	 */
-	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = "/api/reviews")
 	ResponseEntity<Void> createReview(@RequestPart("requestMeta") RequestCreateReviewMetaDTO reviewMeta,
 		@RequestPart("reviewImage") MultipartFile reviewImage);
 
 	/**
 	 * 리뷰 수정
 	 */
-	@PutMapping(value = "/{reviewId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "/api/reviews/{reviewId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	ResponseEntity<ResponseUpdateReviewDTO> updateReview(@PathVariable long reviewId,
 		@RequestPart("reviewContent") String reviewContent, @RequestPart("reviewImage") MultipartFile reviewImage);
 
 	/**
 	 * 주문 상세 Id로 리뷰 정보 가져오기
 	 */
-	@GetMapping("/{orderDetailId}")
+	@GetMapping("/api/reviews/{orderDetailId}")
 	ResponseEntity<ResponseReviewDTO> findReviewByOrderDetailId(@PathVariable long orderDetailId);
 
 }

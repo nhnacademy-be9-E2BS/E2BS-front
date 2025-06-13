@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 
-@FeignClient(name = "product-service", url = "${product.book.url}")
+@FeignClient(name = "gateway-service", contextId = "product-service")
 public interface ProductAdaptor {
 
-	@GetMapping("{book-id}")
+	@GetMapping("/api/books/{book-id}")
 	ResponseEntity<ResponseProductReadDTO> getProductById(@PathVariable("book-id") Long bookId, @RequestParam("memberId") String memberId);
 
-	@GetMapping("/order")
+	@GetMapping("/api/books/order")
 	ResponseEntity<List<ResponseProductReadDTO>> getProducts(@RequestParam("products") List<Long> products);
 }

@@ -14,23 +14,23 @@ import com.nhnacademy.front.elasticsearch.model.dto.domain.ProductSortType;
 import com.nhnacademy.front.index.model.dto.response.ResponseMainPageProductDTO;
 import com.nhnacademy.front.product.product.model.dto.response.ResponseProductReadDTO;
 
-@FeignClient(name = "product-search-service", url = "${search.product.url}")
+@FeignClient(name = "gateway-service", contextId = "product-search-service")
 public interface ProductSearchAdaptor {
-	@GetMapping("/search")
+	@GetMapping("/api/books/elasticsearch/search")
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProductsBySearch(Pageable pageable, @RequestParam String keyword, @RequestParam(required = false) ProductSortType sort, @RequestParam String memberId);
 
-	@GetMapping("/category/{categoryId}")
+	@GetMapping("/api/books/elasticsearch/category/{categoryId}")
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getProductsByCategory(Pageable pageable, @PathVariable Long categoryId, @RequestParam(required = false) ProductSortType sort, @RequestParam String memberId);
 
-	@GetMapping("/main/best")
+	@GetMapping("/api/books/elasticsearch/main/best")
 	ResponseEntity<List<ResponseMainPageProductDTO>> getBestProductsByMain();
 
-	@GetMapping("/main/newest")
+	@GetMapping("/api/books/elasticsearch/main/newest")
 	ResponseEntity<List<ResponseMainPageProductDTO>> getNewestProductsByMain();
 
-	@GetMapping("/best")
+	@GetMapping("/api/books/elasticsearch/best")
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getBestProducts(Pageable pageable, @RequestParam String memberId);
 
-	@GetMapping("/newest")
+	@GetMapping("/api/books/elasticsearch/newest")
 	ResponseEntity<PageResponse<ResponseProductReadDTO>> getNewestProducts(Pageable pageable, @RequestParam String memberId);
 }

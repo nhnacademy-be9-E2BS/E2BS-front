@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
 
-@FeignClient(name = "home-adaptor", url = "${auth.home.member.name.url}")
+@FeignClient(name = "gateway-service", contextId = "home-adaptor")
 public interface HomeAdaptor {
 
-	@GetMapping("/{member-id}")
+	@GetMapping("/api/auth/home/{member-id}")
 	ResponseEntity<ResponseHomeMemberNameDTO> getHomeMemberName(@PathVariable("member-id") String memberId);
 
 }
