@@ -1,5 +1,6 @@
 package com.nhnacademy.front.account.member.service;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -122,7 +124,7 @@ class MemberMypageServiceTest {
 		when(memberOrderAdaptor.getMemberOrdersCnt("user")).thenReturn(responseResult);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> {
+		assertThrows(EmptyResponseException.class, () -> {
 			memberMypageService.getMemberOrder("user");
 		});
 
@@ -152,12 +154,13 @@ class MemberMypageServiceTest {
 	void getMemberCouponMethodEmptyResponseExceptionTest() {
 
 		// Given
+		RequestMemberIdDTO request = new RequestMemberIdDTO("user");
 
 		// When
 		when(memberCouponAdaptor.getMemberCouponAmount("user")).thenReturn(null);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberCoupon(new RequestMemberIdDTO("user")));
+		assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberCoupon(request));
 	}
 
 	@Test
@@ -184,12 +187,13 @@ class MemberMypageServiceTest {
 	void getMemberPointEmptyResponseExceptionTest() {
 
 		// Given
+		RequestMemberIdDTO request = new RequestMemberIdDTO("user");
 
 		// When
 		when(memberPointHistoryAdaptor.getMemberPointAmount("user")).thenReturn(null);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberPoint(new RequestMemberIdDTO("user")));
+		assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberPoint(request));
 
 	}
 
@@ -248,12 +252,15 @@ class MemberMypageServiceTest {
 			ResponseEntity<ResponseMemberInfoDTO> responseResult = new ResponseEntity<>(responseMemberInfoDTO,
 				HttpStatus.BAD_REQUEST);
 
+			HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+
 			// When
 			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(responseResult);
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberRankNameException.class, () -> memberMypageService.getMemberRankName(any(HttpServletRequest.class)));
-
+			assertThrows(NotFoundMemberRankNameException.class, () ->
+				memberMypageService.getMemberRankName(mockRequest)
+			);
 		}
 	}
 
@@ -310,12 +317,13 @@ class MemberMypageServiceTest {
 			);
 			ResponseEntity<ResponseMemberInfoDTO> responseResult = new ResponseEntity<>(responseMemberInfoDTO,
 				HttpStatus.BAD_REQUEST);
+			HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
 
 			// When
 			when(memberInfoAdaptor.getMemberInfo("user")).thenReturn(responseResult);
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.getMemberInfo(any(HttpServletRequest.class)));
+			assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.getMemberInfo(mockRequest));
 
 		}
 	}
@@ -350,19 +358,20 @@ class MemberMypageServiceTest {
 	@DisplayName("회원 정보를 수정하는 메서드 PasswordNotEqualsException 테스트")
 	void updateMemberInfoMethodPasswordNotEqualsExceptionTest() {
 
-		// Given
-		try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
-			jwtStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any())).thenReturn("user");
+			// Given
+			try (MockedStatic<JwtGetMemberId> jwtStatic = mockStatic(JwtGetMemberId.class)) {
+				jwtStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any())).thenReturn("user");
 
-			RequestMemberInfoDTO requestMemberInfoDTO = new RequestMemberInfoDTO(
-				"user", "user", "user@naver.com", LocalDate.now(), "010-1234-1234",
-				"1234", "12345"
+				RequestMemberInfoDTO requestMemberInfoDTO = new RequestMemberInfoDTO(
+					"user", "user", "user@naver.com", LocalDate.now(), "010-1234-1234",
+					"1234", "12345"
 			);
+			HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
 
 			// When
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(PasswordNotEqualsException.class, () -> memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO));
+			assertThrows(PasswordNotEqualsException.class, () -> memberMypageService.updateMemberInfo(mockRequest, requestMemberInfoDTO));
 		}
 	}
 
@@ -378,11 +387,12 @@ class MemberMypageServiceTest {
 				"user", "user", "user@naver.com", LocalDate.now(), "010-1234-1234",
 				"1234", null
 			);
+			HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
 
 			// When
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(PasswordNotEqualsException.class, () -> memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO));
+			assertThrows(PasswordNotEqualsException.class, () -> memberMypageService.updateMemberInfo(mockRequest, requestMemberInfoDTO));
 		}
 	}
 
@@ -400,13 +410,14 @@ class MemberMypageServiceTest {
 			);
 
 			ResponseEntity<Void> responseResult = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
 
 			// When
 			when(memberInfoAdaptor.updateMemberInfo("user", requestMemberInfoDTO))
 				.thenReturn(responseResult);
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.updateMemberInfo(any(HttpServletRequest.class), requestMemberInfoDTO));
+			assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.updateMemberInfo(mockRequest, requestMemberInfoDTO));
 		}
 	}
 
@@ -420,7 +431,7 @@ class MemberMypageServiceTest {
 
 			ResponseEntity<Void> responseResult = new ResponseEntity<>(HttpStatus.CREATED);
 
-			HttpServletRequest request = mock(HttpServletRequest.class);
+			HttpServletRequest requestResult = mock(HttpServletRequest.class);
 			HttpServletResponse responseMock = mock(HttpServletResponse.class);
 
 			// When
@@ -428,7 +439,7 @@ class MemberMypageServiceTest {
 
 			// Then
 			Assertions.assertThatCode(() ->
-				memberMypageService.withdrawMember(request, responseMock)
+				memberMypageService.withdrawMember(requestResult, responseMock)
 			).doesNotThrowAnyException();
 
 		}
@@ -444,14 +455,14 @@ class MemberMypageServiceTest {
 
 			ResponseEntity<Void> responseResult = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-			HttpServletRequest request = mock(HttpServletRequest.class);
+			HttpServletRequest requestResult = mock(HttpServletRequest.class);
 			HttpServletResponse responseMock = mock(HttpServletResponse.class);
 
 			// When
 			when(memberInfoAdaptor.withdrawMember("user")).thenReturn(responseResult);
 
 			// Then
-			org.junit.jupiter.api.Assertions.assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.withdrawMember(request, responseMock));
+			assertThrows(NotFoundMemberInfoException.class, () -> memberMypageService.withdrawMember(requestResult, responseMock));
 
 		}
 	}
@@ -530,7 +541,7 @@ class MemberMypageServiceTest {
 		when(memberOrderAdaptor.getMemberRecentOrders("user")).thenReturn(responseResult);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberRecentOrders("user"));
+		assertThrows(EmptyResponseException.class, () -> memberMypageService.getMemberRecentOrders("user"));
 
 	}
 
