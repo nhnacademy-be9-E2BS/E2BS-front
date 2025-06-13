@@ -60,6 +60,8 @@ import lombok.RequiredArgsConstructor;
 @ControllerAdvice
 @RequiredArgsConstructor
 public class WebAdviceController {
+	private final static String ERROR_MESSAGE = "errorMessage";
+
 	private final ErrorMessageLoader errorMessageLoader;
 
 	// 잘못된 요청 에러
@@ -85,7 +87,7 @@ public class WebAdviceController {
 		String errorMessage = errorMessageLoader.getMessage(code);
 
 		ModelAndView modelAndView = new ModelAndView("redirect:/members/login");
-		modelAndView.addObject("errorMessage", errorMessage);
+		modelAndView.addObject(ERROR_MESSAGE, errorMessage);
 
 		return modelAndView;
 	}
@@ -112,7 +114,7 @@ public class WebAdviceController {
 		String errorMessage = errorMessageLoader.getMessage(code);
 
 		ModelAndView modelAndView = new ModelAndView("redirect:/error/500");
-		modelAndView.addObject("errorMessage", errorMessage);
+		modelAndView.addObject(ERROR_MESSAGE, errorMessage);
 
 		return modelAndView;
 	}
@@ -123,7 +125,7 @@ public class WebAdviceController {
 		String errorMessage = errorMessageLoader.getMessage(code);
 
 		ModelAndView modelAndView = new ModelAndView("redirect:/members/login");
-		modelAndView.addObject("errorMessage", errorMessage);
+		modelAndView.addObject(ERROR_MESSAGE, errorMessage);
 
 		return modelAndView;
 	}
@@ -134,7 +136,7 @@ public class WebAdviceController {
 		String errorMessage = errorMessageLoader.getMessage(code);
 
 		ModelAndView modelAndView = new ModelAndView("redirect:/customers/login");
-		modelAndView.addObject("errorMessage", errorMessage);
+		modelAndView.addObject(ERROR_MESSAGE, errorMessage);
 
 		return modelAndView;
 	}
@@ -145,7 +147,7 @@ public class WebAdviceController {
 		String errorMessage = errorMessageLoader.getMessage(code);
 
 		ModelAndView modelAndView = new ModelAndView("redirect:/members/register");
-		modelAndView.addObject("errorMessage", errorMessage);
+		modelAndView.addObject(ERROR_MESSAGE, errorMessage);
 
 		return modelAndView;
 	}
@@ -156,7 +158,7 @@ public class WebAdviceController {
 		String errorMessage = errorMessageLoader.getMessage(code);
 
 		ModelAndView modelAndView = new ModelAndView("redirect:/mypage/info");
-		modelAndView.addObject("errorMessage", errorMessage);
+		modelAndView.addObject(ERROR_MESSAGE, errorMessage);
 
 		return modelAndView;
 	}
@@ -168,7 +170,7 @@ public class WebAdviceController {
 		String errorMessage = errorMessageLoader.getMessage(code);
 
 		ModelAndView modelAndView = new ModelAndView("redirect:/error/500");
-		modelAndView.addObject("errorMessage", errorMessage);
+		modelAndView.addObject(ERROR_MESSAGE, errorMessage);
 
 		return modelAndView;
 	}

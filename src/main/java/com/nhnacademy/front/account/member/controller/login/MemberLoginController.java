@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/members/login")
 public class MemberLoginController {
+	private final static String DORMANT_CNT = "dormantCnt";
 
 	/**
 	 * 로그인 뷰
@@ -19,9 +20,9 @@ public class MemberLoginController {
 	@Operation(summary = "로그인 폼 페이지", description = "로그인 화면 제공")
 	@GetMapping
 	public String getLogin(HttpServletRequest request) {
-		if (request.getSession().getAttribute("dormantCnt") != null) {
-			Integer dormantCnt = (Integer)request.getSession().getAttribute("dormantCnt");
-			request.getSession().setAttribute("dormantCnt", dormantCnt + 1);
+		if (request.getSession().getAttribute(DORMANT_CNT) != null) {
+			Integer dormantCnt = (Integer)request.getSession().getAttribute(DORMANT_CNT);
+			request.getSession().setAttribute(DORMANT_CNT, dormantCnt + 1);
 		}
 
 		return "member/login/login";

@@ -72,8 +72,9 @@ public class MemberService {
 		if (!memberInfoDTO.getStatusCode().is2xxSuccessful() || Objects.isNull(memberInfoDTO.getBody())) {
 			return null;
 		}
+		ResponseMemberInfoDTO responseMemberInfoDTO = memberInfoDTO.getBody();
 
-		return memberInfoDTO.getBody().getCustomer().getCustomerName();
+		return responseMemberInfoDTO.getCustomer().getCustomerName();
 	}
 
 	public String getMemberState(String memberId) {

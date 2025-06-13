@@ -52,8 +52,9 @@ public class MemberMypageService {
 		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
 			throw new EmptyResponseException();
 		}
+		ResponseMemberOrderDTO responseMemberOrderDTO = response.getBody();
 
-		return response.getBody().getOrderCnt();
+		return responseMemberOrderDTO.getOrderCnt();
 	}
 
 	/**
@@ -92,8 +93,9 @@ public class MemberMypageService {
 		if (!memberInfoDTO.getStatusCode().is2xxSuccessful() || Objects.isNull(memberInfoDTO.getBody())) {
 			throw new NotFoundMemberRankNameException();
 		}
+		ResponseMemberInfoDTO responseMemberInfoDTO = memberInfoDTO.getBody();
 
-		return memberInfoDTO.getBody().getMemberRank().getMemberRankName();
+		return responseMemberInfoDTO.getMemberRank().getMemberRankName();
 	}
 
 	/**
