@@ -1,5 +1,7 @@
 package com.nhnacademy.front.account.oauth.controller;
 
+import java.util.Objects;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +57,16 @@ public class OAuthController {
 			oAuthService.getPaycoMemberInfo(responseProviderPaycoAccessTokenDTO.getAccessToken());
 
 		oAuthService.paycoLogin(responsePaycoMemberInfoDTO, request, response);
+
+		// 주문할 장바구니 항목이 존재할 경우
+		Cookie[] cookies = request.getCookies();
+		if (Objects.nonNull(cookies)) {
+			for (Cookie cookie : cookies) {
+				if ("orderCart".equals(cookie.getName())) {
+					return "redirect:/members/order";
+				}
+			}
+		}
 
 		return "redirect:/";
 	}

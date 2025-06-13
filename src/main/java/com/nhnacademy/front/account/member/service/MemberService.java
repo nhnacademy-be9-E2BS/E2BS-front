@@ -84,7 +84,7 @@ public class MemberService {
 				throw new GetMemberStateFailedException();
 			}
 
-			return response.getBody().getMemberstate();
+			return Objects.requireNonNull(response.getBody()).getMemberstate();
 		} catch (FeignException ex) {
 			throw new GetMemberStateFailedException();
 		}
