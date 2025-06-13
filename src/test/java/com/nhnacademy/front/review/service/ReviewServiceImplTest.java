@@ -259,9 +259,8 @@ class ReviewServiceImplTest {
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
-		assertThrows(ReviewProcessException.class, () -> {
-			reviewService.getReviewsByMember(any(), any());
-		});
+		assertThrows(ReviewProcessException.class, () ->
+			reviewService.getReviewsByMember("wrongMemberId", Pageable.unpaged()));
 	}
 
 	@Test
@@ -285,9 +284,8 @@ class ReviewServiceImplTest {
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
-		assertThrows(ReviewProcessException.class, () -> {
-			reviewService.isReviewedByOrder(any());
-		});
+		assertThrows(ReviewProcessException.class, () ->
+			reviewService.isReviewedByOrder("wrongOrderCode"));
 	}
 
 	@Test
@@ -323,9 +321,8 @@ class ReviewServiceImplTest {
 			.thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 		// when & then
-		assertThrows(ReviewProcessException.class, () ->  {
-			reviewService.findReviewByOrderDetailId(anyLong());
-		});
+		assertThrows(ReviewProcessException.class, () ->
+			reviewService.findReviewByOrderDetailId(1L));
 	}
 
 	@Test
