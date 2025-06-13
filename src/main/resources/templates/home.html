@@ -837,10 +837,11 @@
                             <span class="dot">·</span>
                             <span th:text="${ItemNewAllList[0].publisherName}">출판사</span>
                         </p>
-                        <p class="today-main-desc"
-                           th:utext="${ItemNewAllList[0].productDescription}">
-                            도서 설명이 이곳에 노출됩니다.
-                        </p>
+                        <div class="today-main-desc">
+                            <p th:utext="${ItemNewAllList[0].productDescription}">
+                                도서 설명이 이곳에 노출됩니다.
+                            </p>
+                        </div>
                         <p class="today-main-price"
                            th:text="|₩${#numbers.formatInteger(ItemNewAllList[0].productSalePrice, 3, 'COMMA')}|">
                             17,820원
@@ -984,7 +985,7 @@
             document.querySelector('.today-main-img').src = main.productImage;
             document.querySelector('.today-main-title').innerText = main.productTitle;
             document.querySelector('.today-main-meta').innerText = `${main.contributorName} · ${main.publisherName}`;
-            document.querySelector('.today-main-desc').innerText = main.productDescription;
+            document.querySelector('.today-main-desc').innerHTML = main.productDescription;
             document.querySelector('.today-main-price').innerText = '₩' + main.productSalePrice.toLocaleString();
 
             // 서브 도서 렌더링
