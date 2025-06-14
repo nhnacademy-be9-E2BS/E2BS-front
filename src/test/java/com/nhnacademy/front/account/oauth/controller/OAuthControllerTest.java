@@ -20,6 +20,7 @@ import com.nhnacademy.front.account.oauth.model.dto.response.ResponsePaycoMember
 import com.nhnacademy.front.account.oauth.model.dto.response.ResponseProviderPaycoAccessTokenDTO;
 import com.nhnacademy.front.account.oauth.service.OAuthService;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
+import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 
@@ -37,6 +38,15 @@ class OAuthControllerTest {
 	@MockitoBean
 	private OAuthService oAuthService;
 
+	@Mock
+	private HttpServletRequest request;
+
+	@Mock
+	private HttpServletResponse response;
+
+	@MockitoBean
+	private CartInterceptor cartInterceptor;
+
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
@@ -46,14 +56,9 @@ class OAuthControllerTest {
 	@MockitoBean
 	private ErrorMessageLoader errorMessageLoader;
 
-	@Mock
-	private HttpServletRequest request;
-
-	@Mock
-	private HttpServletResponse response;
-
 	@BeforeEach
 	void setUp() throws Exception {
+		when(cartInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}

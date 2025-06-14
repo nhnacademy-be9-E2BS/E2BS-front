@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 
@@ -26,6 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
 	private final ObjectMapper objectMapper;
 	private final CategoryInterceptor categoryInterceptor;
 	private final MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
+	private final CartInterceptor cartInterceptor;
 
 	/**
 	 * 직렬화를 위해 커스터마이징한 ObjectMapper converter에 추가
@@ -65,6 +67,28 @@ public class WebConfig implements WebMvcConfigurer {
 			.excludePathPatterns("/vendors/**")
 			.excludePathPatterns("/error/**");
 
+		registry.addInterceptor(cartInterceptor)
+			.excludePathPatterns("/customers/login")
+			.excludePathPatterns("/customers/register")
+			.excludePathPatterns("/members/order")
+			.excludePathPatterns("/customers/order")
+			.excludePathPatterns("/order/auth")
+			.excludePathPatterns("/order/payment")
+			.excludePathPatterns("/order/point")
+			.excludePathPatterns("/order/success")
+			.excludePathPatterns("/order/confirm")
+			.excludePathPatterns("/payco/login/**")
+			.excludePathPatterns("/oauth2/authorization/payco")
+			.excludePathPatterns("/login/oauth2/code/payco/**")
+			.excludePathPatterns("/id.payco.com/**")
+			.excludePathPatterns("/.well-known/**")
+			.excludePathPatterns("/actuator/**")
+			.excludePathPatterns("/**/*.css")
+			.excludePathPatterns("/**/*.js")
+			.excludePathPatterns("/**/*.png")
+			.excludePathPatterns("/**/*.jpg")
+			.excludePathPatterns("/vendors/**")
+			.excludePathPatterns("/error/**");
 	}
 
 	/**

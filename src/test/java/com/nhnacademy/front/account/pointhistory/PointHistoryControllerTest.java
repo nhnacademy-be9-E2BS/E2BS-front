@@ -28,6 +28,7 @@ import com.nhnacademy.front.account.pointhistory.controller.PointHistoryControll
 import com.nhnacademy.front.account.pointhistory.model.dto.response.ResponsePointHistoryDTO;
 import com.nhnacademy.front.account.pointhistory.service.PointHistoryService;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
+import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -58,6 +59,9 @@ class PointHistoryControllerTest {
 	private HomeService homeService;
 
 	@MockitoBean
+	private CartInterceptor cartInterceptor;
+
+	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
 	@MockitoBean
@@ -66,9 +70,9 @@ class PointHistoryControllerTest {
 	@MockitoBean
 	private ErrorMessageLoader errorMessageLoader;
 
-
 	@BeforeEach
 	void setUp() throws Exception {
+		when(cartInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
