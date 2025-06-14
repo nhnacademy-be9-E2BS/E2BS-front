@@ -67,7 +67,7 @@ management:
 
 custom:
   oauth2:
-    payco-callback-path: /login/oauth2/code/payco
+    payco-callback-path: /login/oauth2/code/payco/**
 
 dooray:
   authentication:
