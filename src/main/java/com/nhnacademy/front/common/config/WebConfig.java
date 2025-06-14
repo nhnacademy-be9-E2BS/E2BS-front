@@ -29,6 +29,15 @@ public class WebConfig implements WebMvcConfigurer {
 	private final MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
 	private final CartInterceptor cartInterceptor;
 
+	private static final String ACTUATOR_PATH = "/actuator/**";
+	private static final String CSS_PATH = "/**/*.css";
+	private static final String JS_PATH = "/**/*.js";
+	private static final String PNG_PATH = "/**/*.png";
+	private static final String JPG_PATH = "/**/*.jpg";
+	private static final String VENDORS_PATH = "/vendors/**";
+	private static final String ERROR_PATH = "/error/**";
+	private static final String PAYCO_CALLBACK_PATH = "/login/oauth2/code/payco";
+
 	/**
 	 * 직렬화를 위해 커스터마이징한 ObjectMapper converter에 추가
 	 */
@@ -38,57 +47,26 @@ public class WebConfig implements WebMvcConfigurer {
 	}
 
 	/**
-	 * 접속 시 카테고리 조회 요청 인터셉터
+	 * 접속 시 요청 인터셉터
 	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(categoryInterceptor)
-			.excludePathPatterns("/actuator/**")
-			.excludePathPatterns("/**/*.css")
-			.excludePathPatterns("/**/*.js")
-			.excludePathPatterns("/**/*.png")
-			.excludePathPatterns("/**/*.jpg")
-			.excludePathPatterns("/vendors/**")
-			.excludePathPatterns("/error/**")
-			.excludePathPatterns("/login/oauth2/code/payco");
+			.excludePathPatterns(PAYCO_CALLBACK_PATH, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH);
 
 		registry.addInterceptor(memberNameAndRoleInterceptor)
-			.excludePathPatterns("/login/**")
-			.excludePathPatterns("/register/**")
-			.excludePathPatterns("/admin/login/**")
-			.excludePathPatterns("/payco/login/**")
-
-			.excludePathPatterns("/login/oauth2/code/payco")
-			.excludePathPatterns("/actuator/**")
-			.excludePathPatterns("/**/*.css")
-			.excludePathPatterns("/**/*.js")
-			.excludePathPatterns("/**/*.png")
-			.excludePathPatterns("/**/*.jpg")
-			.excludePathPatterns("/vendors/**")
-			.excludePathPatterns("/error/**");
+			.excludePathPatterns("/login/**", "/register/**", "/admin/login/**", "/payco/login/**")
+			.excludePathPatterns(PAYCO_CALLBACK_PATH, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH);
 
 		registry.addInterceptor(cartInterceptor)
-			.excludePathPatterns("/customers/login")
-			.excludePathPatterns("/customers/register")
-			.excludePathPatterns("/members/order")
-			.excludePathPatterns("/customers/order")
-			.excludePathPatterns("/order/auth")
-			.excludePathPatterns("/order/payment")
-			.excludePathPatterns("/order/point")
-			.excludePathPatterns("/order/success")
-			.excludePathPatterns("/order/confirm")
-			.excludePathPatterns("/payco/login/**")
-			.excludePathPatterns("/oauth2/authorization/payco")
-			.excludePathPatterns("/login/oauth2/code/payco/**")
-			.excludePathPatterns("/id.payco.com/**")
-			.excludePathPatterns("/.well-known/**")
-			.excludePathPatterns("/actuator/**")
-			.excludePathPatterns("/**/*.css")
-			.excludePathPatterns("/**/*.js")
-			.excludePathPatterns("/**/*.png")
-			.excludePathPatterns("/**/*.jpg")
-			.excludePathPatterns("/vendors/**")
-			.excludePathPatterns("/error/**");
+			.excludePathPatterns(
+				"/customers/login", "/customers/register",
+				"/members/order", "/customers/order",
+				"/order/auth", "/order/payment", "/order/point", "/order/success", "/order/confirm",
+				"/payco/login/**", "/oauth2/authorization/payco", "/id.payco.com/**",
+				"/.well-known/**",
+				PAYCO_CALLBACK_PATH, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH
+			);
 	}
 
 	/**
