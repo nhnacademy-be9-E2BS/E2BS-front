@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
+import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.common.page.PageResponse;
@@ -51,6 +52,9 @@ class MemberCouponControllerTest {
 	private MemberCouponService memberCouponService;
 
 	@MockitoBean
+	private CartInterceptor cartInterceptor;
+
+	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
 	@MockitoBean
@@ -61,6 +65,7 @@ class MemberCouponControllerTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		when(cartInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
