@@ -263,22 +263,18 @@ class MemberServiceTest {
 	@Test
 	@DisplayName("회원 역할 조회 메서드 테스트")
 	void getMemberRoleMethodTest() {
+		// given
+		String memberId = "user123";
+		String expectedRole = "MEMBER";
+		ResponseEntity<String> response = ResponseEntity.ok(expectedRole);
 
-		// Given
-		ResponseMemberStateDTO responseMemberStateDTO = new ResponseMemberStateDTO(
-			"ACTIVE"
-		);
-		ResponseEntity<ResponseMemberStateDTO> response = new ResponseEntity<>(responseMemberStateDTO,
-			HttpStatus.CREATED);
+		when(memberStateAdaptor.getMemberRole(memberId)).thenReturn(response);
 
-		// When
-		when(memberStateAdaptor.getMemberState("user")).thenReturn(response);
+		// when
+		String actualRole = memberService.getMemberRole(memberId);
 
-		String result = memberService.getMemberState("user");
-
-		// Then
-		Assertions.assertThat(result).isEqualTo(response.getBody().getMemberstate());
-
+		// then
+		assertEquals(expectedRole, actualRole);
 	}
 
 	@Test
