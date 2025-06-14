@@ -1,5 +1,6 @@
 package com.nhnacademy.front.account.member.service;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
@@ -102,7 +103,7 @@ class MemberServiceTest {
 		// When
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(RegisterNotEqualsPasswordException.class, () -> memberService.createMember(requestRegisterMemberDTO));
+		assertThrows(RegisterNotEqualsPasswordException.class, () -> memberService.createMember(requestRegisterMemberDTO));
 
 	}
 
@@ -125,7 +126,7 @@ class MemberServiceTest {
 		when(memberRegisterAdaptor.postRegisterMember(requestRegisterMemberDTO)).thenReturn(null);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(RegisterProcessException.class, () -> memberService.createMember(requestRegisterMemberDTO));
+		assertThrows(RegisterProcessException.class, () -> memberService.createMember(requestRegisterMemberDTO));
 
 	}
 
@@ -148,7 +149,7 @@ class MemberServiceTest {
 		when(memberRegisterAdaptor.postRegisterMember(requestRegisterMemberDTO)).thenThrow(FeignException.class);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(RegisterProcessException.class, () -> memberService.createMember(requestRegisterMemberDTO));
+		assertThrows(RegisterProcessException.class, () -> memberService.createMember(requestRegisterMemberDTO));
 
 	}
 
@@ -255,8 +256,71 @@ class MemberServiceTest {
 		when(memberStateAdaptor.getMemberState("user")).thenReturn(response);
 
 		// Then
-		org.junit.jupiter.api.Assertions.assertThrows(GetMemberStateFailedException.class, () -> memberService.getMemberState("user"));
+		assertThrows(GetMemberStateFailedException.class, () -> memberService.getMemberState("user"));
 
+	}
+
+	@Test
+	@DisplayName("회원 역할 조회 메서드 테스트")
+	void getMemberRoleMethodTest() {
+
+		// Given
+		ResponseMemberStateDTO responseMemberStateDTO = new ResponseMemberStateDTO(
+			"ACTIVE"
+		);
+		ResponseEntity<ResponseMemberStateDTO> response = new ResponseEntity<>(responseMemberStateDTO,
+			HttpStatus.CREATED);
+
+		// When
+		when(memberStateAdaptor.getMemberState("user")).thenReturn(response);
+
+		String result = memberService.getMemberState("user");
+
+		// Then
+		Assertions.assertThat(result).isEqualTo(response.getBody().getMemberstate());
+
+	}
+
+	@Test
+	@DisplayName("회원 역할 조회 실패 - 응답 코드가 2xx가 아님 테스트")
+	void getMemberRoleMethodTestNotSuccessfulStatus() {
+		// given
+		String memberId = "user123";
+		ResponseEntity<String> response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("MEMBER");
+
+		when(memberStateAdaptor.getMemberRole(memberId)).thenReturn(response);
+
+		// when & then
+		assertThrows(GetMemberStateFailedException.class,
+			() -> memberService.getMemberRole(memberId));
+	}
+
+	@Test
+	@DisplayName("회원 역할 조회 실패 - 응답 바디가 null 테스트")
+	void getMemberRole_nullBody() {
+		// given
+		String memberId = "user123";
+		ResponseEntity<String> response = ResponseEntity.ok(null);
+
+		when(memberStateAdaptor.getMemberRole(memberId)).thenReturn(response);
+
+		// when & then
+		assertThrows(GetMemberStateFailedException.class,
+			() -> memberService.getMemberRole(memberId));
+	}
+
+	@Test
+	@DisplayName("회원 역할 조회 실패 - FeignException 테스트")
+	void getMemberRole_feignException() {
+		// given
+		String memberId = "user123";
+
+		when(memberStateAdaptor.getMemberRole(memberId))
+			.thenThrow(mock(FeignException.class));
+
+		// when & then
+		assertThrows(GetMemberStateFailedException.class,
+			() -> memberService.getMemberRole(memberId));
 	}
 
 }
