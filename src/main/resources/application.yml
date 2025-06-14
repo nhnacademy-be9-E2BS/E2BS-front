@@ -65,6 +65,10 @@ management:
       exposure:
         include: "*" # Actuator 의 모든 엔드포인트를 웹에서 노출 (운영환경에선 최소화 필요)
 
+custom:
+  oauth2:
+    payco-callback-path: /login/oauth2/code/payco
+
 dooray:
   authentication:
     url: https://nhnacademy.dooray.com/services

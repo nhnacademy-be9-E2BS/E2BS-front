@@ -2,6 +2,7 @@ package com.nhnacademy.front.common.config;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -29,6 +30,9 @@ public class WebConfig implements WebMvcConfigurer {
 	private final MemberNameAndRoleInterceptor memberNameAndRoleInterceptor;
 	private final CartInterceptor cartInterceptor;
 
+	@Value("${custom.oauth2.payco-callback-path}")
+	private String paycoCallbackPath;
+
 	private static final String ACTUATOR_PATH = "/actuator/**";
 	private static final String CSS_PATH = "/**/*.css";
 	private static final String JS_PATH = "/**/*.js";
@@ -36,7 +40,6 @@ public class WebConfig implements WebMvcConfigurer {
 	private static final String JPG_PATH = "/**/*.jpg";
 	private static final String VENDORS_PATH = "/vendors/**";
 	private static final String ERROR_PATH = "/error/**";
-	private static final String PAYCO_CALLBACK_PATH = "/login/oauth2/code/payco";
 
 	/**
 	 * 직렬화를 위해 커스터마이징한 ObjectMapper converter에 추가
@@ -52,11 +55,11 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(categoryInterceptor)
-			.excludePathPatterns(PAYCO_CALLBACK_PATH, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH);
+			.excludePathPatterns(paycoCallbackPath, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH);
 
 		registry.addInterceptor(memberNameAndRoleInterceptor)
 			.excludePathPatterns("/login/**", "/register/**", "/admin/login/**", "/payco/login/**")
-			.excludePathPatterns(PAYCO_CALLBACK_PATH, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH);
+			.excludePathPatterns(paycoCallbackPath, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH);
 
 		registry.addInterceptor(cartInterceptor)
 			.excludePathPatterns(
@@ -65,7 +68,7 @@ public class WebConfig implements WebMvcConfigurer {
 				"/order/auth", "/order/payment", "/order/point", "/order/success", "/order/confirm",
 				"/payco/login/**", "/oauth2/authorization/payco", "/id.payco.com/**",
 				"/.well-known/**",
-				PAYCO_CALLBACK_PATH, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH
+				paycoCallbackPath, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH
 			);
 	}
 
