@@ -9,12 +9,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.service.MemberCartService;
@@ -111,9 +112,8 @@ public class MemberCartController {
 			@ApiResponse(responseCode = "401", description = "인증 실패"),
 			@ApiResponse(responseCode = "404", description = "해당 장바구니 항목 없음")
 		})
-	@PutMapping("/members/carts/items/{cartItemsId}")
+	@PutMapping("/members/carts/items")
 	public ResponseEntity<Integer> updateCartItemForMember(
-		@Parameter(description = "장바구니 항목 ID", required = true) @PathVariable long cartItemsId,
 		@Parameter(description = "변경할 장바구니 항목 정보", required = true) @Valid @RequestBody RequestUpdateCartItemsDTO requestDto,
 		@Parameter(hidden = true) BindingResult bindingResult,
 		@Parameter(hidden = true) HttpServletRequest request) {
@@ -124,7 +124,7 @@ public class MemberCartController {
 		String memberId = JwtGetMemberId.jwtGetMemberId(request);
 		requestDto.setMemberId(memberId);
 
-		int cartItemsCounts = memberCartService.updateCartItemForMember(cartItemsId, requestDto);
+		int cartItemsCounts = memberCartService.updateCartItemForMember(requestDto);
 		request.getSession().setAttribute(CART_ITEMS_COUNTS, cartItemsCounts);
 
 		return ResponseEntity.ok(cartItemsCounts);
@@ -138,11 +138,10 @@ public class MemberCartController {
 			@ApiResponse(responseCode = "401", description = "인증 실패"),
 			@ApiResponse(responseCode = "404", description = "해당 항목 없음")
 		})
-	@DeleteMapping("/members/carts/items/{cartItemsId}")
-	public ResponseEntity<Integer> deleteCartItemForMember(
-		@Parameter(description = "장바구니 항목 ID", required = true) @PathVariable long cartItemsId,
-		@Parameter(hidden = true) HttpServletRequest request) {
-		memberCartService.deleteCartItemForMember(cartItemsId);
+	@DeleteMapping("/members/carts/items")
+	public ResponseEntity<Integer> deleteCartItemForMember(@Parameter(description = "삭제 요청 DTO", required = true) @ModelAttribute RequestDeleteCartItemsForMemberDTO requestDto,
+		                                                   @Parameter(hidden = true) HttpServletRequest request) {
+		memberCartService.deleteCartItemForMember(requestDto);
 
 		HttpSession session = request.getSession();
 		Integer cartItemsCounts = (Integer)session.getAttribute(CART_ITEMS_COUNTS);

@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.service.MemberCartService;
@@ -147,7 +148,6 @@ class MemberCartControllerTest {
 	@DisplayName("PUT /members/carts/items/{cartItemsId} - 회원 장바구니 항목 수량 변경 테스트")
 	void updateCartItemForMember() throws Exception {
 		// given
-		long cartItemId = 10L;
 		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO(MEMBER_ID, "", 1L, 5);
 		String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
@@ -155,10 +155,10 @@ class MemberCartControllerTest {
 			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
 
 			// when & then
-			when(memberCartService.updateCartItemForMember(eq(cartItemId), any(RequestUpdateCartItemsDTO.class)))
+			when(memberCartService.updateCartItemForMember(any(RequestUpdateCartItemsDTO.class)))
 				.thenReturn(5);
 
-			mockMvc.perform(put("/members/carts/items/{cartItemsId}", cartItemId)
+			mockMvc.perform(put("/members/carts/items")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(jsonRequest)
 					.with(csrf()))
@@ -166,7 +166,7 @@ class MemberCartControllerTest {
 				.andExpect(content().string("5"));
 		}
 
-		verify(memberCartService).updateCartItemForMember(eq(cartItemId), any(RequestUpdateCartItemsDTO.class));
+		verify(memberCartService).updateCartItemForMember(any(RequestUpdateCartItemsDTO.class));
 	}
 
 	@Test
@@ -193,20 +193,23 @@ class MemberCartControllerTest {
 	@DisplayName("DELETE /members/carts/items/{cartItemsId} - 회원 장바구니 항목 삭제 테스트")
 	void deleteCartItemForMember() throws Exception {
 		// given
-		long cartItemId = 11L;
+		RequestDeleteCartItemsForMemberDTO requestDto = new RequestDeleteCartItemsForMemberDTO();
+		String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
 		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
 			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
 
 			// when & then
-			mockMvc.perform(delete("/members/carts/items/{cartItemsId}", cartItemId)
+			mockMvc.perform(delete("/members/carts/items")
 					.sessionAttr("cartItemsCounts", 3)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(jsonRequest)
 					.with(csrf()))
 				.andExpect(status().isOk())
 				.andExpect(content().string("2"));
 		}
 
-		verify(memberCartService).deleteCartItemForMember(cartItemId);
+		verify(memberCartService).deleteCartItemForMember(requestDto);
 	}
 
 	@Test
