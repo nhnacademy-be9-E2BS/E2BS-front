@@ -17,7 +17,7 @@ public class CookieUtil {
 	private CookieUtil() {
 	}
 
-	private static final int EXPIRY = 60 * 60 * 24; // 1일
+	private static final int EXPIRY = 60 * 60 * 3; // 3시간
 
 	public static void setCookie(String cookieName, HttpServletResponse response, String value) {
 		ResponseCookie responseCookie =  ResponseCookie.from(cookieName, value)
