@@ -3,6 +3,7 @@ package com.nhnacademy.front.common.config;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,11 +12,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-class RedisConfigUnitTest {
+class RedisConfigTest {
 
 	RedisConfig redisConfig = new RedisConfig();
 
 	@Test
+	@DisplayName("ObjectMapper 생성 테스트")
 	void testRedisObjectMapper() {
 		// when
 		ObjectMapper objectMapper = redisConfig.redisObjectMapper();
@@ -25,6 +27,7 @@ class RedisConfigUnitTest {
 	}
 
 	@Test
+	@DisplayName("RedisTemplate 생성 테스트")
 	void testRedisTemplate() {
 		// given
 		RedisConnectionFactory mockFactory = mock(RedisConnectionFactory.class);
