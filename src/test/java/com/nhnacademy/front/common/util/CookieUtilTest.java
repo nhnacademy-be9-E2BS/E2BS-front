@@ -29,7 +29,7 @@ class CookieUtilTest {
 		List<String> setCookieHeaders = response.getHeaders("Set-Cookie");
 		assertThat(setCookieHeaders).isNotEmpty();
 
-		String setCookieHeader = setCookieHeaders.getFirst();
+		String setCookieHeader = setCookieHeaders.get(0);
 		assertThat(setCookieHeader).contains(COOKIE_NAME + "=" + COOKIE_VALUE);
 		assertThat(setCookieHeader).contains("HttpOnly");
 		assertThat(setCookieHeader).contains("Secure");
@@ -41,8 +41,10 @@ class CookieUtilTest {
 	@DisplayName("쿠키 값 조회 테스트")
 	void getCookieValue_Found() {
 		// given
+		Cookie cookie = new Cookie(COOKIE_NAME, COOKIE_VALUE);
+		cookie.setPath("/");
 		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.setCookies(new Cookie(COOKIE_NAME, COOKIE_VALUE));
+		request.setCookies(cookie);
 
 		// when
 		String value = CookieUtil.getCookieValue(COOKIE_NAME, request);
@@ -78,7 +80,7 @@ class CookieUtilTest {
 		List<String> headers = response.getHeaders("Set-Cookie");
 		assertThat(headers).isNotEmpty();
 
-		String setCookieHeader = headers.getFirst();
+		String setCookieHeader = headers.get(0);
 		assertThat(setCookieHeader).contains(COOKIE_NAME + "=");
 		assertThat(setCookieHeader).contains("Max-Age=0");
 		assertThat(setCookieHeader).contains("SameSite=Lax");
