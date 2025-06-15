@@ -7,8 +7,8 @@
 
 <head>
   <style>
-    .ti-heart.liked {
-      color: red; /* 좋아요 누른 상태 */
+    .fa-heart.liked {
+      color: red;
     }
 
     .card-img {
@@ -207,15 +207,20 @@
                         </span>
           </div>
 
-          <!-- 별점 및 리뷰-->
+          <!-- 별점 및 리뷰 및 좋아요-->
           <div class="form-group">
             <ul class="list" th:data-rating="${product.avgRating != null ? product.avgRating : 0}">
               <li th:each="i : ${#numbers.sequence(1,5)}">
                 <i class="fa fa-star"></i>
               </li>
               <li style="color: #000000;"
-                  th:text="${product.avgRating} + '&nbsp&nbsp&nbsp&nbsp&nbsp리뷰'"></li>
-              <li th:text="'('+${product.reviewCount}+')'"></li>
+                  th:text="${product.avgRating} + '&nbsp'"></li>
+              <li th:text="'('+${product.reviewCount}+') &nbsp&nbsp&nbsp'"></li>
+
+              <li th:if="${product.likeCount != null}" class="like-section">
+                <i class="fa fa-heart liked"></i>
+                <span th:text="${product.likeCount}"></span>
+              </li>
             </ul>
           </div>
 
