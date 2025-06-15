@@ -1,6 +1,7 @@
 package com.nhnacademy.front.common.util;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ class CookieUtilTest {
 		String value = CookieUtil.getCookieValue(COOKIE_NAME, request);
 
 		// then
-		assertThat(value).isEqualTo(COOKIE_VALUE);
+		assertEquals(COOKIE_VALUE, value);
 	}
 
 	@Test
@@ -64,7 +65,7 @@ class CookieUtilTest {
 		String value = CookieUtil.getCookieValue(COOKIE_NAME, request);
 
 		// then
-		assertThat(value).isNull();
+		assertNull(value);
 	}
 
 	@Test
@@ -77,10 +78,8 @@ class CookieUtilTest {
 		CookieUtil.clearCookie(COOKIE_NAME, response);
 
 		// then
-		List<String> headers = response.getHeaders("Set-Cookie");
-		assertThat(headers).isNotEmpty();
-
-		String setCookieHeader = headers.get(0);
+		String setCookieHeader = response.getHeader("Set-Cookie");
+		assertNotNull(setCookieHeader);
 		assertThat(setCookieHeader).contains(COOKIE_NAME + "=");
 		assertThat(setCookieHeader).contains("Max-Age=0");
 		assertThat(setCookieHeader).contains("SameSite=Lax");
