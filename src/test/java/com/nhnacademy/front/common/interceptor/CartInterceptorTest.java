@@ -27,7 +27,7 @@ class CartInterceptorTest {
 
 	@Test
 	@DisplayName("쿠키에 orderCart가 있는 경우 제거 동작 테스트")
-	void testPreHandle_OrderCartCookieExists() throws Exception {
+	void preHandle_OrderCartCookieExists() {
 		// given
 		Cookie targetCookie = new Cookie("orderCart", "some-value");
 		Cookie[] cookies = {targetCookie};
@@ -45,7 +45,7 @@ class CartInterceptorTest {
 
 	@Test
 	@DisplayName("쿠키에 orderCart가 없는 경우")
-	void testPreHandle_OrderCartCookieNotFound() throws Exception {
+	void preHandle_OrderCartCookieNotFound() {
 		// given
 		Cookie[] cookies = {new Cookie("other", "value")};
 		when(request.getCookies()).thenReturn(cookies);
@@ -60,7 +60,7 @@ class CartInterceptorTest {
 
 	@Test
 	@DisplayName("요청 쿠키가 null인 경우")
-	void testPreHandle_NoCookies() throws Exception {
+	void preHandle_NoCookies() {
 		// given
 		when(request.getCookies()).thenReturn(null);
 
