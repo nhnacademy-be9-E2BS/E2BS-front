@@ -31,6 +31,7 @@ import com.nhnacademy.front.account.memberstate.model.domain.MemberStateName;
 import com.nhnacademy.front.account.socialauth.model.domain.SocialAuth;
 import com.nhnacademy.front.account.socialauth.model.domain.SocialAuthName;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
+import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 
@@ -49,6 +50,9 @@ class MemberInfoMypageControllerTest {
 	private MemberMypageService memberMypageService;
 
 	@MockitoBean
+	private CartInterceptor cartInterceptor;
+
+	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
 	@MockitoBean
@@ -59,6 +63,7 @@ class MemberInfoMypageControllerTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		when(cartInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}

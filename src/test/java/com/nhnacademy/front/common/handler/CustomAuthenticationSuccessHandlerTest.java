@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
@@ -54,9 +53,9 @@ class CustomAuthenticationSuccessHandlerTest {
 		// given
 		String memberId = "admin123";
 		when(authentication.getName()).thenReturn(memberId);
-		when(memberService.getMemberState(memberId)).thenReturn("ADMIN");
+		when(memberService.getMemberRole(memberId)).thenReturn("ADMIN");
 
-		CustomAuthenticationSuccessHandler spyHandler = Mockito.spy(handler);
+		CustomAuthenticationSuccessHandler spyHandler = spy(handler);
 
 		// when
 		spyHandler.onAuthenticationSuccess(request, response, authentication);

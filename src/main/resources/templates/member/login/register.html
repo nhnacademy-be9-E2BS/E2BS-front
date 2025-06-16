@@ -125,6 +125,8 @@
             }
 
             const apiBaseUrl = getApiBaseUrl();
+            console.log('getApiBaseUrl(): ', apiBaseUrl)
+
 
             fetch(`${apiBaseUrl}/api/members/${encodeURIComponent(memberId)}/register`)
                 .then(response => {

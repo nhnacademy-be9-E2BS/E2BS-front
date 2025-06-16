@@ -21,6 +21,7 @@ import com.nhnacademy.front.account.member.model.dto.request.RequestDoorayAuthen
 import com.nhnacademy.front.account.member.model.dto.request.RequestDormantDoorayNumberDTO;
 import com.nhnacademy.front.account.member.service.MemberDormantService;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
+import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 
@@ -38,6 +39,9 @@ class MemberDoorayDormantControllerTest {
 	private MemberDormantService memberDormantService;
 
 	@MockitoBean
+	private CartInterceptor cartInterceptor;
+
+	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
 	@MockitoBean
@@ -48,6 +52,7 @@ class MemberDoorayDormantControllerTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		when(cartInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}

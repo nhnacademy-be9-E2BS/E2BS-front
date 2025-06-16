@@ -23,6 +23,7 @@ function checkIdDuplicate() {
     }
 
     const apiBaseUrl = getApiBaseUrl();
+    console.log('getApiBaseUrl(): ', apiBaseUrl)
 
     fetch(`${apiBaseUrl}/api/customers/register/${encodeURIComponent(customerEmail)}`)
         .then(response => {

@@ -27,6 +27,7 @@ import com.nhnacademy.front.account.memberrank.service.MemberRankService;
 import com.nhnacademy.front.account.memberrole.model.domain.MemberRole;
 import com.nhnacademy.front.account.memberrole.model.domain.MemberRoleName;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
+import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 import com.nhnacademy.front.home.model.dto.response.ResponseHomeMemberNameDTO;
@@ -55,6 +56,12 @@ class MemberRankControllerTest {
 	@MockitoBean
 	private HomeService homeService;
 
+	@Mock
+	private HttpServletRequest request;
+
+	@MockitoBean
+	private CartInterceptor cartInterceptor;
+
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
@@ -64,11 +71,9 @@ class MemberRankControllerTest {
 	@MockitoBean
 	private ErrorMessageLoader errorMessageLoader;
 
-	@Mock
-	private HttpServletRequest request;
-
 	@BeforeEach
 	void setUp() throws Exception {
+		when(cartInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
