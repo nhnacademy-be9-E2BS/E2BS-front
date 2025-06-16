@@ -1,5 +1,7 @@
 package com.nhnacademy.front.product.product.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -48,7 +50,9 @@ public class ProductController {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 		})
 	@GetMapping("/{book-id}")
-	public String getProduct(@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId, Model model,
+	public String getProduct(
+		@Parameter(description = "조회할 도서 ID", example = "1", required = true) @PathVariable("book-id") Long bookId,
+		Model model,
 		@Parameter(description = "페이징 정보") @PageableDefault(size = 5, sort = "reviewCreatedAt", direction = Sort.Direction.DESC) Pageable pageable,
 		@Parameter(hidden = true) HttpServletRequest request) {
 		String memberId = "";
@@ -72,12 +76,15 @@ public class ProductController {
 		long discountRate = (long)(((double)(response.getProductRegularPrice() - response.getProductSalePrice())
 			/ response.getProductRegularPrice()) * 100);
 
+		List<ResponseProductReadDTO> recommendedProducts = productService.getRecommendedProducts(bookId, memberId);
+
 		model.addAttribute("reviewsByProduct", reviewsByProduct);
 		model.addAttribute("totalGradeAvg", reviewInfo.getTotalGradeAvg());
 		model.addAttribute("totalCount", reviewInfo.getTotalCount());
 		model.addAttribute("starCounts", reviewInfo.getStarCounts());
 		model.addAttribute("deliveryFee", deliveryFee);
 		model.addAttribute("discountRate", discountRate);
+		model.addAttribute("recommendedProducts", recommendedProducts);
 
 		return "product/product-detail";
 	}
