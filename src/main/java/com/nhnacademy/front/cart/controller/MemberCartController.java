@@ -1,6 +1,7 @@
 package com.nhnacademy.front.cart.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -139,13 +139,26 @@ public class MemberCartController {
 			@ApiResponse(responseCode = "404", description = "해당 항목 없음")
 		})
 	@DeleteMapping("/members/carts/items")
-	public ResponseEntity<Integer> deleteCartItemForMember(@Parameter(description = "삭제 요청 DTO", required = true) @ModelAttribute RequestDeleteCartItemsForMemberDTO requestDto,
+	public ResponseEntity<Integer> deleteCartItemForMember(@Parameter(description = "삭제 요청 DTO", required = true) @Valid @RequestBody RequestDeleteCartItemsForMemberDTO requestDto,
+		                                                   @Parameter(hidden = true) BindingResult bindingResult,
 		                                                   @Parameter(hidden = true) HttpServletRequest request) {
+		if (bindingResult.hasErrors()) {
+			throw new ValidationFailedException(bindingResult);
+		}
+
+		String memberId = JwtGetMemberId.jwtGetMemberId(request);
+		requestDto.setMemberId(memberId);
+
 		memberCartService.deleteCartItemForMember(requestDto);
 
 		HttpSession session = request.getSession();
 		Integer cartItemsCounts = (Integer)session.getAttribute(CART_ITEMS_COUNTS);
-		int updatedCount = cartItemsCounts != null ? cartItemsCounts - 1 : 0;
+
+		int updatedCount = 0;
+		if (Objects.nonNull(cartItemsCounts)) {
+			updatedCount = cartItemsCounts - 1;
+		}
+
 		session.setAttribute(CART_ITEMS_COUNTS, updatedCount);
 
 		return ResponseEntity.ok(updatedCount);

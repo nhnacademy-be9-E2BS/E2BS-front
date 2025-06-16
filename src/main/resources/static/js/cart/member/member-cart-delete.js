@@ -6,22 +6,19 @@ $(document).ready(function () {
             return;
         }
 
-        const cartItemsId = $(this).data('cartitemsid');
-        console.log("삭제할 cartItemsId: ", cartItemsId);
+        const productId = $(this).data('productid');
+        console.log("삭제할 productId: ", productId);
 
         const row = $(this).closest('tr');
 
         $.ajax({
             url: `/members/carts/items`,
             type: 'DELETE',
-            beforeSend: function(xhr) {
-                // CSRF 토큰이 있을 경우 설정 (Spring Security 사용 시)
-                // const token = $('meta[name="_csrf"]').attr('content');
-                // const header = $('meta[name="_csrf_header"]').attr('content');
-                // if (token && header) {
-                //     xhr.setRequestHeader(header, token);
-                // }
-            },
+            contentType: 'application/json',
+            data: JSON.stringify({
+                memberId: "",
+                productId: productId
+            }),
             success: function (response) {
                 if (response === 0) {
                     $(`.nav-shop__circle`).hide();

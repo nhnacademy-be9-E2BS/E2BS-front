@@ -40,7 +40,7 @@ public interface MemberCartAdaptor {
 	/**
 	 * 회원 - 장바구니 항목 삭제
 	 */
-	@DeleteMapping("/api/auth/members/carts/items/{cartItemId}")
+	@DeleteMapping("/api/auth/members/carts/items")
 	ResponseEntity<Void> deleteCartItemForMember(@RequestBody RequestDeleteCartItemsForMemberDTO requestDto);
 
 	/**

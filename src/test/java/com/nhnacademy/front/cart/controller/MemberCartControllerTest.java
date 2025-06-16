@@ -121,9 +121,9 @@ class MemberCartControllerTest {
 	void getCartsByMember() throws Exception {
 		// given
 		List<ResponseCartItemsForMemberDTO> cartItemsByMember = List.of(
-			new ResponseCartItemsForMemberDTO(1L, 1L, "상품A", 15000, 10000, new BigDecimal(50), "thumbnailImage", 2,
+			new ResponseCartItemsForMemberDTO(1L, "상품A", 15000, 10000, new BigDecimal(50), "thumbnailImage", 2,
 				20000),
-			new ResponseCartItemsForMemberDTO(1L, 2L, "상품B", 15000, 10000, new BigDecimal(50), "thumbnailImage", 3,
+			new ResponseCartItemsForMemberDTO(2L, "상품B", 15000, 10000, new BigDecimal(50), "thumbnailImage", 3,
 				30000)
 		);
 
