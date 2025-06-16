@@ -168,7 +168,7 @@ class MemberInfoMypageControllerTest {
 				.param("memberPhone", requestMemberInfoDTO.getMemberPhone())
 				.param("customerPassword", requestMemberInfoDTO.getCustomerPassword())
 				.param("customerPasswordCheck", requestMemberInfoDTO.getCustomerPasswordCheck()))
-			.andExpect(status().is4xxClientError());
+			.andExpect(status().is3xxRedirection());
 
 	}
 

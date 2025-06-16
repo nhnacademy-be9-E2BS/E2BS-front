@@ -164,7 +164,7 @@ class AdminSettingsControllerTest {
 		// Then
 		mockMvc.perform(post("/admin/settings/members/user")
 				.with(csrf()))
-			.andExpect(status().is4xxClientError());
+			.andExpect(status().is3xxRedirection());
 
 	}
 

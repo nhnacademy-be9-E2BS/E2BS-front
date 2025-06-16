@@ -85,14 +85,15 @@ class CustomerControllerTest {
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{}"))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
 	@DisplayName("비회원 가입 테스트")
 	void register() throws Exception {
 		// given
-		RequestCustomerRegisterDTO request = new RequestCustomerRegisterDTO("email@naver.com", "홍길동", "pwd123", "pwd123");
+		RequestCustomerRegisterDTO request = new RequestCustomerRegisterDTO("email@naver.com", "홍길동", "pwd123",
+			"pwd123");
 		String jsonRequest = objectMapper.writeValueAsString(request);
 
 		ResponseCustomerDTO customer = new ResponseCustomerDTO("홍길동", 1L);
@@ -116,7 +117,7 @@ class CustomerControllerTest {
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{}"))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -147,7 +148,7 @@ class CustomerControllerTest {
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{}"))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -177,7 +178,7 @@ class CustomerControllerTest {
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{}"))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 }

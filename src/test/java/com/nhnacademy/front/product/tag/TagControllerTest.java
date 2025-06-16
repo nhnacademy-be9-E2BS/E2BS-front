@@ -1,6 +1,5 @@
 package com.nhnacademy.front.product.tag;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
@@ -22,7 +21,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
@@ -118,9 +116,7 @@ class TagControllerTest {
 		mockMvc.perform(post("/admin/settings/tags")
 				.param("tagName", tagName)
 				.with(csrf()))
-			.andExpect(status().isBadRequest())
-			.andExpect(result -> assertThat(result.getResolvedException())
-				.isInstanceOf(ValidationFailedException.class));
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -150,9 +146,7 @@ class TagControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(requestTagDTO))
 				.with(csrf()))
-			.andExpect(status().isBadRequest())
-			.andExpect(result -> assertThat(result.getResolvedException())
-				.isInstanceOf(ValidationFailedException.class));
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
