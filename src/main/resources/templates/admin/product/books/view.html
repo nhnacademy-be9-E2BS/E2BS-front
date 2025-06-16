@@ -136,11 +136,14 @@
                                 th:text="${product.publisher != null ? product.publisher.publisherName : '출판사 정보 없음'}">출판사</span></span>
                     </div>
                     <div class="book-meta">
-                        <span>정가: <span th:text="${product.productRegularPrice}">0</span>원</span>
-                        <span>판매가: <span th:text="${product.productSalePrice}">0</span>원</span>
+                        <span>정가:
+                            <span th:text="${#numbers.formatInteger(product.productRegularPrice, 0, 'COMMA')}">0</span>원</span>
+                        <span>판매가:
+                            <span th:text="${#numbers.formatInteger(product.productSalePrice, 0, 'COMMA')}">0</span>원</span>
                     </div>
                     <div class="book-meta">
-                        <span>재고: <span th:text="${product.productStock}">0</span></span>
+                        <span>재고:<span
+                                th:text="${#numbers.formatInteger(product.productStock, 0, 'COMMA')}">0</span></span>
                     </div>
                 </div>
                 <!-- 수정 버튼 -->

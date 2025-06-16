@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	/**
-	 * product 단일 조회 (상세 조회)
+	 * product 단일 조회 (상세 조회)에서 연관도서 조회
 	 */
 	@Override
 	public List<ResponseProductReadDTO> getRecommendedProducts(long productId, String memberId) {
