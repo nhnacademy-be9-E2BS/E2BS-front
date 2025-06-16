@@ -4,15 +4,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const decreaseButtons = document.querySelectorAll('.reduced.items-count');
 
     increaseButtons.forEach(button => {
-        button.addEventListener('click', () => updateQuantity(button.dataset.productid, button.dataset.cartitemsid, 1));
+        button.addEventListener('click', () => updateQuantity(button.dataset.productid, 1));
     });
 
     decreaseButtons.forEach(button => {
-        button.addEventListener('click', () => updateQuantity(button.dataset.productid, button.dataset.cartitemsid, -1));
+        button.addEventListener('click', () => updateQuantity(button.dataset.productid, -1));
     });
 
-    function updateQuantity(productId, cartItemsId, change) {
-        console.log('cartItemsId: ' + cartItemsId)
+    function updateQuantity(productId, change) {
         console.log('productId: ' + productId)
 
         const quantityInput = document.getElementById(`quantity-${productId}`);
@@ -27,8 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         const row = quantityInput.closest('tr');
+        const checkbox = row.querySelector('.cart-item-checkbox');
 
         if (quantity === 0) {
+            // 체크 해제 후 합계 업데이트 한 후에 그 다음 행 제거
+            checkbox.checked = false;
             row.remove();
         } else {
             const unitPriceText = row.querySelector('.unit-price').textContent;
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         updateTotalPayment();
-        sendCartUpdate(productId, cartItemsId, quantity);
+        sendCartUpdate(productId, quantity);
     }
 });
 
@@ -82,9 +84,9 @@ function updateTotalPayment() {
 
 
 // 수량 변경 ajax 요청 메소드
-function sendCartUpdate(productId, cartItemsId, quantity) {
+function sendCartUpdate(productId, quantity) {
     $.ajax({
-        url: `/members/carts/items/${cartItemsId}`,
+        url: `/members/carts/items`,
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({

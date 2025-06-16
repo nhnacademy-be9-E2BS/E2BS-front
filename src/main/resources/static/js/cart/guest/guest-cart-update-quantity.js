@@ -29,17 +29,15 @@ document.addEventListener('DOMContentLoaded', function () {
             // 체크 해제 후 합계 업데이트 한 후에 그 다음 행 제거
             checkbox.checked = false;
             row.remove();
-            updateTotalPayment();
         } else {
             const unitPriceText = row.querySelector('.unit-price').textContent;
             const unitPrice = parseInt(unitPriceText.replace(/[^\d]/g, ''));
             const totalPrice = unitPrice * quantity;
             const totalPriceElement = row.querySelector('.total-price');
             totalPriceElement.textContent = totalPrice.toLocaleString('ko-KR') + '원'
-
-            updateTotalPayment();
         }
 
+        updateTotalPayment();
         sendCartUpdate(productId, quantity);
     }
 });

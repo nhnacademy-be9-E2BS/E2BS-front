@@ -12,7 +12,7 @@ $(document).ready(function () {
         const row = $(this).closest('tr');
 
         $.ajax({
-            url: `/members/carts/items/${cartItemsId}`,
+            url: `/members/carts/items`,
             type: 'DELETE',
             beforeSend: function(xhr) {
                 // CSRF 토큰이 있을 경우 설정 (Spring Security 사용 시)
