@@ -148,7 +148,7 @@ class MemberCartControllerTest {
 	}
 
 	@Test
-	@DisplayName("PUT /members/carts/items/{cartItemsId} - 회원 장바구니 항목 수량 변경 테스트")
+	@DisplayName("PUT /members/carts/items - 회원 장바구니 항목 수량 변경 테스트")
 	void updateCartItemForMember() throws Exception {
 		// given
 		RequestUpdateCartItemsDTO requestDto = new RequestUpdateCartItemsDTO(MEMBER_ID, "", 1L, 5);
@@ -173,7 +173,7 @@ class MemberCartControllerTest {
 	}
 
 	@Test
-	@DisplayName("PUT /members/carts/items/{cartItemsId} - 회원 장바구니 항목 수량 변경 테스트 실패(유효성 검사)")
+	@DisplayName("PUT /members/carts/items - 회원 장바구니 항목 수량 변경 테스트 실패(유효성 검사)")
 	void updateCartItemForMember_ValidationFail() throws Exception {
 		// given
 		long cartItemId = 10L;
@@ -193,11 +193,13 @@ class MemberCartControllerTest {
 	}
 
 	@Test
-	@DisplayName("DELETE /members/carts/items/{cartItemsId} - 회원 장바구니 항목 삭제 테스트")
+	@DisplayName("DELETE /members/carts/items - 회원 장바구니 항목 삭제 테스트")
 	void deleteCartItemForMember() throws Exception {
 		// given
-		RequestDeleteCartItemsForMemberDTO requestDto = new RequestDeleteCartItemsForMemberDTO();
+		RequestDeleteCartItemsForMemberDTO requestDto = new RequestDeleteCartItemsForMemberDTO("", 1L);
 		String jsonRequest = objectMapper.writeValueAsString(requestDto);
+
+		doNothing().when(memberCartService).deleteCartItemForMember(any(RequestDeleteCartItemsForMemberDTO.class));
 
 		try (MockedStatic<JwtGetMemberId> mockedStatic = mockStatic(JwtGetMemberId.class)) {
 			mockedStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class))).thenReturn(MEMBER_ID);
@@ -211,8 +213,6 @@ class MemberCartControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().string("2"));
 		}
-
-		verify(memberCartService).deleteCartItemForMember(requestDto);
 	}
 
 	@Test

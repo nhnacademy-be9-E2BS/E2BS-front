@@ -34,7 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 
 	@Override
-	public void createReview(RequestCreateReviewDTO request) {
+	public void createReview(RequestCreateReviewDTO request) throws FeignException {
 		try {
 			RequestCreateReviewMetaDTO requestMeta = new RequestCreateReviewMetaDTO(request.getProductId(),
 				request.getCustomerId(), request.getMemberId(), request.getReviewContent(), request.getReviewGrade());

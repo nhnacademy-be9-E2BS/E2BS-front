@@ -1,7 +1,5 @@
 package com.nhnacademy.front.review.controller;
 
-import java.util.Objects;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +20,7 @@ import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.page.PageResponse;
 import com.nhnacademy.front.common.page.PageResponseConverter;
 import com.nhnacademy.front.jwt.parser.JwtGetMemberId;
+import com.nhnacademy.front.jwt.parser.JwtHasToken;
 import com.nhnacademy.front.review.model.dto.request.RequestCreateReviewDTO;
 import com.nhnacademy.front.review.model.dto.request.RequestUpdateReviewDTO;
 import com.nhnacademy.front.review.model.dto.response.ResponseMemberReviewDTO;
@@ -59,7 +58,7 @@ public class ReviewController {
 		if (bindingResult.hasErrors()) {
 			throw new ValidationFailedException(bindingResult);
 		}
-		if (Objects.isNull(request.getSession().getAttribute("guestId"))) {
+		if (JwtHasToken.hasToken(request)) {
 			String memberId = JwtGetMemberId.jwtGetMemberId(request);
 			requestDto.setMemberId(memberId);
 		}
