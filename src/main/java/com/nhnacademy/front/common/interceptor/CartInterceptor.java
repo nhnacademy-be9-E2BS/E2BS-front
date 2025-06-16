@@ -14,16 +14,18 @@ public class CartInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-
-		Cookie[] cookies = request.getCookies();
-		if (Objects.nonNull(cookies)) {
-			for (Cookie cookie : cookies) {
-				if (TARGET_COOKIE_NAME.equals(cookie.getName())) {
-					cookie.setValue("");
-					cookie.setPath("/");
-					cookie.setMaxAge(0);
-					response.addCookie(cookie);
-					break;
+		String uri = request.getRequestURI();
+		if (!uri.startsWith("/order") && !uri.startsWith("/members/order") && !uri.startsWith("/customers/order")) {
+			Cookie[] cookies = request.getCookies();
+			if (Objects.nonNull(cookies)) {
+				for (Cookie cookie : cookies) {
+					if (TARGET_COOKIE_NAME.equals(cookie.getName())) {
+						cookie.setValue("");
+						cookie.setPath("/");
+						cookie.setMaxAge(0);
+						response.addCookie(cookie);
+						break;
+					}
 				}
 			}
 		}

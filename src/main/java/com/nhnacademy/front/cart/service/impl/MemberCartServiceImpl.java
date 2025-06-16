@@ -9,6 +9,7 @@ import com.nhnacademy.front.cart.adaptor.MemberCartAdaptor;
 import com.nhnacademy.front.cart.adaptor.MemberRegisterCartAdaptor;
 import com.nhnacademy.front.cart.exception.CartProcessException;
 import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.service.MemberCartService;
@@ -57,8 +58,8 @@ public class MemberCartServiceImpl implements MemberCartService {
 	}
 
 	@Override
-	public Integer updateCartItemForMember(long cartItemId, RequestUpdateCartItemsDTO requestDto) throws FeignException {
-		ResponseEntity<Integer> result = memberCartAdaptor.updateCartItemForMember(cartItemId, requestDto);
+	public Integer updateCartItemForMember(RequestUpdateCartItemsDTO requestDto) throws FeignException {
+		ResponseEntity<Integer> result = memberCartAdaptor.updateCartItemForMember(requestDto);
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
 			throw new CartProcessException("회원 장바구니 항목 수량 변경 실패: " + result.getStatusCode());
@@ -67,8 +68,8 @@ public class MemberCartServiceImpl implements MemberCartService {
 	}
 
 	@Override
-	public void deleteCartItemForMember(long cartItemId) throws FeignException {
-		ResponseEntity<Void> result = memberCartAdaptor.deleteCartItemForMember(cartItemId);
+	public void deleteCartItemForMember(RequestDeleteCartItemsForMemberDTO requestDto) throws FeignException {
+		ResponseEntity<Void> result = memberCartAdaptor.deleteCartItemForMember(requestDto);
 
 		if (!result.getStatusCode().is2xxSuccessful()) {
 			throw new CartProcessException("회원 장바구니 항목 삭제 실패: " + result.getStatusCode());

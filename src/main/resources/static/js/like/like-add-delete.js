@@ -41,7 +41,7 @@ $(document).ready(function () {
                 console.error('xhr.responseJSON:', xhr.responseJSON);
                 console.error('xhr.responseJSON message:', xhr.responseJSON.message);
 
-                let message = '';
+                let message;
 
                 if (liked) {
                     message = '위시리스트 취소 실패했습니다. ' + `(${xhr.responseJSON.status})`
@@ -50,36 +50,26 @@ $(document).ready(function () {
                 }
 
                 if (xhr.responseJSON) {
-                    const rawTimestamp = xhr.responseJSON.timestamp;
-                    let formattedTime = rawTimestamp;
+                    const timeStamp = xhr.responseJSON.timeStamp;
+                    const errorTitle = xhr.responseJSON.title;
 
-                    try {
-                        const date = new Date(rawTimestamp);
-                        formattedTime = date.toLocaleString('ko-KR', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                            hour12: false,
-                            timeZone: 'Asia/Seoul'
-                        });
-                    } catch (e) {
-                        console.warn("시간 포맷 변환 실패:", e);
+                    const jsonStart = errorTitle.indexOf('[{');
+                    const jsonEnd = errorTitle.lastIndexOf('}]');
+
+                    if (jsonStart !== -1 && jsonEnd !== -1) {
+                        const jsonArrayStr = errorTitle.substring(jsonStart, jsonEnd + 2);
+                        try {
+                            const arr = JSON.parse(jsonArrayStr);
+                            if (Array.isArray(arr) && arr.length > 0 && arr[0].title) {
+                                extractedMessage = arr[0].title;
+                            }
+                        } catch (e) {
+                            console.error('JSON 파싱 오류:', e);
+                        }
                     }
 
-                    // 전체 message 또는 trace에서 Exception 이후 메시지 한 줄 추출
-                    const fullText = xhr.responseJSON.message || xhr.responseJSON.trace || '';
-                    let extractedMessage = fullText;
-
-                    const match = fullText.match(/Exception:\s*(.+?)\\r?\\n/);
-                    if (match && match[1]) {
-                        extractedMessage = match[1];
-                    }
-
-                    message += `\n\n발생 시간: ${formattedTime}` +
-                               `\n에러 메시지: ${extractedMessage}`;
+                    message += `\n\n발생 시간: ${timeStamp}` +
+                        `\n에러 메시지: ${extractedMessage}`;
                 }
 
                 alert(message);

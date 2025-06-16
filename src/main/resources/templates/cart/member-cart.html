@@ -102,15 +102,13 @@
 
                                       <button type="button"
                                               class="increase items-count"
-                                              th:data-productid="${cartItem.productId}"
-                                              th:data-cartitemsid="${cartItem.cartItemsId}">
+                                              th:data-productid="${cartItem.productId}">
                                           <i class="fas fa-plus"></i>
                                       </button>
 
                                       <button type="button"
                                               class="reduced items-count"
-                                              th:data-productid="${cartItem.productId}"
-                                              th:data-cartitemsid="${cartItem.cartItemsId}">
+                                              th:data-productid="${cartItem.productId}">
                                           <i class="fas fa-minus"></i>
                                       </button>
                                   </div>
@@ -123,7 +121,7 @@
                               <td>
                                   <button type="button"
                                           class="delete-item-btn"
-                                          th:data-cartitemsid="${cartItem.cartItemsId}"
+                                          th:data-productid="${cartItem.productId}"
                                           style="background: none; border: none;">
                                       <i class="ti-trash" style="color: #dc3545;"></i>
                                   </button>
