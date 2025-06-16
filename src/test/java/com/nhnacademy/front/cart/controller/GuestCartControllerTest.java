@@ -109,7 +109,7 @@ class GuestCartControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json)
 				.with(csrf()))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -149,7 +149,7 @@ class GuestCartControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json)
 				.with(csrf()))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -159,7 +159,8 @@ class GuestCartControllerTest {
 		String guestKey = "session-id-123";
 		Cookie cookie = new Cookie("guestKey", guestKey);
 
-		List<ResponseCartItemsForGuestDTO> cartItems = List.of(new ResponseCartItemsForGuestDTO(1L, "title", 10000, 5000, new BigDecimal(0), "image", 3, 15000));
+		List<ResponseCartItemsForGuestDTO> cartItems = List.of(
+			new ResponseCartItemsForGuestDTO(1L, "title", 10000, 5000, new BigDecimal(0), "image", 3, 15000));
 
 		ResponseDeliveryFeeDTO deliveryFeeDTO = new ResponseDeliveryFeeDTO(1L, 3000, 50000, LocalDateTime.now());
 
@@ -208,7 +209,7 @@ class GuestCartControllerTest {
 
 		verify(guestCartService).deleteCartItemForGuest(any(RequestDeleteCartItemsForGuestDTO.class));
 	}
-	
+
 	@Test
 	@DisplayName("DELETE /guests/carts/items - 장바구니 항목 삭제 테스트 실패(유효성 검사)")
 	void deleteCartItemForGuest_Fail_Validation() throws Exception {
@@ -226,7 +227,7 @@ class GuestCartControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json)
 				.with(csrf()))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test

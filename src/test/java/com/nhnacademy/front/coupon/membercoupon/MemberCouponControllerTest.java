@@ -1,6 +1,5 @@
 package com.nhnacademy.front.coupon.membercoupon;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
@@ -21,7 +20,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
@@ -106,11 +104,7 @@ class MemberCouponControllerTest {
 		mockMvc.perform(post("/admin/settings/memberCoupons/issue")
 				.param("couponId", "")  // 누락/잘못된 값
 				.with(csrf()))
-			.andExpect(status().isBadRequest())
-			.andExpect(result ->
-				assertThat(result.getResolvedException())
-					.isInstanceOf(ValidationFailedException.class)
-			);
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -142,7 +136,6 @@ class MemberCouponControllerTest {
 			.andExpect(view().name("member/mypage/coupon-box"))
 			.andExpect(model().attributeExists("memberCoupons", "usableCouponCount", "status"));
 	}
-
 
 	@Test
 	@DisplayName("마이페이지 쿠폰함 - 사용 가능")

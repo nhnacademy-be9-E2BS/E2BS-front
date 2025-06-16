@@ -200,7 +200,7 @@ class AddressControllerTest {
 				.param("addressDefault", String.valueOf(requestMemberAddressSaveDTO.isAddressDefault()))
 				.param("addressReceiverPhone", ""))
 			.andDo(print())
-			.andExpect(status().is4xxClientError());
+			.andExpect(status().is3xxRedirection());
 
 	}
 

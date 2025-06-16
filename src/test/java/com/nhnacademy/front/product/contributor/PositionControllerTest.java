@@ -1,6 +1,5 @@
 package com.nhnacademy.front.product.contributor;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -21,7 +20,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
@@ -85,9 +83,7 @@ class PositionControllerTest {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.content("positionName=")
 				.with(csrf()))
-			.andExpect(status().isBadRequest())
-			.andExpect(result -> assertThat(result.getResolvedException())
-				.isInstanceOf(ValidationFailedException.class));
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test

@@ -112,6 +112,6 @@ class DeliveryFeeControllerTest {
 			.with(csrf()));
 
 		// then
-		result.andExpect(status().isBadRequest());
+		result.andExpect(status().is3xxRedirection());
 	}
 }

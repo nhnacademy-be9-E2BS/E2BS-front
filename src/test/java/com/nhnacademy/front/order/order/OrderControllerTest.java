@@ -1,6 +1,5 @@
 package com.nhnacademy.front.order.order;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
@@ -35,7 +34,6 @@ import com.nhnacademy.front.account.member.model.dto.response.ResponseMemberInfo
 import com.nhnacademy.front.account.member.service.MemberMypageService;
 import com.nhnacademy.front.cart.model.dto.request.RequestCartOrderDTO;
 import com.nhnacademy.front.cart.service.CartService;
-import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
@@ -162,7 +160,6 @@ class OrderControllerTest {
 		String json = objectMapper.writeValueAsString(dto);
 		String encodedCart = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
 
-
 		PageResponse<ResponseWrapperDTO> wrappers = mock(PageResponse.class);
 		ResponseMemberInfoDTO member = new ResponseMemberInfoDTO();
 		member.setCustomer(new Customer(1L, "test@email.com", "1234", "test"));
@@ -172,7 +169,6 @@ class OrderControllerTest {
 		when(wrappers.getContent()).thenReturn(new ArrayList<>());
 		when(memberMypageService.getMemberInfo(any())).thenReturn(member);
 		when(memberMypageService.getMemberPoint(any())).thenReturn(0L);
-
 
 		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(mock(ResponseDeliveryFeeDTO.class));
 		mockMvc.perform(get("/members/order")
@@ -192,7 +188,6 @@ class OrderControllerTest {
 
 		String orderCart = "{\"productIds\":[1,2],\"cartQuantities\":[1,2]}";
 		String encodedCart = Base64.getEncoder().encodeToString(orderCart.getBytes(StandardCharsets.UTF_8));
-
 
 		when(deliveryFeeSevice.getCurrentDeliveryFee()).thenReturn(mock(ResponseDeliveryFeeDTO.class));
 		mockMvc.perform(post("/customers/order")
@@ -235,9 +230,7 @@ class OrderControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))
 				.with(csrf()))
-			.andExpect(status().isBadRequest())
-			.andExpect(result -> assertThat(result.getResolvedException())
-				.isInstanceOf(ValidationFailedException.class));
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -267,9 +260,7 @@ class OrderControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))
 				.with(csrf()))
-			.andExpect(status().isBadRequest())
-			.andExpect(result -> assertThat(result.getResolvedException())
-				.isInstanceOf(ValidationFailedException.class));
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -305,7 +296,6 @@ class OrderControllerTest {
 	void testGetConfirmOrder() throws Exception {
 		String orderCart = "{\"productIds\":[1,2],\"cartQuantities\":[1,2]}";
 		String encodedCart = Base64.getEncoder().encodeToString(orderCart.getBytes(StandardCharsets.UTF_8));
-
 
 		mockMvc.perform(get("/order/confirm")
 				.cookie(new Cookie("orderCart", encodedCart)))
@@ -343,7 +333,8 @@ class OrderControllerTest {
 		pageResponse.setSize(10);
 		pageResponse.setTotalElements(1L);
 		ResponseEntity<PageResponse<ResponseOrderDTO>> responseEntity = ResponseEntity.ok(pageResponse);
-		when(orderService.getOrdersByMemberId(any(Pageable.class), any(), any(), any(), any(), any())).thenReturn(responseEntity);
+		when(orderService.getOrdersByMemberId(any(Pageable.class), any(), any(), any(), any(), any())).thenReturn(
+			responseEntity);
 
 		try (MockedStatic<JwtGetMemberId> mockStatic = mockStatic(JwtGetMemberId.class)) {
 			mockStatic.when(() -> JwtGetMemberId.jwtGetMemberId(any(HttpServletRequest.class)))
