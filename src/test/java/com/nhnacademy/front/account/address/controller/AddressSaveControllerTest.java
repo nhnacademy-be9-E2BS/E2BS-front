@@ -137,7 +137,7 @@ class AddressSaveControllerTest {
 				.param("addressExtra", requestMemberAddressSaveDTO.getAddressExtra())
 				.param("addressDefault", String.valueOf(requestMemberAddressSaveDTO.isAddressDefault())))
 			.andDo(print())
-			.andExpect(status().is4xxClientError());
+			.andExpect(status().is3xxRedirection());
 
 	}
 

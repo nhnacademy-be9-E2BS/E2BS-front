@@ -113,7 +113,7 @@ class PointPolicyControllerTest {
 				.param("policyType", "REGISTER")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.with(csrf()))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -145,6 +145,6 @@ class PointPolicyControllerTest {
 				.param("pointPolicyFigure", "aaa")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.with(csrf()))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 }

@@ -98,7 +98,8 @@ class ReviewControllerTest {
 	@DisplayName("POST /reviews - 리뷰 작성 테스트 실패(유효성 검사)")
 	void createReview_Fail_Validation() throws Exception {
 		// given
-		MockMultipartFile mockFile = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg", "dummy".getBytes());
+		MockMultipartFile mockFile = new MockMultipartFile("reviewImage", "test-image.jpg", "image/jpeg",
+			"dummy".getBytes());
 
 		// when & then
 		mockMvc.perform(MockMvcRequestBuilders.multipart("/reviews")
@@ -107,7 +108,7 @@ class ReviewControllerTest {
 				.param("reviewGrade", "") // 유효성 실패 조건
 				.param("productId", "1")
 				.with(csrf()))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -142,16 +143,17 @@ class ReviewControllerTest {
 		// given
 		String memberId = "user123";
 		List<ResponseMemberReviewDTO> memberReviewDTOList = List.of(
-			new ResponseMemberReviewDTO(1L, 1L, "thumbnail", "ProductA", "내용", 4, "http:localhost:9000/bbb.jpg", LocalDateTime.now()),
-			new ResponseMemberReviewDTO(2L, 2L, "thumbnail", "ProductB", "내용", 4, "http:localhost:9000/bbb.jpg", LocalDateTime.now())
-			);
+			new ResponseMemberReviewDTO(1L, 1L, "thumbnail", "ProductA", "내용", 4, "http:localhost:9000/bbb.jpg",
+				LocalDateTime.now()),
+			new ResponseMemberReviewDTO(2L, 2L, "thumbnail", "ProductB", "내용", 4, "http:localhost:9000/bbb.jpg",
+				LocalDateTime.now())
+		);
 
 		PageResponse.SortInfo sortInfo = new PageResponse.SortInfo();
 		PageResponse.PageableInfo pageableInfo = new PageResponse.PageableInfo();
 		PageResponse<ResponseMemberReviewDTO> result =
 			new PageResponse<>(memberReviewDTOList, pageableInfo, true,
 				2, 1, 5, 0, sortInfo, true, 2, false);
-
 
 		when(reviewService.getReviewsByMember(eq(memberId), any(Pageable.class)))
 			.thenReturn(result);

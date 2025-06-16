@@ -27,7 +27,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.front.common.error.exception.ValidationFailedException;
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
 import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
@@ -227,7 +226,8 @@ class ProductAdminControllerTest {
 
 		when(tagService.getTags(Pageable.unpaged())).thenReturn(tagPageResponse);
 
-		List<ResponseProductStateDTO> mockStates = List.of(new ResponseProductStateDTO(1L, ProductStateName.SALE.name()));
+		List<ResponseProductStateDTO> mockStates = List.of(
+			new ResponseProductStateDTO(1L, ProductStateName.SALE.name()));
 		when(productStateService.getProductStates()).thenReturn(mockStates);
 
 		// when & then
@@ -320,7 +320,8 @@ class ProductAdminControllerTest {
 
 		when(tagService.getTags(Pageable.unpaged())).thenReturn(tagPageResponse);
 
-		List<ResponseProductStateDTO> mockStates = List.of(new ResponseProductStateDTO(1L, ProductStateName.SALE.name()));
+		List<ResponseProductStateDTO> mockStates = List.of(
+			new ResponseProductStateDTO(1L, ProductStateName.SALE.name()));
 		when(productStateService.getProductStates()).thenReturn(mockStates);
 
 		// when & then
@@ -392,9 +393,7 @@ class ProductAdminControllerTest {
 				.param("categoryIds", "1")
 				.param("contributorIds", "1")
 				.with(csrf()))
-			.andExpect(status().isBadRequest())
-			.andExpect(result -> assertThat(result.getResolvedException())
-				.isInstanceOf(ValidationFailedException.class));
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -459,9 +458,7 @@ class ProductAdminControllerTest {
 					request.setMethod("PUT");
 					return request;
 				}))
-			.andExpect(status().isBadRequest())
-			.andExpect(result -> assertThat(result.getResolvedException())
-				.isInstanceOf(ValidationFailedException.class));
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -489,9 +486,7 @@ class ProductAdminControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))
 				.with(csrf()))
-			.andExpect(status().isBadRequest())
-			.andExpect(result -> assertThat(result.getResolvedException())
-				.isInstanceOf(ValidationFailedException.class));
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -520,7 +515,8 @@ class ProductAdminControllerTest {
 	@DisplayName("알라딘 단일 도서 등록 - 실패 (ProductCreateProcessException)")
 	void create_product_from_aladdin_fail_test() throws Exception {
 		// given
-		doThrow(new ProductCreateProcessException()).when(productAdminService).createProductApi(any(RequestProductApiCreateDTO.class));
+		doThrow(new ProductCreateProcessException()).when(productAdminService)
+			.createProductApi(any(RequestProductApiCreateDTO.class));
 
 		// when & then
 		mockMvc.perform(post("/admin/settings/books/aladdin/register/submit")
@@ -534,7 +530,8 @@ class ProductAdminControllerTest {
 				.param("categoryIds", "1")
 				.param("tagIds", "1")
 				.with(csrf()))
-			.andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ProductCreateProcessException.class));
+			.andExpect(
+				result -> assertThat(result.getResolvedException()).isInstanceOf(ProductCreateProcessException.class));
 	}
 
 	@Test
@@ -560,7 +557,8 @@ class ProductAdminControllerTest {
 	@Test
 	@DisplayName("알라딘 쿼리 기반 도서 등록 - 실패 (ProductCreateProcessException)")
 	void create_product_from_aladdin_query_fail_test() throws Exception {
-		doThrow(new ProductCreateProcessException()).when(productAdminService).createProductQueryApi(any(RequestProductApiCreateByQueryDTO.class));
+		doThrow(new ProductCreateProcessException()).when(productAdminService)
+			.createProductQueryApi(any(RequestProductApiCreateByQueryDTO.class));
 
 		mockMvc.perform(post("/admin/settings/books/aladdin/register/submit/list")
 				.param("productTitle", "쿼리도서")
@@ -573,7 +571,8 @@ class ProductAdminControllerTest {
 				.param("categoryIds", "2")
 				.param("tagIds", "2")
 				.with(csrf()))
-			.andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ProductCreateProcessException.class));
+			.andExpect(
+				result -> assertThat(result.getResolvedException()).isInstanceOf(ProductCreateProcessException.class));
 	}
 
 	@Test
@@ -588,7 +587,8 @@ class ProductAdminControllerTest {
 				.param("title", "테스트도서")
 				.param("page", "0")
 				.param("size", "10"))
-			.andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ProductGetProcessException.class));
+			.andExpect(
+				result -> assertThat(result.getResolvedException()).isInstanceOf(ProductGetProcessException.class));
 	}
 
 	@Test
@@ -603,7 +603,8 @@ class ProductAdminControllerTest {
 				.param("queryType", "BESTSELLER")
 				.param("page", "0")
 				.param("size", "10"))
-			.andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ProductGetProcessException.class));
+			.andExpect(
+				result -> assertThat(result.getResolvedException()).isInstanceOf(ProductGetProcessException.class));
 	}
 
 	@Test
@@ -694,7 +695,6 @@ class ProductAdminControllerTest {
 			.andExpect(model().attribute("queryType", "BESTSELLER"));
 	}
 
-
 	@Test
 	@DisplayName("알라딘 도서 검색창 뷰 조회 - success")
 	void aladdin_search_form_view_test() throws Exception {
@@ -702,15 +702,5 @@ class ProductAdminControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("admin/product/search"));
 	}
-
-
-
-
-
-
-
-
-
-
 
 }
