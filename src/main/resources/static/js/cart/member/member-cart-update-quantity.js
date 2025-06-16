@@ -4,15 +4,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const decreaseButtons = document.querySelectorAll('.reduced.items-count');
 
     increaseButtons.forEach(button => {
-        button.addEventListener('click', () => updateQuantity(button.dataset.productid, button.dataset.cartitemsid, 1));
+        button.addEventListener('click', () => updateQuantity(button.dataset.productid, 1));
     });
 
     decreaseButtons.forEach(button => {
-        button.addEventListener('click', () => updateQuantity(button.dataset.productid, button.dataset.cartitemsid, -1));
+        button.addEventListener('click', () => updateQuantity(button.dataset.productid, -1));
     });
 
-    function updateQuantity(productId, cartItemsId, change) {
-        console.log('cartItemsId: ' + cartItemsId)
+    function updateQuantity(productId, change) {
         console.log('productId: ' + productId)
 
         const quantityInput = document.getElementById(`quantity-${productId}`);
@@ -27,8 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         const row = quantityInput.closest('tr');
+        const checkbox = row.querySelector('.cart-item-checkbox');
 
         if (quantity === 0) {
+            // 체크 해제 후 합계 업데이트 한 후에 그 다음 행 제거
+            checkbox.checked = false;
             row.remove();
         } else {
             const unitPriceText = row.querySelector('.unit-price').textContent;
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         updateTotalPayment();
-        sendCartUpdate(productId, cartItemsId, quantity);
+        sendCartUpdate(productId, quantity);
     }
 });
 
@@ -82,9 +84,9 @@ function updateTotalPayment() {
 
 
 // 수량 변경 ajax 요청 메소드
-function sendCartUpdate(productId, cartItemsId, quantity) {
+function sendCartUpdate(productId, quantity) {
     $.ajax({
-        url: `/members/carts/items/${cartItemsId}`,
+        url: `/members/carts/items`,
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -110,35 +112,25 @@ function sendCartUpdate(productId, cartItemsId, quantity) {
             let message = '장바구니 수량 업데이트에 실패했습니다. ' + `(${xhr.responseJSON.status})`;
 
             if (xhr.responseJSON) {
-                const rawTimestamp = xhr.responseJSON.timestamp;
-                let formattedTime = rawTimestamp;
+                const timeStamp = xhr.responseJSON.timeStamp;
+                const errorTitle = xhr.responseJSON.title;
 
-                try {
-                    const date = new Date(rawTimestamp);
-                    formattedTime = date.toLocaleString('ko-KR', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: false,
-                        timeZone: 'Asia/Seoul'
-                    });
-                } catch (e) {
-                    console.warn("시간 포맷 변환 실패:", e);
+                const jsonStart = errorTitle.indexOf('[{');
+                const jsonEnd = errorTitle.lastIndexOf('}]');
+
+                if (jsonStart !== -1 && jsonEnd !== -1) {
+                    const jsonArrayStr = errorTitle.substring(jsonStart, jsonEnd + 2);
+                    try {
+                        const arr = JSON.parse(jsonArrayStr);
+                        if (Array.isArray(arr) && arr.length > 0 && arr[0].title) {
+                            extractedMessage = arr[0].title;
+                        }
+                    } catch (e) {
+                        console.error('JSON 파싱 오류:', e);
+                    }
                 }
 
-                // 전체 message 또는 trace에서 Exception 이후 메시지 한 줄 추출
-                const fullText = xhr.responseJSON.message || xhr.responseJSON.trace || '';
-                let extractedMessage = fullText;
-
-                const match = fullText.match(/Exception:\s*(.+?)\\r?\\n/);
-                if (match && match[1]) {
-                    extractedMessage = match[1];
-                }
-
-                message += `\n\n발생 시간: ${formattedTime}` +
+                message += `\n\n발생 시간: ${timeStamp}` +
                     `\n에러 메시지: ${extractedMessage}`;
             }
 

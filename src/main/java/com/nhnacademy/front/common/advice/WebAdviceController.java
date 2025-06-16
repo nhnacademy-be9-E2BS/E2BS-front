@@ -29,7 +29,6 @@ import com.nhnacademy.front.account.member.exception.RegisterNotEqualsPasswordEx
 import com.nhnacademy.front.account.member.exception.RegisterProcessException;
 import com.nhnacademy.front.account.oauth.exception.PaycoProcessingException;
 import com.nhnacademy.front.account.pointhistory.exception.PointHistoryGetException;
-import com.nhnacademy.front.cart.exception.CartProcessException;
 import com.nhnacademy.front.common.error.exception.EmptyResponseException;
 import com.nhnacademy.front.common.error.exception.LoginRedirectException;
 import com.nhnacademy.front.common.error.exception.NotMatchedLoginPasswordException;
@@ -44,14 +43,12 @@ import com.nhnacademy.front.product.category.exception.CategoryDeleteProcessExce
 import com.nhnacademy.front.product.category.exception.CategoryGetProcessException;
 import com.nhnacademy.front.product.category.exception.CategoryNotFoundException;
 import com.nhnacademy.front.product.category.exception.CategoryUpdateProcessException;
-import com.nhnacademy.front.product.like.exception.LikeProcessException;
 import com.nhnacademy.front.product.product.exception.ProductCreateProcessException;
 import com.nhnacademy.front.product.product.exception.ProductGetProcessException;
 import com.nhnacademy.front.product.product.exception.ProductUpdateProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherCreateProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherGetProcessException;
 import com.nhnacademy.front.product.publisher.exception.PublisherUpdateProcessException;
-import com.nhnacademy.front.review.exception.ReviewProcessException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -66,7 +63,6 @@ public class WebAdviceController {
 	@ExceptionHandler({
 		ValidationFailedException.class,
 		CustomerRegisterProcessingException.class,
-		CartProcessException.class, ReviewProcessException.class, LikeProcessException.class,
 		DormantDoorayNotMatchedNumberException.class})
 	public ModelAndView badRequestException(Exception ex) {
 		String code = "B400";
@@ -117,7 +113,7 @@ public class WebAdviceController {
 		PublisherUpdateProcessException.class,
 		CategoryCreateProcessException.class, CategoryGetProcessException.class, CategoryNotFoundException.class,
 		CategoryUpdateProcessException.class, CategoryDeleteProcessException.class,
-		ProductCreateProcessException.class, ProductGetProcessException.class, ProductUpdateProcessException.class
+		ProductCreateProcessException.class, ProductGetProcessException.class, ProductUpdateProcessException.class,
 	})
 	public ModelAndView systemException500() { // NOSOANR
 		String code = "F500";

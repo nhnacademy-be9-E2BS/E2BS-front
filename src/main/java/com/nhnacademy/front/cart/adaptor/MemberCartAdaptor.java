@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.front.cart.model.dto.request.RequestAddCartItemsDTO;
+import com.nhnacademy.front.cart.model.dto.request.RequestDeleteCartItemsForMemberDTO;
 import com.nhnacademy.front.cart.model.dto.request.RequestUpdateCartItemsDTO;
 import com.nhnacademy.front.cart.model.dto.response.ResponseCartItemsForMemberDTO;
 
@@ -33,15 +34,14 @@ public interface MemberCartAdaptor {
 	/**
 	 * 회원 - 장바구니 항목 수량 변경
 	 */
-	@PutMapping("/api/auth/members/carts/items/{cartItemsId}")
-	ResponseEntity<Integer> updateCartItemForMember(@PathVariable long cartItemsId,
-		@RequestBody RequestUpdateCartItemsDTO requestDto);
+	@PutMapping("/api/auth/members/carts/items")
+	ResponseEntity<Integer> updateCartItemForMember(@RequestBody RequestUpdateCartItemsDTO requestDto);
 
 	/**
 	 * 회원 - 장바구니 항목 삭제
 	 */
-	@DeleteMapping("/api/auth/members/carts/items/{cartItemId}")
-	ResponseEntity<Void> deleteCartItemForMember(@PathVariable long cartItemId);
+	@DeleteMapping("/api/auth/members/carts/items")
+	ResponseEntity<Void> deleteCartItemForMember(@RequestBody RequestDeleteCartItemsForMemberDTO requestDto);
 
 	/**
 	 * 회원 - 장바구니 전체 삭제

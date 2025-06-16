@@ -58,15 +58,18 @@ public class WebConfig implements WebMvcConfigurer {
 			.excludePathPatterns(paycoCallbackPath, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH);
 
 		registry.addInterceptor(memberNameAndRoleInterceptor)
-			.excludePathPatterns("/login/**", "/register/**", "/admin/login/**", "/payco/login/**")
+			.excludePathPatterns("/login/**", "/register/**", "/admin/login/**",
+				"/payco/login/**", "/oauth2/authorization/payco", "/id.payco.com/**",
+				"/payco/callback", "/payco/access-token", "/payco/member-info", "/auth/jwt/create", "/auth/payco-login")
 			.excludePathPatterns(paycoCallbackPath, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH);
 
 		registry.addInterceptor(cartInterceptor)
 			.excludePathPatterns(
 				"/customers/login", "/customers/register",
 				"/members/order", "/customers/order",
-				"/order/auth", "/order/payment", "/order/point", "/order/success", "/order/confirm",
+				"/order/auth", "/order/payment", "/order/point", "/order/success", "/order/success/**", "/order/confirm",
 				"/payco/login/**", "/oauth2/authorization/payco", "/id.payco.com/**",
+				"/payco/callback", "/payco/access-token", "/payco/member-info", "/auth/jwt/create", "/auth/payco-login",
 				"/.well-known/**",
 				paycoCallbackPath, ACTUATOR_PATH, CSS_PATH, JS_PATH, PNG_PATH, JPG_PATH, VENDORS_PATH, ERROR_PATH
 			);
