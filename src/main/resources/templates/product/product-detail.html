@@ -116,6 +116,57 @@
 		.error-text {
 			color: #c64d4d;
 		}
+		.recommended-products {
+			max-width: 100%;
+			margin: 40px auto 0 auto;
+			padding: 24px 0;
+			display: block;
+		}
+
+		.recommended-products h2 {
+			margin-bottom: 20px;
+			text-align: center;
+		}
+
+		.recommended-products h3 {
+			font-size: 1.1rem;
+			font-weight: 600;
+			text-decoration: none;
+		}
+
+		.recommended-products a {
+			text-decoration: none;
+		}
+
+		.recommended-products ul {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 24px;
+			justify-content: center;
+			padding: 0;
+			margin: 0;
+			list-style: none;
+		}
+
+		.recommended-products li {
+			width: 180px;
+			background: #fafafa;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+			padding: 16px 12px;
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.recommended-products img {
+			width: 110px;
+			height: 150px;
+			object-fit: cover;
+			margin-bottom: 8px;
+			border-radius: 4px;
+		}
 	</style>
 </head>
 <body>
@@ -448,6 +499,25 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	</section>
+
+	<section class="recommended-products">
+		<div th:if="${not #lists.isEmpty(recommendedProducts)}">
+			<h2>연관 도서</h2>
+			<ul>
+				<li th:each="recommended : ${recommendedProducts}">
+					<a th:href="@{/books/{id}(id=${recommended.productId})}">
+						<img th:src="${recommended.productImagePaths[0].productImagePath}" alt="추천 도서 이미지"
+							 onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIU-UceDHDzvuE5Gp1xYX0irHtgIWTeWwzlPVvLegZoes3vFaKT736CE8&s'"
+							 th:if="${not #lists.isEmpty(recommended.productImagePaths)}">
+						<h3 th:text="${recommended.productTitle}"></h3>
+					</a>
+
+					<p th:text="'₩' + ${#numbers.formatInteger(recommended.productSalePrice, 0, 'COMMA')} + '원'" style="color: #1976d2; font-weight: bold; font-size: 1.05rem; margin: 6px 0 2px 0;"></p>
+					<p>평점: <span th:text="${#numbers.formatDecimal(recommended.avgRating, 1, 2)}"></span> (리뷰: <span th:text="${recommended.reviewCount}"></span>)</p>
+				</li>
+			</ul>
 		</div>
 	</section>
 

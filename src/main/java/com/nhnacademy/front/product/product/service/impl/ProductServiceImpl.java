@@ -52,4 +52,22 @@ public class ProductServiceImpl implements ProductService {
 			throw new ProductGetProcessException();
 		}
 	}
+
+	/**
+	 * product 단일 조회 (상세 조회)
+	 */
+	@Override
+	public List<ResponseProductReadDTO> getRecommendedProducts(long productId, String memberId) {
+		try {
+			ResponseEntity<List<ResponseProductReadDTO>> response = productAdaptor.getRecommendedProducts(productId,
+				memberId);
+
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new ProductGetProcessException();
+			}
+			return response.getBody();
+		} catch (FeignException e) {
+			throw new ProductGetProcessException();
+		}
+	}
 }
