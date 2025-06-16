@@ -47,8 +47,8 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 		HttpSession session = request.getSession();
 
 		// 회원인 경우
-		String memberState = memberService.getMemberState(memberId);
-		if (memberState.equals("MEMBER")) {
+		String memberRole = memberService.getMemberRole(memberId);
+		if (memberRole.equals("MEMBER")) {
 			// 게스트 키가 있으면 장바구니를 꺼내서 병합 후 항목 개수 적용
 			String guestCookieValue = CookieUtil.getCookieValue("guestKey", request);
 			if (Objects.nonNull(guestCookieValue)) {

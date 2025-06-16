@@ -16,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ErrorController {
-	private final static String ERROR_404 = "error/error-404";
-	private final static String ERROR_500 = "error/error-500";
-	private final static String ERROR_MESSAGE = "errorMessage";
+	private static final String ERROR_400 = "error/error-400";
+	private static final String ERROR_404 = "error/error-404";
+	private static final String ERROR_409 = "error/error-409";
+	private static final String ERROR_500 = "error/error-500";
+	private static final String ERROR_MESSAGE = "errorMessage";
 
 	private final ErrorMessageLoader errorMessageLoader;
 
@@ -30,10 +32,24 @@ public class ErrorController {
 		return ResponseEntity.ok(message);
 	}
 
+	@Operation(summary = "400 에러 페이지", description = "400 에러 코드에 해당하는 메세지 및 화면 제공")
+	@GetMapping("/error/400")
+	public String getError400(@RequestParam(value = "errorMessage") String errorMessage, Model model) {
+		model.addAttribute(ERROR_MESSAGE, errorMessage);
+		return ERROR_400;
+	}
+
 	@Operation(summary = "404 에러 페이지", description = "404 에러 코드에 해당하는 메세지 및 화면 제공")
 	@GetMapping("/error/404")
 	public String getError404(@RequestParam(value = "errorMessage") String errorMessage, Model model) {
 		return renderErrorPage(errorMessage, model);
+	}
+
+	@Operation(summary = "409 에러 페이지", description = "409 에러 코드에 해당하는 메세지 및 화면 제공")
+	@GetMapping("/error/409")
+	public String getError409(@RequestParam(value = "errorMessage") String errorMessage, Model model) {
+		model.addAttribute(ERROR_MESSAGE, errorMessage);
+		return ERROR_409;
 	}
 
 	@Operation(summary = "500 에러 페이지", description = "500 에러 코드에 해당하는 메세지 및 화면 제공")
@@ -51,8 +67,8 @@ public class ErrorController {
 	}
 
 	private String renderErrorPage(String errorMessage, Model model) {
-		model.addAttribute("errorMessage", errorMessage);
-		return "error/404";
+		model.addAttribute(ERROR_MESSAGE, errorMessage);
+		return ERROR_404;
 	}
 
 }

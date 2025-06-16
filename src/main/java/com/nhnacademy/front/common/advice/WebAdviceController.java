@@ -1,7 +1,5 @@
 package com.nhnacademy.front.common.advice;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -60,7 +58,7 @@ import lombok.RequiredArgsConstructor;
 @ControllerAdvice
 @RequiredArgsConstructor
 public class WebAdviceController {
-	private final static String ERROR_MESSAGE = "errorMessage";
+	private static final String ERROR_MESSAGE = "errorMessage";
 
 	private final ErrorMessageLoader errorMessageLoader;
 
@@ -70,14 +68,26 @@ public class WebAdviceController {
 		CustomerRegisterProcessingException.class,
 		CartProcessException.class, ReviewProcessException.class, LikeProcessException.class,
 		DormantDoorayNotMatchedNumberException.class})
-	public ResponseEntity<String> badRequestException(Exception ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	public ModelAndView badRequestException(Exception ex) {
+		String code = "B400";
+		String errorMessage = errorMessageLoader.getMessage(code);
+
+		ModelAndView modelAndView = new ModelAndView("redirect:/error/400");
+		modelAndView.addObject(ERROR_MESSAGE, errorMessage);
+
+		return modelAndView;
 	}
 
 	// 찾지 못한 에러
 	@ExceptionHandler({NotFoundMemberIdException.class})
-	public ResponseEntity<String> notFoundMemberIdException(Exception ex) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	public ModelAndView notFoundMemberIdException(Exception ex) {
+		String code = "M409";
+		String errorMessage = errorMessageLoader.getMessage(code);
+
+		ModelAndView modelAndView = new ModelAndView("redirect:/error/409");
+		modelAndView.addObject(ERROR_MESSAGE, errorMessage);
+
+		return modelAndView;
 	}
 
 	// 인증 관련 에러
@@ -109,7 +119,7 @@ public class WebAdviceController {
 		CategoryUpdateProcessException.class, CategoryDeleteProcessException.class,
 		ProductCreateProcessException.class, ProductGetProcessException.class, ProductUpdateProcessException.class
 	})
-	public ModelAndView systemException500() {
+	public ModelAndView systemException500() { // NOSOANR
 		String code = "F500";
 		String errorMessage = errorMessageLoader.getMessage(code);
 
@@ -164,7 +174,7 @@ public class WebAdviceController {
 	}
 
 	@ExceptionHandler({Throwable.class})
-	public ModelAndView throwable500Exception() {
+	public ModelAndView throwableException() { // NOSONAR
 		String code = "F500";
 
 		String errorMessage = errorMessageLoader.getMessage(code);

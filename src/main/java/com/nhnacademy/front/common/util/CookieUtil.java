@@ -2,6 +2,8 @@ package com.nhnacademy.front.common.util;
 
 import java.util.Objects;
 
+import org.springframework.http.ResponseCookie;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,14 +17,18 @@ public class CookieUtil {
 	private CookieUtil() {
 	}
 
-	private static final int EXPIRY = 60 * 60 * 24; // 1일
+	private static final int EXPIRY = 60 * 60 * 3; // 3시간
 
 	public static void setCookie(String cookieName, HttpServletResponse response, String value) {
-		Cookie cookie = new Cookie(cookieName, value);
-		cookie.setPath("/");
-		cookie.setHttpOnly(true);
-		cookie.setMaxAge(EXPIRY);
-		response.addCookie(cookie);
+		ResponseCookie responseCookie =  ResponseCookie.from(cookieName, value)
+			.path("/")
+			.sameSite("Lax")
+			.secure(true)
+			.httpOnly(true)
+			.maxAge(EXPIRY)
+			.build();
+
+		response.addHeader("Set-Cookie", responseCookie.toString());
 	}
 
 	public static String getCookieValue(String cookieName, HttpServletRequest request) {
@@ -37,10 +43,15 @@ public class CookieUtil {
 	}
 
 	public static void clearCookie(String cookieName, HttpServletResponse response) {
-		Cookie cookie = new Cookie(cookieName, null);
-		cookie.setPath("/");
-		cookie.setMaxAge(0);
-		response.addCookie(cookie);
+		ResponseCookie responseCookie = ResponseCookie.from(cookieName, "")
+			.path("/")
+			.maxAge(0)
+			.httpOnly(true)
+			.secure(true)
+			.sameSite("Lax")
+			.build();
+
+		response.addHeader("Set-Cookie", responseCookie.toString());
 	}
 
 }

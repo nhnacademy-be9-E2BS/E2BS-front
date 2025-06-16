@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
+import com.nhnacademy.front.common.error.exception.ServerErrorException;
+
 import lombok.Getter;
 
 @Getter
@@ -39,14 +41,16 @@ public class ErrorMessageLoader {
 
 	}
 
-	private void loadYamlFromUrl(String url) throws Exception {
+	private void loadYamlFromUrl(String url) {
 		Yaml yaml = new Yaml();
 
-		try (InputStream inputStream = new URL(url).openStream()) {
+		try (InputStream inputStream = new URL(url).openStream()) { // NOSONAR
 			Map<String, Object> data = yaml.load(inputStream);
-			Map<String, String> errors = (Map<String, String>)data.get("errors");
+			Map<String, String> errors = (Map<String, String>)data.get("errors"); // NOSONAR
 
 			errorMessages.putAll(errors);
+		} catch (Exception ex) {
+			throw new ServerErrorException();
 		}
 
 	}

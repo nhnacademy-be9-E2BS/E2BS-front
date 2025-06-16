@@ -77,6 +77,9 @@ public class MemberService {
 		return responseMemberInfoDTO.getCustomer().getCustomerName();
 	}
 
+	/**
+	 * 회원 상태 조회 메소드
+	 */
 	public String getMemberState(String memberId) {
 		try {
 			ResponseEntity<ResponseMemberStateDTO> response = memberStateAdaptor.getMemberState(memberId);
@@ -84,7 +87,23 @@ public class MemberService {
 				throw new GetMemberStateFailedException();
 			}
 
-			return response.getBody().getMemberstate();
+			return Objects.requireNonNull(response.getBody()).getMemberstate();
+		} catch (FeignException ex) {
+			throw new GetMemberStateFailedException();
+		}
+	}
+
+	/**
+	 * 회원 역할 조회 메소드
+	 */
+	public String getMemberRole(String memberId) {
+		try {
+			ResponseEntity<String> response = memberStateAdaptor.getMemberRole(memberId);
+			if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
+				throw new GetMemberStateFailedException();
+			}
+
+			return response.getBody();
 		} catch (FeignException ex) {
 			throw new GetMemberStateFailedException();
 		}

@@ -10,4 +10,6 @@ public interface ProductService {
 
 	//Order전용 - 도서 여러권 리스트로 조회
 	List<ResponseProductReadDTO> getProducts(List<Long> productIds);
+
+	List<ResponseProductReadDTO> getRecommendedProducts(long productId, String memberId);
 }

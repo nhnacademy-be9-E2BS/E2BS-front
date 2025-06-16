@@ -25,7 +25,7 @@ public class CategoryInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		Object cached = redisTemplate.hasKey("Categories::header")
+		Object cached = Boolean.TRUE.equals(redisTemplate.hasKey("Categories::header"))
 			? redisTemplate.opsForValue().get("Categories::header")
 			: null;
 

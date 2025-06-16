@@ -18,6 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.nhnacademy.front.common.error.loader.ErrorMessageLoader;
+import com.nhnacademy.front.common.interceptor.CartInterceptor;
 import com.nhnacademy.front.common.interceptor.CategoryInterceptor;
 import com.nhnacademy.front.common.interceptor.MemberNameAndRoleInterceptor;
 
@@ -31,6 +32,12 @@ class MemberLoginControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	@Mock
+	private HttpServletRequest request;
+
+	@MockitoBean
+	private CartInterceptor cartInterceptor;
+
 	@MockitoBean
 	private CategoryInterceptor categoryInterceptor;
 
@@ -40,11 +47,9 @@ class MemberLoginControllerTest {
 	@MockitoBean
 	private ErrorMessageLoader errorMessageLoader;
 
-	@Mock
-	private HttpServletRequest request;
-
 	@BeforeEach
 	void setUp() throws Exception {
+		when(cartInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
