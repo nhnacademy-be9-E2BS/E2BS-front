@@ -28,10 +28,9 @@ class CustomAuthenticationFailureHandlerTest {
 		when(exception.getMessage()).thenReturn("Invalid credentials");
 	}
 
-	@SuppressWarnings("squid:S2699")
 	@Test
 	@DisplayName("관리자 로그인 실패시 리다이렉트 테스트")
-	void adminLoginFailureRedirect() throws IOException, ServletException {
+	void adminLoginFailureRedirect() throws IOException, ServletException { // NOSONAR
 		// given
 		when(request.getHeader("Referer")).thenReturn("http://localhost/admin/login");
 

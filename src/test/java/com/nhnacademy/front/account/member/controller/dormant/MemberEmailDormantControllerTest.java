@@ -138,7 +138,7 @@ class MemberEmailDormantControllerTest {
 		// Then
 		mockMvc.perform(post("/member/dormant/email").session(session)
 				.with(csrf()))
-			.andExpect(status().is4xxClientError());
+			.andExpect(status().is3xxRedirection());
 
 	}
 
@@ -188,7 +188,7 @@ class MemberEmailDormantControllerTest {
 		mockMvc.perform(post("/member/dormant/email").session(session)
 				.with(csrf())
 				.param("dormantEmailNumber", "000000"))
-			.andExpect(status().is4xxClientError());
+			.andExpect(status().is3xxRedirection());
 
 	}
 

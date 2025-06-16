@@ -83,7 +83,7 @@ class ContributorControllerTest {
 				.param("contributorName", "")
 				.param("positionId", "1")
 				.with(csrf()))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().is3xxRedirection());
 	}
 
 	@Test

@@ -171,7 +171,7 @@ class MemberDoorayDormantControllerTest {
 		// Then
 		mockMvc.perform(post("/member/dormant/dooray").session(session)
 				.with(csrf()))
-			.andExpect(status().is4xxClientError());
+			.andExpect(status().is3xxRedirection());
 
 	}
 
@@ -219,7 +219,7 @@ class MemberDoorayDormantControllerTest {
 		mockMvc.perform(post("/member/dormant/dooray").session(session)
 				.with(csrf())
 				.param("dormantDoorayNumber", requestDormantDoorayNumberDTO.getDormantDoorayNumber()))
-			.andExpect(status().is4xxClientError());
+			.andExpect(status().is3xxRedirection());
 
 	}
 

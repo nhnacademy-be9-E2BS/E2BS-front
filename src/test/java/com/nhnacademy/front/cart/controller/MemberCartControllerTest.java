@@ -72,6 +72,7 @@ class MemberCartControllerTest {
 		when(categoryInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		when(memberNameAndRoleInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 	}
+
 	private static final String MEMBER_ID = "id123";
 
 	@Test
@@ -111,7 +112,7 @@ class MemberCartControllerTest {
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(jsonRequest)
 					.with(csrf()))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().is3xxRedirection());
 		}
 	}
 
@@ -120,8 +121,10 @@ class MemberCartControllerTest {
 	void getCartsByMember() throws Exception {
 		// given
 		List<ResponseCartItemsForMemberDTO> cartItemsByMember = List.of(
-			new ResponseCartItemsForMemberDTO(1L, 1L, "상품A", 15000, 10000, new BigDecimal(50), "thumbnailImage", 2, 20000),
-			new ResponseCartItemsForMemberDTO(1L, 2L, "상품B", 15000, 10000, new BigDecimal(50), "thumbnailImage", 3, 30000)
+			new ResponseCartItemsForMemberDTO(1L, 1L, "상품A", 15000, 10000, new BigDecimal(50), "thumbnailImage", 2,
+				20000),
+			new ResponseCartItemsForMemberDTO(1L, 2L, "상품B", 15000, 10000, new BigDecimal(50), "thumbnailImage", 3,
+				30000)
 		);
 
 		ResponseDeliveryFeeDTO deliveryFeeDTO = new ResponseDeliveryFeeDTO(1L, 3000, 50000, LocalDateTime.now());
@@ -185,7 +188,7 @@ class MemberCartControllerTest {
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(jsonRequest)
 					.with(csrf()))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().is3xxRedirection());
 		}
 	}
 

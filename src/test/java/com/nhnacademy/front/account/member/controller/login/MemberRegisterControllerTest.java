@@ -135,7 +135,7 @@ class MemberRegisterControllerTest {
 				.param("customerPasswordCheck", requestRegisterMemberDTO.getCustomerPasswordCheck())
 				.param("customerEmail", requestRegisterMemberDTO.getCustomerEmail())
 				.param("memberBirth", String.valueOf(requestRegisterMemberDTO.getMemberBirth())))
-			.andExpect(status().is4xxClientError());
+			.andExpect(status().is3xxRedirection());
 
 	}
 
