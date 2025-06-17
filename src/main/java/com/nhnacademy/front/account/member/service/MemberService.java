@@ -1,5 +1,6 @@
 package com.nhnacademy.front.account.member.service;
 
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
@@ -107,6 +108,15 @@ public class MemberService {
 		} catch (FeignException ex) {
 			throw new GetMemberStateFailedException();
 		}
+	}
+
+	public boolean existsMemberByMemberId(String memberId) {
+		ResponseEntity<Map<String, Boolean>> response = memberRegisterAdaptor.checkMemberIdDuplicate(memberId);
+		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
+			throw new RegisterProcessException();
+		}
+
+		return response.getBody().get("available");
 	}
 
 }
