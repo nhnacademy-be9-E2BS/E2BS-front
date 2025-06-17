@@ -116,7 +116,11 @@ public class MemberService {
 			throw new RegisterProcessException();
 		}
 
-		return Boolean.TRUE.equals(response.getBody().get("available"));
+		if (Objects.nonNull(response.getBody())) {
+			return Boolean.TRUE.equals(response.getBody().get("available"));
+		} else {
+			return false;
+		}
 	}
 
 }
