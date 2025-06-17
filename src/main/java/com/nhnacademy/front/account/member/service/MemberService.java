@@ -112,15 +112,14 @@ public class MemberService {
 
 	public boolean existsMemberByMemberId(String memberId) {
 		ResponseEntity<Map<String, Boolean>> response = memberRegisterAdaptor.checkMemberIdDuplicate(memberId);
-		if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
+
+		Map<String, Boolean> body = response.getBody();
+
+		if (!response.getStatusCode().is2xxSuccessful() || body == null) {
 			throw new RegisterProcessException();
 		}
 
-		if (Objects.nonNull(response.getBody())) {
-			return Boolean.TRUE.equals(response.getBody().get("available"));
-		} else {
-			return false;
-		}
+		return Boolean.TRUE.equals(body.get("available"));
 	}
 
 }
