@@ -235,9 +235,10 @@
                             </li>
                             <li style="color: #000000;"
                                 th:text="${product.avgRating} + '&nbsp'"></li>
-                            <li th:text="'('+${product.reviewCount}+') &nbsp&nbsp&nbsp'"></li>
+                            <li th:if="${product.reviewCount != 0}"
+                                th:text="|(${product.reviewCount})|"></li>
 
-                            <li th:if="${product.likeCount != null}" class="like-section">
+                            <li th:if="${product.likeCount != 0}" class="like-section" style="margin-left: 5px;">
                                 <i class="fa fa-heart liked"></i>
                                 <span th:text="${product.likeCount}"></span>
                             </li>
