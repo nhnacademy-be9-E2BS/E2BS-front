@@ -82,7 +82,7 @@
                             <span th:text="${likeProduct.avgRating}"></span>
                             <span th:utext="'(' + ${likeProduct.reviewCount} + ')' + '&nbsp;' + '&nbsp;'"></span>
                         </span>
-                        <span th:if="${likeProduct.likeCount != null}">
+                        <span th:if="${likeProduct.likeCount != 0}">
                             <i class="fa fa-heart liked"></i>
                             <span th:text="${likeProduct.likeCount}"></span>
                         </span>
