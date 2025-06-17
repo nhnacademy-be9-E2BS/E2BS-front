@@ -130,21 +130,34 @@
 
             fetch(`${apiBaseUrl}/api/members/${encodeURIComponent(memberId)}/register`)
                 .then(response => {
+                    console.log('response(): ', "here")
+
                     if (!response.ok) {
+                        console.log('response(): ', "ok")
+
                         throw new Error(`서버 오류: ${response.status}`);
                     }
+
+                    console.log('response(): ', "no")
                     return response.json();
                 })
                 .then(data => {
+                    console.log('response(): ', "hello")
+
                     if (data.available) {
+                        console.log('response(): ', "available")
+
                         messageElement.textContent = '사용 가능한 아이디입니다.';
                         messageElement.className = 'text-success';
                     } else {
+                        console.log('response(): ', "not available")
                         messageElement.textContent = '이미 사용 중인 아이디입니다.';
                         messageElement.className = 'text-danger';
                     }
                 })
                 .catch(error => {
+                    console.log('response(): ', "error")
+
                     messageElement.textContent = '서버 오류가 발생했습니다.';
                     messageElement.className = 'text-danger';
                 });
