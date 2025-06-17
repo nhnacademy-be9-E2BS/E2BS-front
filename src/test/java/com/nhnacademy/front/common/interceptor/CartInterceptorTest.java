@@ -7,6 +7,8 @@ import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -75,54 +77,21 @@ class CartInterceptorTest {
 		verify(response, never()).addCookie(any());
 	}
 
-	@Test
-	@DisplayName("/order URI로 시작하는 경우 쿠키 제거하지 않음")
-	void preHandle_OrderUri_NoCookieRemove() {
+	@ParameterizedTest
+	@ValueSource(strings = {"/order", "/members/order", "/customers/order"})
+	@DisplayName("특정 URI로 시작하는 경우 쿠키 제거하지 않음")
+	void preHandle_OrderUri_NoCookieRemove(String uri) {
 		// given
-		when(request.getRequestURI()).thenReturn("/order/checkout");
-		Cookie orderCartCookie = new Cookie("orderCart", "some-value");
-		when(request.getCookies()).thenReturn(new Cookie[] { orderCartCookie });
+		when(request.getRequestURI()).thenReturn(uri);
+		Cookie targetCookie = new Cookie("orderCart", "some-value");
+		Cookie[] cookies = {targetCookie};
+		when(request.getCookies()).thenReturn(cookies);
 
 		// when
 		boolean result = interceptor.preHandle(request, response, new Object());
 
 		// then
 		assertTrue(result);
-		assertThat(orderCartCookie.getValue()).isEqualTo("some-value");
-		verify(response, never()).addCookie(any());
-	}
-
-	@Test
-	@DisplayName("/members/order URI로 시작하는 경우 쿠키 제거하지 않음")
-	void preHandle_MembersOrderUri_NoCookieRemove() {
-		// given
-		when(request.getRequestURI()).thenReturn("/members/order/history");
-		Cookie orderCartCookie = new Cookie("orderCart", "some-value");
-		when(request.getCookies()).thenReturn(new Cookie[] { orderCartCookie });
-
-		// when
-		boolean result = interceptor.preHandle(request, response, new Object());
-
-		// then
-		assertTrue(result);
-		assertThat(orderCartCookie.getValue()).isEqualTo("some-value");
-		verify(response, never()).addCookie(any());
-	}
-
-	@Test
-	@DisplayName("/customers/order URI로 시작하는 경우 쿠키 제거하지 않음")
-	void preHandle_CustomersOrderUri_NoCookieRemove() {
-		// given
-		when(request.getRequestURI()).thenReturn("/customers/order/list");
-		Cookie orderCartCookie = new Cookie("orderCart", "some-value");
-		when(request.getCookies()).thenReturn(new Cookie[] { orderCartCookie });
-
-		// when
-		boolean result = interceptor.preHandle(request, response, new Object());
-
-		// then
-		assertTrue(result);
-		assertThat(orderCartCookie.getValue()).isEqualTo("some-value");
 		verify(response, never()).addCookie(any());
 	}
 
