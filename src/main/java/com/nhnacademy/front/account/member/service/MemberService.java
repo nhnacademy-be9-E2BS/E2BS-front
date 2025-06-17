@@ -116,7 +116,7 @@ public class MemberService {
 			throw new RegisterProcessException();
 		}
 
-		return response.getBody().get("available");
+		return Objects.requireNonNull(response.getBody().get("available"));
 	}
 
 }
