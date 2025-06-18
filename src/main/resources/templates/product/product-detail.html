@@ -544,6 +544,8 @@
 
 	<!--주문 하기 시 DTO 전송-->
 	<script>
+		const productStock = [[${product.productStock}]];
+
 		const quantityInput = document.getElementById('quantity');
 		quantityInput.addEventListener("input", () => {
 			if(quantityInput.value === "" || quantityInput.value === "0"){
@@ -553,6 +555,13 @@
 
 		function submitOrderMember() {
 			console.log('submitOrderMember')
+			const quantityInput = document.getElementById('quantity');
+			const quantity = quantityInput.value;
+
+			if (productStock < quantity) {
+				alert("재고가 없어 주문할 수 없습니다.");
+				return;
+			}
 
 			let productIdList = [];
 			productIdList.push([[${product.productId}]]);
@@ -576,6 +585,14 @@
 
 		function submitOrderGuest() {
 			console.log('submitOrderGuest')
+
+			const quantityInput = document.getElementById('quantity');
+			const quantity = quantityInput.value;
+
+			if (productStock < quantity) {
+				alert("재고가 없어 주문할 수 없습니다.");
+				return;
+			}
 
 			let productIdList = [];
 			productIdList.push([[${product.productId}]]);

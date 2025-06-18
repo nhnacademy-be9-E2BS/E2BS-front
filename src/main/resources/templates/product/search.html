@@ -227,6 +227,8 @@
                         </span>
                     </div>
 
+                    <span style="display: none" th:id="'stock__' + ${product.productId}" th:value="${product.productStock}"></span>
+
                     <!-- 별점 및 리뷰 및 좋아요-->
                     <div class="form-group">
                         <ul class="list" th:data-rating="${product.avgRating != null ? product.avgRating : 0}">
@@ -402,8 +404,15 @@
 
         <!--주문 하기 시 DTO 전송-->
         function submitOrderMember(productId) {
+            const stockInput = document.getElementById(`stock__${productId}`);
+            const stock = stockInput.value;
+
             const quantityInput = document.getElementById(`quantity__${productId}`);
             const quantity = quantityInput.value;
+            if (stock < quantity) {
+                alert("재고가 없어 주문할 수 없습니다.");
+                return;
+            }
 
             const cartOrder = {
                 productIds: [productId],
@@ -418,8 +427,15 @@
         }
 
         function submitOrderGuest(productId) {
+            const stockInput = document.getElementById(`stock__${productId}`);
+            const stock = stockInput.value;
+
             const quantityInput = document.getElementById(`quantity__${productId}`);
             const quantity = quantityInput.value;
+            if (stock < quantity) {
+                alert("재고가 없어 주문할 수 없습니다.");
+                return;
+            }
 
             fetch('/order/auth', {
                 method: "POST",
