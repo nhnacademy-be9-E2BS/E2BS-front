@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -37,7 +38,21 @@ public class SecurityConfig {
 	private final RedisTemplate<String, String> redisTemplate;
 	private final AuthenticationManager authenticationManager;
 
+	@Bean
 	@Order(1)
+	public SecurityFilterChain swaggerSecurityFilterChain(HttpSecurity http) throws Exception {
+		http
+			.securityMatcher("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
+			.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+			.requestCache(RequestCacheConfigurer::disable)
+			.securityContext(AbstractHttpConfigurer::disable)
+			.sessionManagement(AbstractHttpConfigurer::disable);
+
+		return http.build();
+	}
+
+
+	@Order(2)
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -58,13 +73,6 @@ public class SecurityConfig {
 				.requestMatchers(LOGIN_URL, ROOT_URL, REGISTER_URL, ADMIN_LOGIN_URL, ACTUATOR_HEALTH).permitAll()
 				.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/scss/**", "/vendors/**",
 					"/Aroma Shop-doc/**").permitAll()
-				.requestMatchers(
-					"/swagger-ui/**",
-					"/swagger-ui.html",
-					"/v3/api-docs/**",
-					"/swagger-resources/**",
-					"/webjars/**"
-				).permitAll()
 				.anyRequest().permitAll()
 			)
 			/**
