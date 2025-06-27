@@ -58,6 +58,13 @@ public class SecurityConfig {
 				.requestMatchers(LOGIN_URL, ROOT_URL, REGISTER_URL, ADMIN_LOGIN_URL, ACTUATOR_HEALTH).permitAll()
 				.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**", "/scss/**", "/vendors/**",
 					"/Aroma Shop-doc/**").permitAll()
+				.requestMatchers(
+					"/swagger-ui/**",
+					"/swagger-ui.html",
+					"/v3/api-docs/**",
+					"/swagger-resources/**",
+					"/webjars/**"
+				).permitAll()
 				.anyRequest().permitAll()
 			)
 			/**
